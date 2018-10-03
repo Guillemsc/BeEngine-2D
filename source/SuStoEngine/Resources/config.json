@@ -1,0 +1,44 @@
+{
+    "app": {
+        "title": "SuSto Engine",
+        "organization": "SuSto Engine",
+        "version": "v0.5.0",
+        "max_fps": 999
+    },
+    "window": {
+        "width": 551,
+        "height": 209,
+        "fullscreen": false,
+        "resizable": true,
+        "borderless": false,
+        "fulldekstop": false,
+        "maximized": true,
+        "vsync": false,
+        "brightness": 1
+    },
+    "input": {
+        "console": "",
+        "profiler": "",
+        "configuration": ""
+    },
+    "camera": {
+        "mouse_sensitivity": 1,
+        "wheel_speed": 188.09600830078125,
+        "camera_speed": 500.00003051757813
+    },
+    "camera_position": [
+        431.72274780273438,
+        -201.78504943847656,
+        -767.76324462890625
+    ],
+    "camera_front": [
+        -0.40010213851928711,
+        0.27153661847114563,
+        0.8753206729888916
+    ],
+    "camera_up": [
+        0.11288300901651382,
+        0.96243220567703247,
+        -0.24694490432739258
+    ]
+}
