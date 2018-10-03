@@ -4,8 +4,8 @@
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "JSONLoader.h"
 #include "ModuleFileSystem.h"
+#include "ModuleJson.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -19,7 +19,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	CreateProfiles();
 
 	// Create modules
-	json = new JSONLoader();
+	json = new ModuleJson();
 	window = new ModuleWindow();
 	input = new ModuleInput();
 	audio = new ModuleAudio();
@@ -58,6 +58,8 @@ void Application::CreateProfiles()
 bool Application::Awake()
 {
 	bool ret = true;
+
+	SetMaxFps(1);
 
 	prof_app_awake->Start();
 

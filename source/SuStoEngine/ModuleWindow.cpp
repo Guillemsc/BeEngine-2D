@@ -2,7 +2,6 @@
 #include "App.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
-#include "JSONLoader.h"
 #include "Cursor.h"
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
@@ -27,28 +26,28 @@ ModuleWindow::~ModuleWindow()
 
 void ModuleWindow::OnLoadConfig(JSON_Doc * config)
 {
-	width = config->GetNumber("window.width", 900);
-	height = config->GetNumber("window.height", 900);
-	fullscreen = config->GetBool("window.fullscreen", false);
-	resizable = config->GetBool("window.resizable", true);
-	borderless = config->GetBool("window.borderless", false);
-	full_dekstop = config->GetBool("window.fulldekstop", false);
-	maximized = config->GetBool("window.maximized", false);
-	SetVsync(config->GetBool("window.vsync", true));
-	brightness = config->GetNumber("window.brightness", 1.0f);
+	//width = config->GetNumber("window.width", 900);
+	//height = config->GetNumber("window.height", 900);
+	//fullscreen = config->GetBool("window.fullscreen", false);
+	//resizable = config->GetBool("window.resizable", true);
+	//borderless = config->GetBool("window.borderless", false);
+	//full_dekstop = config->GetBool("window.fulldekstop", false);
+	//maximized = config->GetBool("window.maximized", false);
+	//SetVsync(config->GetBool("window.vsync", true));
+	//brightness = config->GetNumber("window.brightness", 1.0f);
 }
 
 void ModuleWindow::OnSaveConfig(JSON_Doc * config)
 {
-	config->SetNumber("window.width", width);
-	config->SetNumber("window.height", height);
-	config->SetBool("window.fullscreen", fullscreen);
-	config->SetBool("window.resizable", resizable);
-	config->SetBool("window.borderless", borderless);
-	config->SetBool("window.fulldekstop", full_dekstop);
-	config->SetBool("window.maximized", maximized);
-	config->SetNumber("window.brightness", GetBrightness());
-	config->SetBool("window.vsync", GetVsync());
+	//config->SetNumber("window.width", width);
+	//config->SetNumber("window.height", height);
+	//config->SetBool("window.fullscreen", fullscreen);
+	//config->SetBool("window.resizable", resizable);
+	//config->SetBool("window.borderless", borderless);
+	//config->SetBool("window.fulldekstop", full_dekstop);
+	//config->SetBool("window.maximized", maximized);
+	//config->SetNumber("window.brightness", GetBrightness());
+	//config->SetBool("window.vsync", GetVsync());
 }
 
 // Called before render is available

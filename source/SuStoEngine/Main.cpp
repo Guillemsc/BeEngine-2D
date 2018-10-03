@@ -93,7 +93,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	INTERNAL_LOG("Exiting engine");
+	INTERNAL_LOG("Exiting Application");
 	delete App;
 
 	return main_return;

@@ -5,8 +5,6 @@
 #include  "imgui.h"
 #endif //IMGUI_API
 
-#include "JSONLoader.h"
-
 typedef enum ImGuiDockSlot 
 {
 	ImGuiDockSlot_Left = 0,
@@ -30,8 +28,8 @@ namespace ImGui
 	IMGUI_API void EndDock();
 	IMGUI_API void SetDockActive();
 	IMGUI_API void DockDebugWindow();
-	void SaveLayout(JSON_Doc * json, const char* layout_name);
-	bool LoadLayout(JSON_Doc * json, const char* layout_name);
+	//void SaveLayout(JSON_Doc * json, const char* layout_name);
+	//bool LoadLayout(JSON_Doc * json, const char* layout_name);
 
 } // namespace ImGui
 

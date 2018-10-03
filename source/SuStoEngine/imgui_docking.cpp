@@ -32,7 +32,6 @@ SOFTWARE.
 
 #include "imgui_docking.h"
 #include <string>
-#include "JSONLoader.h"
 
 bool gImGuiDockReuseTabWindowTextureIfAvailable = true;
 
@@ -1167,7 +1166,7 @@ namespace ImGui
 			return idx < 0 ? nullptr : m_docks[(int)idx]; 
 		}
 
-		void SaveLayout(JSON_Doc * json, const char* layout_name)
+		/*void SaveLayout(JSON_Doc * json, const char* layout_name)
 		{
 			json->AddSection(layout_name);
 			json->MoveToSection(layout_name);
@@ -1272,7 +1271,7 @@ namespace ImGui
 			json->MoveToRoot();
 
 			return ret;
-		}
+		}*/
 	};
 
 	//	void save()
@@ -1404,12 +1403,14 @@ namespace ImGui
 	{
 		g_dock.debugWindow();
 	}
-	void SaveLayout(JSON_Doc * json, const char * layout_name)
-	{
-		g_dock.SaveLayout(json, layout_name);
-	}
-	bool LoadLayout(JSON_Doc * json, const char * layout_name)
-	{
-		return g_dock.LoadLayout(json, layout_name);
-	}
+
+	//void SaveLayout(JSON_Doc * json, const char * layout_name)
+	//{
+	//	g_dock.SaveLayout(json, layout_name);
+	//}
+
+	//bool LoadLayout(JSON_Doc * json, const char * layout_name)
+	//{
+	//	return g_dock.LoadLayout(json, layout_name);
+	//}
 };

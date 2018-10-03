@@ -5,7 +5,6 @@
 #include "ModuleWindow.h"
 #include "Cursor.h"
 #include "imgui.h"
-#include "JSONLoader.h"
 #include "ModuleRenderer3D.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
@@ -51,26 +50,26 @@ bool ModuleCamera3D::CleanUp()
 
 void ModuleCamera3D::OnLoadConfig(JSON_Doc * config)
 {
-	mouse_sensitivity = config->GetNumber("camera.mouse_sensitivity", 0.25f);
-	wheel_speed = config->GetNumber("camera.wheel_speed", 5.0f);
-	camera_speed = config->GetNumber("camera.camera_speed", 20.0f);
+	//mouse_sensitivity = config->GetNumber("camera.mouse_sensitivity", 0.25f);
+	//wheel_speed = config->GetNumber("camera.wheel_speed", 5.0f);
+	//camera_speed = config->GetNumber("camera.camera_speed", 20.0f);
 
-	float3 cam_pos = config->GetNumber3("camera_position");
-	float3 z_dir = config->GetNumber3("camera_front", float3(0, 0, 1));
-	float3 y_dir = config->GetNumber3("camera_up", float3(0, 1, 0));
-	editor_camera->SetPosition(cam_pos);
-	editor_camera->SetZDir(z_dir);
-	editor_camera->SetYDir(y_dir);
+	//float3 cam_pos = config->GetNumber3("camera_position");
+	//float3 z_dir = config->GetNumber3("camera_front", float3(0, 0, 1));
+	//float3 y_dir = config->GetNumber3("camera_up", float3(0, 1, 0));
+	//editor_camera->SetPosition(cam_pos);
+	//editor_camera->SetZDir(z_dir);
+	//editor_camera->SetYDir(y_dir);
 }
 
 void ModuleCamera3D::OnSaveConfig(JSON_Doc * config)
 {
-	config->SetNumber("camera.mouse_sensitivity", mouse_sensitivity);
-	config->SetNumber("camera.wheel_speed", wheel_speed);
-	config->SetNumber("camera.camera_speed", camera_speed);
-	config->SetNumber3("camera_position", editor_camera->GetPosition());
-	config->SetNumber3("camera_front", editor_camera->GetZDir());
-	config->SetNumber3("camera_up", editor_camera->GetYDir());
+	//config->SetNumber("camera.mouse_sensitivity", mouse_sensitivity);
+	//config->SetNumber("camera.wheel_speed", wheel_speed);
+	//config->SetNumber("camera.camera_speed", camera_speed);
+	//config->SetNumber3("camera_position", editor_camera->GetPosition());
+	//config->SetNumber3("camera_front", editor_camera->GetZDir());
+	//config->SetNumber3("camera_up", editor_camera->GetYDir());
 }
 
 Camera3D * ModuleCamera3D::CreateCamera()
@@ -191,7 +190,7 @@ bool ModuleCamera3D::Update()
 
 	//if (IsMouseInsideWindow())
 	//{
-	//	mouse_movement = true;
+	mouse_movement = true;
 	//}
 
 	// Mouse motion ----------------

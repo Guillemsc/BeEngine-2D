@@ -6,7 +6,7 @@
 #include "Profiler.h"
 #include "Module.h"
 
-class JSONLoader;
+class ModuleJson;
 class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
@@ -65,7 +65,7 @@ private:
 
 public:
 	//Modules
-	JSONLoader*		   json	= nullptr;
+	ModuleJson *	   json	= nullptr;
 	ModuleWindow*      window = nullptr;
 	ModuleInput*       input = nullptr;
 	ModuleAudio*       audio = nullptr;
@@ -74,8 +74,6 @@ public:
 
 	Profiler*		   profiler = nullptr;
 
-	std::list<Module*> modules;
-
 private:
 	int				   argc;
 	char**			   args;
@@ -83,6 +81,8 @@ private:
 	std::string		   title = "";
 	std::string		   organization = "";
 	std::string		   version = "";
+
+	std::list<Module*> modules;
 
 	std::vector<const char*>  internal_logs;
 	std::list<ConsoleLogLine> console_logs;

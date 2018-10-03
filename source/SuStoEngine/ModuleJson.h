@@ -1,5 +1,5 @@
-#ifndef _JSONLOADER_H_
-#define _JSONLOADER_H_
+#ifndef _MODULE_JSON_H_
+#define _MODULE_JSON_H_
 
 #include "Module.h"
 #include "Parson\parson.h"
@@ -43,7 +43,7 @@ public:
 	void MoveToRoot();
 	void AddSection(const std::string& set);
 
-	JSON_Doc GetJsonNode();
+	JSON_Doc GetNode();
 
 	void Clear();
 
@@ -62,22 +62,22 @@ private:
 	std::string		 path;
 };
 
-class JSONLoader : public Module
+class ModuleJson : public Module
 {
 public:
-	JSONLoader(bool enabled = true);
-	~JSONLoader();
+	ModuleJson(bool enabled = true);
+	~ModuleJson();
 
 	bool Awake();
 	bool CleanUp();
 
 	JSON_Doc* LoadJSON(const char* path);
 	JSON_Doc* CreateJSON(const char * path, const char* name, const char* extension);
-	JSON_Doc* CreateJSON(const char * path);
+	JSON_Doc* CreateJSON(const char * filepath);
 	void UnloadJSON(JSON_Doc* path);
 
 private:
 	std::list<JSON_Doc*> jsons;
 };
 
-#endif // !_JSONLOADER_H_
+#endif // !_MODULE_JSON_H_

@@ -3,7 +3,6 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
-#include "JSONLoader.h"
 
 // SDL_GetScancode: https://wiki.libsdl.org/SDL_Keycode
 // To use PS3 Controller install this driver https://github.com/nefarius/ScpToolkit/releases/tag/v1.6.238.16010
@@ -26,16 +25,12 @@ ModuleInput::~ModuleInput()
 
 void ModuleInput::OnLoadConfig(JSON_Doc* config)
 {
-	SetKeyBinding(config->GetString("input.console", "º"), "console");
-	SetKeyBinding(config->GetString("input.profiler", ""), "profiler");
-	SetKeyBinding(config->GetString("input.configuration", ""), "configuration");
+
 }
 
 void ModuleInput::OnSaveConfig(JSON_Doc * config)
 {
-	config->SetString("input.console", GetKeyBinding("console"));
-	config->SetString("input.profiler", GetKeyBinding("profiler"));
-	config->SetString("input.configuration", GetKeyBinding("configuration"));
+
 }
 
 // Called before render is available

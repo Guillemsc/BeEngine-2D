@@ -129,7 +129,7 @@
     <ClInclude Include="imgui_docking.h" />
     <ClInclude Include="imgui_impl_sdl.h" />
     <ClInclude Include="imgui_internal.h" />
-    <ClInclude Include="JSONLoader.h" />
+    <ClInclude Include="ModuleJson.h" />
     <ClInclude Include="GeometryMath.h" />
     <ClInclude Include="MathBuildConfig.h" />
     <ClInclude Include="MathGeoLib.h" />
@@ -218,7 +218,7 @@
     <ClCompile Include="imgui_docking.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_sdl.cpp" />
-    <ClCompile Include="JSONLoader.cpp" />
+    <ClCompile Include="ModuleJson.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Math\BitOps.cpp" />
     <ClCompile Include="Math\Callstack.cpp" />

@@ -57,24 +57,24 @@ bool ModuleRenderer3D::Awake()
 	// OpenGL
 	if (ret == true)
 	{
-		// get version info
+		// Get version info
 		INTERNAL_LOG("Vendor: %s", glGetString(GL_VENDOR));
 		INTERNAL_LOG("Renderer: %s", glGetString(GL_RENDERER));
 		INTERNAL_LOG("OpenGL version supported %s", glGetString(GL_VERSION));
 		INTERNAL_LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-		//Use Vsync
+		// Use Vsync
 		if (SDL_GL_SetSwapInterval(App->window->GetVsync()) < 0)
 			INTERNAL_LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//fbo_texture = new FBO();
 		//fbo_texture->Create(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
-		//Initialize Projection Matrix
+		// Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		//Check for error
+		// Check for error
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
@@ -82,11 +82,11 @@ bool ModuleRenderer3D::Awake()
 			ret = false;
 		}
 
-		//Initialize Modelview Matrix
+		// Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		//Check for error
+		// Check for error
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
@@ -99,10 +99,10 @@ bool ModuleRenderer3D::Awake()
 
 		glClearDepth(1.0f);
 
-		//Initialize clear color
+		// Initialize clear color
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 
-		//Check for error
+		// Check for error
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
@@ -122,11 +122,13 @@ bool ModuleRenderer3D::Awake()
 		glDisable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		glDisable(GL_CULL_FACE);
 	}
 
-	SetTexture2D(true);
-	float light[4] = { 255, 255, 255, 255 };
-	SetAmbientLight(true, light);
+	//SetTexture2D(true);
+	//float light[4] = { 255, 255, 255, 255 };
+	//SetAmbientLight(true, light);
 
 	return ret;
 }
@@ -134,6 +136,38 @@ bool ModuleRenderer3D::Awake()
 bool ModuleRenderer3D::Start()
 {
 	bool ret = true;
+
+	// Shaders testing -----------------------
+
+	uint vao = GenVertexArrayBuffer();
+	BindVertexArrayBuffer(vao);
+
+	uint vbo = GenBuffer();
+	BindArrayBuffer(vbo);
+
+	float g_vertex_buffer_data[] = 
+	{
+		-1.0f, -1.0f, -0.0f,
+		1.0f, -1.0f, -0.0f,
+		-1.0f,  1.0f, -0.0f,
+	};
+
+	LoadArrayToVRAM(sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
+
+	const char* vertex_code = "#version 330 core\n layout(location = 0) in vec3 vertexPosition_modelspace; void main(){  gl_Position.xyz = vertexPosition_modelspace; gl_Position.w = 1.0;}";
+	const char* fragment_code = "#version 330 core\n out vec3 color; void main(){color = vec3(1, 0, 0);}";
+
+	uint vertex_shader_id = CreateVertexShader(vertex_code);
+	uint fragment_shader_id = CreateFragmentShader(fragment_code);
+
+	uint shader_program_id = CreateShaderProgram();
+
+	AttachShaderToProgram(shader_program_id, vertex_shader_id);
+	AttachShaderToProgram(shader_program_id, fragment_shader_id);
+
+	LinkProgram(shader_program_id);
+
+	// ----------------------------------------
 
 	return ret;
 }
@@ -148,12 +182,12 @@ bool ModuleRenderer3D::PreUpdate()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//glLoadMatrixf(App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadMatrixf(App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
 
 	return ret;
 }
@@ -164,18 +198,41 @@ bool ModuleRenderer3D::PostUpdate()
 	bool ret = true;
 
 	// Draw scene
-	RenderScene();
+	//RenderScene();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Shaders testing -----------------------
 
-	// Disable light
-	SetLightingState(false);
+	UseShaderProgram(3);
+
+	GLint posAttrib = glGetAttribLocation(3, "vertexPosition_modelspace");
+	EnableVertexAttributeArray(posAttrib);
+	SetVertexAttributePointer(posAttrib, 3, 0, 0);
+
+	BindArrayBuffer(1);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
+	}
+
+	DisableVertexAttributeArray(posAttrib);
+	
+
+	// ----------------------------------------
+
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//// Disable light
+	//SetLightingState(false);
 
 	//// Draw editor
-	//App->editorUI->DrawEditor();
+	////App->editorUI->DrawEditor();
 
-	// Enable light
-	SetLightingState(true);
+	//// Enable light
+	//SetLightingState(true);
 
 	// Swap
 	SDL_GL_SwapWindow(App->window->window);
@@ -1077,133 +1134,4 @@ void ModuleRenderer3D::DeleteProgram(uint program_id)
 			INTERNAL_LOG("Error deleting shader program %s\n", gluErrorString(error));
 		}
 	}
-}
-
-const bool ModuleRenderer3D::GetPoligonModeWireframe() const
-{
-	return wireframe;
-}
-
-const bool ModuleRenderer3D::GetPoligonModePoints() const
-{
-	return points;
-}
-
-const bool ModuleRenderer3D::GetPoligonModeFill() const
-{
-	return fill;
-}
-
-const bool ModuleRenderer3D::GetDepthTest() const
-{
-	return glIsEnabled(GL_DEPTH_TEST);
-}
-
-const bool ModuleRenderer3D::GetCullFace() const
-{
-	return glIsEnabled(GL_CULL_FACE);
-}
-
-const bool ModuleRenderer3D::GetLightingState() const
-{
-	return glIsEnabled(GL_LIGHTING);
-}
-
-const bool ModuleRenderer3D::GetTexture2D() const
-{
-	return glIsEnabled(GL_TEXTURE_2D);
-}
-
-const bool ModuleRenderer3D::GetColorMaterial() const
-{
-	return glIsEnabled(GL_COLOR_MATERIAL);
-}
-
-//const float4 ModuleRenderer3D::GetAmbientLight() const
-//{
-//	//float* color = new float[4];
-//	//glLightfv(GL_LIGHT0, GL_AMBIENT, color);
-//	//float4 ret = float4(color[0], color[1], color[3], color[1]);
-//	//RELEASE_ARRAY(color);
-//	return ret;
-//}
-
-uint ModuleRenderer3D::LoadBuffer(float* elements, uint size)
-{
-	uint id = 0;
-
-	glGenBuffers(1, (GLuint*)&(id));
-	glBindBuffer(GL_ARRAY_BUFFER, id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * size, elements, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return id;
-}
-
-uint ModuleRenderer3D::LoadBuffer(uint * elements, uint size)
-{
-	uint id = 0;
-
-	glGenBuffers(1, (GLuint*)&(id));
-	glBindBuffer(GL_ARRAY_BUFFER, id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * size, elements, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return id;
-}
-
-uint ModuleRenderer3D::LoadTextureBuffer(const void* texture, uint size, int format, int width, int height, uint wrap_s, uint wrap_t, uint mag, uint min)
-{
-	uint id = 0;
-
-	GLenum err;
-	while ((err = glGetError()) != GL_NO_ERROR)
-	{
-		INTERNAL_LOG("%d", err);
-	}
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(size, (GLuint*)&(id));
-	glBindTexture(GL_TEXTURE_2D, id);
-
-	while ((err = glGetError()) != GL_NO_ERROR)
-	{
-		INTERNAL_LOG("%d", err);
-	}
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, texture);
-
-	while ((err = glGetError()) != GL_NO_ERROR)
-	{
-		INTERNAL_LOG("%d", err);
-	}
-
-
-	return id;
-}
-
-void ModuleRenderer3D::UnloadTextureBuffer(uint id, uint size)
-{
-	glDeleteTextures(size, &id);
-}
-
-void ModuleRenderer3D::DrawGrid(int HALF_GRID_SIZE)
-{
-	glBegin(GL_LINES);
-	glColor3f(0.75f, 0.75f, 0.75f);
-	for (int i = -HALF_GRID_SIZE; i <= HALF_GRID_SIZE; i++)
-	{
-		glVertex3f((float)i, 0, (float)-HALF_GRID_SIZE);
-		glVertex3f((float)i, 0, (float)HALF_GRID_SIZE);
-
-		glVertex3f((float)-HALF_GRID_SIZE, 0, (float)i);
-		glVertex3f((float)HALF_GRID_SIZE, 0, (float)i);
-	}
-	glEnd();
-
 }

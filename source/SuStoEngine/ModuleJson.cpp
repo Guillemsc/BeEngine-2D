@@ -1,17 +1,17 @@
-#include "JSONLoader.h"
+#include "ModuleJson.h"
 #include "Globals.h"
 #include "Functions.h"
 
-JSONLoader::JSONLoader(bool enabled) : Module(enabled)
+ModuleJson::ModuleJson(bool enabled) : Module(enabled)
 {
 
 }
 
-JSONLoader::~JSONLoader()
+ModuleJson::~ModuleJson()
 {
 }
 
-bool JSONLoader::Awake()
+bool ModuleJson::Awake()
 {
 	bool ret = true;
 
@@ -20,7 +20,7 @@ bool JSONLoader::Awake()
 	return ret;
 }
 
-JSON_Doc* JSONLoader::LoadJSON(const char * path)
+JSON_Doc* ModuleJson::LoadJSON(const char * path)
 {
 	JSON_Doc* ret = nullptr;
 
@@ -57,7 +57,7 @@ JSON_Doc* JSONLoader::LoadJSON(const char * path)
 }
 
 
-JSON_Doc* JSONLoader::CreateJSON(const char * path, const char* name, const char* extension)
+JSON_Doc* ModuleJson::CreateJSON(const char * path, const char* name, const char* extension)
 {
 	JSON_Doc* ret = nullptr;
 
@@ -68,14 +68,14 @@ JSON_Doc* JSONLoader::CreateJSON(const char * path, const char* name, const char
 	return ret;
 }
 
-JSON_Doc * JSONLoader::CreateJSON(const char * path)
+JSON_Doc * ModuleJson::CreateJSON(const char * filepath)
 {
 	JSON_Doc* ret = nullptr;
 
 	bool exists = false;
 	for (std::list<JSON_Doc*>::iterator it = jsons.begin(); it != jsons.end(); it++)
 	{
-		if (TextCmp(path, (*it)->GetPath().c_str()))
+		if (TextCmp(filepath, (*it)->GetPath().c_str()))
 		{
 			exists = true;
 			break;
@@ -84,7 +84,7 @@ JSON_Doc * JSONLoader::CreateJSON(const char * path)
 
 	if (exists)
 	{
-		INTERNAL_LOG("Error creating %s. There is already a file with this path/name", path);
+		INTERNAL_LOG("Error creating %s. There is already a file with this path/name", filepath);
 	}
 	else
 	{
@@ -92,13 +92,13 @@ JSON_Doc * JSONLoader::CreateJSON(const char * path)
 
 		if (root_value == nullptr)
 		{
-			INTERNAL_LOG("Error creating %s. Wrong path?", path);
+			INTERNAL_LOG("Error creating %s. Wrong path?", filepath);
 		}
 		else
 		{
 			JSON_Object* root_object = json_value_get_object(root_value);
 
-			JSON_Doc* new_doc = new JSON_Doc(root_value, root_object, path);
+			JSON_Doc* new_doc = new JSON_Doc(root_value, root_object, filepath);
 			jsons.push_back(new_doc);
 
 			new_doc->Save();
@@ -110,7 +110,7 @@ JSON_Doc * JSONLoader::CreateJSON(const char * path)
 	return ret;
 }
 
-void JSONLoader::UnloadJSON(JSON_Doc * son)
+void ModuleJson::UnloadJSON(JSON_Doc * son)
 {
 	if (son != nullptr)
 	{
@@ -131,7 +131,7 @@ void JSONLoader::UnloadJSON(JSON_Doc * son)
 	}
 }
 
-bool JSONLoader::CleanUp()
+bool ModuleJson::CleanUp()
 {
 	bool ret = true;
 
@@ -451,7 +451,7 @@ void JSON_Doc::AddSection(const std::string& set)
 	json_object_set_value(object, set.c_str(), json_value_init_object());
 }
 
-JSON_Doc JSON_Doc::GetJsonNode()
+JSON_Doc JSON_Doc::GetNode()
 {
 	return JSON_Doc(*this);
 }

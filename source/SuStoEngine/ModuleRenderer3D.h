@@ -10,8 +10,6 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#define MAX_LIGHTS 8
-
 class FBO;
 class SuStoUIMain;
 class DebugDraw;
@@ -128,33 +126,8 @@ public:
 	void DeleteProgram(uint program_id);
 	// --------------------------------------------------------
 
-	// Deprecated ---------------------------------------------
-	const bool GetPoligonModeWireframe() const;
-	const bool GetPoligonModePoints() const;
-	const bool GetPoligonModeFill() const;
-	const bool GetDepthTest() const;
-	const bool GetCullFace() const;
-	const bool GetLightingState() const;
-	const bool GetTexture2D() const;
-	const bool GetColorMaterial() const;
-	//const float4 GetAmbientLight() const;
-
-	uint LoadBuffer(float* elements, uint size);
-	uint LoadBuffer(uint* elements, uint size);
-	uint LoadTextureBuffer(const void* texture, uint size, int format, int width, int height, uint wrap_s, uint wrap_t, uint mag, uint min);
-	void UnloadTextureBuffer(uint id, uint size);
-
-	void DrawGrid(int HALF_GRID_SIZE);
-	// -------------------------------------------------
-
 private:
 	SDL_GLContext context;
-	//mat3x3 NormalMatrix;
-	//mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
-
-	bool wireframe = false;
-	bool points = false;
-	bool fill = false;
 };
 
 #endif // !__MODULE_RENDERER_H__
