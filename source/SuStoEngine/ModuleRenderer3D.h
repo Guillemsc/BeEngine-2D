@@ -17,7 +17,7 @@ class DebugDraw;
 class ModuleRenderer3D : public Module
 {
 public:
-	ModuleRenderer3D(bool start_enabled = true);
+	ModuleRenderer3D();
 	~ModuleRenderer3D();
 
 	bool Awake();
@@ -101,8 +101,8 @@ public:
 	uint CheckFrameBufferStatus();
 	void DeleteFrameBuffer(uint& id);
 
-	uint CreateVertexShader(const char* source);
-	uint CreateFragmentShader(const char* source);
+	uint CreateVertexShader(const char* source, std::string& compilation_error_msg = std::string());
+	uint CreateFragmentShader(const char* source, std::string& compilation_error_msg = std::string());
 	void DeleteShader(uint shader_id);
 
 	uint GetProgramBinary(uint program_id, uint buff_size, char* buff) const;
@@ -113,8 +113,7 @@ public:
 	void DisableVertexAttributeArray(uint id);
 	void SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap);
 
-	void SetUniformMatrix(uint program, const char* name, float* data);
-	void SetUniformForViewAndProjection(uint program, const char* view_name, const char* proj_name);
+	void SetUniformMatrix(uint program, const char* name, const float* data);
 
 	void SetUniformFloat(uint program, const char* name, float data);
 	void SetUniformBool(uint program, const char* name, bool data);

@@ -13,7 +13,7 @@ class Cursor;
 class ModuleWindow : public Module
 {
 public:
-	ModuleWindow(bool start_enabled = true);
+	ModuleWindow();
 
 	// Destructor
 	virtual ~ModuleWindow();

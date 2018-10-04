@@ -9,7 +9,7 @@
 class ModuleAudio : public Module
 {
 public:
-	ModuleAudio(bool start_enabled = true);
+	ModuleAudio();
 	~ModuleAudio();
 
 	bool Awake();

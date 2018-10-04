@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include "Functions.h"
 
-FileSystem::FileSystem(bool start_enabled) : Module(start_enabled)
+FileSystem::FileSystem() : Module()
 {
 	assets_path = CreateFolder(App->GetBasePath(), "Assets");
 	library_path = CreateFolder(App->GetBasePath(), "Library");

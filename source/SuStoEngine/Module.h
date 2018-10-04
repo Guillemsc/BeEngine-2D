@@ -15,7 +15,7 @@ class Module
 	friend Application;
 
 public:
-	Module(bool start_enabled = true) : enabled(start_enabled)
+	Module()
 	{}
 
 	virtual ~Module()
@@ -83,7 +83,6 @@ public:
 	}
 
 protected:
-	// Profiler
 	Profile* prof_module_awake = nullptr;
 	Profile* prof_module_start = nullptr;
 	Profile* prof_module_preupdate = nullptr;
@@ -92,5 +91,5 @@ protected:
 
 private:
 	std::string name = "";
-	bool   enabled = false;
+	bool        enabled = true;
 };

@@ -65,7 +65,7 @@ private:
 class ModuleJson : public Module
 {
 public:
-	ModuleJson(bool enabled = true);
+	ModuleJson();
 	~ModuleJson();
 
 	bool Awake();

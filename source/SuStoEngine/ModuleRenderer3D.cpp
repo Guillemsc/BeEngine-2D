@@ -5,6 +5,7 @@
 #include "App.h"
 #include "ModuleRenderer3D.h"
 #include "FBO.h"
+#include "ModuleShader.h"
 #include "SDL/include/SDL_opengl.h"
 #include "ImGuizmo.h"
 #include <gl/GL.h>
@@ -14,7 +15,7 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/Lib/glew32.lib") 
 
-ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
+ModuleRenderer3D::ModuleRenderer3D() : Module()
 {
 
 }
@@ -126,10 +127,6 @@ bool ModuleRenderer3D::Awake()
 		glDisable(GL_CULL_FACE);
 	}
 
-	//SetTexture2D(true);
-	//float light[4] = { 255, 255, 255, 255 };
-	//SetAmbientLight(true, light);
-
 	return ret;
 }
 
@@ -145,27 +142,45 @@ bool ModuleRenderer3D::Start()
 	uint vbo = GenBuffer();
 	BindArrayBuffer(vbo);
 
-	float g_vertex_buffer_data[] = 
+	float g_vertex_buffer_data[] =
 	{
-		-1.0f, -1.0f, -0.0f,
-		1.0f, -1.0f, -0.0f,
-		-1.0f,  1.0f, -0.0f,
+		0, 0, 0,
+		1000.0f, 0, 0.0f,
+		1000.0f, 1000.0f, 0.0f,
 	};
 
 	LoadArrayToVRAM(sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
 
-	const char* vertex_code = "#version 330 core\n layout(location = 0) in vec3 vertexPosition_modelspace; void main(){  gl_Position.xyz = vertexPosition_modelspace; gl_Position.w = 1.0;}";
-	const char* fragment_code = "#version 330 core\n out vec3 color; void main(){color = vec3(1, 0, 0);}";
+	const char* vertex_code =
+		"#version 330 core\n \
+		layout(location = 0) in vec3 position;\n \
+		uniform mat4 Model; \
+		uniform mat4 View; \
+		uniform mat4 Projection; \
+		void main()\
+		{\
+			gl_Position = Projection * View * Model * vec4(position, 1);\
+		}";
 
-	uint vertex_shader_id = CreateVertexShader(vertex_code);
-	uint fragment_shader_id = CreateFragmentShader(fragment_code);
+	const char* fragment_code =
+		"#version 330 core\n \
+		out vec3 color; \
+		void main()\
+		{\
+			color = vec3(1, 0, 0);\
+		}";
 
-	uint shader_program_id = CreateShaderProgram();
+	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
+	vsh->SetShaderCode(vertex_code);
 
-	AttachShaderToProgram(shader_program_id, vertex_shader_id);
-	AttachShaderToProgram(shader_program_id, fragment_shader_id);
+	Shader* fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
+	fsh->SetShaderCode(fragment_code);
 
-	LinkProgram(shader_program_id);
+	ShaderProgram* sp = App->shader->CreateShaderProgram();
+	sp->SetVertexShader(vsh);
+	sp->SetFragmentShader(fsh);
+
+	sp->LinkProgram();
 
 	// ----------------------------------------
 
@@ -180,14 +195,6 @@ bool ModuleRenderer3D::PreUpdate()
 	//fbo_texture->Bind();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//glLoadMatrixf(App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
-
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadMatrixf(App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
 
 	return ret;
 }
@@ -202,11 +209,20 @@ bool ModuleRenderer3D::PostUpdate()
 
 	// Shaders testing -----------------------
 
+	float4x4 model = float4x4::identity;
+	model[0][3] = 100;
+	model[1][3] = 100;
+	model[2][3] = 100;
+
 	UseShaderProgram(3);
 
-	GLint posAttrib = glGetAttribLocation(3, "vertexPosition_modelspace");
+	GLint posAttrib = glGetAttribLocation(3, "position");
 	EnableVertexAttributeArray(posAttrib);
 	SetVertexAttributePointer(posAttrib, 3, 0, 0);
+
+	SetUniformMatrix(3, "Model", model.Transposed().ptr());
+	SetUniformMatrix(3, "View", App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
+	SetUniformMatrix(3, "Projection", App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
 
 	BindArrayBuffer(1);
 
@@ -219,7 +235,7 @@ bool ModuleRenderer3D::PostUpdate()
 	}
 
 	DisableVertexAttributeArray(posAttrib);
-	
+
 
 	// ----------------------------------------
 
@@ -839,7 +855,7 @@ void ModuleRenderer3D::DeleteFrameBuffer(uint & id)
 	}
 }
 
-uint ModuleRenderer3D::CreateVertexShader(const char * source)
+uint ModuleRenderer3D::CreateVertexShader(const char * source, std::string& compilation_error_msg)
 {
 	GLuint vertexShader = 0;
 
@@ -858,13 +874,14 @@ uint ModuleRenderer3D::CreateVertexShader(const char * source)
 		INTERNAL_LOG("Shader compilation error:\n %s", infoLog);
 		glDeleteShader(vertexShader);
 
+		compilation_error_msg = infoLog;
 		vertexShader = 0;
 	}
 
 	return vertexShader;
 }
 
-uint ModuleRenderer3D::CreateFragmentShader(const char * source)
+uint ModuleRenderer3D::CreateFragmentShader(const char * source, std::string& compilation_error_msg)
 {
 	GLuint fragmentShader = 0;
 
@@ -883,6 +900,7 @@ uint ModuleRenderer3D::CreateFragmentShader(const char * source)
 		INTERNAL_LOG("Shader compilation error:\n %s", infoLog);
 		glDeleteShader(fragmentShader);
 
+		compilation_error_msg = infoLog;
 		fragmentShader = 0;
 	}
 
@@ -991,7 +1009,7 @@ void ModuleRenderer3D::SetVertexAttributePointer(uint id, uint element_size, uin
 	}
 }
 
-void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, float * data)
+void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, const float * data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
 
@@ -1002,29 +1020,6 @@ void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, float *
 	if (error != GL_NO_ERROR)
 	{
 		INTERNAL_LOG("Error Setting uniform matrix %s: %s\n", name, gluErrorString(error));
-	}
-}
-
-void ModuleRenderer3D::SetUniformForViewAndProjection(uint program, const char * view_name, const char * proj_name)
-{
-	GLint modelLoc_view = glGetUniformLocation(program, view_name);
-	if (modelLoc_view != -1)
-		glUniformMatrix4fv(modelLoc_view, 1, GL_FALSE, App->camera->GetViewMatrix());
-
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		INTERNAL_LOG("Error Setting uniform matrix %s %s\n", view_name, gluErrorString(error));
-	}
-
-	GLint modelLoc_proj = glGetUniformLocation(program, proj_name);
-	if (modelLoc_proj != -1)
-		glUniformMatrix4fv(modelLoc_proj, 1, GL_FALSE, App->camera->GetProjectionMatrix());
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		INTERNAL_LOG("Error Setting uniform matrix %s %s\n", proj_name, gluErrorString(error));
 	}
 }
 

@@ -35,7 +35,7 @@ public:
 class FileSystem : public Module
 {
 public:
-	FileSystem(bool start_enabled = true);
+	FileSystem();
 	~FileSystem();
 
 	bool Awake();

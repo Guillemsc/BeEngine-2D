@@ -4,7 +4,7 @@
 #include "ModuleRenderer3D.h"
 #include "Cursor.h"
 
-ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
+ModuleWindow::ModuleWindow() : Module()
 {
 	window = NULL;
 	screen_surface = NULL;
@@ -16,7 +16,7 @@ ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 	borderless = false;
 	full_dekstop = false;
 	maximized = true;
-	vsync = false;
+	vsync = true;
 }
 
 // Destructor
@@ -73,12 +73,22 @@ bool ModuleWindow::Awake()
 	}
 	else
 	{
-		Uint32				flags =	 0;
-		if (fullscreen)		flags += SDL_WINDOW_FULLSCREEN;
-		if (resizable)		flags += SDL_WINDOW_RESIZABLE;
-		if (borderless)		flags += SDL_WINDOW_BORDERLESS;
-		if (full_dekstop)	flags += SDL_WINDOW_FULLSCREEN_DESKTOP;
-		if (maximized)		flags += SDL_WINDOW_MAXIMIZED;
+		Uint32 flags =	 0;
+
+		if (fullscreen)		
+			flags += SDL_WINDOW_FULLSCREEN;
+
+		if (resizable)		
+			flags += SDL_WINDOW_RESIZABLE;
+
+		if (borderless)		
+			flags += SDL_WINDOW_BORDERLESS;
+
+		if (full_dekstop)	
+			flags += SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+		if (maximized)		
+			flags += SDL_WINDOW_MAXIMIZED;
 
 		window = GenerateWindow(window, screen_surface, App->GetAppName(), flags, float2(SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED), float2( 0, 0), brightness);
 
@@ -157,6 +167,7 @@ void ModuleWindow::SetWindowSize(const int _width, const int _height)
 	if (_width > 0 && _height > 0)
 	{
 		width = _width;
+
 		height = _height;
 		SDL_SetWindowSize(window, width, height);
 
@@ -263,6 +274,7 @@ void ModuleWindow::SetMaximized(const bool& set)
 
 	if(set)
 		SDL_MaximizeWindow(window);
+
 	else
 		SDL_RestoreWindow(window);
 }

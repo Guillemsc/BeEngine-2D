@@ -354,6 +354,9 @@
     <ClInclude Include="ModuleJson.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleShader.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -540,6 +543,9 @@
       <Filter>Sources\6. Components ===========</Filter>
     </ClCompile>
     <ClCompile Include="ModuleJson.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleShader.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>

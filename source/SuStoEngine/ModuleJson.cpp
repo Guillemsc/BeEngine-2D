@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "Functions.h"
 
-ModuleJson::ModuleJson(bool enabled) : Module(enabled)
+ModuleJson::ModuleJson() : Module()
 {
 
 }
