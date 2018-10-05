@@ -113,10 +113,16 @@ public:
 	void DisableVertexAttributeArray(uint id);
 	void SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap);
 
-	void SetUniformMatrix(uint program, const char* name, const float* data);
+	uint GetAttributesCount(uint program);
+	void GetAttributesInfo(uint program, uint index, std::string& name, GLenum& type);
 
+	void SetUniformMatrix(uint program, const char* name, const float* data);
 	void SetUniformFloat(uint program, const char* name, float data);
 	void SetUniformBool(uint program, const char* name, bool data);
+	void SetUniformVec3(uint program, const char* name, float3 data);
+
+	uint GetUniformsCount(uint program);
+	void GetUniformInfo(uint program, uint index, std::string& name, GLenum& type);
 
 	uint CreateShaderProgram();
 	void UseShaderProgram(uint id);

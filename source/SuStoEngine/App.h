@@ -23,11 +23,12 @@ public:
 	Application(int argc, char* args[]);
 	~Application();
 
-	void CreateProfiles();
 	bool Awake();
 	bool Start();
 	bool Update();
 	bool CleanUp();
+
+	void CreateProfiles();
 
 	int GetArgc() const;
 	const char* GetArgv(int index) const;

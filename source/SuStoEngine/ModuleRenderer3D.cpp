@@ -151,23 +151,46 @@ bool ModuleRenderer3D::Start()
 
 	LoadArrayToVRAM(sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
 
+	//const char* vertex_code =
+	//	"#version 330 core\n \
+	//	layout(location = 0) in vec3 position;\n \
+	//	uniform mat4 Model; \
+	//	uniform mat4 View; \
+	//	uniform mat4 Projection; \
+	//	void main()\
+	//	{\
+	//		gl_Position = Projection * View * Model * vec4(position, 1);\
+	//	}";
+
+	//const char* fragment_code =
+	//	"#version 330 core\n \
+	//	out vec3 color; \
+	//	void main()\
+	//	{\
+	//		color = vec3(1, 0, 0);\
+	//	}";
+
 	const char* vertex_code =
 		"#version 330 core\n \
 		layout(location = 0) in vec3 position;\n \
+		out vec3 oColour;	\
 		uniform mat4 Model; \
 		uniform mat4 View; \
 		uniform mat4 Projection; \
+		uniform vec3 Colour;\
 		void main()\
 		{\
 			gl_Position = Projection * View * Model * vec4(position, 1);\
+			oColour = Colour;\
 		}";
 
 	const char* fragment_code =
 		"#version 330 core\n \
+		in vec3 oColour;\
 		out vec3 color; \
 		void main()\
 		{\
-			color = vec3(1, 0, 0);\
+			color = oColour;\
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
@@ -181,6 +204,10 @@ bool ModuleRenderer3D::Start()
 	sp->SetFragmentShader(fsh);
 
 	sp->LinkProgram();
+
+	std::string uniform_name;
+	GLenum type;
+	GetUniformInfo(sp->GetID(), 0, uniform_name, type);
 
 	// ----------------------------------------
 
@@ -223,6 +250,7 @@ bool ModuleRenderer3D::PostUpdate()
 	SetUniformMatrix(3, "Model", model.Transposed().ptr());
 	SetUniformMatrix(3, "View", App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
 	SetUniformMatrix(3, "Projection", App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
+	SetUniformVec3(3, "Colour", float3(1, 1, 1));
 
 	BindArrayBuffer(1);
 
@@ -1009,6 +1037,42 @@ void ModuleRenderer3D::SetVertexAttributePointer(uint id, uint element_size, uin
 	}
 }
 
+uint ModuleRenderer3D::GetAttributesCount(uint program)
+{
+	uint ret = 0;
+
+	GLint count = 0;
+	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error getting attributes count on program %d: %s\n", program, gluErrorString(error));
+	}
+
+	ret = count;
+
+	return ret;
+}
+
+void ModuleRenderer3D::GetAttributesInfo(uint program, uint index, std::string & name, GLenum & type)
+{
+	const GLsizei bufSize = 100;
+	GLchar c_name[bufSize];
+	GLsizei length;
+	GLint size;
+
+	glGetActiveAttrib(program, (GLuint)index, bufSize, &length, &size, &type, c_name);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error getting attribute info on program %d: %s\n", program, gluErrorString(error));
+	}
+
+	name = c_name;
+}
+
 void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, const float * data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
@@ -1049,6 +1113,56 @@ void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data
 	{
 		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
 	}
+}
+
+void ModuleRenderer3D::SetUniformVec3(uint program, const char * name, float3 data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+
+	if (modelLoc != -1)
+		glUniform3f(modelLoc, data.x, data.y, data.z);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+uint ModuleRenderer3D::GetUniformsCount(uint program)
+{
+	uint ret = 0;
+
+	GLint count = 0;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error getting uniforms count on program %d: %s\n", program, gluErrorString(error));
+	}
+
+	ret = count;
+
+	return ret;
+}
+
+void ModuleRenderer3D::GetUniformInfo(uint program, uint index, std::string& name, GLenum& type)
+{
+	const GLsizei bufSize = 100;
+	GLchar c_name[bufSize];
+	GLsizei length;
+	GLint size;
+
+	glGetActiveUniform(program, (GLuint)index, bufSize, &length, &size, &type, c_name);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error getting uniforms info on program %d: %s\n", program, gluErrorString(error));
+	}
+
+	name = c_name;
 }
 
 uint ModuleRenderer3D::CreateShaderProgram()

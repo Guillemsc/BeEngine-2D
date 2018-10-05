@@ -252,6 +252,10 @@ void ShaderProgram::UseProgram()
 		App->renderer3D->UseShaderProgram(id);
 }
 
+void ShaderProgram::SetProgramParameters(ShaderProgramParameters para)
+{
+}
+
 Shader* ShaderProgram::GetVertexShader() const
 {
 	return vertex_shader;
@@ -271,3 +275,68 @@ uint ShaderProgram::GetID() const
 {
 	return id;
 }
+
+ShaderProgramParameters::ShaderProgramParameters()
+{
+}
+
+void ShaderProgramParameters::SetFloat(const char * uniform_name, float value)
+{
+	float_values[uniform_name] = value;
+}
+
+void ShaderProgramParameters::SetInt(const char * uniform_name, int value)
+{
+	int_values[uniform_name] = value;
+}
+
+void ShaderProgramParameters::SetTexture(const char * uniform_name, int value)
+{
+	texture_values[uniform_name] = value;
+}
+
+void ShaderProgramParameters::SetVector2(const char * uniform_name, float2 value)
+{
+	vector2_values[uniform_name] = value;
+}
+
+void ShaderProgramParameters::SetVector3(const char * uniform_name, float3 value)
+{
+	vector3_values[uniform_name] = value;
+}
+
+void ShaderProgramParameters::SetVector4(const char * uniform_name, float4 value)
+{
+	vector4_values[uniform_name] = value;
+}
+
+std::map<std::string, float> ShaderProgramParameters::GetFloatValues()
+{
+	return float_values;
+}
+
+std::map<std::string, int> ShaderProgramParameters::GetIntValues()
+{
+	return int_values;
+}
+
+std::map<std::string, int> ShaderProgramParameters::GetTextureValues()
+{
+	return texture_values;
+}
+
+std::map<std::string, float2> ShaderProgramParameters::GetVector2Values()
+{
+	return vector2_values;
+}
+
+std::map<std::string, float3> ShaderProgramParameters::GetVector3Values()
+{
+	return vector3_values;
+}
+
+std::map<std::string, float4> ShaderProgramParameters::GetVector4Values()
+{
+	return vector4_values;
+}
+

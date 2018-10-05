@@ -339,9 +339,6 @@
     <ClInclude Include="Globals.h">
       <Filter>Sources\1. App =================</Filter>
     </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Sources\1. App =================</Filter>
-    </ClInclude>
     <ClInclude Include="tinyfiledialogs.h">
       <Filter>Sources\6. ThirdParties ============\tinyfile</Filter>
     </ClInclude>
@@ -355,6 +352,9 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
     <ClInclude Include="ModuleShader.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
   </ItemGroup>

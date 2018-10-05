@@ -119,30 +119,30 @@ void Cursor::CleanUp()
 	if (arrow != nullptr)
 		SDL_FreeCursor(arrow);
 
-	if (ibeam == nullptr)
+	if (ibeam != nullptr)
 		SDL_FreeCursor(ibeam);
 
-	if (wait == nullptr)
+	if (wait != nullptr)
 		SDL_FreeCursor(wait);
 
-	if (crosshair == nullptr)
+	if (crosshair != nullptr)
 		SDL_FreeCursor(crosshair);
 
-	if (sizenwse == nullptr)
+	if (sizenwse != nullptr)
 		SDL_FreeCursor(sizenwse);
 
-	if (sizenesw == nullptr)
+	if (sizenesw != nullptr)
 		SDL_FreeCursor(sizenesw);
 
-	if (sizewe == nullptr)
+	if (sizewe != nullptr)
 		SDL_FreeCursor(sizewe);
 
-	if (sizens == nullptr)
+	if (sizens != nullptr)
 		SDL_FreeCursor(sizens);
 
-	if (sizeall == nullptr)
+	if (sizeall != nullptr)
 		SDL_FreeCursor(sizeall);
 
-	if (hand == nullptr)
+	if (hand != nullptr)
 		SDL_FreeCursor(hand);
 }
