@@ -170,45 +170,65 @@ bool ModuleRenderer3D::Start()
 	//		color = vec3(1, 0, 0);\
 	//	}";
 
+
+	const char* user_vertex_code = 
+		"#version 330 core\n \
+		out vec3 oColour;	\
+		uniform vec3 Colour;\
+		void UserShader()\
+		{\
+			oColour = Colour;\
+		}";
+
+	const char* user_fragment_code = 		
+		"#version 330 core\n \
+		in vec3 oColour;\
+		out vec3 color; \
+		void UserShader()\
+		{\
+			color = oColour;\
+		}";
+
 	const char* vertex_code =
 		"#version 330 core\n \
 		layout(location = 0) in vec3 position;\n \
-		out vec3 oColour;	\
 		uniform mat4 Model; \
 		uniform mat4 View; \
 		uniform mat4 Projection; \
-		uniform vec3 Colour;\
+		void UserShader();\
 		void main()\
 		{\
+			UserShader();\
 			gl_Position = Projection * View * Model * vec4(position, 1);\
-			oColour = Colour;\
 		}";
 
 	const char* fragment_code =
 		"#version 330 core\n \
-		in vec3 oColour;\
-		out vec3 color; \
+		void UserShader();\
 		void main()\
 		{\
-			color = oColour;\
+			UserShader();\
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
 	vsh->SetShaderCode(vertex_code);
 
+	Shader* user_vsh = App->shader->CreateShader(ShaderType::VERTEX);
+	user_vsh->SetShaderCode(user_vertex_code);
+
 	Shader* fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
 	fsh->SetShaderCode(fragment_code);
 
-	ShaderProgram* sp = App->shader->CreateShaderProgram();
-	sp->SetVertexShader(vsh);
-	sp->SetFragmentShader(fsh);
+	Shader* user_fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
+	user_fsh->SetShaderCode(user_fragment_code);
+
+	sp = App->shader->CreateShaderProgram();
+	sp->AddShader(user_vsh);
+	sp->AddShader(user_fsh);
+	sp->AddShader(vsh);
+	sp->AddShader(fsh);
 
 	sp->LinkProgram();
-
-	std::string uniform_name;
-	GLenum type;
-	GetUniformInfo(sp->GetID(), 0, uniform_name, type);
-
 	// ----------------------------------------
 
 	return ret;
@@ -241,16 +261,19 @@ bool ModuleRenderer3D::PostUpdate()
 	model[1][3] = 100;
 	model[2][3] = 100;
 
-	UseShaderProgram(3);
+	sp->UseProgram();
 
-	GLint posAttrib = glGetAttribLocation(3, "position");
+	ShaderProgramParameters par;
+	par.SetVector3("Colour", float3(1, 1, 1));
+	sp->SetProgramParameters(par);
+
+	GLint posAttrib = glGetAttribLocation(sp->GetID(), "position");
 	EnableVertexAttributeArray(posAttrib);
 	SetVertexAttributePointer(posAttrib, 3, 0, 0);
 
-	SetUniformMatrix(3, "Model", model.Transposed().ptr());
-	SetUniformMatrix(3, "View", App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
-	SetUniformMatrix(3, "Projection", App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
-	SetUniformVec3(3, "Colour", float3(1, 1, 1));
+	SetUniformMatrix(sp->GetID(), "Model", model.Transposed().ptr());
+	SetUniformMatrix(sp->GetID(), "View", App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
+	SetUniformMatrix(sp->GetID(), "Projection", App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
 
 	BindArrayBuffer(1);
 

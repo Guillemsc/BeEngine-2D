@@ -11,8 +11,7 @@
 #include <gl/GLU.h>
 
 class FBO;
-class SuStoUIMain;
-class DebugDraw;
+class ShaderProgram;
 
 class ModuleRenderer3D : public Module
 {
@@ -133,6 +132,8 @@ public:
 
 private:
 	SDL_GLContext context;
+
+	ShaderProgram* sp;
 };
 
 #endif // !__MODULE_RENDERER_H__

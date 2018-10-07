@@ -29,6 +29,7 @@ public:
 	bool GetCompiles() const;
 	const char* GetCompilationError();
 	uint GetID() const;
+	ShaderType GetType() const;
 
 private:
 	ShaderType type;
@@ -45,27 +46,28 @@ public:
 
 	void CleanUp();
 
-	void SetVertexShader(Shader* set);
-	void SetFragmentShader(Shader* set);
-
-	void ClearVertexShader();
-	void ClearFragmentShader();
+	void AddShader(Shader* set);
+	void RemoveShader(Shader* sh);
+	void RemoveShaders();
 
 	bool LinkProgram();
 	void UseProgram();
 	void SetProgramParameters(ShaderProgramParameters para);
 
-	Shader* GetVertexShader() const;
-	Shader* GetFragmentShader() const;
+	std::vector<Shader*> GetVertexShaders() const;
+	std::vector<Shader*> GetFragmentShaders() const;
 
 	bool GetLinked() const;
 	uint GetID() const;
 
 private:
+	void UnlinkProgram();
+
+private:
 	uint id = 0;
 
-	Shader* vertex_shader = nullptr;
-	Shader* fragment_shader = nullptr;
+	std::vector<Shader*> vertex_shaders;
+	std::vector<Shader*> fragment_shaders;
 
 	bool linked = false;
 };
