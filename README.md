@@ -1,4 +1,4 @@
-# BeEngine 2D
+![BeEngine](misc/BeEngineBanner.png)
 
 ## License
 MIT License
