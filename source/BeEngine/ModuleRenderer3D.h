@@ -25,6 +25,8 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
+	SDL_GLContext GetSDLGLContext() const;
+
 	void OnResize(int width, int height);
 
 	void RenderScene();

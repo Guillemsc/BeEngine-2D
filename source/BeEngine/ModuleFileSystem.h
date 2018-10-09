@@ -128,4 +128,4 @@ private:
 
 void Changed(const std::experimental::filesystem::path& path);
 
-#endif // __MODULE_FILE_SYSTEM_H__
+#endif // !__MODULE_FILE_SYSTEM_H__

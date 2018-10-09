@@ -44,12 +44,15 @@ public:
 	const float GetBrightness() const;
 	void SetVsync(const bool& set);
 	const bool GetVsync() const;
+
 	Cursor* GetCursor() const;
 
-//private:
+	SDL_Window* GetWindow() const;
+	SDL_Surface* GetSurface() const;
+
+private:
 	SDL_Window* GenerateWindow(SDL_Window* window, SDL_Surface* surface, const char* name, Uint32 flags, float2 pos = { SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED }, float2 size = { 500, 500 }, float brightness = 1.0f);
 
-public:
 	//The window we'll be rendering to
 	SDL_Window* window = nullptr;
 

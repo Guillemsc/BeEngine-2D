@@ -7,6 +7,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleJson.h"
 #include "ModuleShader.h"
+#include "ModuleEditor.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -27,6 +28,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
 	shader = new ModuleShader();
+	editor = new ModuleEditor();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -41,8 +43,9 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(audio, "Module Audio");
 	AddModule(shader, "Module Shader");
 
-	// Renderer last
-	AddModule(renderer3D, "Renderer");
+	// Renderers
+	AddModule(renderer3D, "Module Renderer");
+	AddModule(editor, "Module Editor");
 }
 
 Application::~Application()

@@ -110,8 +110,6 @@ bool ModuleWindow::Update()
 {
 	bool ret = true;
 
-	cursor->SetCurrentCursor();
-
 	return ret;
 }
 
@@ -332,4 +330,14 @@ const bool ModuleWindow::GetVsync() const
 Cursor * ModuleWindow::GetCursor() const
 {
 	return cursor;
+}
+
+SDL_Window * ModuleWindow::GetWindow() const
+{
+	return window;
+}
+
+SDL_Surface * ModuleWindow::GetSurface() const
+{
+	return screen_surface;
 }

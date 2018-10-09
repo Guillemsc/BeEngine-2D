@@ -13,6 +13,7 @@ class ModuleAudio;
 class ModuleRenderer3D;
 class ModuleCamera3D;
 class ModuleShader;
+class ModuleEditor;
 
 class Profiler;
 class JSON_Doc;
@@ -74,6 +75,7 @@ public:
 	ModuleRenderer3D*  renderer3D = nullptr;
 	ModuleCamera3D*    camera = nullptr;
 	ModuleShader*	   shader = nullptr;
+	ModuleEditor*	   editor = nullptr;
 
 	Profiler*		   profiler = nullptr;
 

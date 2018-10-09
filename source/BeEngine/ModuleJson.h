@@ -1,5 +1,5 @@
-#ifndef _MODULE_JSON_H_
-#define _MODULE_JSON_H_
+#ifndef __MODULE_JSON_H__
+#define __MODULE_JSON_H__
 
 #include "Module.h"
 #include "Parson\parson.h"
@@ -80,4 +80,4 @@ private:
 	std::list<JSON_Doc*> jsons;
 };
 
-#endif // !_MODULE_JSON_H_
+#endif // !__MODULE_JSON_H__

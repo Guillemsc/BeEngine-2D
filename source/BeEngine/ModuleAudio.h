@@ -29,4 +29,4 @@ private:
 	std::list<Mix_Chunk*>	fx;
 };
 
-#endif // __MODULE_AUDIO_H__
+#endif // !__MODULE_AUDIO_H__
