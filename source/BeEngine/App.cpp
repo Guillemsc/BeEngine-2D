@@ -66,6 +66,9 @@ bool Application::Awake()
 {
 	bool ret = true;
 
+	window->GetWindowNamer()->AddNamePart("app_name", "");
+	window->GetWindowNamer()->AddNamePart("app_version", "");
+
 	prof_app_awake->Start();
 
 	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); it++)
@@ -277,12 +280,10 @@ float Application::GetDT() const
 }
 
 void Application::SetAppName(const char* name)
-{
-	if (title != name)
-	{
-		title = name;
-		window->SetTitle(name);
-	}
+{	
+	title = name;
+
+	window->GetWindowNamer()->UpdateNamePart("app_name", title);
 }
 
 const char * Application::GetAppName() const
@@ -291,11 +292,8 @@ const char * Application::GetAppName() const
 }
 
 void Application::SetAppOrganization(const char* name)
-{
-	if (name != organization)
-	{
-		organization = name;
-	}
+{	
+	organization = name;
 }
 
 const char * Application::GetAppOrganization()
@@ -316,6 +314,8 @@ int Application::GetMaxFps() const
 void Application::SetVersion(const char * set)
 {
 	version = set;
+
+	window->GetWindowNamer()->UpdateNamePart("app_version", version);
 }
 
 const char * Application::GetVersion() const

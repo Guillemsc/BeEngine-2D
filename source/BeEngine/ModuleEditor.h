@@ -24,6 +24,8 @@ private:
 	void ImGuiNewFrame();
 	void ImGuiQuit();
 
+	void MenuBar();
+	void ToolsBar(float2 margins_left_up);
 	void DockingSpace(float2 margins_left_up, float2 margins_right_down);
 };
 

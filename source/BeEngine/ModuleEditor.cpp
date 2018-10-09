@@ -36,7 +36,11 @@ bool ModuleEditor::PreUpdate()
 
 	ImGuiNewFrame();
 
-	DockingSpace(float2(0, 0), float2(0, 0));
+	MenuBar();
+
+	ToolsBar(float2(0, 19));
+
+	DockingSpace(float2(0, 50), float2(0, 0));
 
 	return ret;
 }
@@ -113,6 +117,40 @@ void ModuleEditor::ImGuiQuit()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+}
+
+void ModuleEditor::MenuBar()
+{
+	ImGui::BeginMainMenuBar();
+
+	bool selected = true;
+	bool enabled = true;
+	ImGui::MenuItem("asd", "asd", selected, enabled);
+
+	ImGui::EndMainMenuBar();
+}
+
+void ModuleEditor::ToolsBar(float2 margins_left_up)
+{
+	float2 window_size = App->window->GetWindowSize();
+
+	float2 tools_bar_pos = float2(margins_left_up.x, margins_left_up.y);
+	float2 tools_bar_size = float2(window_size.x, 30);
+
+	bool opened = true;
+
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
+		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus
+		| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoScrollbar;
+
+	ImGui::SetNextWindowPos(ImVec2(tools_bar_pos.x, tools_bar_pos.y));
+	ImGui::SetNextWindowSize(ImVec2(tools_bar_size.x, tools_bar_size.y));
+
+	ImGui::Begin("Tools Bar", &opened, flags);
+
+	ImGui::Button("Press to die");
+
+	ImGui::End();
 }
 
 void ModuleEditor::DockingSpace(float2 margins_left_up, float2 margins_right_down)

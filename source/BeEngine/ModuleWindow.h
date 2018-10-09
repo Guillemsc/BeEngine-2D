@@ -10,6 +10,27 @@
 class Application;
 class Cursor;
 
+class WindowNaming
+{
+	struct NamePart
+	{
+		std::string identifier;
+		std::string val;
+	};
+
+public:
+	WindowNaming();
+
+	void AddNamePart(std::string identifier, std::string default_val);
+	void UpdateNamePart(std::string identifier, std::string value);
+
+private:
+	void UpdateWindowName();
+
+private:
+	std::vector<NamePart> name_parts;
+};
+
 class ModuleWindow : public Module
 {
 public:
@@ -24,15 +45,18 @@ public:
 	bool Update();
 	bool CleanUp();
 
-	void SetTitle(const char* title);
+	void SetWindowTitle(const char* title);
 
 	void SetWindowSize(int width, int height);
 	void GetWindowSize(int &width, int &height);
 	const float2 GetWindowSize();
+
 	void GetDisplaySize(int &width, int &height);
 	const float2 GetDisplaySize();
+
 	void SetFullscreen(const bool& set);
 	const bool GetFullscreen() const;
+
 	void SetResizable(const bool& set);
 	const bool GetResizable() const;
 	void SetBorderless(const bool& set);
@@ -43,11 +67,15 @@ public:
 	const bool GetMaximized();
 	void SetBrightness(float& set);
 	const float GetBrightness() const;
+
 	void SetVsync(const bool& set);
 	const bool GetVsync() const;
 
+	void SetWindowIcon(const char* filepath);
+
 	Cursor* GetCursor() const;
 
+	WindowNaming* GetWindowNamer() const;
 	SDL_Window* GetWindow() const;
 	SDL_Surface* GetSurface() const;
 
@@ -59,6 +87,9 @@ private:
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface = nullptr;
+
+	// Window namer
+	WindowNaming* window_namer = nullptr;
 
 private:
 	Cursor* cursor = nullptr;

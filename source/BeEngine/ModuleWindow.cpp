@@ -10,6 +10,8 @@ ModuleWindow::ModuleWindow() : Module()
 	window = NULL;
 	screen_surface = NULL;
 
+	window_namer = new WindowNaming();
+
 	width = 1280;
 	height = 1024;
 	fullscreen = false;
@@ -93,8 +95,7 @@ bool ModuleWindow::Awake()
 
 		window = GenerateWindow(window, screen_surface, App->GetAppName(), flags, float2(SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED), float2(1280, 720), brightness);
 
-		SDL_Surface* icon = SDL_LoadBMP("spooky.bmp");
-		SDL_SetWindowIcon(window, icon);
+		SetWindowIcon("spooky.bmp");
 
 		if (window == nullptr)
 			ret = false;
@@ -122,6 +123,8 @@ bool ModuleWindow::CleanUp()
 
 	cursor->CleanUp();
 	RELEASE(cursor);
+
+	RELEASE(window_namer);
 
 	//Destroy window
 	if(window != NULL)
@@ -162,7 +165,7 @@ SDL_Window* ModuleWindow::GenerateWindow(SDL_Window* window, SDL_Surface* surfac
 	return window;
 }
 
-void ModuleWindow::SetTitle(const char* title)
+void ModuleWindow::SetWindowTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
@@ -336,9 +339,20 @@ const bool ModuleWindow::GetVsync() const
 	return vsync;
 }
 
+void ModuleWindow::SetWindowIcon(const char * filepath)
+{
+	SDL_Surface* icon = SDL_LoadBMP("spooky.bmp");
+	SDL_SetWindowIcon(window, icon);
+}
+
 Cursor * ModuleWindow::GetCursor() const
 {
 	return cursor;
+}
+
+WindowNaming * ModuleWindow::GetWindowNamer() const
+{
+	return window_namer;
 }
 
 SDL_Window * ModuleWindow::GetWindow() const
@@ -349,4 +363,61 @@ SDL_Window * ModuleWindow::GetWindow() const
 SDL_Surface * ModuleWindow::GetSurface() const
 {
 	return screen_surface;
+}
+
+WindowNaming::WindowNaming()
+{
+}
+
+void WindowNaming::AddNamePart(std::string identifier, std::string value)
+{
+	bool found = false;
+	for (std::vector<NamePart>::iterator it = name_parts.begin(); it != name_parts.end(); ++it)
+	{
+		if ((*it).identifier.compare(identifier) == 0)
+		{
+			found = true;
+			(*it).val = value;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		NamePart part;
+		part.identifier = identifier;
+		part.val = value;
+
+		name_parts.push_back(part);
+	}
+
+	UpdateWindowName();
+}
+
+void WindowNaming::UpdateNamePart(std::string identifier, std::string value)
+{
+	for (std::vector<NamePart>::iterator it = name_parts.begin(); it != name_parts.end(); ++it)
+	{
+		if ((*it).identifier.compare(identifier) == 0)
+		{
+			(*it).val = value;
+			break;
+		}
+	}
+
+	UpdateWindowName();
+}
+
+void WindowNaming::UpdateWindowName()
+{
+	std::string name;
+
+	for (std::vector<NamePart>::iterator it = name_parts.begin(); it != name_parts.end(); ++it)
+	{
+		name += (*it).val;
+
+		name += " ";
+	}
+
+	App->window->SetWindowTitle(name.c_str());
 }
