@@ -151,26 +151,6 @@ bool ModuleRenderer3D::Start()
 
 	LoadArrayToVRAM(sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
 
-	//const char* vertex_code =
-	//	"#version 330 core\n \
-	//	layout(location = 0) in vec3 position;\n \
-	//	uniform mat4 Model; \
-	//	uniform mat4 View; \
-	//	uniform mat4 Projection; \
-	//	void main()\
-	//	{\
-	//		gl_Position = Projection * View * Model * vec4(position, 1);\
-	//	}";
-
-	//const char* fragment_code =
-	//	"#version 330 core\n \
-	//	out vec3 color; \
-	//	void main()\
-	//	{\
-	//		color = vec3(1, 0, 0);\
-	//	}";
-
-
 	const char* user_vertex_code = 
 		"#version 330 core\n \
 		out vec3 oColour;	\

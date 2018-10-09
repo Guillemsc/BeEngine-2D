@@ -269,11 +269,6 @@ bool ModuleCamera3D::Update()
 	return ret;
 }
 
-//const bool ModuleCamera3D::IsMouseInsideWindow() const
-//{
-//	return PointInRect(float2(App->input->GetMouseX(), App->input->GetMouseY()), App->editorUI->GameRect());
-//}
-
 Camera3D::Camera3D()
 {
 	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
@@ -515,41 +510,6 @@ void Camera3D::Look(const float3 & look_pos)
 
 	frustum.SetFront(direction_matrix.MulDir(frustum.Front()).Normalized());
 	frustum.SetUp(direction_matrix.MulDir(frustum.Up()).Normalized());
-}
-
-void Camera3D::GetElementsToDraw()
-{
-	//std::vector<GameObject*> to_check = App->gameobj->GetDynamicGameObjects();
-
-	//// Clean all objects that doesn't have aabb
-	//for (std::vector<GameObject*>::iterator it = to_check.begin(); it != to_check.end();)
-	//{
-	//	if ((*it)->GetComponent(MESH) == nullptr)
-	//	{
-	//		(*it)->SetDraw(false);
-	//		it = to_check.erase(it);
-	//	}
-	//	else 
-	//		it++;
-	//}
-	//App->gameobj->GetKDTree()->GetElementsToTest(frustum, to_check);
-
-	////test elements with frustum
-	//for (std::vector<GameObject*>::iterator it = to_check.begin(); it != to_check.end(); ++it)
-	//{
-	//	if (CheckInsideFrustum((*it)->GetBbox()))
-	//	{
-	//		(*it)->SetDraw(true);
-	//	}
-	//	else
-	//	{
-	//		(*it)->SetDraw(false);
-	//	}
-	//}
-}
-
-void Camera3D::DiscardElementsToDraw(std::vector<GameObject*>& dynamics, std::vector<GameObject*>& statics)
-{
 }
 
 bool Camera3D::CheckInsideFrustum(const AABB & box)

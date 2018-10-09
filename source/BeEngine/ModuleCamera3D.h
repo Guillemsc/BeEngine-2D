@@ -103,8 +103,6 @@ public:
 
 	void Look(const float3& look_pos);
 
-	void GetElementsToDraw();
-	void DiscardElementsToDraw(std::vector<GameObject*>& dynamics, std::vector<GameObject*>& statics);
 	bool CheckInsideFrustum(const AABB& box);
 	void SetFrustumCulling(bool set);
 	bool GetFrustumCulling();

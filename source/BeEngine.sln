@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SusStoEngine", "SuStoEngine\SuSto Engine.vcxproj", "{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BeEngine", "BeEngine\BeEngine.vcxproj", "{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
