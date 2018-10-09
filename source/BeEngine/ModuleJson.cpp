@@ -137,13 +137,13 @@ bool ModuleJson::CleanUp()
 
 	INTERNAL_LOG("Unloading JSON Module");
 
-	for (std::list<JSON_Doc*>::iterator it = jsons.begin(); it != jsons.end();)
+	for (std::list<JSON_Doc*>::iterator it = jsons.begin(); it != jsons.end(); ++it)
 	{
 		(*it)->CleanUp();
-		delete (*it);
-
-		it = jsons.erase(it);
+		RELEASE(*it);
 	}
+
+	jsons.clear();
 
 	return ret;
 }

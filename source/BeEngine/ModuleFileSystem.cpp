@@ -8,14 +8,7 @@
 
 FileSystem::FileSystem() : Module()
 {
-	assets_path = CreateFolder(App->GetBasePath(), "Assets");
-	library_path = CreateFolder(App->GetBasePath(), "Library");
-	library_mesh_path = CreateFolder(library_path.c_str(), "Meshes");
-	library_prefab_path = CreateFolder(library_path.c_str(), "Prefabs");
-	library_texture_path = CreateFolder(library_path.c_str(), "Textures");
-	library_scene_path = CreateFolder(library_path.c_str(), "Scenes");
-	library_shaders_path = CreateFolder(library_path.c_str(), "Shades");
-	settings_path = CreateFolder(App->GetBasePath(), "Settings");
+
 }
 
 FileSystem::~FileSystem()

@@ -11,8 +11,9 @@
 ModuleCamera3D::ModuleCamera3D() : Module()
 {
 	editor_camera = CreateCamera();
-	current_camera = editor_camera;
-	current_camera->SetFrustumCulling(false);
+	game_camera = CreateCamera();
+	editor_camera->SetFrustumCulling(false);
+	game_camera->SetFrustumCulling(false);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -103,12 +104,13 @@ void ModuleCamera3D::DestroyCamera(Camera3D * cam)
 
 void ModuleCamera3D::DestroyAllCameras()
 {
-	for (std::vector<Camera3D*>::iterator it = cameras.begin(); it != cameras.end();)
+	for (std::vector<Camera3D*>::iterator it = cameras.begin(); it != cameras.end(); ++it)
 	{
 		(*it)->CleanUp();
 		RELEASE(*it);
-		it = cameras.erase(it);
 	}
+
+	cameras.clear();
 }
 
 std::vector<Camera3D*> ModuleCamera3D::GetCameras()
@@ -119,6 +121,16 @@ std::vector<Camera3D*> ModuleCamera3D::GetCameras()
 Camera3D * ModuleCamera3D::GetEditorCamera() const
 {
 	return editor_camera;
+}
+
+void ModuleCamera3D::SetGameCamera(Camera3D * set)
+{
+	game_camera = set;
+}
+
+Camera3D * ModuleCamera3D::GetGameCamera() const
+{
+	return game_camera;
 }
 
 void ModuleCamera3D::SetMouseSensitivity(const float& set)
@@ -149,32 +161,6 @@ const float ModuleCamera3D::GetWheelSpeed() const
 const float ModuleCamera3D::GetCameraSpeed() const
 {
 	return camera_speed;
-}
-
-void ModuleCamera3D::SetCurrentCamera(Camera3D * set)
-{
-	if (set != nullptr)
-		current_camera = set;
-}
-
-Camera3D * ModuleCamera3D::GetCurrentCamera() const
-{
-	return current_camera;
-}
-
-void ModuleCamera3D::SetCurrentCameraToEditorCamera()
-{
-	current_camera = editor_camera;
-}
-
-const float * ModuleCamera3D::GetViewMatrix() const
-{
-	return current_camera->GetOpenGLViewMatrix().ptr();
-}
-
-const float * ModuleCamera3D::GetProjectionMatrix() const
-{
-	return current_camera->GetOpenGLProjectionMatrix().ptr();
 }
 
 // -----------------------------------------------------------------
@@ -288,8 +274,8 @@ Camera3D::Camera3D()
 
 void Camera3D::CleanUp()
 {
-	render_tex->CleanUp();
-	RELEASE(render_tex);
+	/*render_tex->CleanUp();*/
+	//RELEASE(render_tex);
 }
 
 void Camera3D::Bind(uint x, uint y, uint width, uint heigth)

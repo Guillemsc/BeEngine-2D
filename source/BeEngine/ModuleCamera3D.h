@@ -140,6 +140,9 @@ public:
 
 	Camera3D* GetEditorCamera() const;
 
+	void SetGameCamera(Camera3D* set);
+	Camera3D* GetGameCamera() const;
+
 	void SetMouseSensitivity(const float& set);
 	void SetWheelSpeed(const float& set);
 	void SetCameraSpeed(const float& set);
@@ -148,19 +151,9 @@ public:
 	const float GetWheelSpeed() const;
 	const float GetCameraSpeed() const;
 
-	void SetCurrentCamera(Camera3D* set);
-	Camera3D* GetCurrentCamera() const;
-	void SetCurrentCameraToEditorCamera();
-
-	const float* GetViewMatrix() const;
-	const float* GetProjectionMatrix() const;
-
-private:
-	//const bool IsMouseInsideWindow() const;
-
 private:
 	Camera3D* editor_camera = nullptr;
-	Camera3D* current_camera = nullptr;
+	Camera3D* game_camera = nullptr;
 
 	std::vector<Camera3D*> cameras;
 

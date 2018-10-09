@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "Cursor.h"
+#include "ModuleJson.h"
 
 ModuleWindow::ModuleWindow() : Module()
 {
@@ -26,28 +27,28 @@ ModuleWindow::~ModuleWindow()
 
 void ModuleWindow::OnLoadConfig(JSON_Doc * config)
 {
-	//width = config->GetNumber("window.width", 900);
-	//height = config->GetNumber("window.height", 900);
-	//fullscreen = config->GetBool("window.fullscreen", false);
-	//resizable = config->GetBool("window.resizable", true);
-	//borderless = config->GetBool("window.borderless", false);
-	//full_dekstop = config->GetBool("window.fulldekstop", false);
-	//maximized = config->GetBool("window.maximized", false);
-	//SetVsync(config->GetBool("window.vsync", true));
-	//brightness = config->GetNumber("window.brightness", 1.0f);
+	width = config->GetNumber("window.width", 900);
+	height = config->GetNumber("window.height", 900);
+	fullscreen = config->GetBool("window.fullscreen", false);
+	resizable = config->GetBool("window.resizable", true);
+	borderless = config->GetBool("window.borderless", false);
+	full_dekstop = config->GetBool("window.fulldekstop", false);
+	maximized = config->GetBool("window.maximized", false);
+	SetVsync(config->GetBool("window.vsync", true));
+	brightness = config->GetNumber("window.brightness", 1.0f);
 }
 
 void ModuleWindow::OnSaveConfig(JSON_Doc * config)
 {
-	//config->SetNumber("window.width", width);
-	//config->SetNumber("window.height", height);
-	//config->SetBool("window.fullscreen", fullscreen);
-	//config->SetBool("window.resizable", resizable);
-	//config->SetBool("window.borderless", borderless);
-	//config->SetBool("window.fulldekstop", full_dekstop);
-	//config->SetBool("window.maximized", maximized);
-	//config->SetNumber("window.brightness", GetBrightness());
-	//config->SetBool("window.vsync", GetVsync());
+	config->SetNumber("window.width", width);
+	config->SetNumber("window.height", height);
+	config->SetBool("window.fullscreen", fullscreen);
+	config->SetBool("window.resizable", resizable);
+	config->SetBool("window.borderless", borderless);
+	config->SetBool("window.fulldekstop", full_dekstop);
+	config->SetBool("window.maximized", maximized);
+	config->SetNumber("window.brightness", GetBrightness());
+	config->SetBool("window.vsync", GetVsync());
 }
 
 // Called before render is available
@@ -90,7 +91,7 @@ bool ModuleWindow::Awake()
 		if (maximized)		
 			flags += SDL_WINDOW_MAXIMIZED;
 
-		window = GenerateWindow(window, screen_surface, App->GetAppName(), flags, float2(SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED), float2( 0, 0), brightness);
+		window = GenerateWindow(window, screen_surface, App->GetAppName(), flags, float2(SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED), float2(1280, 720), brightness);
 
 		SDL_Surface* icon = SDL_LoadBMP("spooky.bmp");
 		SDL_SetWindowIcon(window, icon);
@@ -117,10 +118,12 @@ bool ModuleWindow::Update()
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {
+	bool ret = false;
+
 	INTERNAL_LOG("Destroying SDL window and quitting all SDL systems");
 
 	cursor->CleanUp();
-	delete cursor;
+	RELEASE(cursor);
 
 	//Destroy window
 	if(window != NULL)
@@ -130,7 +133,8 @@ bool ModuleWindow::CleanUp()
 
 	//Quit SDL subsystems
 	SDL_Quit();
-	return true;
+
+	return ret;
 }
 
 SDL_Window* ModuleWindow::GenerateWindow(SDL_Window* window, SDL_Surface* surface, const char* name, Uint32 flags, float2 pos, float2 size, float brightness)
@@ -148,8 +152,11 @@ SDL_Window* ModuleWindow::GenerateWindow(SDL_Window* window, SDL_Surface* surfac
 	{
 		surface = SDL_GetWindowSurface(window);
 		
-		if (brightness > 1) brightness = 1;
-		else if (brightness < 0) brightness = 0;
+		if (brightness > 1) 
+			brightness = 1;
+
+		else if (brightness < 0) 
+			brightness = 0;
 
 		SDL_SetWindowBrightness(window, brightness);
 	}
@@ -198,6 +205,7 @@ const float2 ModuleWindow::GetDisplaySize()
 {
 	int x, y;
 	GetDisplaySize(x, y);
+
 	return float2(x, y);
 }
 
@@ -312,6 +320,7 @@ const float ModuleWindow::GetBrightness() const
 void ModuleWindow::SetVsync(const bool& set)
 {
 	vsync = set;
+
 	SDL_GL_SetSwapInterval(vsync);
 }
 

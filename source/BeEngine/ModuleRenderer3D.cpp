@@ -252,8 +252,8 @@ bool ModuleRenderer3D::PostUpdate()
 	SetVertexAttributePointer(posAttrib, 3, 0, 0);
 
 	SetUniformMatrix(sp->GetID(), "Model", model.Transposed().ptr());
-	SetUniformMatrix(sp->GetID(), "View", App->camera->GetCurrentCamera()->GetOpenGLViewMatrix().ptr());
-	SetUniformMatrix(sp->GetID(), "Projection", App->camera->GetCurrentCamera()->GetOpenGLProjectionMatrix().ptr());
+	SetUniformMatrix(sp->GetID(), "View", App->camera->GetEditorCamera()->GetOpenGLViewMatrix().ptr());
+	SetUniformMatrix(sp->GetID(), "Projection", App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix().ptr());
 
 	BindArrayBuffer(1);
 
@@ -302,7 +302,7 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
-	App->camera->GetCurrentCamera()->SetAspectRatio((float)width / (float)height);
+	App->camera->GetEditorCamera()->SetAspectRatio((float)width / (float)height);
 }
 
 void ModuleRenderer3D::RenderScene()
