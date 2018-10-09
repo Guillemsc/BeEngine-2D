@@ -186,6 +186,15 @@ void ModuleWindow::GetWindowSize(int & width, int & height)
 	SDL_GetWindowSize(window, &width, &height);
 }
 
+const float2 ModuleWindow::GetWindowSize()
+{
+	int w, h = 0;
+
+	GetWindowSize(w, h);
+
+	return float2(w, h);
+}
+
 void ModuleWindow::GetDisplaySize(int & width, int & height)
 {
 	SDL_DisplayMode dm;

@@ -2,6 +2,7 @@
 #define __MODULE_EDITOR_H__
 
 #include "Module.h"
+#include "GeometryMath.h"
 
 class ModuleEditor : public Module
 {
@@ -22,6 +23,8 @@ private:
 	void ImGuiInit();
 	void ImGuiNewFrame();
 	void ImGuiQuit();
+
+	void DockingSpace(float2 margins_left_up, float2 margins_right_down);
 };
 
 #endif // !__MODULE_EDITOR_H__

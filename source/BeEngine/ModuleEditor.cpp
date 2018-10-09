@@ -36,6 +36,8 @@ bool ModuleEditor::PreUpdate()
 
 	ImGuiNewFrame();
 
+	DockingSpace(float2(0, 0), float2(0, 0));
+
 	return ret;
 }
 
@@ -44,9 +46,11 @@ bool ModuleEditor::Update()
 	bool ret = true;
 
 	bool open = true;
+
 	ImGui::ShowDemoWindow(&open);
 	ImGui::Begin("asd", &open);
 	ImGui::End();
+	
 
 	return ret;
 }
@@ -72,12 +76,12 @@ void ModuleEditor::RenderEditor()
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
+	//ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	//{
+	//	ImGui::UpdatePlatformWindows();
+	//	ImGui::RenderPlatformWindowsDefault();
+	//}
 }
 
 void ModuleEditor::ImGuiInit()
@@ -86,8 +90,8 @@ void ModuleEditor::ImGuiInit()
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer3D->GetSDLGLContext());
 
@@ -109,4 +113,26 @@ void ModuleEditor::ImGuiQuit()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+}
+
+void ModuleEditor::DockingSpace(float2 margins_left_up, float2 margins_right_down)
+{
+	bool opened = true;
+
+	float2 window_size = App->window->GetWindowSize();
+
+	float2 docking_pos = float2(margins_left_up.x - 5, margins_left_up.y - 5);
+	float2 docking_size = float2(window_size.x - margins_right_down.x + 7 - margins_left_up.x, 
+		window_size.y - margins_right_down.y + 7 - margins_left_up.y);
+
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove 
+		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+	ImGui::SetNextWindowPos(ImVec2(docking_pos.x, docking_pos.y));
+	ImGui::SetNextWindowSize(ImVec2(docking_size.x, docking_size.y));
+
+	ImGui::Begin("DockingSpace", &opened, flags);
+	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+	ImGui::DockSpace(dockspace_id, ImVec2(docking_size.x - 15, docking_size.y - 15));
+	ImGui::End();
 }
