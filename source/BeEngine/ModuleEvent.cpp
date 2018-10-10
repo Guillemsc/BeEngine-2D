@@ -91,8 +91,6 @@ bool ModuleEvent::CleanUp()
 {
 	bool ret = true;
 
-	DestroyAllEventDelegates();
-
 	return ret;
 }
 

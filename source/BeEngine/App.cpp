@@ -9,6 +9,7 @@
 #include "ModuleShader.h"
 #include "ModuleEditor.h"
 #include "ModuleEvent.h"
+#include "ModuleAction.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -32,6 +33,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	editor = new ModuleEditor();
 	event = new ModuleEvent();
 	file_system = new FileSystem();
+	action = new ModuleAction();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -39,6 +41,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 
 	// Add modules
 	AddModule(file_system, "Module FileSystem");
+	AddModule(action, "Module Action");
 	AddModule(event, "Module Event");
 	AddModule(json, "Module JSON");
 	AddModule(window, "Module Window");

@@ -363,6 +363,9 @@
     <ClInclude Include="ModuleEvent.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleAction.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -561,6 +564,9 @@
       <Filter>Sources\7. ThirdParties ============\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ModuleEvent.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleAction.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>

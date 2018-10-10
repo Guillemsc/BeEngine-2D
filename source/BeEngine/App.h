@@ -16,6 +16,7 @@ class ModuleShader;
 class ModuleEditor;
 class ModuleEvent;
 class FileSystem;
+class ModuleAction;
 
 class Profiler;
 class JSON_Doc;
@@ -79,7 +80,8 @@ public:
 	ModuleShader*	   shader = nullptr;
 	ModuleEditor*	   editor = nullptr;
 	ModuleEvent*       event = nullptr;
-	FileSystem*  file_system = nullptr;
+	FileSystem*		   file_system = nullptr;
+	ModuleAction*      action = nullptr;
 
 	Profiler*		   profiler = nullptr;
 
