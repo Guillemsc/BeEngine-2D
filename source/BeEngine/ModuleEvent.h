@@ -2,25 +2,40 @@
 #define __MODULE_EVENT_H__
 
 #include <functional>
+#include <map>
 
 #include "Module.h"
+
+enum EventType
+{
+	TEST,
+};
 
 class Event
 {
 public:
 	Event();
+
+	EventType GetType() const;
+
+private:
+	EventType type;
 };
 
 class EventDelegate
 {
 public: 
-	EventDelegate();
+	EventDelegate(EventType e_type);
 
-	void AddListener(std::function<void(const Event&)> function);
-	void RemoveListener(std::function<void(const Event&)> function);
+	void AddListener(const std::function<void(const Event&)>& function);
+	void RemoveListener(const std::function<void(const Event&)>& function);
+
+	void CallListeners(const Event& ev);
 
 private:
 	std::vector<std::function<void(const Event&)>> listeners;
+
+	EventType event_type;
 };
 
 class ModuleEvent : public Module
@@ -36,8 +51,17 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
+	void Suscribe(const std::function<void(const Event&)>& function, EventType e_type);
+	void UnSuscribe(const std::function<void(const Event&)>& function, EventType e_type);
+
+	void SendEvent(const Event& ev);
+
 private:
+	void DestroyAllEventDelegates();
 	void OnEvent(const Event& ev) {}
+
+private:
+	std::map<int, EventDelegate*> event_delegates;
 
 };
 

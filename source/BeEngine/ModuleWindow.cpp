@@ -117,7 +117,7 @@ bool ModuleWindow::Update()
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {
-	bool ret = false;
+	bool ret = true;
 
 	INTERNAL_LOG("Destroying SDL window and quitting all SDL systems");
 
