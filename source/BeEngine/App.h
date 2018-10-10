@@ -14,6 +14,8 @@ class ModuleRenderer3D;
 class ModuleCamera3D;
 class ModuleShader;
 class ModuleEditor;
+class ModuleEvent;
+class FileSystem;
 
 class Profiler;
 class JSON_Doc;
@@ -76,6 +78,8 @@ public:
 	ModuleCamera3D*    camera = nullptr;
 	ModuleShader*	   shader = nullptr;
 	ModuleEditor*	   editor = nullptr;
+	ModuleEvent*       event = nullptr;
+	FileSystem*  file_system = nullptr;
 
 	Profiler*		   profiler = nullptr;
 

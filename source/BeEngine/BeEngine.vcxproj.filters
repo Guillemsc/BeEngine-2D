@@ -360,6 +360,9 @@
     <ClInclude Include="imgui_impl_opengl3.h">
       <Filter>Sources\7. ThirdParties ============\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleEvent.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -556,6 +559,9 @@
     </ClCompile>
     <ClCompile Include="imgui_impl_opengl3.cpp">
       <Filter>Sources\7. ThirdParties ============\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEvent.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

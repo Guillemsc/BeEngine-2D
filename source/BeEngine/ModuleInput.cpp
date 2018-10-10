@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
+#include "ModuleEditor.h"
 
 // SDL_GetScancode: https://wiki.libsdl.org/SDL_Keycode
 // To use PS3 Controller install this driver https://github.com/nefarius/ScpToolkit/releases/tag/v1.6.238.16010
@@ -136,6 +137,8 @@ bool ModuleInput::PreUpdate()
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
 	{
+		App->editor->EditorInput(e);
+
 		switch (e.type)
 		{
 		case SDL_QUIT:
