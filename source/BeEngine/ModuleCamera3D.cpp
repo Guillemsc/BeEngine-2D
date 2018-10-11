@@ -24,7 +24,6 @@ bool ModuleCamera3D::Awake()
 {
 	bool ret = true;
 
-	INTERNAL_LOG("Loading Camera3D");
 
 	return ret;
 }
@@ -33,9 +32,6 @@ bool ModuleCamera3D::Awake()
 bool ModuleCamera3D::Start()
 {
 	bool ret = true;
-
-	INTERNAL_LOG("Setting up the camera");
-
 	return ret;
 }
 
@@ -43,8 +39,6 @@ bool ModuleCamera3D::Start()
 bool ModuleCamera3D::CleanUp()
 {
 	bool ret = true;
-
-	INTERNAL_LOG("Cleaning cameras");
 
 	DestroyAllCameras();
 

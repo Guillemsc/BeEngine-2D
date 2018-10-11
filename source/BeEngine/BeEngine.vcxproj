@@ -133,6 +133,7 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="MenuBar.h" />
     <ClInclude Include="ModuleAction.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleEvent.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="imgui_impl_opengl3.cpp" />
     <ClCompile Include="imgui_impl_sdl.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="MenuBar.cpp" />
     <ClCompile Include="ModuleAction.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleEvent.cpp" />

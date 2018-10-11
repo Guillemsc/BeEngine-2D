@@ -1,6 +1,7 @@
 #include "ModuleEditor.h"
 #include "App.h"
 #include "ModuleWindow.h"
+#include "MenuBar.h"
 #include "ModuleRenderer3D.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -20,6 +21,8 @@ bool ModuleEditor::Awake()
 
 	ImGuiInit();
 
+	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
+
 	AddEditorWindow("test", new EditorWindow());
 
 	return ret;
@@ -36,7 +39,7 @@ bool ModuleEditor::PreUpdate()
 {
 	bool ret = true;
 
-	ImGuiNewFrame();
+	ImGuiStartFrame();
 
 	MenuBar();
 
@@ -44,7 +47,10 @@ bool ModuleEditor::PreUpdate()
 
 	DockingSpace(float2(0, 50), float2(0, 0));
 
+	DrawEditorElements();
 	DrawEditorWindows();
+
+	ImGuiEndFrame();
 
 	return ret;
 }
@@ -74,6 +80,7 @@ bool ModuleEditor::CleanUp()
 	bool ret = true;
 
 	DestroyAllEditorWindows();
+	DestroyAllEditorElements();
 
 	ImGuiQuit();
 
@@ -98,23 +105,75 @@ void ModuleEditor::EditorInput(SDL_Event event)
 	ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
-void ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
+EditorElement* ModuleEditor::AddEditorElement(EditorElement * element, bool visible)
 {
-	bool exists = false;
+	EditorElement* ret = nullptr;
 
-	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
+	if (element != nullptr)
 	{
-		if ((*it)->GetName().compare(name) == 0)
+		bool exists = false;
+		for (std::vector<EditorElement*>::iterator it = editor_elements.begin(); it != editor_elements.end(); ++it)
 		{
-			exists = true;
-			break;
+			if ((*it) == element)
+			{
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists)
+		{
+			editor_elements.push_back(element);
+
+			ret = element;
+
+			ret->SetVisible(visible);
 		}
 	}
 
-	if (!exists)
+	return ret;
+}
+
+void ModuleEditor::DestroyAllEditorElements()
+{
+	for (std::vector<EditorElement*>::iterator it = editor_elements.begin(); it != editor_elements.end(); ++it)
 	{
-		window->name = name;
-		editor_windows.push_back(window);
+		(*it)->CleanUp();
+		RELEASE(*it);
+	}
+
+	editor_elements.clear();
+}
+
+void ModuleEditor::DrawEditorElements()
+{
+	for (std::vector<EditorElement*>::iterator it = editor_elements.begin(); it != editor_elements.end(); ++it)
+	{
+		if ((*it)->GetVisible())
+			(*it)->DrawEditor();
+	}
+}
+
+void ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
+{
+	if (window != nullptr)
+	{
+		bool exists = false;
+
+		for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
+		{
+			if ((*it)->GetName().compare(name) == 0)
+			{
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists)
+		{
+			window->name = name;
+			editor_windows.push_back(window);
+		}
 	}
 }
 
@@ -157,14 +216,27 @@ void ModuleEditor::ImGuiInit()
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
 	LoadCustomStyle();
+
+	font = io.Fonts->AddFontFromFileTTF("C:\\Users\\Guillem\\Documents\\GitHub\\BeEngine-2D\\source\\Resources\\fonts\\framd.ttf", 16);
+
+
 	//ImGui::StyleColorsDark();
 }
 
-void ModuleEditor::ImGuiNewFrame()
+void ModuleEditor::ImGuiStartFrame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->GetWindow());
 	ImGui::NewFrame();
+
+	if (font != nullptr)
+		ImGui::PushFont(font);
+}
+
+void ModuleEditor::ImGuiEndFrame()
+{
+	if (font != nullptr)
+		ImGui::PopFont();
 }
 
 void ModuleEditor::ImGuiQuit()
@@ -172,17 +244,6 @@ void ModuleEditor::ImGuiQuit()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
-}
-
-void ModuleEditor::MenuBar()
-{
-	ImGui::BeginMainMenuBar();
-
-	bool selected = true;
-	bool enabled = true;
-	ImGui::MenuItem("asd", "asd", selected, enabled);
-
-	ImGui::EndMainMenuBar();
 }
 
 void ModuleEditor::ToolsBar(float2 margins_left_up)
@@ -302,4 +363,18 @@ void EditorWindow::SetOpened(bool set)
 bool EditorWindow::GetOpened() const
 {
 	return opened;
+}
+
+EditorElement::EditorElement()
+{
+}
+
+void EditorElement::SetVisible(bool set)
+{
+	visible = set;
+}
+
+bool EditorElement::GetVisible() const
+{
+	return visible;
 }

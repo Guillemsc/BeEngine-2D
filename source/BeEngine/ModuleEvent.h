@@ -9,6 +9,11 @@
 
 class EventDelegate
 {
+	friend class ModuleEvent;
+
+private:
+	void operator delete(void *) {}
+
 public: 
 	EventDelegate(EventType e_type);
 

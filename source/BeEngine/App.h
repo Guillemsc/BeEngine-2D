@@ -73,7 +73,7 @@ private:
 
 public:
 	//Modules
-	ModuleJson *	      json	= nullptr;
+	ModuleJson*	      json	= nullptr;
 	ModuleWindow*         window = nullptr;
 	ModuleInput*          input = nullptr;
 	ModuleAudio*          audio = nullptr;

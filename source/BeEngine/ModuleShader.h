@@ -18,6 +18,11 @@ enum ShaderType
 
 class Shader
 {
+	friend class ModuleShader;
+
+private:
+	void operator delete(void *) {}
+
 public:
 	Shader(ShaderType type);
 
@@ -41,6 +46,11 @@ private:
 
 class ShaderProgram
 {
+	friend class ModuleShader;
+
+private:
+	void operator delete(void *) {}
+
 public:
 	ShaderProgram();
 
@@ -62,6 +72,7 @@ public:
 
 private:
 	void UnlinkProgram();
+
 
 private:
 	uint id = 0;

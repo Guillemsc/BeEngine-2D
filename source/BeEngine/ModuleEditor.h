@@ -4,9 +4,15 @@
 #include "Module.h"
 #include "GeometryMath.h"
 
+class MenuBar;
+struct ImFont;
+
 class EditorWindow
 {
 	friend class ModuleEditor;
+
+protected:
+	void operator delete(void *) {}
 
 public:
 	EditorWindow();
@@ -21,6 +27,26 @@ public:
 private:
 	std::string name;
 	bool		opened = true;
+};
+
+class EditorElement
+{
+	friend class ModuleEditor;
+
+private:
+	void operator delete(void *) {}
+
+public:
+	EditorElement();
+
+	virtual void CleanUp() {};
+	virtual void DrawEditor() {};
+
+	void SetVisible(bool set);
+	bool GetVisible() const;
+
+private:
+	bool visible = false;
 };
 
 class ModuleEditor : public Module
@@ -39,23 +65,33 @@ public:
 	void RenderEditor();
 	void EditorInput(SDL_Event event);
 
+	EditorElement* AddEditorElement(EditorElement* element, bool visible = false);
+	void DestroyAllEditorElements();
+	void DrawEditorElements();
+
 	void AddEditorWindow(const char* name, EditorWindow* window);
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
 
 private:
 	void ImGuiInit();
-	void ImGuiNewFrame();
+	void ImGuiStartFrame();
+	void ImGuiEndFrame();
 	void ImGuiQuit();
 
-	void MenuBar();
 	void ToolsBar(float2 margins_left_up);
 	void DockingSpace(float2 margins_left_up, float2 margins_right_down);
 
 	void LoadCustomStyle();
 
+public:
+	MenuBar * menu_bar = nullptr;
+
 private:
+	std::vector<EditorElement*> editor_elements;
 	std::vector<EditorWindow*> editor_windows;
+
+	ImFont* font = nullptr;
 };
 
 #endif // !__MODULE_EDITOR_H__

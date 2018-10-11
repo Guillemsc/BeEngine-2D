@@ -1,4 +1,7 @@
 #include "ModuleTimeSlicedTask.h"
+#include "App.h"
+#include "ModuleEvent.h"
+#include "Event.h"
 
 ModuleTimeSlicedTask::ModuleTimeSlicedTask()
 {
@@ -100,6 +103,8 @@ void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 					if (curr->on_start)
 						curr->on_start(*it);
 
+					App->event->SendEvent(EventTimeSlicedTaskStarted(curr));
+
 					curr->first_update = false;
 				}
 
@@ -118,9 +123,7 @@ void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 			if (curr->on_finish)
 				curr->on_finish(curr);
 
-			//Event ev(EventType::ET_ASYNC_TASK_FINISHED);
-			//ev.async_task_finished.task = curr;
-			//App->event_system->Send(ev);
+			App->event->SendEvent(EventTimeSlicedTaskFinished(curr));
 
 			RELEASE(*it);
 

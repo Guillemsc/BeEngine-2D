@@ -19,6 +19,8 @@
 
 Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 {
+	INTERNAL_LOG("Creating Modules");
+
 	// Profiler
 	profiler = new Profiler();
 
@@ -89,6 +91,8 @@ bool Application::Awake()
 	{
 		(*it)->prof_module_awake->Start();
 
+		INTERNAL_LOG("Module [%s] Awake", (*it)->GetName());
+
 		ret = (*it)->Awake();
 
 		(*it)->prof_module_awake->Finish();
@@ -114,6 +118,8 @@ bool Application::Start()
 	{
 		(*it)->prof_module_start->Start();
 
+		INTERNAL_LOG("Module [%s] Start", (*it)->GetName());
+
 		ret = (*it)->Start();
 
 		(*it)->prof_module_start->Finish();
@@ -127,7 +133,6 @@ bool Application::Start()
 	return ret;
 }
 
-// Call PreUpdate, Update and PostUpdate on all modules
 bool Application::Update()
 {
 	bool ret = true;
@@ -209,6 +214,8 @@ bool Application::CleanUp()
 
 	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 	{
+		INTERNAL_LOG("Module [%s] CleanUp", (*it)->GetName());
+
 		ret = (*it)->CleanUp();
 
 		if (!ret) 

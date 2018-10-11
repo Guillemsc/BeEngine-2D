@@ -15,8 +15,6 @@ bool ModuleJson::Awake()
 {
 	bool ret = true;
 
-	INTERNAL_LOG("Loading JSON Module");
-
 	return ret;
 }
 
@@ -134,8 +132,6 @@ void ModuleJson::UnloadJSON(JSON_Doc * son)
 bool ModuleJson::CleanUp()
 {
 	bool ret = true;
-
-	INTERNAL_LOG("Unloading JSON Module");
 
 	for (std::list<JSON_Doc*>::iterator it = jsons.begin(); it != jsons.end(); ++it)
 	{

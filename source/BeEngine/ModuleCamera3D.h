@@ -57,6 +57,11 @@ private:
 
 class Camera3D
 {
+	friend class ModuleCamera3D;
+
+private:
+	void operator delete(void *) {}
+
 public:
 	Camera3D();
 

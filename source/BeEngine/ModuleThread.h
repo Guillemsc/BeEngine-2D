@@ -8,6 +8,11 @@
 
 class Thread
 {
+	friend class ModuleThread;
+
+private:
+	void operator delete(void *) {}
+
 public:
 	Thread(const std::function<bool(void)>& function);
 	~Thread();

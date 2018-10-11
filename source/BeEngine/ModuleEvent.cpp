@@ -51,9 +51,6 @@ bool ModuleEvent::Start()
 {
 	bool ret = true;
 
-	Suscribe(std::bind(&ModuleEvent::OnEvent, this, std::placeholders::_1), EventType::TEST);
-	UnSuscribe(std::bind(&ModuleEvent::OnEvent, this, std::placeholders::_1), EventType::TEST);
-
 	return ret;
 }
 
@@ -81,6 +78,8 @@ bool ModuleEvent::PostUpdate()
 bool ModuleEvent::CleanUp()
 {
 	bool ret = true;
+
+	DestroyAllEventDelegates();
 
 	return ret;
 }

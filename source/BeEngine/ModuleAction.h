@@ -7,14 +7,14 @@ class Action
 {
 	friend class ModuleAction;
 
+private:
+	void operator delete(void *) {}
+
 public:
 	Action();
 
 	virtual void DoAction() = 0;
 	virtual void UndoAction() = 0;
-
-private:
-	void operator delete(void *) {}
 };
 
 class ModuleAction : public Module

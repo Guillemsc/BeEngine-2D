@@ -14,6 +14,9 @@ class TimeSlicedTask
 {
 	friend class ModuleTimeSlicedTask;
 
+private:
+	void operator delete(void *) {}
+
 public:
 	TimeSlicedTask(TimeSlicedTaskType mode, uint iterations_per_frame = 10, std::string task_name = "TimeSlicedTask");
 
@@ -33,9 +36,6 @@ public:
 	void OnStart(const std::function<void(TimeSlicedTask*)>& fun);
 	void OnUpdate(const std::function<void(TimeSlicedTask*)>& fun);
 	void OnFinish(const std::function<void(TimeSlicedTask*)>& fun);
-
-private:
-	void operator delete(void *) {}
 
 private:
 	TimeSlicedTaskType mode = TimeSlicedTaskType::FOCUS;
