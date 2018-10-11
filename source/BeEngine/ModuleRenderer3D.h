@@ -132,6 +132,8 @@ public:
 	void DeleteProgram(uint program_id);
 	// --------------------------------------------------------
 
+	bool RenderEditorAsync();
+
 private:
 	SDL_GLContext context;
 

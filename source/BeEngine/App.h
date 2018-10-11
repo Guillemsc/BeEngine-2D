@@ -17,6 +17,8 @@ class ModuleEditor;
 class ModuleEvent;
 class FileSystem;
 class ModuleAction;
+class ModuleThread;
+class ModuleTimeSlicedTask;
 
 class Profiler;
 class JSON_Doc;
@@ -71,17 +73,19 @@ private:
 
 public:
 	//Modules
-	ModuleJson *	   json	= nullptr;
-	ModuleWindow*      window = nullptr;
-	ModuleInput*       input = nullptr;
-	ModuleAudio*       audio = nullptr;
-	ModuleRenderer3D*  renderer3D = nullptr;
-	ModuleCamera3D*    camera = nullptr;
-	ModuleShader*	   shader = nullptr;
-	ModuleEditor*	   editor = nullptr;
-	ModuleEvent*       event = nullptr;
-	FileSystem*		   file_system = nullptr;
-	ModuleAction*      action = nullptr;
+	ModuleJson *	      json	= nullptr;
+	ModuleWindow*         window = nullptr;
+	ModuleInput*          input = nullptr;
+	ModuleAudio*          audio = nullptr;
+	ModuleRenderer3D*     renderer3D = nullptr;
+	ModuleCamera3D*       camera = nullptr;
+	ModuleShader*	      shader = nullptr;
+	ModuleEditor*	      editor = nullptr;
+	ModuleEvent*          event = nullptr;
+	FileSystem*		      file_system = nullptr;
+	ModuleAction*         action = nullptr;
+	ModuleThread*         thread = nullptr;
+	ModuleTimeSlicedTask* time_sliced = nullptr;
 
 	Profiler*		   profiler = nullptr;
 

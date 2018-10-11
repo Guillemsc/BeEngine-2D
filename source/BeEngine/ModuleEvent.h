@@ -5,22 +5,7 @@
 #include <map>
 
 #include "Module.h"
-
-enum EventType
-{
-	TEST,
-};
-
-class Event
-{
-public:
-	Event();
-
-	EventType GetType() const;
-
-private:
-	EventType type;
-};
+#include "Event.h"
 
 class EventDelegate
 {

@@ -1,14 +1,5 @@
 #include "ModuleEvent.h"
 
-Event::Event()
-{
-}
-
-EventType Event::GetType() const
-{
-	return type;
-}
-
 EventDelegate::EventDelegate(EventType e_type)
 {
 	event_type = e_type;
