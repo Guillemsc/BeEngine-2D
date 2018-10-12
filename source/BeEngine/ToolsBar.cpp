@@ -23,8 +23,6 @@ void ToolsBar::DrawEditor()
 	float2 tools_bar_pos = float2(margins_left_up.x, margins_left_up.y);
 	float2 tools_bar_size = float2(window_size.x, 39);
 
-	bool opened = true;
-
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
 		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus
 		| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoScrollbar;
@@ -32,9 +30,11 @@ void ToolsBar::DrawEditor()
 	ImGui::SetNextWindowPos(ImVec2(tools_bar_pos.x, tools_bar_pos.y));
 	ImGui::SetNextWindowSize(ImVec2(tools_bar_size.x, tools_bar_size.y));
 
-	ImGui::Begin("Tools Bar", &opened, flags);
+	if (ImGui::Begin("Tools Bar", &opened, flags))
+	{
 
-	ImGui::Button("Press to die");
+		ImGui::Button("Press to die");
+	}
 
 	ImGui::End();
 }

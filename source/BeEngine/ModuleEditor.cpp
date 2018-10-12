@@ -3,11 +3,11 @@
 #include "GeometryMath.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
-#include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "MenuBar.h"
 #include "ToolsBar.h"
+#include "DockingSpace.h"
 #include "SceneWindow.h"
 
 ModuleEditor::ModuleEditor()
@@ -24,6 +24,7 @@ bool ModuleEditor::Awake()
 
 	ImGuiInit();
 
+	docking_space = (DockingSpace*)AddEditorElement(new DockingSpace(float2(0, 58), float2(0, 0)));
 	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
 	tools_bar = (ToolsBar*)AddEditorElement(new ToolsBar(float2(0, 19)), true);
 
@@ -45,8 +46,6 @@ bool ModuleEditor::PreUpdate()
 
 	ImGuiStartFrame();
 
-	DockingSpace(float2(0, 58), float2(0, 0));
-
 	DrawEditorElements();
 	DrawEditorWindows();
 
@@ -59,11 +58,7 @@ bool ModuleEditor::Update()
 {
 	bool ret = true;
 
-	bool open = true;
-
-	ImGui::ShowDemoWindow(&open);
-	ImGui::Begin("asd", &open);
-	ImGui::End();
+	ImGui::ShowDemoWindow(&demo_window_open);
 	
 	return ret;
 }
@@ -81,6 +76,8 @@ bool ModuleEditor::CleanUp()
 
 	DestroyAllEditorWindows();
 	DestroyAllEditorElements();
+
+	editor_fonts.clear();
 
 	ImGuiQuit();
 
@@ -196,7 +193,10 @@ void ModuleEditor::DrawEditorWindows()
 {
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 	{
-		if (ImGui::Begin((*it)->name.c_str(), &(*it)->opened))
+		ImGuiWindowFlags flags = 0;
+		flags |= (*it)->GetWindowFlags();
+
+		if (ImGui::Begin((*it)->name.c_str(), &(*it)->opened, flags))
 		{
 			ImVec2 win_pos = ImGui::GetWindowPos();
 			ImVec2 win_size = ImGui::GetWindowSize();
@@ -205,10 +205,18 @@ void ModuleEditor::DrawEditorWindows()
 			(*it)->window_size = float2(win_size.x, win_size.y);
 
 			(*it)->DrawEditor();
-
-			ImGui::End();
 		}
+		ImGui::End();
 	}
+}
+
+ImFont* ModuleEditor::GetLoadedFont(const char * name)
+{
+	ImFont* ret = nullptr;
+
+	ret = editor_fonts[name];
+
+	return ret;
 }
 
 void ModuleEditor::ImGuiInit()
@@ -227,10 +235,14 @@ void ModuleEditor::ImGuiInit()
 
 	LoadCustomStyle();
 
-	font = io.Fonts->AddFontFromFileTTF("C:\\Users\\Guillem\\Documents\\GitHub\\BeEngine-2D\\source\\Resources\\fonts\\framd.ttf", 16);
-
-
-	//ImGui::StyleColorsDark();
+	LoadImGuiFont("Roboto-Medium.ttf", 16, "RobotoMedium_16");
+	LoadImGuiFont("Roboto-Medium.ttf", 18, "RobotoMedium_18");
+	LoadImGuiFont("Roboto-Black.ttf", 16, "RobotoBlack_16");
+	LoadImGuiFont("Roboto-Bold.ttf", 17, "RobotoBold_17");
+	LoadImGuiFont("Roboto-MediumItalic.ttf", 16, "RobotoMediumItalic_16");
+	LoadImGuiFont("Roboto-Light.ttf", 16, "RobotoLight_16");
+	LoadImGuiFont("RobotoCondensed-Regular.ttf", 16, "RobotoCondensed_16");
+	LoadImGuiFont("FontAwesome.ttf", 16, "Awesome_16");
 }
 
 void ModuleEditor::ImGuiStartFrame()
@@ -238,15 +250,11 @@ void ModuleEditor::ImGuiStartFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->GetWindow());
 	ImGui::NewFrame();
-
-	if (font != nullptr)
-		ImGui::PushFont(font);
 }
 
 void ModuleEditor::ImGuiEndFrame()
 {
-	if (font != nullptr)
-		ImGui::PopFont();
+
 }
 
 void ModuleEditor::ImGuiQuit()
@@ -256,26 +264,19 @@ void ModuleEditor::ImGuiQuit()
 	ImGui::DestroyContext();
 }
 
-void ModuleEditor::DockingSpace(float2 margins_left_up, float2 margins_right_down)
+ImFont* ModuleEditor::LoadImGuiFont(const char * filename, int size, const char * load_name)
 {
-	bool opened = true;
+	ImFont* ret = nullptr;
 
-	float2 window_size = App->window->GetWindowSize();
+	ImGuiIO& io = ImGui::GetIO();
+	
+	std::string font_path = App->GetBasePath() + std::string("fonts\\") + filename;
 
-	float2 docking_pos = float2(margins_left_up.x - 5, margins_left_up.y - 5);
-	float2 docking_size = float2(window_size.x - margins_right_down.x + 7 - margins_left_up.x, 
-		window_size.y - margins_right_down.y + 7 - margins_left_up.y);
+	ret = io.Fonts->AddFontFromFileTTF(font_path.c_str(), size);
 
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove 
-		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus;
+	editor_fonts[load_name] = ret;
 
-	ImGui::SetNextWindowPos(ImVec2(docking_pos.x, docking_pos.y));
-	ImGui::SetNextWindowSize(ImVec2(docking_size.x, docking_size.y));
-
-	ImGui::Begin("DockingSpace", &opened, flags);
-	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-	ImGui::DockSpace(dockspace_id, ImVec2(docking_size.x - 15, docking_size.y - 15));
-	ImGui::End();
+	return ret;
 }
 
 void ModuleEditor::LoadCustomStyle()
@@ -286,15 +287,15 @@ void ModuleEditor::LoadCustomStyle()
 	colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
 	colors[ImGuiCol_ChildBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
 	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-	colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+	colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.50f);
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 	colors[ImGuiCol_FrameBg] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
-	colors[ImGuiCol_TitleBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.65f);
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-	colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+	colors[ImGuiCol_TitleBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.90f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.00f, 0.45f, 0.76f, 1.00f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
+	colors[ImGuiCol_MenuBarBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.65f);
 	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
 	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
 	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
@@ -308,15 +309,15 @@ void ModuleEditor::LoadCustomStyle()
 	colors[ImGuiCol_Header] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_HeaderHovered] = ImVec4(0.50f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_HeaderActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
-	colors[ImGuiCol_Separator] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
-	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
+	colors[ImGuiCol_Separator] = ImVec4(0.29f, 0.29f, 0.29f, 0.65f);
+	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_SeparatorActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
-	colors[ImGuiCol_Tab] = ImVec4(0.56f, 0.81f, 0.98f, 0.65f);
+	colors[ImGuiCol_Tab] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
 	colors[ImGuiCol_TabHovered] = ImVec4(0.28f, 0.28f, 0.28f, 0.98f);
-	colors[ImGuiCol_TabActive] = ImVec4(0.15f, 0.15f, 0.15f, 0.94f);
+	colors[ImGuiCol_TabActive] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
 	colors[ImGuiCol_TabUnfocused] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_DockingPreview] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);

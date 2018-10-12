@@ -3,9 +3,12 @@
 
 #include "Module.h"
 #include "GeometryMath.h"
+#include "imgui.h"
+#include <map>
 
 class MenuBar;
 class ToolsBar;
+class DockingSpace;
 struct ImFont;
 
 class EditorWindow
@@ -21,6 +24,7 @@ public:
 	virtual void Start() {};
 	virtual void CleanUp() {};
 	virtual void DrawEditor() {};
+	virtual ImGuiWindowFlags GetWindowFlags() { ImGuiWindowFlags ret = 0; return ret; }
 
 	std::string GetName() const;
 	void SetOpened(bool set);
@@ -71,7 +75,7 @@ public:
 	void RenderEditor();
 	void EditorInput(SDL_Event event);
 
-	EditorElement* AddEditorElement(EditorElement* element, bool visible = false);
+	EditorElement* AddEditorElement(EditorElement* element, bool visible = true);
 	void DestroyAllEditorElements();
 	void DrawEditorElements();
 
@@ -79,25 +83,30 @@ public:
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
 
+	ImFont* GetLoadedFont(const char* name);
+
 private:
 	void ImGuiInit();
 	void ImGuiStartFrame();
 	void ImGuiEndFrame();
 	void ImGuiQuit();
 
-	void DockingSpace(float2 margins_left_up, float2 margins_right_down);
+	ImFont* LoadImGuiFont(const char* filename, int size, const char* load_name);
 
 	void LoadCustomStyle();
 
 public:
-	MenuBar* menu_bar = nullptr;
-	ToolsBar* tools_bar = nullptr;
+	DockingSpace* docking_space = nullptr;
+	MenuBar*      menu_bar = nullptr;
+	ToolsBar*     tools_bar = nullptr;
 
 private:
 	std::vector<EditorElement*> editor_elements;
 	std::vector<EditorWindow*> editor_windows;
 
-	ImFont* font = nullptr;
+	std::map<std::string, ImFont*> editor_fonts;
+
+	bool demo_window_open = true;
 };
 
 #endif // !__MODULE_EDITOR_H__

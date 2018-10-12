@@ -21,6 +21,8 @@ public:
 private:
 	float2 margins_left_up = float2::zero;
 
+	bool opened = true;
+
 };
 
 #endif // !__TOOLS_BAR_H__

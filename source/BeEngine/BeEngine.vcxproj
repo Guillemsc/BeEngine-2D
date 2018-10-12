@@ -96,6 +96,7 @@
     <ClInclude Include="Algorithm\SAT.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="Cursor.h" />
+    <ClInclude Include="DockingSpace.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FileWatch.h" />
     <ClInclude Include="FBO.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="Algorithm\Random\LCG.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="DockingSpace.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="SceneWindow.cpp" />

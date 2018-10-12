@@ -14,11 +14,12 @@ public:
 	MenuBar();
 	~MenuBar();
 
+	void Start();
 	void CleanUp();
 	void DrawEditor();
 
 private:
-
+	ImFont* font = nullptr;
 };
 
 #endif // !__MENU_BAR_H__

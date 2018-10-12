@@ -64,6 +64,12 @@
     <Filter Include="Sources\7. ThirdParties ============\FileWatch">
       <UniqueIdentifier>{ba1d51e3-f9e7-4b87-8e5d-e3893b9f1e6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3. Editor ================\Windows">
+      <UniqueIdentifier>{83e38b5a-1583-4376-8413-91eff97cc1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3. Editor ================\Elements">
+      <UniqueIdentifier>{74765075-780e-49e6-9458-564271a36b10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -375,14 +381,17 @@
     <ClInclude Include="Event.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="SceneWindow.h">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="DockingSpace.h">
+      <Filter>Sources\3. Editor ================\Elements</Filter>
+    </ClInclude>
     <ClInclude Include="MenuBar.h">
-      <Filter>Sources\3. Editor ================</Filter>
+      <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClInclude>
     <ClInclude Include="ToolsBar.h">
-      <Filter>Sources\3. Editor ================</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneWindow.h">
-      <Filter>Sources\3. Editor ================</Filter>
+      <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -593,14 +602,17 @@
     <ClCompile Include="ModuleTimeSlicedTask.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
+    <ClCompile Include="SceneWindow.cpp">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="DockingSpace.cpp">
+      <Filter>Sources\3. Editor ================\Elements</Filter>
+    </ClCompile>
     <ClCompile Include="MenuBar.cpp">
-      <Filter>Sources\3. Editor ================</Filter>
+      <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClCompile>
     <ClCompile Include="ToolsBar.cpp">
-      <Filter>Sources\3. Editor ================</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneWindow.cpp">
-      <Filter>Sources\3. Editor ================</Filter>
+      <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
