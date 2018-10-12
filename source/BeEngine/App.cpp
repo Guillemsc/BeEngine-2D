@@ -146,16 +146,15 @@ bool Application::Update()
 	// PreUpdate
 	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); it++)
 	{
-		if (!(*it)->GetEnabled())
-			continue;
+		if (!ret)
+			break;
 
 		(*it)->prof_module_preupdate->Start();
 
-		ret = (*it)->PreUpdate();
+		if ((*it)->GetEnabled())
+			ret = (*it)->PreUpdate();
 
 		(*it)->prof_module_preupdate->Finish();
-
-		if (!ret) return false;
 	}
 
 	prof_app_preupdate->Finish();
@@ -165,17 +164,15 @@ bool Application::Update()
 	// Update
 	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); it++)
 	{
-		if (!(*it)->GetEnabled())
-			continue;
+		if (!ret)
+			break;
 
 		(*it)->prof_module_update->Start();
 
-		ret = (*it)->Update();
+		if ((*it)->GetEnabled())
+			ret = (*it)->Update();
 
 		(*it)->prof_module_update->Finish();
-
-		if (!ret)
-			return false;
 	}
 
 	prof_app_update->Finish();

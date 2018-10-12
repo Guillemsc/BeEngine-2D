@@ -634,54 +634,6 @@ bool RenderTexture::Create(uint _x, uint _y, uint _width, uint _height)
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	////Create MSAA framebufer
-	//fbo_msaa_id = App->renderer3D->GenFrameBuffer();
-	//App->renderer3D->BindFrameBuffer(fbo_msaa_id);
-
-	////Create a multisampled color attachment texture
-	//texture_msaa_id = App->renderer3D->GenTexture();
-	//App->renderer3D->BindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
-	//App->renderer3D->Set2DMultisample(current_msaa_samples, width, height);
-	//App->renderer3D->UnbindTexture(GL_TEXTURE_2D_MULTISAMPLE);
-	//App->renderer3D->SetFrameBufferTexture2D(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
-
-	////Create a renderbuffer for depth and stencil
-	//rbo_id = App->renderer3D->GenRenderBuffer();
-	//App->renderer3D->BindRenderBuffer(rbo_id);
-	//App->renderer3D->RenderStorageMultisample(current_msaa_samples, width, height);
-	//App->renderer3D->UnbindRenderBuffer();
-	//App->renderer3D->RenderFrameBuffer(rbo_id);
-
-	//GLenum error = App->renderer3D->CheckFrameBufferStatus();
-	//if (error != GL_FRAMEBUFFER_COMPLETE)
-	//{
-	//	CONSOLE_ERROR("RenderTextureMSAA: Framebuffer is not complete! %s", gluErrorString(error));
-	//	ret = false;
-	//}
-
-	//App->renderer3D->UnbindFrameBuffer();
-
-	////configure post-processing framebuffer
-	//fbo_id = App->renderer3D->GenFrameBuffer();
-	//App->renderer3D->BindFrameBuffer(fbo_id);
-
-	////create the color attachment texture
-	//texture_id = App->renderer3D->GenTexture();
-
-	//App->renderer3D->BindTexture(texture_id);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//App->renderer3D->SetFrameBufferTexture2D(GL_TEXTURE_2D, texture_id);
-
-	//error = App->renderer3D->CheckFrameBufferStatus();
-	//if (error != GL_FRAMEBUFFER_COMPLETE)
-	//{
-	//	CONSOLE_ERROR("RenderTextureMSAA: Intermediate framebuffer is not complete! %s", gluErrorString(error));
-	//	ret = false;
-	//}
-	//App->renderer3D->UnbindFrameBuffer();
-
 	created = true;
 
 	return ret;
@@ -702,25 +654,13 @@ void RenderTexture::Bind(uint x, uint y, uint _width, uint _height)
 	if (width != _width || height != _height)
 		Resize(x, y, width, height);
 	
-	//App->renderer3D->GetViewport(last_x, last_y, last_width, last_height);
-
-	//App->renderer3D->BindFrameBuffer(fbo_msaa_id);
-	//App->renderer3D->SetViewport(0, 0, width, height);
-	//App->renderer3D->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo_msaa_id);
+	glViewport(0, 0, width, height);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderTexture::Unbind()
 {
-	//App->renderer3D->UnbindFrameBuffer();
-	//glViewport(last_x, last_y, last_width, last_height);
-
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo_msaa_id);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo_id);
-	glBlitFramebuffer(0, 0, width, height,  // src rect
-		0, 0, width, height,  // dst rect
-		GL_COLOR_BUFFER_BIT, // buffer mask
-		GL_NEAREST); // scale filter
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(last_x, last_y, last_width, last_height);
 }

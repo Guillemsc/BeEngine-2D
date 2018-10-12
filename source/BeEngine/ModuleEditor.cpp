@@ -1,11 +1,14 @@
 #include "ModuleEditor.h"
 #include "App.h"
+#include "GeometryMath.h"
 #include "ModuleWindow.h"
-#include "MenuBar.h"
 #include "ModuleRenderer3D.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
+#include "MenuBar.h"
+#include "ToolsBar.h"
+#include "GameWindow.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -22,8 +25,9 @@ bool ModuleEditor::Awake()
 	ImGuiInit();
 
 	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
+	tools_bar = (ToolsBar*)AddEditorElement(new ToolsBar(float2(0, 19)), true);
 
-	AddEditorWindow("test", new EditorWindow());
+	AddEditorWindow("Game", new GameWindow());
 
 	return ret;
 }
@@ -41,11 +45,7 @@ bool ModuleEditor::PreUpdate()
 
 	ImGuiStartFrame();
 
-	MenuBar();
-
-	ToolsBar(float2(0, 19));
-
-	DockingSpace(float2(0, 50), float2(0, 0));
+	DockingSpace(float2(0, 58), float2(0, 0));
 
 	DrawEditorElements();
 	DrawEditorWindows();
@@ -194,6 +194,10 @@ void ModuleEditor::DrawEditorWindows()
 	{
 		if (ImGui::Begin((*it)->name.c_str(), &(*it)->opened))
 		{
+			ImVec2 win_size = ImGui::GetWindowSize();
+
+			(*it)->window_size = float2(win_size.x, win_size.y);
+
 			(*it)->DrawEditor();
 
 			ImGui::End();
@@ -246,29 +250,6 @@ void ModuleEditor::ImGuiQuit()
 	ImGui::DestroyContext();
 }
 
-void ModuleEditor::ToolsBar(float2 margins_left_up)
-{
-	float2 window_size = App->window->GetWindowSize();
-
-	float2 tools_bar_pos = float2(margins_left_up.x, margins_left_up.y);
-	float2 tools_bar_size = float2(window_size.x, 30);
-
-	bool opened = true;
-
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
-		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus
-		| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoScrollbar;
-
-	ImGui::SetNextWindowPos(ImVec2(tools_bar_pos.x, tools_bar_pos.y));
-	ImGui::SetNextWindowSize(ImVec2(tools_bar_size.x, tools_bar_size.y));
-
-	ImGui::Begin("Tools Bar", &opened, flags);
-
-	ImGui::Button("Press to die");
-
-	ImGui::End();
-}
-
 void ModuleEditor::DockingSpace(float2 margins_left_up, float2 margins_right_down)
 {
 	bool opened = true;
@@ -296,7 +277,7 @@ void ModuleEditor::LoadCustomStyle()
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-	colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 0.94f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
 	colors[ImGuiCol_ChildBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
 	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
 	colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
@@ -363,6 +344,11 @@ void EditorWindow::SetOpened(bool set)
 bool EditorWindow::GetOpened() const
 {
 	return opened;
+}
+
+float2 EditorWindow::GetWindowSize() const
+{
+	return window_size;
 }
 
 EditorElement::EditorElement()

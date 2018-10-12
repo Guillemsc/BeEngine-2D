@@ -138,79 +138,79 @@ bool ModuleRenderer3D::Start()
 
 	// Shaders testing -----------------------
 
-	//uint vao = GenVertexArrayBuffer();
-	//BindVertexArrayBuffer(vao);
+	uint vao = GenVertexArrayBuffer();
+	BindVertexArrayBuffer(vao);
 
-	//uint vbo = GenBuffer();
-	//BindArrayBuffer(vbo);
+	uint vbo = GenBuffer();
+	BindArrayBuffer(vbo);
 
-	//float g_vertex_buffer_data[] =
-	//{
-	//	0, 0, 0,
-	//	1000.0f, 0, 0.0f,
-	//	1000.0f, 1000.0f, 0.0f,
-	//};
+	float g_vertex_buffer_data[] =
+	{
+		0, 0, 0,
+		1000.0f, 0, 0.0f,
+		1000.0f, 1000.0f, 0.0f,
+	};
 
-	//LoadArrayToVRAM(sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
+	LoadArrayToVRAM(sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
 
-	//const char* user_vertex_code = 
-	//	"#version 330 core\n \
-	//	out vec3 oColour;	\
-	//	uniform vec3 Colour;\
-	//	void UserShader()\
-	//	{\
-	//		oColour = Colour;\
-	//	}";
+	const char* user_vertex_code = 
+		"#version 330 core\n \
+		out vec3 oColour;	\
+		uniform vec3 Colour;\
+		void UserShader()\
+		{\
+			oColour = Colour;\
+		}";
 
-	//const char* user_fragment_code = 		
-	//	"#version 330 core\n \
-	//	in vec3 oColour;\
-	//	out vec3 color; \
-	//	void UserShader()\
-	//	{\
-	//		color = oColour;\
-	//	}";
+	const char* user_fragment_code = 		
+		"#version 330 core\n \
+		in vec3 oColour;\
+		out vec3 color; \
+		void UserShader()\
+		{\
+			color = oColour;\
+		}";
 
-	//const char* vertex_code =
-	//	"#version 330 core\n \
-	//	layout(location = 0) in vec3 position;\n \
-	//	uniform mat4 Model; \
-	//	uniform mat4 View; \
-	//	uniform mat4 Projection; \
-	//	void UserShader();\
-	//	void main()\
-	//	{\
-	//		UserShader();\
-	//		gl_Position = Projection * View * Model * vec4(position, 1);\
-	//	}";
+	const char* vertex_code =
+		"#version 330 core\n \
+		layout(location = 0) in vec3 position;\n \
+		uniform mat4 Model; \
+		uniform mat4 View; \
+		uniform mat4 Projection; \
+		void UserShader();\
+		void main()\
+		{\
+			UserShader();\
+			gl_Position = Projection * View * Model * vec4(position, 1);\
+		}";
 
-	//const char* fragment_code =
-	//	"#version 330 core\n \
-	//	void UserShader();\
-	//	void main()\
-	//	{\
-	//		UserShader();\
-	//	}";
+	const char* fragment_code =
+		"#version 330 core\n \
+		void UserShader();\
+		void main()\
+		{\
+			UserShader();\
+		}";
 
-	//Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
-	//vsh->SetShaderCode(vertex_code);
+	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
+	vsh->SetShaderCode(vertex_code);
 
-	//Shader* user_vsh = App->shader->CreateShader(ShaderType::VERTEX);
-	//user_vsh->SetShaderCode(user_vertex_code);
+	Shader* user_vsh = App->shader->CreateShader(ShaderType::VERTEX);
+	user_vsh->SetShaderCode(user_vertex_code);
 
-	//Shader* fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
-	//fsh->SetShaderCode(fragment_code);
+	Shader* fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
+	fsh->SetShaderCode(fragment_code);
 
-	//Shader* user_fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
-	//user_fsh->SetShaderCode(user_fragment_code);
+	Shader* user_fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
+	user_fsh->SetShaderCode(user_fragment_code);
 
-	//sp = App->shader->CreateShaderProgram();
-	//sp->AddShader(user_vsh);
-	//sp->AddShader(user_fsh);
-	//sp->AddShader(vsh);
-	//sp->AddShader(fsh);
+	sp = App->shader->CreateShaderProgram();
+	sp->AddShader(user_vsh);
+	sp->AddShader(user_fsh);
+	sp->AddShader(vsh);
+	sp->AddShader(fsh);
 
-	//sp->LinkProgram();
+	sp->LinkProgram();
 	// ----------------------------------------
 
 	return ret;
@@ -238,7 +238,9 @@ bool ModuleRenderer3D::PostUpdate()
 
 	// Shaders testing -----------------------
 
-	/*float4x4 model = float4x4::identity;
+	App->camera->GetEditorCamera()->Bind(0, 0, App->window->GetWindowSize().x, App->window->GetWindowSize().y);
+
+	float4x4 model = float4x4::identity;
 	model[0][3] = 100;
 	model[1][3] = 100;
 	model[2][3] = 100;
@@ -267,7 +269,9 @@ bool ModuleRenderer3D::PostUpdate()
 		INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
 	}
 
-	DisableVertexAttributeArray(posAttrib);*/
+	DisableVertexAttributeArray(posAttrib);
+
+	App->camera->GetEditorCamera()->Unbind();
 
 	App->editor->RenderEditor();
 

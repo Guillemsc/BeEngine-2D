@@ -5,6 +5,7 @@
 #include "GeometryMath.h"
 
 class MenuBar;
+class ToolsBar;
 struct ImFont;
 
 class EditorWindow
@@ -23,10 +24,12 @@ public:
 	std::string GetName() const;
 	void SetOpened(bool set);
 	bool GetOpened() const;
+	float2 GetWindowSize() const;
 
 private:
 	std::string name;
 	bool		opened = true;
+	float2	    window_size = float2::zero;
 };
 
 class EditorElement
@@ -79,13 +82,13 @@ private:
 	void ImGuiEndFrame();
 	void ImGuiQuit();
 
-	void ToolsBar(float2 margins_left_up);
 	void DockingSpace(float2 margins_left_up, float2 margins_right_down);
 
 	void LoadCustomStyle();
 
 public:
-	MenuBar * menu_bar = nullptr;
+	MenuBar* menu_bar = nullptr;
+	ToolsBar* tools_bar = nullptr;
 
 private:
 	std::vector<EditorElement*> editor_elements;

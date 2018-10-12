@@ -378,6 +378,12 @@
     <ClInclude Include="MenuBar.h">
       <Filter>Sources\3. Editor ================</Filter>
     </ClInclude>
+    <ClInclude Include="ToolsBar.h">
+      <Filter>Sources\3. Editor ================</Filter>
+    </ClInclude>
+    <ClInclude Include="GameWindow.h">
+      <Filter>Sources\3. Editor ================</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -588,6 +594,12 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
     <ClCompile Include="MenuBar.cpp">
+      <Filter>Sources\3. Editor ================</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolsBar.cpp">
+      <Filter>Sources\3. Editor ================</Filter>
+    </ClCompile>
+    <ClCompile Include="GameWindow.cpp">
       <Filter>Sources\3. Editor ================</Filter>
     </ClCompile>
   </ItemGroup>
