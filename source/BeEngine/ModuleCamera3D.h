@@ -16,7 +16,7 @@ public:
 
 	void CleanUp();
 
-	void Bind(uint x, uint y, uint width, uint height);
+	void Bind(uint width, uint height);
 	void Unbind();
 	void ChangeMSAALevel(int MSAA_level);
 
@@ -28,8 +28,8 @@ public:
 	uint GetHeight() const;
 
 private:
-	bool Create(uint x, uint y, uint width, uint height);
-	void Resize(uint x, uint y, uint width, uint height);
+	bool Create(uint width, uint height);
+	void Resize(uint width, uint height);
 	void Destroy();
 
 private:
@@ -39,8 +39,6 @@ private:
 	uint rbo_id = 0;
 	uint texture_msaa_id = 0;
 
-	uint x = 0;
-	uint y = 0;
 	uint width = 0;
 	uint height = 0;
 
@@ -67,7 +65,7 @@ public:
 
 	void CleanUp();
 
-	void Bind(uint x, uint y, uint width, uint heigth);
+	void Bind(uint width, uint heigth);
 	void Unbind();
 	uint GetTextId();
 

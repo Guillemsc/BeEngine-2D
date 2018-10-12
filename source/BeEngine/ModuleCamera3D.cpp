@@ -273,10 +273,10 @@ void Camera3D::CleanUp()
 	//RELEASE(render_tex);
 }
 
-void Camera3D::Bind(uint x, uint y, uint width, uint heigth)
+void Camera3D::Bind(uint width, uint heigth)
 {
 	if(render_tex != nullptr)
-		render_tex->Bind(x, y, width, heigth);
+		render_tex->Bind(width, heigth);
 }
 
 void Camera3D::Unbind()
@@ -567,20 +567,12 @@ void RenderTexture::CleanUp()
 		Destroy();
 }
 
-bool RenderTexture::Create(uint _x, uint _y, uint _width, uint _height)
+bool RenderTexture::Create(uint _width, uint _height)
 {
 	bool ret = true;
 
-	x = _x;
-	y = _y;
 	width = _width;
 	height = _height;
-
-	if (x < 0)
-		x = 0;
-
-	if (y < 0)
-		y = 0;
 
 	if (width < 1)
 		width = 1;
@@ -588,81 +580,83 @@ bool RenderTexture::Create(uint _x, uint _y, uint _width, uint _height)
 	if (height < 1)
 		height = 1;
 
-	//Create MSAA framebufer
-	glGenFramebuffers(1, &fbo_msaa_id);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo_msaa_id);
+	// Create MSAA framebufer
+	fbo_msaa_id = App->renderer3D->GenFrameBuffer();
+	App->renderer3D->BindFrameBuffer(fbo_msaa_id);
 
-	//Create a multisampled color attachment texture
-	glGenTextures(1, &texture_msaa_id);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, current_msaa_samples, GL_RGB, width, height, GL_TRUE);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id, 0);
+	// Create a multisampled color attachment texture
+	texture_msaa_id = App->renderer3D->GenTexture();
+	App->renderer3D->BindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
+	App->renderer3D->Set2DMultisample(current_msaa_samples, width, height);
+	App->renderer3D->UnbindTexture(GL_TEXTURE_2D_MULTISAMPLE);
 
-	//Create a renderbuffer for depth and stencil
-	glGenRenderbuffers(1, &rbo_id);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo_id);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, current_msaa_samples, GL_DEPTH24_STENCIL8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
+	App->renderer3D->SetFrameBufferTexture2D(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
 
-	GLenum error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (error != GL_FRAMEBUFFER_COMPLETE)
-	{
-		CONSOLE_ERROR("RenderTextureMSAA: Framebuffer is not complete! %s", gluErrorString(error));
-		ret = false;
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// Create a renderbuffer for depth and stencil
+	rbo_id = App->renderer3D->GenRenderBuffer();
+	App->renderer3D->BindRenderBuffer(rbo_id);
+	App->renderer3D->RenderStorageMultisample(current_msaa_samples, width, height);
+	App->renderer3D->UnbindRenderBuffer();
+	
+	App->renderer3D->RenderFrameBuffer(rbo_id);
+	App->renderer3D->UnbindFrameBuffer();
 
-	//configure post-processing framebuffer
-	glGenFramebuffers(1, &fbo_id);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
+	// Configure post-processing framebuffer
+	fbo_id = App->renderer3D->GenFrameBuffer();
+	App->renderer3D->BindFrameBuffer(fbo_id);
 
-	//create the color attachment texture
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
+	// Create the color attachment texture
+	texture_id = App->renderer3D->GenTexture();
+	App->renderer3D->BindTexture(texture_id);
+	
+	// Set Parameters
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0);
 
-	error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (error != GL_FRAMEBUFFER_COMPLETE)
-	{
-		CONSOLE_ERROR("RenderTextureMSAA: Intermediate framebuffer is not complete! %s", gluErrorString(error));
-		ret = false;
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	App->renderer3D->SetFrameBufferTexture2D(GL_TEXTURE_2D, texture_id);
+
+	App->renderer3D->UnbindTexture();
 
 	created = true;
 
 	return ret;
 }
 
-void RenderTexture::Resize(uint x, uint y, uint width, uint height)
+void RenderTexture::Resize(uint width, uint height)
 {
 	Destroy();
 
-	Create(x, y, width, height);
+	Create(width, height);
 }
 
-void RenderTexture::Bind(uint x, uint y, uint _width, uint _height)
+void RenderTexture::Bind(uint _width, uint _height)
 {
 	if (!created)
-		Create(x, y, _width, _height);
+		Create(_width, _height);
 
 	if (width != _width || height != _height)
-		Resize(x, y, width, height);
+		Resize(width, height);
 	
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo_msaa_id);
-	glViewport(0, 0, width, height);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	App->renderer3D->BindFrameBuffer(fbo_msaa_id);
+	App->renderer3D->SetViewport(0, 0, width, height);
+	App->renderer3D->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderTexture::Unbind()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(last_x, last_y, last_width, last_height);
+	App->renderer3D->BindFrameBuffer(GL_READ_FRAMEBUFFER, fbo_msaa_id);
+	App->renderer3D->BindFrameBuffer(GL_DRAW_FRAMEBUFFER, fbo_id);
+	//
+	//App->renderer3D->BlitFrameBuffer(0, 0, width, height);
+
+	glBlitFramebuffer(0, 0, width, height,  // src rect
+		0, 0, width, height,  // dst rect
+		GL_COLOR_BUFFER_BIT, // buffer mask
+		GL_NEAREST); // scale filter
+
+	App->renderer3D->UnbindFrameBuffer();
+	App->renderer3D->SetViewport(last_x, last_y, last_width, last_height);
 }
 
 void RenderTexture::ChangeMSAALevel(int MSAA_level)
@@ -671,34 +665,22 @@ void RenderTexture::ChangeMSAALevel(int MSAA_level)
 
 	current_msaa_samples = MSAA_level;
 
-	Create(x, y, width, height);
+	Create(width, height);
 }
 
 void RenderTexture::Destroy()
 {
-	//App->renderer3D->DeleteTexture(texture_id);
-	//App->renderer3D->DeleteTexture(texture_msaa_id);
-	//App->renderer3D->DeleteFrameBuffer(fbo_id);
-	//App->renderer3D->DeleteFrameBuffer(fbo_msaa_id);
-	//App->renderer3D->DeleteFrameBuffer(rbo_id);
+	App->renderer3D->DeleteTexture(texture_id);
+	App->renderer3D->DeleteTexture(texture_msaa_id);
+	App->renderer3D->DeleteFrameBuffer(fbo_id);
+	App->renderer3D->DeleteFrameBuffer(fbo_msaa_id);
+	App->renderer3D->DeleteFrameBuffer(rbo_id);
 
-	glDeleteTextures(1, &texture_id);
 	texture_id = 0;
-	glDeleteTextures(1, &texture_msaa_id);
 	texture_msaa_id = 0;
-
-	glDeleteFramebuffers(1, &fbo_id);
 	fbo_id = 0;
-	glDeleteFramebuffers(1, &fbo_msaa_id);
 	fbo_msaa_id = 0;
-	glDeleteRenderbuffers(1, &rbo_id);
 	rbo_id = 0;
-
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_ERROR("RenderTextureMSAA: error at destroy! %s\n", gluErrorString(error));
-	}
 
 	created = false;
 }

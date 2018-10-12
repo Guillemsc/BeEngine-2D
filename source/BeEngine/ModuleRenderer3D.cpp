@@ -238,7 +238,7 @@ bool ModuleRenderer3D::PostUpdate()
 
 	// Shaders testing -----------------------
 
-	App->camera->GetEditorCamera()->Bind(0, 0, App->window->GetWindowSize().x, App->window->GetWindowSize().y);
+	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
 	float4x4 model = float4x4::identity;
 	model[0][3] = 100;
@@ -313,7 +313,7 @@ SDL_GLContext ModuleRenderer3D::GetSDLGLContext() const
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
-	App->camera->GetEditorCamera()->SetAspectRatio((float)width / (float)height);
+	
 }
 
 void ModuleRenderer3D::RenderScene()
@@ -832,6 +832,12 @@ uint ModuleRenderer3D::GenFrameBuffer() const
 
 	glGenFramebuffers(1, (GLuint*)&ret);
 
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error generating frame buffer: %s\n", gluErrorString(error));
+	}
+
 	return ret;
 }
 
@@ -843,6 +849,31 @@ void ModuleRenderer3D::BindFrameBuffer(uint id) const
 	if (error != GL_NO_ERROR)
 	{
 		INTERNAL_LOG("Error binding frame buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::BindFrameBuffer(uint target, uint id) const
+{
+	glBindFramebuffer(target, id);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error binding frame buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::BlitFrameBuffer(uint x, uint y, uint w, uint h) const
+{
+	glBlitFramebuffer(x, y, w, w,  // src rect
+		x, y, w, h,  // dst rect
+		GL_COLOR_BUFFER_BIT, // buffer mask
+		GL_NEAREST); // scale filter
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error bliting frame buffer: %s\n", gluErrorString(error));
 	}
 }
 

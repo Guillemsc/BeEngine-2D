@@ -3,7 +3,7 @@
 
 #include "ModuleEditor.h"
 
-class GameWindow : public EditorWindow
+class SceneWindow : public EditorWindow
 {
 	friend class ModuleEditor;
 
@@ -11,14 +11,15 @@ private:
 	void operator delete(void *) {}
 
 public:
-	GameWindow();
-	~GameWindow();
+	SceneWindow();
+	~SceneWindow();
 
+	void Start();
 	void CleanUp();
 	void DrawEditor();
 
 private:
-
+	float2 last_size = float2::zero;
 };
 
 #endif // !__GAME_WINDOW_H__

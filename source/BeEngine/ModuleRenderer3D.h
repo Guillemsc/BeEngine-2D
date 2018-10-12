@@ -97,6 +97,8 @@ public:
 
 	uint GenFrameBuffer() const;
 	void BindFrameBuffer(uint id) const;
+	void BindFrameBuffer(uint target, uint id) const;
+	void BlitFrameBuffer(uint x, uint y, uint w, uint h) const;
 	void RenderFrameBuffer(uint id) const;
 	void UnbindFrameBuffer() const;
 	uint CheckFrameBufferStatus();

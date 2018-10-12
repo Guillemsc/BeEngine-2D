@@ -18,6 +18,7 @@ protected:
 public:
 	EditorWindow();
 
+	virtual void Start() {};
 	virtual void CleanUp() {};
 	virtual void DrawEditor() {};
 
@@ -29,6 +30,7 @@ public:
 private:
 	std::string name;
 	bool		opened = true;
+	float2		window_pos = float2::zero;
 	float2	    window_size = float2::zero;
 };
 
@@ -42,6 +44,7 @@ private:
 public:
 	EditorElement();
 
+	virtual void Start() {};
 	virtual void CleanUp() {};
 	virtual void DrawEditor() {};
 

@@ -100,7 +100,7 @@
     <ClInclude Include="FileWatch.h" />
     <ClInclude Include="FBO.h" />
     <ClInclude Include="Functions.h" />
-    <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="Geometry\AABB.h" />
     <ClInclude Include="Geometry\AABB2D.h" />
     <ClInclude Include="Geometry\Capsule.h" />
@@ -205,7 +205,7 @@
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Functions.cpp" />
-    <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Geometry\AABB.cpp" />
     <ClCompile Include="Geometry\Capsule.cpp" />
     <ClCompile Include="Geometry\Circle.cpp" />

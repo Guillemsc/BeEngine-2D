@@ -8,7 +8,7 @@
 #include "imgui_impl_opengl3.h"
 #include "MenuBar.h"
 #include "ToolsBar.h"
-#include "GameWindow.h"
+#include "SceneWindow.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -27,7 +27,7 @@ bool ModuleEditor::Awake()
 	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
 	tools_bar = (ToolsBar*)AddEditorElement(new ToolsBar(float2(0, 19)), true);
 
-	AddEditorWindow("Game", new GameWindow());
+	AddEditorWindow("Scene", new SceneWindow());
 
 	return ret;
 }
@@ -128,6 +128,8 @@ EditorElement* ModuleEditor::AddEditorElement(EditorElement * element, bool visi
 			ret = element;
 
 			ret->SetVisible(visible);
+
+			element->Start();
 		}
 	}
 
@@ -173,6 +175,8 @@ void ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
 		{
 			window->name = name;
 			editor_windows.push_back(window);
+
+			window->Start();
 		}
 	}
 }
@@ -194,8 +198,10 @@ void ModuleEditor::DrawEditorWindows()
 	{
 		if (ImGui::Begin((*it)->name.c_str(), &(*it)->opened))
 		{
+			ImVec2 win_pos = ImGui::GetWindowPos();
 			ImVec2 win_size = ImGui::GetWindowSize();
 
+			(*it)->window_size = float2(win_pos.x, win_pos.y);
 			(*it)->window_size = float2(win_size.x, win_size.y);
 
 			(*it)->DrawEditor();

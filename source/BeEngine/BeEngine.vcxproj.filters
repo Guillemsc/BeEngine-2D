@@ -381,7 +381,7 @@
     <ClInclude Include="ToolsBar.h">
       <Filter>Sources\3. Editor ================</Filter>
     </ClInclude>
-    <ClInclude Include="GameWindow.h">
+    <ClInclude Include="SceneWindow.h">
       <Filter>Sources\3. Editor ================</Filter>
     </ClInclude>
   </ItemGroup>
@@ -599,7 +599,7 @@
     <ClCompile Include="ToolsBar.cpp">
       <Filter>Sources\3. Editor ================</Filter>
     </ClCompile>
-    <ClCompile Include="GameWindow.cpp">
+    <ClCompile Include="SceneWindow.cpp">
       <Filter>Sources\3. Editor ================</Filter>
     </ClCompile>
   </ItemGroup>
