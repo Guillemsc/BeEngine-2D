@@ -12,6 +12,7 @@
 #include "ModuleAction.h"
 #include "ModuleThread.h"
 #include "ModuleTimeSlicedTask.h"
+#include "ModuleProject.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -40,6 +41,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	action      = new ModuleAction();
 	thread      = new ModuleThread();
 	time_sliced = new ModuleTimeSlicedTask();
+	project	    = new ModuleProject();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -58,6 +60,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(audio, "Module Audio");
 	AddModule(audio, "Module Audio");
 	AddModule(shader, "Module Shader");
+	AddModule(project, "Module Project");
 
 	// Renderers
 	AddModule(renderer3D, "Module Renderer");
@@ -351,6 +354,11 @@ SDL_version Application::GetSDLVersion()
 const char * Application::GetBasePath()
 {
 	return SDL_GetBasePath();
+}
+
+const char * Application::GetPreferedPath()
+{
+	return SDL_GetPrefPath(organization.c_str(), title.c_str());
 }
 
 void Application::OpenBrowser(const char* url)

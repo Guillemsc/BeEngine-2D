@@ -396,6 +396,9 @@
     <ClInclude Include="ProjectManager.h">
       <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleProject.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -619,6 +622,9 @@
     </ClCompile>
     <ClCompile Include="ProjectManager.cpp">
       <Filter>Sources\3. Editor ================\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleProject.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

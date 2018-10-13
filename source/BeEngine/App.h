@@ -19,6 +19,7 @@ class FileSystem;
 class ModuleAction;
 class ModuleThread;
 class ModuleTimeSlicedTask;
+class ModuleProject;
 
 class Profiler;
 class JSON_Doc;
@@ -52,6 +53,7 @@ public:
 	const char* GetVersion() const;
 	SDL_version GetSDLVersion();
 	const char* GetBasePath();
+	const char* GetPreferedPath();
 
 	float GetDT() const;
 
@@ -73,7 +75,7 @@ private:
 
 public:
 	//Modules
-	ModuleJson*	      json	= nullptr;
+	ModuleJson*	          json	= nullptr;
 	ModuleWindow*         window = nullptr;
 	ModuleInput*          input = nullptr;
 	ModuleAudio*          audio = nullptr;
@@ -86,6 +88,7 @@ public:
 	ModuleAction*         action = nullptr;
 	ModuleThread*         thread = nullptr;
 	ModuleTimeSlicedTask* time_sliced = nullptr;
+	ModuleProject*		  project = nullptr;
 
 	Profiler*		   profiler = nullptr;
 

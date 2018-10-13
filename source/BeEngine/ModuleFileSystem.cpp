@@ -5,6 +5,7 @@
 #include <iostream>
 #include <ctype.h>
 #include "Functions.h"
+#include "tinyfiledialogs.h"
 
 FileSystem::FileSystem() : Module()
 {
@@ -180,6 +181,15 @@ DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
 	}
 
 	// --------------------------
+
+	return ret;
+}
+
+std::string FileSystem::SelectFolderDialog()
+{
+	std::string ret;
+
+	ret = tinyfd_selectFolderDialogW("asd", "asd");
 
 	return ret;
 }

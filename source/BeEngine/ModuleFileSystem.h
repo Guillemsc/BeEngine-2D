@@ -81,6 +81,8 @@ public:
 
 	DecomposedFilePath DecomposeFilePath(std::string file_path);
 
+	std::string SelectFolderDialog();
+
 	// DEPRECATED ---------------------------------------------------
 
 	// Example file.ex -> .ex
