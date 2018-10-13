@@ -101,6 +101,7 @@
     <ClInclude Include="FileWatch.h" />
     <ClInclude Include="FBO.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="Geometry\AABB.h" />
     <ClInclude Include="Geometry\AABB2D.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="DockingSpace.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Functions.cpp" />
+    <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Geometry\AABB.cpp" />
     <ClCompile Include="Geometry\Capsule.cpp" />

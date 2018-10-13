@@ -9,6 +9,7 @@
 #include "ToolsBar.h"
 #include "DockingSpace.h"
 #include "SceneWindow.h"
+#include "ProjectManager.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -27,6 +28,7 @@ bool ModuleEditor::Awake()
 	docking_space = (DockingSpace*)AddEditorElement(new DockingSpace(float2(0, 58), float2(0, 0)));
 	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
 	tools_bar = (ToolsBar*)AddEditorElement(new ToolsBar(float2(0, 19)), true);
+	project_manager = (ProjectManager*)AddEditorElement(new ProjectManager(), true);
 
 	AddEditorWindow("Scene", new SceneWindow());
 
@@ -36,6 +38,8 @@ bool ModuleEditor::Awake()
 bool ModuleEditor::Start()
 {
 	bool ret = true;
+
+	SetEditorState(EditorState::PROJECT_MANAGER);
 
 	return ret;
 }
@@ -88,13 +92,6 @@ void ModuleEditor::RenderEditor()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	//ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	//{
-	//	ImGui::UpdatePlatformWindows();
-	//	ImGui::RenderPlatformWindowsDefault();
-	//}
 }
 
 void ModuleEditor::EditorInput(SDL_Event event)
@@ -193,21 +190,52 @@ void ModuleEditor::DrawEditorWindows()
 {
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 	{
-		ImGuiWindowFlags flags = 0;
-		flags |= (*it)->GetWindowFlags();
-
-		if (ImGui::Begin((*it)->name.c_str(), &(*it)->opened, flags))
+		if ((*it)->GetVisible())
 		{
-			ImVec2 win_pos = ImGui::GetWindowPos();
-			ImVec2 win_size = ImGui::GetWindowSize();
+			ImGuiWindowFlags flags = 0;
+			flags |= (*it)->GetWindowFlags();
 
-			(*it)->window_size = float2(win_pos.x, win_pos.y);
-			(*it)->window_size = float2(win_size.x, win_size.y);
+			if (ImGui::Begin((*it)->name.c_str(), &(*it)->opened, flags))
+			{
+				ImVec2 win_pos = ImGui::GetWindowPos();
+				ImVec2 win_size = ImGui::GetWindowSize();
 
-			(*it)->DrawEditor();
+				(*it)->window_size = float2(win_pos.x, win_pos.y);
+				(*it)->window_size = float2(win_size.x, win_size.y);
+
+				(*it)->DrawEditor();
+			}
+			ImGui::End();
 		}
-		ImGui::End();
 	}
+}
+
+void ModuleEditor::SetEditorState(const EditorState & state)
+{
+	switch (state)
+	{
+	case EditorState::PROJECT_MANAGER:
+		project_manager->SetVisible(true);
+		docking_space->SetVisible(false);
+		menu_bar->SetVisible(false);
+		tools_bar->SetVisible(false);
+
+		for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
+			(*it)->SetVisible(false);
+		
+		break;
+	case EditorState::MAIN_ENGINE:
+		project_manager->SetVisible(false);
+		docking_space->SetVisible(true);
+		menu_bar->SetVisible(true);
+		tools_bar->SetVisible(true);
+
+		for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
+			(*it)->SetVisible(true);
+		break;
+	}
+
+	editor_state = state;
 }
 
 ImFont* ModuleEditor::GetLoadedFont(const char * name)
@@ -237,6 +265,8 @@ void ModuleEditor::ImGuiInit()
 
 	LoadImGuiFont("Roboto-Medium.ttf", 16, "RobotoMedium_16");
 	LoadImGuiFont("Roboto-Medium.ttf", 18, "RobotoMedium_18");
+	LoadImGuiFont("Roboto-Medium.ttf", 30, "RobotoMedium_30");
+	LoadImGuiFont("Roboto-Medium.ttf", 60, "RobotoMedium_60");
 	LoadImGuiFont("Roboto-Black.ttf", 16, "RobotoBlack_16");
 	LoadImGuiFont("Roboto-Bold.ttf", 17, "RobotoBold_17");
 	LoadImGuiFont("Roboto-MediumItalic.ttf", 16, "RobotoMediumItalic_16");
@@ -284,19 +314,19 @@ void ModuleEditor::LoadCustomStyle()
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-	colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
 	colors[ImGuiCol_ChildBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
 	colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.50f);
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 	colors[ImGuiCol_FrameBg] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
-	colors[ImGuiCol_TitleBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.90f);
+	colors[ImGuiCol_TitleBg] = ImVec4(0.19f, 0.19f, 0.19f, 0.90f);
 	colors[ImGuiCol_TitleBgActive] = ImVec4(0.00f, 0.45f, 0.76f, 1.00f);
 	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
-	colors[ImGuiCol_MenuBarBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.65f);
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
+	colors[ImGuiCol_MenuBarBg] = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.07f, 0.07f, 0.06f, 0.53f);
 	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
 	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
 	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
@@ -315,9 +345,9 @@ void ModuleEditor::LoadCustomStyle()
 	colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
-	colors[ImGuiCol_Tab] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
+	colors[ImGuiCol_Tab] = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
 	colors[ImGuiCol_TabHovered] = ImVec4(0.28f, 0.28f, 0.28f, 0.98f);
-	colors[ImGuiCol_TabActive] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
+	colors[ImGuiCol_TabActive] = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
 	colors[ImGuiCol_TabUnfocused] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_DockingPreview] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
@@ -343,9 +373,14 @@ std::string EditorWindow::GetName() const
 	return name;
 }
 
-void EditorWindow::SetOpened(bool set)
+void EditorWindow::SetVisible(bool set)
 {
-	opened = set;
+	visible = set;
+}
+
+bool EditorWindow::GetVisible() const
+{
+	return visible;
 }
 
 bool EditorWindow::GetOpened() const

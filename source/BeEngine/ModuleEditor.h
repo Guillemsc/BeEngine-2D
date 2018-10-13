@@ -6,10 +6,11 @@
 #include "imgui.h"
 #include <map>
 
+struct ImFont;
 class MenuBar;
 class ToolsBar;
 class DockingSpace;
-struct ImFont;
+class ProjectManager;
 
 class EditorWindow
 {
@@ -27,13 +28,15 @@ public:
 	virtual ImGuiWindowFlags GetWindowFlags() { ImGuiWindowFlags ret = 0; return ret; }
 
 	std::string GetName() const;
-	void SetOpened(bool set);
+	void SetVisible(bool set);
+	bool GetVisible() const;
 	bool GetOpened() const;
 	float2 GetWindowSize() const;
 
 private:
 	std::string name;
 	bool		opened = true;
+	bool		visible = true;
 	float2		window_pos = float2::zero;
 	float2	    window_size = float2::zero;
 };
@@ -57,6 +60,12 @@ public:
 
 private:
 	bool visible = false;
+};
+
+enum EditorState
+{
+	PROJECT_MANAGER,
+	MAIN_ENGINE,
 };
 
 class ModuleEditor : public Module
@@ -83,6 +92,8 @@ public:
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
 
+	void SetEditorState(const EditorState& state);
+
 	ImFont* GetLoadedFont(const char* name);
 
 private:
@@ -96,11 +107,14 @@ private:
 	void LoadCustomStyle();
 
 public:
-	DockingSpace* docking_space = nullptr;
-	MenuBar*      menu_bar = nullptr;
-	ToolsBar*     tools_bar = nullptr;
+	DockingSpace*   docking_space = nullptr;
+	MenuBar*        menu_bar = nullptr;
+	ToolsBar*       tools_bar = nullptr;
+	ProjectManager* project_manager = nullptr;
 
 private:
+	EditorState editor_state;
+
 	std::vector<EditorElement*> editor_elements;
 	std::vector<EditorWindow*> editor_windows;
 
