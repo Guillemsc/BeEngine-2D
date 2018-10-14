@@ -51,6 +51,7 @@ public:
 private:
 	void LoadProjects();
 	void SerializeProjects();
+	bool ProjectExists(const char* project_path);
 
 private:
 	std::vector<Project*> projects;

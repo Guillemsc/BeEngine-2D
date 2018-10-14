@@ -51,12 +51,12 @@ void ProjectManager::DrawEditor()
 
 		ImGui::SetCursorScreenPos(ImVec2(margins, 120));
 
-		if (!creating_project)
+		if (state == ProjectManagerState::SELECTING_PROJECT)
 		{
 			DrawProjectSelector();
 		}
 
-		if (creating_project)
+		if (state == ProjectManagerState::CREATING_PROJECT)
 		{
 			DrawProjectCreator();
 		}
@@ -71,16 +71,22 @@ void ProjectManager::DrawProjectSelector()
 
 	if (ImGui::Button("New Project"))
 	{
-		creating_project = true;
+		state = ProjectManagerState::CREATING_PROJECT;
 
 		project_creation_location = App->GetPreferedPath();
+		memset(project_creation_name, 0, 100);
 	}
 
 	ImGui::SameLine();
 
 	if (ImGui::Button("Open Project"))
 	{
-
+		bool canceled = false;
+		std::string open_path = App->file_system->SelectFolderDialog(canceled);
+		if (!canceled)
+		{
+			App->project->LoadProject(open_path.c_str());
+		}
 	}
 
 	ImGui::SetCursorScreenPos(ImVec2(margins, 175));
@@ -203,7 +209,7 @@ void ProjectManager::DrawProjectCreator()
 
 		if (App->project->CreateNewProject(project_creation_location.c_str(), name.c_str()))
 		{
-			creating_project = false;
+			state = ProjectManagerState::SELECTING_PROJECT;
 		}
 	}
 
@@ -211,7 +217,7 @@ void ProjectManager::DrawProjectCreator()
 
 	if (ImGui::Button("Cancel"))
 	{
-		creating_project = false;
+		state = ProjectManagerState::SELECTING_PROJECT;
 	}
 
 	ImGui::PopFont();

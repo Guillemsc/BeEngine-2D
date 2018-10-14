@@ -3,6 +3,12 @@
 
 #include "ModuleEditor.h"
 
+enum ProjectManagerState
+{
+	SELECTING_PROJECT,
+	CREATING_PROJECT,
+};
+
 class ProjectManager : public EditorElement
 {
 	friend class ModuleEditor;
@@ -30,7 +36,7 @@ private:
 	int margins = 0;
 	float2 window_size = float2::zero;
 
-	bool creating_project = false;
+	ProjectManagerState state = SELECTING_PROJECT;
 	
 	char project_creation_name[100];
 

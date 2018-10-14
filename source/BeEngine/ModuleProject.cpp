@@ -64,23 +64,32 @@ bool ModuleProject::CreateNewProject(const char* path, const char * name)
 
 	if (App->file_system->FolderExists(path))
 	{
-		Project* proj = new Project();
+		std::string full_path = path + std::string(name) + "\\";
 
-		proj->SetPath(path);
-		proj->SetName(name);
-
-		projects.push_back(proj);
-
-		JSON_Doc* doc = App->json->CreateJSON(path, "project", "beproject");
-
-		if (doc != nullptr)
+		if (!App->file_system->FolderExists(full_path.c_str()))
 		{
-			doc->SetString("name", name);
+			full_path = App->file_system->CreateFolder(path, name);
 
-			ret = true;
+			Project* proj = new Project();
+
+			proj->SetPath(full_path.c_str());
+			proj->SetName(name);
+
+			projects.push_back(proj);
+
+			JSON_Doc* doc = App->json->CreateJSON(full_path.c_str(), "project", "beproject");
+
+			if (doc != nullptr)
+			{
+				doc->SetString("name", name);
+
+				doc->Save();
+
+				ret = true;
+			}
+
+			SerializeProjects();
 		}
-
-		SerializeProjects();
 	}
 
 	return ret;
@@ -90,24 +99,27 @@ bool ModuleProject::LoadProject(const char * path)
 {
 	bool ret = false;
 
-	std::string filepath = path + std::string("project.beproject");
-
-	JSON_Doc* doc = App->json->LoadJSON(filepath.c_str());
-
-	if (doc != nullptr)
+	if (!ProjectExists(path))
 	{
-		std::string name = doc->GetString("name");
-		
-		Project* proj = new Project();
-		proj->SetPath(path);
-		proj->SetName(name.c_str());
+		std::string filepath = path + std::string("project.beproject");
 
-		projects.push_back(proj);
+		JSON_Doc* doc = App->json->LoadJSON(filepath.c_str());
 
-		ret = true;
+		if (doc != nullptr)
+		{
+			std::string name = doc->GetString("name");
+
+			Project* proj = new Project();
+			proj->SetPath(path);
+			proj->SetName(name.c_str());
+
+			projects.push_back(proj);
+
+			ret = true;
+		}
+
+		SerializeProjects();
 	}
-
-	SerializeProjects();
 
 	return ret;
 }
@@ -197,6 +209,24 @@ void ModuleProject::SerializeProjects()
 
 		App->json->UnloadJSON(doc);
 	}
+}
+
+bool ModuleProject::ProjectExists(const char* project_path)
+{
+	bool ret = false;
+
+	std::string path = project_path;
+
+	for (std::vector<Project*>::iterator it = projects.begin(); it != projects.end(); ++it)
+	{
+		if ((*it)->GetPath().compare(path) == 0)
+		{
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
 }
 
 Project::Project()
