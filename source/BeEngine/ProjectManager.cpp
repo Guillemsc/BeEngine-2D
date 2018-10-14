@@ -2,6 +2,7 @@
 #include "App.h"
 #include "ModuleWindow.h"
 #include "ModuleProject.h"
+#include "ModuleFileSystem.h"
 
 ProjectManager::ProjectManager()
 {
@@ -185,7 +186,13 @@ void ProjectManager::DrawProjectCreator()
 
 	if (ImGui::Button("..."))
 	{
+		bool canceled = false;
+		std::string folder = App->file_system->SelectFolderDialog(canceled);
 
+		if (!canceled)
+		{
+			project_creation_location = folder;
+		}
 	}
 
 	ImGui::SetCursorScreenPos(ImVec2(margins, 395));

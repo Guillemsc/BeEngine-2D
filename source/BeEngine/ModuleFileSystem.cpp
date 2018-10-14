@@ -185,13 +185,25 @@ DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
 	return ret;
 }
 
-std::string FileSystem::SelectFolderDialog()
+std::string FileSystem::SelectFolderDialog(bool& canceled)
 {
-	std::string ret;
+	std::string ret = "";
 
-	ret = tinyfd_selectFolderDialogW("asd", "asd");
+	//char const * lFilterPatterns[2] = { "*.scene; *.jscene" };
+	//const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
+	const char* folder = tinyfd_selectFolderDialog("asd", NULL);
 
-	return ret;
+	if (folder != nullptr)
+	{
+		ret = folder;
+		ret += "\\";
+
+		canceled = false;
+	}
+	else
+		canceled = true;
+
+	return ret.c_str();
 }
 
 std::string FileSystem::NewNameForFileNameCollision(const char * filename)
