@@ -29,9 +29,9 @@ private:
 	void DrawProjectCreator();
 
 private:
-	ImFont * big_font = nullptr;
-	ImFont * medium_font = nullptr;
-	ImFont * small_font = nullptr;
+	ImFont* big_font = nullptr;
+	ImFont* medium_font = nullptr;
+	ImFont* small_font = nullptr;
 
 	int margins = 0;
 	float2 window_size = float2::zero;

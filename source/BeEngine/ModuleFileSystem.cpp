@@ -189,8 +189,6 @@ std::string FileSystem::SelectFolderDialog(bool& canceled)
 {
 	std::string ret = "";
 
-	//char const * lFilterPatterns[2] = { "*.scene; *.jscene" };
-	//const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
 	const char* folder = tinyfd_selectFolderDialog("asd", NULL);
 
 	if (folder != nullptr)
@@ -204,6 +202,24 @@ std::string FileSystem::SelectFolderDialog(bool& canceled)
 		canceled = true;
 
 	return ret.c_str();
+}
+
+std::string FileSystem::SelectFileDilog(bool & canceled, const char* filter[])
+{
+	std::string ret;
+
+	//const char* lFilterPatterns[2] = { "*.scene; *.jscene" };
+	const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, filter, NULL, 0);
+
+	if (path == nullptr)
+		canceled = true;
+	else
+	{
+		canceled = false;
+		ret = path;
+	}
+
+	return ret;
 }
 
 std::string FileSystem::NewNameForFileNameCollision(const char * filename)

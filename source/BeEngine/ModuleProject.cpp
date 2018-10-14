@@ -58,6 +58,16 @@ bool ModuleProject::CleanUp()
 	return ret;
 }
 
+std::string ModuleProject::GetCurrProjectBasePath() const
+{
+	std::string ret;
+
+	if (curr_project != nullptr)
+		ret = curr_project->GetPath();
+	
+	return ret;
+}
+
 bool ModuleProject::CreateNewProject(const char* path, const char * name)
 {
 	bool ret = false;
@@ -95,13 +105,13 @@ bool ModuleProject::CreateNewProject(const char* path, const char * name)
 	return ret;
 }
 
-bool ModuleProject::LoadProject(const char * path)
+bool ModuleProject::LoadProject(const char * project_folder)
 {
 	bool ret = false;
 
-	if (!ProjectExists(path))
+	if (!ProjectExists(project_folder))
 	{
-		std::string filepath = path + std::string("project.beproject");
+		std::string filepath = project_folder + std::string("project.beproject");
 
 		JSON_Doc* doc = App->json->LoadJSON(filepath.c_str());
 
@@ -110,7 +120,7 @@ bool ModuleProject::LoadProject(const char * path)
 			std::string name = doc->GetString("name");
 
 			Project* proj = new Project();
-			proj->SetPath(path);
+			proj->SetPath(project_folder);
 			proj->SetName(name.c_str());
 
 			projects.push_back(proj);
@@ -120,6 +130,27 @@ bool ModuleProject::LoadProject(const char * path)
 
 		SerializeProjects();
 	}
+
+	return ret;
+}
+
+bool ModuleProject::RemoveProject(const char * project_folder)
+{
+	bool ret = false;
+
+	std::string path = project_folder;
+
+	for (std::vector<Project*>::iterator it = projects.begin(); it != projects.end(); ++it)
+	{
+		if ((*it)->GetPath().compare(path) == 0)
+		{
+			ret = true;
+			projects.erase(it);
+			break;
+		}
+	}
+
+	SerializeProjects();
 
 	return ret;
 }
@@ -163,11 +194,18 @@ void ModuleProject::LoadProjects()
 				std::string name = section_node.GetString("name");
 				std::string path = section_node.GetString("path");
 
-				Project* proj = new Project();
-				proj->SetName(name.c_str());
-				proj->SetPath(path.c_str());
+				if (App->file_system->FolderExists(path.c_str()))
+				{
+					std::string project_doc_path = path + "project.beproject";
+					if(App->file_system->FileExists(project_doc_path.c_str()))
+					{
+						Project* proj = new Project();
+						proj->SetName(name.c_str());
+						proj->SetPath(path.c_str());
 
-				projects.push_back(proj);
+						projects.push_back(proj);
+					}
+				}
 			}
 		}
 

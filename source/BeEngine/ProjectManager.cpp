@@ -82,10 +82,14 @@ void ProjectManager::DrawProjectSelector()
 	if (ImGui::Button("Open Project"))
 	{
 		bool canceled = false;
-		std::string open_path = App->file_system->SelectFolderDialog(canceled);
+		const char* filter[1] = { "*.beproject" };
+		std::string open_path = App->file_system->SelectFileDilog(canceled, filter);
+
 		if (!canceled)
 		{
-			App->project->LoadProject(open_path.c_str());
+			DecomposedFilePath dfp = App->file_system->DecomposeFilePath(open_path);
+
+			App->project->LoadProject(dfp.path.c_str());
 		}
 	}
 
@@ -105,7 +109,7 @@ void ProjectManager::DrawProjectSelector()
 	if (projects.size() > 0)
 	{
 		int count = 0;
-		for (std::vector<Project*>::iterator it = projects.begin(); it != projects.end(); ++it)
+		for (std::vector<Project*>::reverse_iterator it = projects.rbegin(); it != projects.rend(); ++it)
 		{
 			ImGui::PushFont(medium_font);
 
@@ -134,6 +138,13 @@ void ProjectManager::DrawProjectSelector()
 				App->OpenFolder((*it)->GetPath().c_str());
 			}
 
+			ImGui::SameLine();
+
+			if (ImGui::Button("X"))
+			{
+				App->project->RemoveProject((*it)->GetPath().c_str());
+			}
+
 			ImGui::PopID();
 
 			ImGui::SetCursorPosY(90 + (count * 100));
@@ -149,7 +160,7 @@ void ProjectManager::DrawProjectSelector()
 	{
 		ImGui::PushFont(medium_font);
 
-		ImGui::Text("There is no projects");
+		ImGui::Text("There are no projects");
 
 		ImGui::PopFont();
 	}

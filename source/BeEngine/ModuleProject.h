@@ -44,7 +44,8 @@ public:
 	std::string GetCurrProjectBasePath() const;
 
 	bool CreateNewProject(const char* path, const char* name);
-	bool LoadProject(const char* path);
+	bool LoadProject(const char* project_folder);
+	bool RemoveProject(const char* project_folder);
 	void SetCurrProject(Project* set);
 	std::vector<Project*> GetProjects() const;
 
