@@ -17,13 +17,13 @@ private:
 public: 
 	EventDelegate(EventType e_type);
 
-	void AddListener(const std::function<void(const Event&)>& function);
-	void RemoveListener(const std::function<void(const Event&)>& function);
+	void AddListener(const std::function<void(Event*)>& function);
+	void RemoveListener(const std::function<void(Event*)>& function);
 
-	void CallListeners(const Event& ev);
+	void CallListeners(Event* ev);
 
 private:
-	std::vector<std::function<void(const Event&)>> listeners;
+	std::vector<std::function<void(Event*)>> listeners;
 
 	EventType event_type;
 };
@@ -41,14 +41,14 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
-	void Suscribe(const std::function<void(const Event&)>& function, EventType e_type);
-	void UnSuscribe(const std::function<void(const Event&)>& function, EventType e_type);
+	void Suscribe(const std::function<void(Event*)>& function, EventType e_type);
+	void UnSuscribe(const std::function<void(Event*)>& function, EventType e_type);
 
-	void SendEvent(const Event& ev);
+	void SendEvent(Event* ev);
 
 private:
 	void DestroyAllEventDelegates();
-	void OnEvent(const Event& ev) {}
+	void OnEvent(Event*) {}
 
 private:
 	std::map<int, EventDelegate*> event_delegates;

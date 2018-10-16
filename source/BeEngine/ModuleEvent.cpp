@@ -5,14 +5,14 @@ EventDelegate::EventDelegate(EventType e_type)
 	event_type = e_type;
 }
 
-void EventDelegate::AddListener(const std::function<void(const Event& ev)>& function)
+void EventDelegate::AddListener(const std::function<void(Event* ev)>& function)
 {
 	listeners.push_back(function);
 }
 
-void EventDelegate::RemoveListener(const std::function<void(const Event&)>& function)
+void EventDelegate::RemoveListener(const std::function<void(Event*)>& function)
 {
-	for (std::vector<std::function<void(const Event&)>>::iterator it = listeners.begin(); it != listeners.end(); ++it)
+	for (std::vector<std::function<void(Event*)>>::iterator it = listeners.begin(); it != listeners.end(); ++it)
 	{
 		if ((*it).target_type() == function.target_type())
 		{
@@ -22,9 +22,9 @@ void EventDelegate::RemoveListener(const std::function<void(const Event&)>& func
 	}
 }
 
-void EventDelegate::CallListeners(const Event & ev)
+void EventDelegate::CallListeners(Event* ev)
 {
-	for (std::vector<std::function<void(const Event&)>>::iterator it = listeners.begin(); it != listeners.end(); ++it)
+	for (std::vector<std::function<void(Event*)>>::iterator it = listeners.begin(); it != listeners.end(); ++it)
 	{
 		if (*it)
 			(*it)(ev);
@@ -84,7 +84,7 @@ bool ModuleEvent::CleanUp()
 	return ret;
 }
 
-void ModuleEvent::Suscribe(const std::function<void(const Event&)>& function, EventType e_type)
+void ModuleEvent::Suscribe(const std::function<void(Event*)>& function, EventType e_type)
 {
 	EventDelegate* ed = event_delegates[e_type];
 
@@ -98,7 +98,7 @@ void ModuleEvent::Suscribe(const std::function<void(const Event&)>& function, Ev
 	ed->AddListener(function);
 }
 
-void ModuleEvent::UnSuscribe(const std::function<void(const Event&)>& function, EventType e_type)
+void ModuleEvent::UnSuscribe(const std::function<void(Event*)>& function, EventType e_type)
 {
 	EventDelegate* ed = event_delegates[e_type];
 
@@ -108,14 +108,16 @@ void ModuleEvent::UnSuscribe(const std::function<void(const Event&)>& function, 
 	}
 }
 
-void ModuleEvent::SendEvent(const Event & ev)
+void ModuleEvent::SendEvent(Event* ev)
 {
-	EventDelegate* ed = event_delegates[ev.GetType()];
+	EventDelegate* ed = event_delegates[ev->GetType()];
 
 	if (ed != nullptr)
 	{
 		ed->CallListeners(ev);
 	}
+
+	RELEASE(ev);
 }
 
 void ModuleEvent::DestroyAllEventDelegates()

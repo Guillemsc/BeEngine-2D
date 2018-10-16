@@ -103,7 +103,7 @@ void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 					if (curr->on_start)
 						curr->on_start(*it);
 
-					App->event->SendEvent(EventTimeSlicedTaskStarted(curr));
+					App->event->SendEvent(new EventTimeSlicedTaskStarted(curr));
 
 					curr->first_update = false;
 				}
@@ -123,7 +123,7 @@ void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 			if (curr->on_finish)
 				curr->on_finish(curr);
 
-			App->event->SendEvent(EventTimeSlicedTaskFinished(curr));
+			App->event->SendEvent(new EventTimeSlicedTaskFinished(curr));
 
 			RELEASE(*it);
 

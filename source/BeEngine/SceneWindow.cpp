@@ -28,7 +28,7 @@ void SceneWindow::DrawEditor()
 
 	if (last_size.x != window_size.x || last_size.y != window_size.y)
 	{
-		App->event->SendEvent(EventSceneWindowResize(last_size, window_size));
+		App->event->SendEvent(new EventSceneWindowResize(last_size, window_size));
 
 		last_size = window_size;
 

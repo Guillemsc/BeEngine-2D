@@ -2,9 +2,13 @@
 #define __MODULE_PROJECT_H__
 
 #include "Module.h"
+#include "ModuleThreadTask.h"
+
+class Event;
 
 class Project
 {
+	friend class LoadProjectsThreadTask;
 	friend class ModuleProject;
 
 private:
@@ -30,6 +34,8 @@ private:
 
 class ModuleProject : public Module
 {
+	friend class LoadProjectsThreadTask;
+
 public:
 	ModuleProject();
 	~ModuleProject();
@@ -54,12 +60,29 @@ private:
 	void SerializeProjects();
 	bool ProjectExists(const char* project_path);
 
+	void OnEvent(Event*ev);
+
 private:
 	std::vector<Project*> projects;
 
 	Project* curr_project = nullptr;
 
 	std::string projects_json_filepath;
+
+	LoadProjectsThreadTask* task = nullptr;
+};
+
+class LoadProjectsThreadTask : public ThreadTask
+{
+public:
+	LoadProjectsThreadTask(ModuleProject* module_proj);
+
+	void Start();
+	void Update();
+	void Finish();
+
+private:
+	ModuleProject* module_proj = nullptr;
 };
 
 #endif // !__MODULE_PROJECT_H__

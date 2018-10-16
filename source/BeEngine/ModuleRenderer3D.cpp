@@ -7,7 +7,6 @@
 #include "FBO.h"
 #include "ModuleShader.h"
 #include "ModuleEditor.h"
-#include "ModuleThread.h"
 #include "SDL/include/SDL_opengl.h"
 #include "ImGuizmo.h"
 #include <gl/GL.h>

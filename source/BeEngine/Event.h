@@ -3,6 +3,7 @@
 
 #include "ModuleTimeSlicedTask.h"
 #include "GeometryMath.h"
+#include "ModuleThreadTask.h"
 
 enum EventType;
 
@@ -24,6 +25,8 @@ enum EventType
 {
 	TIME_SLICED_TASK_FINISHED,
 	TIME_SLICED_TASK_STARTED,
+
+	THREAD_TASK_FINISHED,
 
 	SCENE_WINDOW_RESIZE,
 };
@@ -60,6 +63,23 @@ public:
 
 private:
 	TimeSlicedTask * task = nullptr;
+};
+
+class EventThreadTaskFinished : public Event
+{
+public:
+	EventThreadTaskFinished(ThreadTask* thread_task) : Event(EventType::THREAD_TASK_FINISHED)
+	{
+		task = thread_task;
+	}
+
+	ThreadTask* GetTask() const
+	{
+		return task;
+	};
+
+private:
+	ThreadTask* task = nullptr;
 };
 
 class EventSceneWindowResize : public Event

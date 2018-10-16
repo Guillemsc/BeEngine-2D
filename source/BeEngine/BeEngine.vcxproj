@@ -190,7 +190,7 @@
     <ClInclude Include="ModuleAudio.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleShader.h" />
-    <ClInclude Include="ModuleThread.h" />
+    <ClInclude Include="ModuleThreadTask.h" />
     <ClInclude Include="ModuleTimeSlicedTask.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="Parson\parson.h" />
@@ -267,7 +267,7 @@
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleShader.cpp" />
-    <ClCompile Include="ModuleThread.cpp" />
+    <ClCompile Include="ModuleThreadTask.cpp" />
     <ClCompile Include="ModuleTimeSlicedTask.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Parson\parson.c" />
