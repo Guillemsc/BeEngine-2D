@@ -30,7 +30,7 @@ void ProgressWindow::DrawEditor()
 		float2 window_size = App->window->GetWindowSize();
 		ImGui::SetNextWindowPos(ImVec2(window_size.x - last_window_size.x - 5, window_size.y - last_window_size.y - 10));
 
-		if (ImGui::Begin("Wait..", nullptr, flags))
+		if (ImGui::Begin("ProgressWindow", nullptr, flags))
 		{
 			for (std::map<std::string, float>::iterator it = processes.begin(); it != processes.end(); ++it)
 			{

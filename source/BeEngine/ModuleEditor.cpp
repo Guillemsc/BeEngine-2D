@@ -302,7 +302,7 @@ ImFont* ModuleEditor::LoadImGuiFont(const char * filename, int size, const char 
 
 	ImGuiIO& io = ImGui::GetIO();
 	
-	std::string font_path = App->GetBasePath() + std::string("fonts\\") + filename;
+	std::string font_path = std::string("fonts\\") + filename;
 
 	ret = io.Fonts->AddFontFromFileTTF(font_path.c_str(), size);
 
