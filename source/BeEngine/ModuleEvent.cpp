@@ -110,14 +110,17 @@ void ModuleEvent::UnSuscribe(const std::function<void(Event*)>& function, EventT
 
 void ModuleEvent::SendEvent(Event* ev)
 {
-	EventDelegate* ed = event_delegates[ev->GetType()];
-
-	if (ed != nullptr)
+	if (ev != nullptr)
 	{
-		ed->CallListeners(ev);
-	}
+		EventDelegate* ed = event_delegates[ev->GetType()];
 
-	RELEASE(ev);
+		if (ed != nullptr)
+		{
+			ed->CallListeners(ev);
+		}
+
+		RELEASE(ev);
+	}
 }
 
 void ModuleEvent::DestroyAllEventDelegates()

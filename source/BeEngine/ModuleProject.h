@@ -53,6 +53,7 @@ public:
 	bool LoadProject(const char* project_folder);
 	bool RemoveProject(const char* project_folder);
 	void SetCurrProject(Project* set);
+	bool GetProjectsLoaded() const;
 	std::vector<Project*> GetProjects() const;
 
 private:
@@ -64,12 +65,13 @@ private:
 
 private:
 	std::vector<Project*> projects;
-
+	bool projects_loaded = false;
 	Project* curr_project = nullptr;
 
 	std::string projects_json_filepath;
 
 	LoadProjectsThreadTask* task = nullptr;
+	std::mutex projects_lock;
 };
 
 class LoadProjectsThreadTask : public ThreadTask

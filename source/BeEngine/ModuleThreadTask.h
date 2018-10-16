@@ -5,6 +5,7 @@
 #include <thread>
 #include <functional>
 #include <future>
+#include <mutex>
 
 class ThreadTask
 {

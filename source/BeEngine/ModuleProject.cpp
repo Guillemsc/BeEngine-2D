@@ -8,6 +8,7 @@
 
 ModuleProject::ModuleProject()
 {
+	projects_json_filepath = App->GetBasePath() + std::string("Projects.json");
 }
 
 ModuleProject::~ModuleProject()
@@ -22,10 +23,10 @@ bool ModuleProject::Awake()
 
 	App->window->GetWindowNamer()->AddNamePart("project_name", "");
 
-	task = new LoadProjectsThreadTask(this);
-	App->thread->StartThread(task);
+	//task = new LoadProjectsThreadTask(this);
+	//App->thread->StartThread(task);
 
-	//LoadProjects();
+	LoadProjects();
 
 	return ret;
 }
@@ -172,6 +173,11 @@ void ModuleProject::SetCurrProject(Project * set)
 	}
 }
 
+bool ModuleProject::GetProjectsLoaded() const
+{
+	return projects_loaded;
+}
+
 std::vector<Project*> ModuleProject::GetProjects() const
 {
 	return projects;
@@ -179,8 +185,6 @@ std::vector<Project*> ModuleProject::GetProjects() const
 
 void ModuleProject::LoadProjects()
 {
-	projects_json_filepath = App->GetBasePath() + std::string("Projects.json");
-
 	JSON_Doc* doc = App->json->LoadJSON(projects_json_filepath.c_str());
 
 	if (doc == nullptr)
@@ -217,6 +221,8 @@ void ModuleProject::LoadProjects()
 		}
 
 		App->json->UnloadJSON(doc);
+
+		SerializeProjects();
 	}
 }
 
@@ -282,7 +288,7 @@ void ModuleProject::OnEvent(Event* ev)
 
 		if (task == th_event->GetTask())
 		{
-			int i = 0;
+			projects_loaded = true;
 		}
 	}
 }
@@ -366,8 +372,10 @@ void LoadProjectsThreadTask::Update()
 						Project* proj = new Project();
 						proj->SetName(name.c_str());
 						proj->SetPath(path.c_str());
-
+						
+						module_proj->projects_lock.lock();
 						module_proj->projects.push_back(proj);
+						module_proj->projects_lock.unlock();
 					}
 				}
 			}

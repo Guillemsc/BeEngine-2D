@@ -49,16 +49,19 @@ void ProjectManager::DrawEditor()
 
 		ImGui::PopFont();
 
-		ImGui::SetCursorScreenPos(ImVec2(margins, 120));
-
-		if (state == ProjectManagerState::SELECTING_PROJECT)
+		if (1)
 		{
-			DrawProjectSelector();
-		}
+			ImGui::SetCursorScreenPos(ImVec2(margins, 120));
 
-		if (state == ProjectManagerState::CREATING_PROJECT)
-		{
-			DrawProjectCreator();
+			if (state == ProjectManagerState::SELECTING_PROJECT)
+			{
+				DrawProjectSelector();
+			}
+
+			if (state == ProjectManagerState::CREATING_PROJECT)
+			{
+				DrawProjectCreator();
+			}
 		}
 	}
 
@@ -216,11 +219,17 @@ void ProjectManager::DrawProjectCreator()
 
 	if(ImGui::Button("Create project"))
 	{
-		std::string name = project_creation_name;
+		//std::string name = project_creation_name;
 
-		if (App->project->CreateNewProject(project_creation_location.c_str(), name.c_str()))
+		for (int i = 0; i < 1000; ++i)
 		{
-			state = ProjectManagerState::SELECTING_PROJECT;
+			std::string name = project_creation_name;
+			name += std::to_string(i);
+
+			if (App->project->CreateNewProject(project_creation_location.c_str(), name.c_str()))
+			{
+				state = ProjectManagerState::SELECTING_PROJECT;
+			}
 		}
 	}
 
