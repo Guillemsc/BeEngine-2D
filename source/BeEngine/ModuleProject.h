@@ -3,12 +3,14 @@
 
 #include "Module.h"
 #include "ModuleThreadTask.h"
+#include "ModuleTimeSlicedTask.h"
 
 class Event;
 
 class Project
 {
 	friend class LoadProjectsThreadTask;
+	friend class LoadProjectsTimeSlicedTask;
 	friend class ModuleProject;
 
 private:
@@ -35,6 +37,7 @@ private:
 class ModuleProject : public Module
 {
 	friend class LoadProjectsThreadTask;
+	friend class LoadProjectsTimeSlicedTask;
 
 public:
 	ModuleProject();
@@ -72,6 +75,8 @@ private:
 
 	LoadProjectsThreadTask* task = nullptr;
 	std::mutex projects_lock;
+
+	LoadProjectsTimeSlicedTask* time_sliced_load_projects_task = nullptr;
 };
 
 class LoadProjectsThreadTask : public ThreadTask
@@ -85,6 +90,21 @@ public:
 
 private:
 	ModuleProject* module_proj = nullptr;
+};
+
+class LoadProjectsTimeSlicedTask : public TimeSlicedTask
+{
+public:
+	LoadProjectsTimeSlicedTask();
+
+	void Start();
+	void Update();
+	void Finish();
+
+private:
+	JSON_Doc* doc = nullptr;
+	int projects_count = 0;
+	int curr_project = 0;
 };
 
 #endif // !__MODULE_PROJECT_H__

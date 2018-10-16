@@ -2,6 +2,8 @@
 #include "App.h"
 #include "ModuleEvent.h"
 #include "Event.h"
+#include "ModuleEditor.h"
+#include "ProgressWindow.h"
 
 ModuleTimeSlicedTask::ModuleTimeSlicedTask()
 {
@@ -37,6 +39,8 @@ bool ModuleTimeSlicedTask::PreUpdate()
 bool ModuleTimeSlicedTask::Update()
 {
 	bool ret = true;
+
+	UpdateEditor();
 
 	return ret;
 }
@@ -105,6 +109,8 @@ void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 
 					App->event->SendEvent(new EventTimeSlicedTaskStarted(curr));
 
+					curr->Start();
+
 					curr->first_update = false;
 				}
 
@@ -129,6 +135,14 @@ void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 
 			it = running_tasks.erase(it);
 		}
+	}
+}
+
+void ModuleTimeSlicedTask::UpdateEditor()
+{
+	for (std::vector<TimeSlicedTask*>::iterator it = running_tasks.begin(); it != running_tasks.end(); ++it)
+	{
+		App->editor->progress_window->AddProcess((*it)->GetDescription(), (*it)->GetPercentageProgress());
 	}
 }
 

@@ -10,6 +10,7 @@
 #include "DockingSpace.h"
 #include "SceneWindow.h"
 #include "ProjectManager.h"
+#include "ProgressWindow.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -29,6 +30,7 @@ bool ModuleEditor::Awake()
 	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
 	tools_bar = (ToolsBar*)AddEditorElement(new ToolsBar(float2(0, 19)), true);
 	project_manager = (ProjectManager*)AddEditorElement(new ProjectManager(), true);
+	progress_window = (ProgressWindow*)AddEditorElement(new ProgressWindow(), true);
 
 	AddEditorWindow("Scene", new SceneWindow());
 

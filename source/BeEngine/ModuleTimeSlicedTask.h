@@ -14,9 +14,6 @@ class TimeSlicedTask
 {
 	friend class ModuleTimeSlicedTask;
 
-private:
-	void operator delete(void *) {}
-
 public:
 	TimeSlicedTask(TimeSlicedTaskType mode, uint iterations_per_frame = 10, std::string task_name = "TimeSlicedTask");
 
@@ -71,6 +68,7 @@ public:
 
 private:
 	void UpdateTimeSlicedTasks();
+	void UpdateEditor();
 
 private:
 	std::vector<TimeSlicedTask*> running_tasks;

@@ -102,6 +102,7 @@
     <ClInclude Include="FBO.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="ModuleProject.h" />
+    <ClInclude Include="ProgressWindow.h" />
     <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="Geometry\AABB.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
+    <ClCompile Include="ProgressWindow.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Geometry\AABB.cpp" />

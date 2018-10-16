@@ -11,6 +11,7 @@ class MenuBar;
 class ToolsBar;
 class DockingSpace;
 class ProjectManager;
+class ProgressWindow;
 
 class EditorWindow
 {
@@ -111,6 +112,7 @@ public:
 	MenuBar*        menu_bar = nullptr;
 	ToolsBar*       tools_bar = nullptr;
 	ProjectManager* project_manager = nullptr;
+	ProgressWindow* progress_window = nullptr;
 
 private:
 	EditorState editor_state;

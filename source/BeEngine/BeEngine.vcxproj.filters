@@ -399,6 +399,9 @@
     <ClInclude Include="ModuleThreadTask.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ProgressWindow.h">
+      <Filter>Sources\3. Editor ================\Elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -625,6 +628,9 @@
     </ClCompile>
     <ClCompile Include="ModuleThreadTask.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressWindow.cpp">
+      <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
