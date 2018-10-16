@@ -10,7 +10,7 @@
 #include "ModuleEditor.h"
 #include "ModuleEvent.h"
 #include "ModuleAction.h"
-#include "ModuleThread.h"
+#include "ModuleThreadTask.h"
 #include "ModuleTimeSlicedTask.h"
 #include "ModuleProject.h"
 #include "imgui.h"
@@ -39,7 +39,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	event       = new ModuleEvent();
 	file_system = new FileSystem();
 	action      = new ModuleAction();
-	thread      = new ModuleThread();
+	thread      = new ModuleThreadTask();
 	time_sliced = new ModuleTimeSlicedTask();
 	project	    = new ModuleProject();
 
