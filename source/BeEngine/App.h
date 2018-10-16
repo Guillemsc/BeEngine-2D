@@ -17,7 +17,7 @@ class ModuleEditor;
 class ModuleEvent;
 class FileSystem;
 class ModuleAction;
-class ModuleThreadTask;
+class ModuleThread;
 class ModuleTimeSlicedTask;
 class ModuleProject;
 
@@ -86,7 +86,7 @@ public:
 	ModuleEvent*          event = nullptr;
 	FileSystem*		      file_system = nullptr;
 	ModuleAction*         action = nullptr;
-	ModuleThreadTask*     thread = nullptr;
+	ModuleThread*         thread = nullptr;
 	ModuleTimeSlicedTask* time_sliced = nullptr;
 	ModuleProject*		  project = nullptr;
 

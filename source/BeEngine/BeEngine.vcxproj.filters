@@ -372,6 +372,9 @@
     <ClInclude Include="ModuleAction.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleThread.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
     <ClInclude Include="ModuleTimeSlicedTask.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
@@ -394,9 +397,6 @@
       <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClInclude>
     <ClInclude Include="ModuleProject.h">
-      <Filter>Sources\2. Modules ==============</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleThreadTask.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
   </ItemGroup>
@@ -602,6 +602,9 @@
     <ClCompile Include="ModuleAction.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleThread.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
     <ClCompile Include="ModuleTimeSlicedTask.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
@@ -621,9 +624,6 @@
       <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClCompile>
     <ClCompile Include="ModuleProject.cpp">
-      <Filter>Sources\2. Modules ==============</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleThreadTask.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>

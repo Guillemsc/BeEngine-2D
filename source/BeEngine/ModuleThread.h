@@ -6,35 +6,15 @@
 #include <functional>
 #include <future>
 
-class ThreadTask
-{
-	friend class ModuleThreadTask;
-
-private:
-	void operator delete(void *) {}
-
-public:
-	ThreadTask();
-
-	virtual void Start() {};
-	virtual void Update() {};
-	virtual void Finish() {};
-
-	void FinishTask();
-
-private:
-	bool finished = false;
-};
-
 class Thread
 {
-	friend class ModuleThreadTask;
+	friend class ModuleThread;
 
 private:
 	void operator delete(void *) {}
 
 public:
-	Thread(const std::function<bool(ThreadTask*)>& function);
+	Thread(const std::function<bool(void)>& function);
 	~Thread();
 
 	void Start();
@@ -45,17 +25,15 @@ private:
 	bool started = false;
 	bool finished = false;
 
-	std::function<bool(ThreadTask*)> function;
+	std::function<bool(void)> function;
 	std::future<bool> future;
-
-	ThreadTask* task = nullptr;
 };
 
-class ModuleThreadTask : public Module
+class ModuleThread : public Module
 {
 public:
-	ModuleThreadTask();
-	~ModuleThreadTask();
+	ModuleThread();
+	~ModuleThread();
 
 	bool Awake();
 	bool Start();
@@ -64,12 +42,10 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
-	void StartThread(ThreadTask* task);
+	void StartThread(const std::function<bool(void)>& function);
 
 private:
 	void CheckThreadsStatus();
-
-	bool ThreadFunction(ThreadTask* task);
 
 private:
 	std::vector<Thread*> threads;
