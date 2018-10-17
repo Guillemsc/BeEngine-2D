@@ -1,10 +1,10 @@
-#ifndef __SCENE_WINDOW_H__
-#define __SCENE_WINDOW_H__
+#ifndef __PROFILER_WINDOW_H__
+#define __PROFILER_WINDOW_H__
 
 #include "ModuleEditor.h"
 #include "imgui.h"
 
-class SceneWindow : public EditorWindow
+class ProfilerWindow : public EditorWindow
 {
 	friend class ModuleEditor;
 
@@ -12,8 +12,8 @@ private:
 	void operator delete(void *) {}
 
 public:
-	SceneWindow();
-	~SceneWindow();
+	ProfilerWindow();
+	~ProfilerWindow();
 
 	void Start();
 	void CleanUp();
@@ -21,9 +21,7 @@ public:
 	ImGuiWindowFlags GetWindowFlags();
 
 private:
-	float2 last_size = float2::zero;
-
 	ImFont* font = nullptr;
 };
 
-#endif // !__SCENE_WINDOW_H__
+#endif // !__PROFILER_WINDOW_H__

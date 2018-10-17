@@ -402,6 +402,12 @@
     <ClInclude Include="ProgressWindow.h">
       <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClInclude>
+    <ClInclude Include="ProfilerWindow.h">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_docking.h">
+      <Filter>Sources\7. ThirdParties ============\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -631,6 +637,12 @@
     </ClCompile>
     <ClCompile Include="ProgressWindow.cpp">
       <Filter>Sources\3. Editor ================\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfilerWindow.cpp">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_docking.cpp">
+      <Filter>Sources\7. ThirdParties ============\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,8 @@
 #include "SceneWindow.h"
 #include "ProjectManager.h"
 #include "ProgressWindow.h"
+#include "ProfilerWindow.h"
+#include "imgui_docking.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -33,6 +35,7 @@ bool ModuleEditor::Awake()
 	progress_window = (ProgressWindow*)AddEditorElement(new ProgressWindow(), true);
 
 	AddEditorWindow("Scene", new SceneWindow());
+	AddEditorWindow("Profiler", new ProfilerWindow());
 
 	return ret;
 }
@@ -72,6 +75,8 @@ bool ModuleEditor::Update()
 bool ModuleEditor::PostUpdate()
 {
 	bool ret = true;
+
+	ImGuiEndFrame();
 
 	return ret;
 }
@@ -190,6 +195,8 @@ void ModuleEditor::DestroyAllEditorWindows()
 
 void ModuleEditor::DrawEditorWindows()
 {
+	docking_space->BeginDockSpace();
+
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 	{
 		if ((*it)->GetVisible())
@@ -197,7 +204,7 @@ void ModuleEditor::DrawEditorWindows()
 			ImGuiWindowFlags flags = 0;
 			flags |= (*it)->GetWindowFlags();
 
-			if (ImGui::Begin((*it)->name.c_str(), &(*it)->opened, flags))
+			if (ImGui::BeginDock((*it)->name.c_str(), false, &(*it)->opened, false, flags))
 			{
 				ImVec2 win_pos = ImGui::GetWindowPos();
 				ImVec2 win_size = ImGui::GetWindowSize();
@@ -205,11 +212,21 @@ void ModuleEditor::DrawEditorWindows()
 				(*it)->window_size = float2(win_pos.x, win_pos.y);
 				(*it)->window_size = float2(win_size.x, win_size.y);
 
+				(*it)->docking_id = ImGui::GetWindowDockId();
+
 				(*it)->DrawEditor();
 			}
-			ImGui::End();
+			ImGui::EndDock();
 		}
 	}
+
+	bool opened = true;
+	if (ImGui::BeginDock("Dumyyyyyy", false, &opened, false))
+	{
+	}
+	ImGui::EndDock();
+
+	docking_space->EndDockSpace();
 }
 
 void ModuleEditor::SetEditorState(const EditorState & state)
@@ -255,7 +272,7 @@ void ModuleEditor::ImGuiInit()
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer3D->GetSDLGLContext());
@@ -286,7 +303,6 @@ void ModuleEditor::ImGuiStartFrame()
 
 void ModuleEditor::ImGuiEndFrame()
 {
-
 }
 
 void ModuleEditor::ImGuiQuit()

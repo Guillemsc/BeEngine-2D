@@ -2,6 +2,7 @@
 #include "App.h"
 #include "ModuleWindow.h"
 #include "ModuleEditor.h"
+#include "imgui_docking.h"
 #include "imgui.h"
 
 DockingSpace::DockingSpace(float2 _margins_left_up, float2 _margins_right_down)
@@ -25,11 +26,26 @@ void DockingSpace::CleanUp()
 
 void DockingSpace::DrawEditor()
 {
+
+	//if (ImGui::Begin("DockingSpace", &opened, flags))
+	//{
+	//	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+	//	ImGui::DockSpace(dockspace_id, ImVec2(docking_size.x - 15, docking_size.y - 15));
+
+	//	docking_id = ImGui::GetWindowDockId();
+	//}
+	//ImGui::End();
+
+	//ImGui::PopFont();
+}
+
+void DockingSpace::BeginDockSpace()
+{
 	float2 window_size = App->window->GetWindowSize();
 
 	float2 docking_pos = float2(margins_left_up.x - 5, margins_left_up.y - 5);
-	float2 docking_size = float2(window_size.x - margins_right_down.x + 7 - margins_left_up.x,
-		window_size.y - margins_right_down.y + 7 - margins_left_up.y);
+	float2 docking_size = float2(window_size.x - margins_right_down.x + 20 - margins_left_up.x,
+		window_size.y - margins_right_down.y + 20 - margins_left_up.y);
 
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
 		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus;
@@ -39,11 +55,15 @@ void DockingSpace::DrawEditor()
 
 	ImGui::PushFont(font);
 
-	if (ImGui::Begin("DockingSpace", &opened, flags))
-	{
-		ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-		ImGui::DockSpace(dockspace_id, ImVec2(docking_size.x - 15, docking_size.y - 15));
-	}
+	bool opened = true;
+	ImGui::Begin("DockingSpace", &opened, flags);
+
+	ImGui::BeginDockspace();
+}
+
+void DockingSpace::EndDockSpace()
+{
+	ImGui::EndDockspace();
 	ImGui::End();
 
 	ImGui::PopFont();

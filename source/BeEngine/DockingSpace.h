@@ -18,11 +18,16 @@ public:
 	void CleanUp();
 	void DrawEditor();
 
+	void BeginDockSpace();
+	void EndDockSpace();
+
 private:
 	float2 margins_left_up;
 	float2 margins_right_down;
 
 	ImFont * font = nullptr;
+
+	uint docking_id = -1;
 
 	bool opened = true;
 };

@@ -40,6 +40,7 @@ private:
 	bool		visible = true;
 	float2		window_pos = float2::zero;
 	float2	    window_size = float2::zero;
+	uint		docking_id = -1;
 };
 
 class EditorElement
@@ -85,6 +86,11 @@ public:
 	void RenderEditor();
 	void EditorInput(SDL_Event event);
 
+	void SetEditorState(const EditorState& state);
+
+	ImFont* GetLoadedFont(const char* name);
+
+private:
 	EditorElement* AddEditorElement(EditorElement* element, bool visible = true);
 	void DestroyAllEditorElements();
 	void DrawEditorElements();
@@ -93,11 +99,6 @@ public:
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
 
-	void SetEditorState(const EditorState& state);
-
-	ImFont* GetLoadedFont(const char* name);
-
-private:
 	void ImGuiInit();
 	void ImGuiStartFrame();
 	void ImGuiEndFrame();

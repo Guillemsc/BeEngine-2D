@@ -62,6 +62,9 @@ void MenuBar::DrawEditor()
 
 		}
 
+		std::string fps = "Fps: " + std::to_string(App->profiler->GetFPS());
+		ImGui::Text(fps.c_str());
+
 		ImGui::EndMainMenuBar();
 	}
 	ImGui::PopFont();

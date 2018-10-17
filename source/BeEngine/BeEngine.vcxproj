@@ -101,7 +101,9 @@
     <ClInclude Include="FileWatch.h" />
     <ClInclude Include="FBO.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="imgui_docking.h" />
     <ClInclude Include="ModuleProject.h" />
+    <ClInclude Include="ProfilerWindow.h" />
     <ClInclude Include="ProgressWindow.h" />
     <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="SceneWindow.h" />
@@ -210,7 +212,9 @@
     <ClCompile Include="DockingSpace.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Functions.cpp" />
+    <ClCompile Include="imgui_docking.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
+    <ClCompile Include="ProfilerWindow.cpp" />
     <ClCompile Include="ProgressWindow.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
