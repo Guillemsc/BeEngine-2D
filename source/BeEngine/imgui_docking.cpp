@@ -296,6 +296,8 @@ namespace ImGui
 				PushID(i);
 				if (!IsMouseDown(0)) dock.status = Status_Docked;
 
+				ImGuiMouseCursor cursor;
+
 				ImVec2 size = dock.children[0]->size;
 				ImVec2 dsize(0, 0);
 				SetCursorScreenPos(dock.children[1]->pos);
@@ -303,6 +305,9 @@ namespace ImGui
 				ImVec2 min_size1 = dock.children[1]->getMinSize();
 				if (dock.isHorizontal())
 				{
+					cursor = ImGuiMouseCursor_ResizeEW;
+					SetCursorScreenPos(ImVec2(dock.pos.x + dock.children[0]->size.x, dock.pos.y));
+
 					InvisibleButton("split", ImVec2(3, dock.size.y));
 					if (dock.status == Status_Dragged) dsize.x = io.MouseDelta.x;
 					dsize.x = -ImMin(-dsize.x, dock.children[0]->size.x - min_size0.x);
@@ -310,6 +315,9 @@ namespace ImGui
 				}
 				else
 				{
+					cursor = ImGuiMouseCursor_ResizeNS;
+					SetCursorScreenPos(ImVec2(dock.pos.x, dock.pos.y + dock.children[0]->size.y));
+
 					InvisibleButton("split", ImVec2(dock.size.x, 3));
 					if (dock.status == Status_Dragged) dsize.y = io.MouseDelta.y;
 					dsize.y = -ImMin(-dsize.y, dock.children[0]->size.y - min_size0.y);
@@ -320,6 +328,11 @@ namespace ImGui
 				ImVec2 new_pos1 = dock.children[1]->pos + dsize;
 				dock.children[0]->setPosSize(dock.children[0]->pos, new_size0);
 				dock.children[1]->setPosSize(new_pos1, new_size1);
+
+				if (IsItemHovered() || dock.status == Status_Dragged)
+				{
+					SetMouseCursor(cursor);
+				}
 
 				if (IsItemHovered() && IsMouseClicked(0))
 				{
