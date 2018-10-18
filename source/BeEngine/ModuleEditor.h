@@ -90,6 +90,15 @@ public:
 
 	ImFont* GetLoadedFont(const char* name);
 
+	bool SetCurrentDockingProfile(const char* set);
+	bool SaveCurrentDockingProfile();
+	const char* GetCurrentDockingProfile() const;
+	bool CreateNewDockingProfile(const char* name);
+	bool CanRemoveDockingProfile(const char* name);
+	bool RemoveDockingProfile(const char* name);
+	bool RemoveCurrentDockingProfile();
+	std::vector<std::string> GetDockingProfiles() const;
+
 private:
 	EditorElement* AddEditorElement(EditorElement* element, bool visible = true);
 	void DestroyAllEditorElements();
@@ -109,10 +118,6 @@ private:
 	void LoadCustomStyle();
 
 	void LoadDockingProfiles();
-	bool SetCurrentDockingProfile(const char* set);
-	bool CreateNewDockingProfile(const char* name);
-	bool RemoveCurrentDockingProfile();
-	bool SaveCurrentDockingProfile();
 	bool DockingProfileExists(const char* name);
 
 public:
@@ -132,6 +137,7 @@ private:
 
 	std::string docking_layouts_json_filepath;
 
+	bool load_docking_profile = true;
 	std::vector<std::string> docking_profiles;
 	std::string current_docking_profile;
 

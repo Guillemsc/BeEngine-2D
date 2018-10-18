@@ -55,16 +55,15 @@ void DockingSpace::BeginDockSpace()
 
 	ImGui::PushFont(font);
 
-	bool opened = true;
-	ImGui::Begin("DockingSpace", &opened, flags);
+	//bool opened = true;
+	//ImGui::Begin("DockingSpace", &opened, flags);
 
-	ImGui::BeginDockspace();
+	ImGui::RootDock(ImVec2(docking_pos.x, docking_pos.y), ImVec2(docking_size.x, docking_size.y));
 }
 
 void DockingSpace::EndDockSpace()
 {
-	ImGui::EndDockspace();
-	ImGui::End();
+	//ImGui::End();
 
 	ImGui::PopFont();
 }

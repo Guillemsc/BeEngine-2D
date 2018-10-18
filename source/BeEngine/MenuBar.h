@@ -19,10 +19,12 @@ public:
 	void DrawEditor();
 
 private:
-	void Draw
+	void DrawLayoutsEditor();
 
 private:
 	ImFont* font = nullptr;
+
+	char new_layout_name[50];
 };
 
 #endif // !__MENU_BAR_H__

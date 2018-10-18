@@ -203,30 +203,28 @@ void ModuleEditor::DrawEditorWindows()
 	docking_space->BeginDockSpace();
 
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
-	{
-		if ((*it)->GetVisible())
+	{		
+		ImGuiWindowFlags flags = 0;
+		flags |= (*it)->GetWindowFlags();
+
+		if (ImGui::BeginDock((*it)->name.c_str(), &(*it)->opened, flags))
 		{
-			ImGuiWindowFlags flags = 0;
-			flags |= (*it)->GetWindowFlags();
+			ImVec2 win_pos = ImGui::GetWindowPos();
+			ImVec2 win_size = ImGui::GetWindowSize();
 
-			if (ImGui::BeginDock((*it)->name.c_str(), false, &(*it)->opened, false, flags))
-			{
-				ImVec2 win_pos = ImGui::GetWindowPos();
-				ImVec2 win_size = ImGui::GetWindowSize();
+			(*it)->window_size = float2(win_pos.x, win_pos.y);
+			(*it)->window_size = float2(win_size.x, win_size.y);
 
-				(*it)->window_size = float2(win_pos.x, win_pos.y);
-				(*it)->window_size = float2(win_size.x, win_size.y);
+			(*it)->docking_id = ImGui::GetWindowDockId();
 
-				(*it)->docking_id = ImGui::GetWindowDockId();
-
-				(*it)->DrawEditor();
-			}
-			ImGui::EndDock();
+			(*it)->DrawEditor();
 		}
+
+		ImGui::EndDock();
 	}
 
 	bool opened = true;
-	if (ImGui::BeginDock("Dumyyyyyy", false, &opened, false))
+	if (ImGui::BeginDock("Dumyyyyyy", &opened))
 	{
 	}
 	ImGui::EndDock();
@@ -338,17 +336,17 @@ void ModuleEditor::LoadCustomStyle()
 
 	ImVec4* colors = ImGui::GetStyle().Colors;
 
-	style->WindowPadding = ImVec2(15, 15);
-	style->WindowRounding = 5.0f;
-	style->FramePadding = ImVec2(5, 5);
-	style->FrameRounding = 4.0f;
-	style->ItemSpacing = ImVec2(12, 8);
-	style->ItemInnerSpacing = ImVec2(8, 6);
-	style->IndentSpacing = 25.0f;
-	style->ScrollbarSize = 15.0f;
-	style->ScrollbarRounding = 9.0f;
-	style->GrabMinSize = 5.0f;
-	style->GrabRounding = 3.0f;
+	//style->WindowPadding = ImVec2(15, 15);
+	//style->WindowRounding = 5.0f;
+	//style->FramePadding = ImVec2(5, 5);
+	//style->FrameRounding = 4.0f;
+	//style->ItemSpacing = ImVec2(12, 8);
+	//style->ItemInnerSpacing = ImVec2(8, 6);
+	//style->IndentSpacing = 25.0f;
+	//style->ScrollbarSize = 15.0f;
+	//style->ScrollbarRounding = 9.0f;
+	//style->GrabMinSize = 5.0f;
+	//style->GrabRounding = 3.0f;
 
 	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -475,6 +473,11 @@ bool ModuleEditor::SetCurrentDockingProfile(const char * set)
 	return ret;
 }
 
+const char * ModuleEditor::GetCurrentDockingProfile() const
+{
+	return current_docking_profile.c_str();
+}
+
 bool ModuleEditor::CreateNewDockingProfile(const char * name)
 {
 	bool ret = false;
@@ -492,6 +495,68 @@ bool ModuleEditor::CreateNewDockingProfile(const char * name)
 			docking_profiles.push_back(name);
 
 			doc->Save();
+
+			ret = true;
+		}
+	}
+
+	return ret;
+}
+
+bool ModuleEditor::CanRemoveDockingProfile(const char * name)
+{
+	bool ret = true;
+
+	std::string default = "default";
+
+	if (default.compare(name) == 0)
+		ret = false;
+
+	return ret;
+}
+
+bool ModuleEditor::RemoveDockingProfile(const char * name)
+{
+	bool ret = false;
+
+	if (CanRemoveDockingProfile(name))
+	{
+		if (DockingProfileExists(name))
+		{
+			for (std::vector<std::string>::iterator it = docking_profiles.begin(); it != docking_profiles.end(); ++it)
+			{
+				if ((*it).compare(name) == 0)
+				{
+					docking_profiles.erase(it);
+					break;
+				}
+			}
+
+			JSON_Doc* doc = App->json->LoadJSON(docking_layouts_json_filepath.c_str());
+
+			if (doc != nullptr)
+			{
+				int layouts_arr_count = doc->GetArrayCount("layouts");
+
+				for (int i = 0; i < layouts_arr_count; ++i)
+				{
+					std::string layout_name = doc->GetStringFromArray("layouts", i);
+
+					if (layout_name.compare(current_docking_profile.c_str()) == 0)
+					{
+						doc->RemoveArrayIndex("layouts", i);
+						break;
+					}
+				}
+
+				ImGui::RemoveLayout(doc, current_docking_profile.c_str());
+
+				doc->Save();
+			}
+
+			SetCurrentDockingProfile("default");
+
+			ret = true;
 		}
 	}
 
@@ -502,34 +567,14 @@ bool ModuleEditor::RemoveCurrentDockingProfile()
 {
 	bool ret = false;
 
-	if (DockingProfileExists(current_docking_profile.c_str()))
-	{
-		JSON_Doc* doc = App->json->LoadJSON(docking_layouts_json_filepath.c_str());
-
-		if (doc != nullptr)
-		{
-			int layouts_arr_count = doc->GetArrayCount("layouts");
-
-			for (int i = 0; i < layouts_arr_count; ++i)
-			{
-				std::string layout_name = doc->GetStringFromArray("layouts", i);
-
-				if (layout_name.compare(current_docking_profile.c_str()) == 0)
-				{
-					doc->RemoveArrayIndex("layouts", i);
-					break;
-				}
-			}
-
-			ImGui::RemoveLayout(doc, current_docking_profile.c_str());
-
-			doc->Save();
-		}
-
-		ret = true;
-	}
+	ret = RemoveDockingProfile(current_docking_profile.c_str());
 
 	return ret;
+}
+
+std::vector<std::string> ModuleEditor::GetDockingProfiles() const
+{
+	return docking_profiles;
 }
 
 bool ModuleEditor::SaveCurrentDockingProfile()
