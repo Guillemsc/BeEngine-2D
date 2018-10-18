@@ -636,7 +636,7 @@ void RenderTexture::Bind(uint _width, uint _height)
 		Create(_width, _height);
 
 	if (width != _width || height != _height)
-		Resize(width, height);
+		Resize(_width, _height);
 	
 	App->renderer3D->BindFrameBuffer(fbo_msaa_id);
 	App->renderer3D->SetViewport(0, 0, width, height);

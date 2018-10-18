@@ -200,8 +200,6 @@ void ModuleEditor::DestroyAllEditorWindows()
 
 void ModuleEditor::DrawEditorWindows()
 {
-	docking_space->BeginDockSpace();
-
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 	{		
 		ImGuiWindowFlags flags = 0;
@@ -228,8 +226,6 @@ void ModuleEditor::DrawEditorWindows()
 	{
 	}
 	ImGui::EndDock();
-
-	docking_space->EndDockSpace();
 }
 
 void ModuleEditor::SetEditorState(const EditorState & state)
