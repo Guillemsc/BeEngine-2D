@@ -8,7 +8,7 @@
 
 ModuleProject::ModuleProject()
 {
-	projects_json_filepath = App->GetBasePath() + std::string("Projects.json");
+	projects_json_filepath = App->GetConfigurationPath() + std::string("projects.json");
 }
 
 ModuleProject::~ModuleProject()

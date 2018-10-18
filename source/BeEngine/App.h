@@ -52,7 +52,9 @@ public:
 	void SetVersion(const char* version);
 	const char* GetVersion() const;
 	SDL_version GetSDLVersion();
+
 	const char* GetBasePath();
+	const char* GetConfigurationPath();
 	const char* GetPreferedPath();
 
 	float GetDT() const;
@@ -90,7 +92,7 @@ public:
 	ModuleTimeSlicedTask* time_sliced = nullptr;
 	ModuleProject*		  project = nullptr;
 
-	Profiler*		   profiler = nullptr;
+	Profiler*			  profiler = nullptr;
 
 private:
 	int				   argc;

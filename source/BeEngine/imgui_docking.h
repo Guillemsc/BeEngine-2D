@@ -32,6 +32,8 @@ namespace ImGui
 	IMGUI_API void DockDebugWindow();
 	void SaveLayout(JSON_Doc* json, const char* layout_name);
 	bool LoadLayout(JSON_Doc* json, const char* layout_name);
+	bool RemoveLayout(JSON_Doc* json, const char* layout_name);
+	bool LayoutExists(JSON_Doc* json, const char* layout_name);
 
 } // namespace ImGui
 

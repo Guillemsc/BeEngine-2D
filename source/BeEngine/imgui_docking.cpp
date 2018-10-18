@@ -1178,48 +1178,51 @@ namespace ImGui
 
 		void SaveLayout(JSON_Doc * json, const char* layout_name)
 		{
-			json->AddSection(layout_name);
-			json->MoveToSection(layout_name);
-
-			json->SetNumber("Docks_Size", m_docks.size());
-
-			for (int i = 0; i < m_docks.size(); ++i)
+			if (json != nullptr)
 			{
-				Dock& dock = *m_docks[i];
+				json->AddSection(layout_name);
+				json->MoveToSection(layout_name);
 
-				std::string di = "Dock" + std::to_string(i) + ".";
+				json->SetNumber("Docks_Size", m_docks.size());
 
-				json->SetString(di + "ID", std::to_string(i).c_str());
-				json->SetString(di + "Label", dock.parent ? (dock.label[0] == '\0' ? "DOCK" : dock.label) : dock.status == Status_Float ? dock.label : "ROOT");
-				json->SetNumber(di + "pos_X", (int)dock.pos.x);
-				json->SetNumber(di + "pos_Y", (int)dock.pos.y);
-				json->SetNumber(di + "size_X", (int)dock.size.x);
-				json->SetNumber(di + "size_Y", (int)dock.size.y);
-				json->SetNumber(di + "status", (int)dock.status);
-				json->SetBool(di + "active", dock.active);
-				json->SetBool(di + "opened", dock.opened);
-				fillLocation(dock);
-				json->SetString(di + "location", strlen(dock.location) ? dock.location : "-1");
-				json->SetNumber(di + "child0", getDockIndex(dock.children[0]));
-				json->SetNumber(di + "child1", getDockIndex(dock.children[1]));
-				json->SetNumber(di + "prev_tab", getDockIndex(dock.prev_tab));
-				json->SetNumber(di + "next_tab", getDockIndex(dock.next_tab));
+				for (int i = 0; i < m_docks.size(); ++i)
+				{
+					Dock& dock = *m_docks[i];
 
-				if (dock.parent == nullptr && !dock.opened)
-				{
-					json->SetNumber(di + "parent", -1);
+					std::string di = "Dock" + std::to_string(i) + ".";
+
+					json->SetString(di + "ID", std::to_string(i).c_str());
+					json->SetString(di + "Label", dock.parent ? (dock.label[0] == '\0' ? "DOCK" : dock.label) : dock.status == Status_Float ? dock.label : "ROOT");
+					json->SetNumber(di + "pos_X", (int)dock.pos.x);
+					json->SetNumber(di + "pos_Y", (int)dock.pos.y);
+					json->SetNumber(di + "size_X", (int)dock.size.x);
+					json->SetNumber(di + "size_Y", (int)dock.size.y);
+					json->SetNumber(di + "status", (int)dock.status);
+					json->SetBool(di + "active", dock.active);
+					json->SetBool(di + "opened", dock.opened);
+					fillLocation(dock);
+					json->SetString(di + "location", strlen(dock.location) ? dock.location : "-1");
+					json->SetNumber(di + "child0", getDockIndex(dock.children[0]));
+					json->SetNumber(di + "child1", getDockIndex(dock.children[1]));
+					json->SetNumber(di + "prev_tab", getDockIndex(dock.prev_tab));
+					json->SetNumber(di + "next_tab", getDockIndex(dock.next_tab));
+
+					if (dock.parent == nullptr && !dock.opened)
+					{
+						json->SetNumber(di + "parent", -1);
+					}
+					else if (dock.parent == nullptr && &dock != getRootDock())
+					{
+						json->SetNumber(di + "parent", getDockIndex(getRootDock()));
+					}
+					else
+					{
+						json->SetNumber(di + "parent", getDockIndex(dock.parent));
+					}
 				}
-				else if (dock.parent == nullptr && &dock != getRootDock())
-				{
-					json->SetNumber(di + "parent", getDockIndex(getRootDock()));
-				}
-				else
-				{
-					json->SetNumber(di + "parent", getDockIndex(dock.parent));
-				}
+
+				json->MoveToRoot();
 			}
-
-			json->MoveToRoot();
 		}
 
 		bool DockContext::LoadLayout(JSON_Doc * json, const char* layout_name)
@@ -1233,52 +1236,90 @@ namespace ImGui
 			}
 			m_docks.clear();
 
-
-			if (json->MoveToSection(layout_name))
+			if (json != nullptr)
 			{
-				int docks = json->GetNumber("Docks_Size", m_docks.size());
-
-				for (int i = 0; i < docks; ++i)
+				if (json->MoveToSection(layout_name))
 				{
-					Dock *new_dock = (Dock*)MemAlloc(sizeof(Dock));
-					m_docks.push_back(new_dock);
-				}
+					int docks = json->GetNumber("Docks_Size", m_docks.size());
 
-				for (int i = 0; i < docks; i++)
-				{
-					std::string di = "Dock" + std::to_string(i) + ".";
-
-					m_docks[i]->label = _strdup(json->GetString((di + "Label").c_str()));
-					m_docks[i]->id = ImHash(m_docks[i]->label, 0);
-					m_docks[i]->status = (Status_)(int)json->GetNumber((di + "status").c_str());
-					m_docks[i]->active = json->GetBool((di + "active").c_str());
-					m_docks[i]->opened = json->GetBool((di + "opened").c_str());
-
-					std::string str = json->GetString((di + "location").c_str());
-					int j = 0;
-					for (std::string::iterator it = str.begin(); it != str.end(); it++)
+					for (int i = 0; i < docks; ++i)
 					{
-						m_docks[i]->location[j] = *it;
-						j++;
+						Dock *new_dock = (Dock*)MemAlloc(sizeof(Dock));
+						m_docks.push_back(new_dock);
 					}
-					m_docks[i]->location[j] = '\0';
-					m_docks[i]->children[0] = getDockByIndex(json->GetNumber((di + "child0").c_str()));
-					m_docks[i]->children[1] = getDockByIndex(json->GetNumber((di + "child1").c_str()));
-					m_docks[i]->prev_tab = getDockByIndex(json->GetNumber((di + "prev_tab").c_str()));
-					m_docks[i]->next_tab = getDockByIndex(json->GetNumber((di + "next_tab").c_str()));
-					m_docks[i]->parent = getDockByIndex(json->GetNumber((di + "parent").c_str()));
-					m_docks[i]->pos.x = json->GetNumber((di + "pos_X").c_str());
-					m_docks[i]->pos.y = json->GetNumber((di + "pos_Y").c_str());
-					m_docks[i]->size.x = json->GetNumber((di + "size_X").c_str());
-					m_docks[i]->size.y = json->GetNumber((di + "size_Y").c_str());
+
+					for (int i = 0; i < docks; i++)
+					{
+						std::string di = "Dock" + std::to_string(i) + ".";
+
+						m_docks[i]->label = _strdup(json->GetString((di + "Label").c_str()));
+						m_docks[i]->id = ImHash(m_docks[i]->label, 0);
+						m_docks[i]->status = (Status_)(int)json->GetNumber((di + "status").c_str());
+						m_docks[i]->active = json->GetBool((di + "active").c_str());
+						m_docks[i]->opened = json->GetBool((di + "opened").c_str());
+
+						std::string str = json->GetString((di + "location").c_str());
+						int j = 0;
+						for (std::string::iterator it = str.begin(); it != str.end(); it++)
+						{
+							m_docks[i]->location[j] = *it;
+							j++;
+						}
+						m_docks[i]->location[j] = '\0';
+						m_docks[i]->children[0] = getDockByIndex(json->GetNumber((di + "child0").c_str()));
+						m_docks[i]->children[1] = getDockByIndex(json->GetNumber((di + "child1").c_str()));
+						m_docks[i]->prev_tab = getDockByIndex(json->GetNumber((di + "prev_tab").c_str()));
+						m_docks[i]->next_tab = getDockByIndex(json->GetNumber((di + "next_tab").c_str()));
+						m_docks[i]->parent = getDockByIndex(json->GetNumber((di + "parent").c_str()));
+						m_docks[i]->pos.x = json->GetNumber((di + "pos_X").c_str());
+						m_docks[i]->pos.y = json->GetNumber((di + "pos_Y").c_str());
+						m_docks[i]->size.x = json->GetNumber((di + "size_X").c_str());
+						m_docks[i]->size.y = json->GetNumber((di + "size_Y").c_str());
+					}
 				}
-			}
-			else
-			{
-				ret = false;
+				else
+				{
+					ret = false;
+				}
+
+				json->MoveToRoot();
 			}
 
-			json->MoveToRoot();
+			return ret;
+		}
+
+		bool RemoveLayout(JSON_Doc * json, const char* layout_name)
+		{
+			bool ret = false;
+
+			if (json != nullptr)
+			{
+				if (json->MoveToSection(layout_name))
+				{
+					json->MoveToRoot();
+
+					json->RemoveSection(layout_name);
+
+					ret = true;
+				}
+			}
+
+			return ret;
+		}
+
+		bool LayoutsExits(JSON_Doc * json, const char* layout_name)
+		{
+			bool ret = false;
+
+			if (json != nullptr)
+			{
+				if (json->MoveToSection(layout_name))
+				{
+					ret = true;
+				}
+
+				json->MoveToRoot();
+			}
 
 			return ret;
 		}
@@ -1332,12 +1373,24 @@ namespace ImGui
 	{
 		g_dock.debugWindow();
 	}
+
 	void SaveLayout(JSON_Doc * json, const char * layout_name)
 	{
 		g_dock.SaveLayout(json, layout_name);
 	}
+
 	bool LoadLayout(JSON_Doc * json, const char * layout_name)
 	{
 		return g_dock.LoadLayout(json, layout_name);
+	}
+
+	bool RemoveLayout(JSON_Doc * json, const char * layout_name)
+	{
+		return g_dock.RemoveLayout(json, layout_name);
+	}
+
+	bool LayoutExists(JSON_Doc * json, const char * layout_name)
+	{
+		return  g_dock.LayoutsExits(json, layout_name);
 	}
 };

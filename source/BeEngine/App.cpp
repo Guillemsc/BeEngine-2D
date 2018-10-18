@@ -356,6 +356,11 @@ const char * Application::GetBasePath()
 	return SDL_GetBasePath();
 }
 
+const char * Application::GetConfigurationPath()
+{
+	return "config\\";
+}
+
 const char * Application::GetPreferedPath()
 {
 	return SDL_GetPrefPath(organization.c_str(), title.c_str());

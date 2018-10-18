@@ -19,6 +19,9 @@ public:
 	void DrawEditor();
 
 private:
+	void Draw
+
+private:
 	ImFont* font = nullptr;
 };
 

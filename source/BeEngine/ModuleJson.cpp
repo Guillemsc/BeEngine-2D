@@ -208,6 +208,18 @@ void JSON_Doc::SetArray(const std::string& set)
 	json_object_dotset_value(object, set.c_str(), va);
 }
 
+bool JSON_Doc::ArrayExists(const std::string & arr)
+{
+	bool ret = false;
+
+	JSON_Array* array = json_object_get_array(object, arr.c_str());
+
+	if (array != nullptr)
+		ret = true;
+
+	return ret;
+}
+
 void JSON_Doc::ClearArray(const std::string& arr)
 {
 	JSON_Array* array = json_object_get_array(object, arr.c_str());

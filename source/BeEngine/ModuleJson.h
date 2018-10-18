@@ -26,6 +26,7 @@ public:
 	const float4 GetNumber4(const std::string& fl, float4 defaul = float4(0, 0, 0, 0));
 
 	void SetArray(const std::string& set);
+	bool ArrayExists(const std::string& arr);
 	void ClearArray(const std::string& arr);
 	void RemoveArrayIndex(const std::string& arr, int index);
 	void AddStringToArray(const std::string& arr, const char* str);

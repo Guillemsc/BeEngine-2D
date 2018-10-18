@@ -108,6 +108,13 @@ private:
 
 	void LoadCustomStyle();
 
+	void LoadDockingProfiles();
+	bool SetCurrentDockingProfile(const char* set);
+	bool CreateNewDockingProfile(const char* name);
+	bool RemoveCurrentDockingProfile();
+	bool SaveCurrentDockingProfile();
+	bool DockingProfileExists(const char* name);
+
 public:
 	DockingSpace*   docking_space = nullptr;
 	MenuBar*        menu_bar = nullptr;
@@ -122,6 +129,11 @@ private:
 	std::vector<EditorWindow*> editor_windows;
 
 	std::map<std::string, ImFont*> editor_fonts;
+
+	std::string docking_layouts_json_filepath;
+
+	std::vector<std::string> docking_profiles;
+	std::string current_docking_profile;
 
 	bool demo_window_open = true;
 };
