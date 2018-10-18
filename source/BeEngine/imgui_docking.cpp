@@ -692,21 +692,14 @@ namespace ImGui
 					ImVec2 pos = GetItemRectMin();
 					tab_base = pos.y;
 					draw_list->PathClear();
-					draw_list->PathLineTo(pos + ImVec2(-15, size.y));
-					draw_list->PathBezierCurveTo(
-						pos + ImVec2(-10, size.y), pos + ImVec2(-5, 0), pos + ImVec2(0, 0), 10);
-					draw_list->PathLineTo(pos + ImVec2(size.x, 0));
-					draw_list->PathBezierCurveTo(pos + ImVec2(size.x + 5, 0),
-						pos + ImVec2(size.x + 10, size.y),
-						pos + ImVec2(size.x + 15, size.y),
-						10);
-					draw_list->PathFillConvex(
-						hovered ? color_hovered : (dock_tab->active ? color_active : color));
-					draw_list->AddText(pos, text_color, dock_tab->label, text_end);
+	
+					draw_list->AddRectFilled(pos + ImVec2(-6, 0), pos + ImVec2(size.x + 6, size.y), hovered ? color_hovered : (dock_tab->active ? color_active : color), 3, ImDrawCornerFlags_Top);
+
+					draw_list->AddText(pos + ImVec2(0, 1), text_color, dock_tab->label, text_end);
 
 					if (dock_tab->active && close_button)
 					{
-						SameLine();
+						ImGui::SameLine();
 						tab_closed = InvisibleButton("close", ImVec2(16, 16));
 						ImVec2 center = (GetItemRectMin() + GetItemRectMax()) * 0.5f;
 						if (IsItemHovered())
