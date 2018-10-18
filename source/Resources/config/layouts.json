@@ -1,51 +1,47 @@
 {
     "layouts": [
         "default",
-        "Test1",
-        "Test2"
+        "Test1"
     ],
     "default": {
-        "Docks_Size": 5,
+        "Docks_Size": 4,
         "Dock0": {
-            "ID": "0",
             "Label": "Scene",
-            "pos_X": 1173,
+            "pos_X": 545,
             "pos_Y": 53,
-            "size_X": 762,
+            "size_X": 1390,
             "size_Y": 979,
             "status": 0,
             "active": true,
             "opened": true,
-            "location": "00",
+            "location": "0",
             "child0": -1,
             "child1": -1,
             "prev_tab": -1,
             "next_tab": -1,
-            "parent": 4
+            "parent": 3
         },
         "Dock1": {
-            "ID": "1",
             "Label": "Profiler",
-            "pos_X": 493,
+            "pos_X": -5,
             "pos_Y": 53,
-            "size_X": 680,
+            "size_X": 550,
             "size_Y": 979,
             "status": 0,
-            "active": true,
+            "active": false,
             "opened": true,
-            "location": "10",
+            "location": "1",
             "child0": -1,
             "child1": -1,
             "prev_tab": -1,
-            "next_tab": -1,
-            "parent": 4
+            "next_tab": 2,
+            "parent": 3
         },
         "Dock2": {
-            "ID": "2",
             "Label": "Dumyyyyyy",
             "pos_X": -5,
             "pos_Y": 53,
-            "size_X": 498,
+            "size_X": 550,
             "size_Y": 979,
             "status": 0,
             "active": true,
@@ -53,12 +49,11 @@
             "location": "1",
             "child0": -1,
             "child1": -1,
-            "prev_tab": -1,
+            "prev_tab": 1,
             "next_tab": -1,
             "parent": 3
         },
         "Dock3": {
-            "ID": "3",
             "Label": "",
             "pos_X": -5,
             "pos_Y": 53,
@@ -67,32 +62,15 @@
             "status": 0,
             "active": true,
             "opened": false,
-            "location": "-1",
-            "child0": 2,
-            "child1": 4,
-            "prev_tab": -1,
-            "next_tab": -1,
-            "parent": -1
-        },
-        "Dock4": {
-            "ID": "4",
-            "Label": "",
-            "pos_X": 493,
-            "pos_Y": 53,
-            "size_X": 1442,
-            "size_Y": 979,
-            "status": 0,
-            "active": true,
-            "opened": false,
-            "location": "0",
+            "location": "",
             "child0": 1,
             "child1": 0,
             "prev_tab": -1,
             "next_tab": -1,
-            "parent": 3
+            "parent": -1
         }
     },
-    "curr_layout": "Test1",
+    "curr_layout": "default",
     "Test1": {
         "Docks_Size": 4,
         "Dock0": {
@@ -158,89 +136,6 @@
             "prev_tab": -1,
             "next_tab": -1,
             "parent": -1
-        }
-    },
-    "Test2": {
-        "Docks_Size": 5,
-        "Dock0": {
-            "Label": "Scene",
-            "pos_X": -5,
-            "pos_Y": 53,
-            "size_X": 992,
-            "size_Y": 979,
-            "status": 0,
-            "active": true,
-            "opened": true,
-            "location": "11",
-            "child0": -1,
-            "child1": -1,
-            "prev_tab": -1,
-            "next_tab": -1,
-            "parent": 4
-        },
-        "Dock1": {
-            "Label": "Profiler",
-            "pos_X": 987,
-            "pos_Y": 53,
-            "size_X": 309,
-            "size_Y": 979,
-            "status": 0,
-            "active": true,
-            "opened": true,
-            "location": "01",
-            "child0": -1,
-            "child1": -1,
-            "prev_tab": -1,
-            "next_tab": -1,
-            "parent": 4
-        },
-        "Dock2": {
-            "Label": "Dumyyyyyy",
-            "pos_X": 1296,
-            "pos_Y": 53,
-            "size_X": 639,
-            "size_Y": 979,
-            "status": 0,
-            "active": true,
-            "opened": true,
-            "location": "0",
-            "child0": -1,
-            "child1": -1,
-            "prev_tab": -1,
-            "next_tab": -1,
-            "parent": 3
-        },
-        "Dock3": {
-            "Label": "",
-            "pos_X": -5,
-            "pos_Y": 53,
-            "size_X": 1940,
-            "size_Y": 979,
-            "status": 0,
-            "active": true,
-            "opened": false,
-            "location": "",
-            "child0": 4,
-            "child1": 2,
-            "prev_tab": -1,
-            "next_tab": -1,
-            "parent": -1
-        },
-        "Dock4": {
-            "Label": "",
-            "pos_X": -5,
-            "pos_Y": 53,
-            "size_X": 1301,
-            "size_Y": 979,
-            "status": 0,
-            "active": true,
-            "opened": false,
-            "location": "1",
-            "child0": 0,
-            "child1": 1,
-            "prev_tab": -1,
-            "next_tab": -1,
-            "parent": 3
         }
     }
 }

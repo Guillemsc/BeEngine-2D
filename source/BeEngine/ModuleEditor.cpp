@@ -443,7 +443,7 @@ void ModuleEditor::LoadDockingProfiles()
 	}
 }
 
-bool ModuleEditor::SetCurrentDockingProfile(const char * set)
+bool ModuleEditor::SetCurrentDockingProfile(const char * set, bool load)
 {
 	bool ret = false;
 
@@ -453,7 +453,8 @@ bool ModuleEditor::SetCurrentDockingProfile(const char * set)
 	{
 		if (DockingProfileExists(set))
 		{
-			ret = ImGui::LoadLayout(doc, set);
+			if(load)
+				ImGui::LoadLayout(doc, set);
 
 			current_docking_profile = set;
 
@@ -554,7 +555,7 @@ bool ModuleEditor::RemoveDockingProfile(const char * name)
 				doc->Save();
 			}
 
-			SetCurrentDockingProfile("default");
+			SetCurrentDockingProfile("default", false);
 
 			ret = true;
 		}

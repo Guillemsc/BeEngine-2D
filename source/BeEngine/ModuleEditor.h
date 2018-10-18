@@ -90,7 +90,7 @@ public:
 
 	ImFont* GetLoadedFont(const char* name);
 
-	bool SetCurrentDockingProfile(const char* set);
+	bool SetCurrentDockingProfile(const char* set, bool load = true);
 	bool SaveCurrentDockingProfile();
 	const char* GetCurrentDockingProfile() const;
 	bool CreateNewDockingProfile(const char* name);
