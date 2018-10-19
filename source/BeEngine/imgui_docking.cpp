@@ -656,12 +656,12 @@ namespace ImGui
 			if (BeginChild(tmp, size, true))
 			{
 				Dock* dock_tab = &dock;
-
+				
 				ImDrawList* draw_list = GetWindowDrawList();
-				ImU32 color = GetColorU32(ImGuiCol_FrameBg);
-				ImU32 color_active = GetColorU32(ImGuiCol_FrameBgActive);
-				ImU32 color_hovered = GetColorU32(ImGuiCol_FrameBgHovered);
-				ImU32 button_hovered = GetColorU32(ImGuiCol_ButtonHovered);
+				ImU32 color = GetColorU32(ImGuiCol_Button);
+				ImU32 color_active = GetColorU32(ImGuiCol_ButtonActive);
+				ImU32 color_hovered = GetColorU32(ImGuiCol_ButtonHovered);
+				ImU32 button_hovered = GetColorU32(ImGuiCol_FrameBgHovered);
 				ImU32 text_color = GetColorU32(ImGuiCol_Text);
 				float line_height = GetTextLineHeightWithSpacing();
 				float tab_base;

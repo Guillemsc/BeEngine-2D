@@ -4,6 +4,8 @@
 #include "ModuleEditor.h"
 #include "imgui.h"
 
+class Profile;
+
 class ProfilerWindow : public EditorWindow
 {
 	friend class ModuleEditor;
@@ -19,6 +21,9 @@ public:
 	void CleanUp();
 	void DrawEditor();
 	ImGuiWindowFlags GetWindowFlags();
+
+private: 
+	void DrawProfileRecursive(Profile* prof, int &draw_counter, bool profiles_update);
 
 private:
 	ImFont* font = nullptr;

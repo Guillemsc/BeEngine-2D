@@ -333,7 +333,7 @@ void ModuleEditor::LoadCustomStyle()
 	ImVec4* colors = ImGui::GetStyle().Colors;
 
 	//style->WindowPadding = ImVec2(15, 15);
-	//style->WindowRounding = 5.0f;
+	style->WindowRounding = 3.0f;
 	//style->FramePadding = ImVec2(5, 5);
 	//style->FrameRounding = 4.0f;
 	//style->ItemSpacing = ImVec2(12, 8);
@@ -367,7 +367,7 @@ void ModuleEditor::LoadCustomStyle()
 	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_Button] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_ButtonHovered] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
-	colors[ImGuiCol_ButtonActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_Header] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
 	colors[ImGuiCol_HeaderHovered] = ImVec4(0.50f, 0.78f, 0.98f, 0.65f);
 	colors[ImGuiCol_HeaderActive] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);

@@ -9,6 +9,8 @@
 
 class Profile
 {
+	friend class Profiler;
+
 public:
 	Profile(std::string name);
 
@@ -22,8 +24,7 @@ public:
 	const int GetLastFrameTick() const;
 	const int GetLastFrameMs() const;
 
-	const std::vector<int> GetTicksList() const;
-	const std::vector<int> GetMsList() const;
+	const float GetAverageMs() const;
 
 	Profile* AddProfileChild(std::string name);
 	int GetChildProfilesCount();
@@ -35,12 +36,15 @@ private:
 
 	std::list<Profile*> child_profiles;
 
-	int total_frames_ms = 0.0f;
+	float total_time_second = 0.0f;
+	int total_frames_second = 0;
 
-	std::vector<int> ms;
-	std::vector<int> ticks;
-	int list_ticks = 0;
-	int list_ms = 0;
+	float last_second_ms = 0.0f;
+
+	int last_tick = 0;
+	int last_ms = 0;
+
+	Profiler* profiler = nullptr;
 };
 
 class Profiler
@@ -86,6 +90,9 @@ public:
 	const bool HasSSE3() const;
 	const bool HasSSE41()  const;
 	const bool HasSSE42() const;
+
+public:
+	bool frame_one_second = false;
 
 private:
 	// Start

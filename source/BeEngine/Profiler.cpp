@@ -60,8 +60,13 @@ void Profiler::AppUpdateStart()
 	frame_counter++;
 	frame_counter_ms += frame_time.ReadMs();
 
+	if (frame_one_second)
+		frame_one_second = false;
+
 	if (frame_counter_ms > 1000)
 	{
+		frame_one_second = true;
+
 		last_second_frames = frame_counter;
 		frame_counter = 0;
 		frame_counter_ms = frame_counter_ms - 1000;
@@ -90,6 +95,8 @@ Profile * Profiler::AddStartProfile(std::string name)
 
 	start_profiles.push_back(profile);
 
+	profile->profiler = this;
+
 	return profile;
 }
 
@@ -108,6 +115,8 @@ Profile* Profiler::AddUpdateProfile(std::string name)
 	Profile* profile = new Profile(name);
 
 	update_profiles.push_back(profile);
+
+	profile->profiler = this;
 
 	return profile;
 }
@@ -265,17 +274,20 @@ void Profile::Start()
 
 void Profile::Finish()
 {
-	total_frames_ms += timer.ReadMs();
-
-	ticks.push_back(timer.ReadTicks());
-
-	ms.push_back(timer.ReadMs());
-
-	if (ticks.size() > MAX_PROFILE_LOGGED)
+	if (profiler->frame_one_second)
 	{
-		ticks.erase(ticks.begin());
-		ms.erase(ms.begin());
+		if(total_time_second > 0)
+			last_second_ms = (total_time_second / (float)total_frames_second);
+
+		total_frames_second = 0;
+		total_time_second = 0.0f;
 	}
+
+	total_time_second += timer.ReadMs();
+	++total_frames_second;
+
+	last_tick = timer.ReadTicks();
+	last_ms = timer.ReadMs();
 }
 
 const char * Profile::GetName()
@@ -287,10 +299,7 @@ const int Profile::GetLastFrameTick() const
 {
 	int ret = 0;
 
-	if (!ticks.empty())
-	{
-		ret = ticks.front();
-	}
+	ret = last_tick;
 
 	return ret;
 }
@@ -299,22 +308,14 @@ const int Profile::GetLastFrameMs() const
 {
 	int ret = 0;
 
-	if (!ms.empty())
-	{
-		ret = ms.front();
-	}
+	ret = last_ms;
 
 	return ret;
 }
 
-const std::vector<int> Profile::GetTicksList() const
+const float Profile::GetAverageMs() const
 {
-	return ticks;
-}
-
-const std::vector<int> Profile::GetMsList() const
-{
-	return ms;
+	return last_second_ms;
 }
 
 Profile * Profile::AddProfileChild(std::string name)
@@ -322,6 +323,8 @@ Profile * Profile::AddProfileChild(std::string name)
 	Profile* profile = new Profile(name);
 
 	child_profiles.push_back(profile);
+
+	profile->profiler = profiler;
 
 	return profile;
 }

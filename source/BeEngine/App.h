@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __APP_H__
+#define __APP_H__
 
 #include <list>
 #include <string>
@@ -121,3 +122,5 @@ private:
 };
 
 extern Application* App;
+
+#endif // !__APP__
