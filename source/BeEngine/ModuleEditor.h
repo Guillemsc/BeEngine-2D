@@ -144,6 +144,7 @@ private:
 	std::string current_docking_profile;
 
 	Profile* prof_editor_windows_draw = nullptr;
+	Profile* prof_editor_elements_draw = nullptr;
 
 	bool demo_window_open = true;
 };

@@ -247,7 +247,7 @@ bool ModuleRenderer3D::PostUpdate()
 	sp->UseProgram();
 
 	ShaderProgramParameters par;
-	par.SetVector3("Colour", float3(1, 1, 1));
+	par.SetVector3("Colour", float3(0.0f, 0.45f, 0.8f));
 	sp->SetProgramParameters(par);
 
 	GLint posAttrib = glGetAttribLocation(sp->GetID(), "position");

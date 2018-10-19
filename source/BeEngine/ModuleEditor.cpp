@@ -25,6 +25,7 @@ ModuleEditor::~ModuleEditor()
 
 void ModuleEditor::CreateProfiles()
 {
+	prof_editor_elements_draw = prof_module_preupdate->AddProfileChild("Editor elements draw");
 	prof_editor_windows_draw = prof_module_preupdate->AddProfileChild("Editor windows draw");
 }
 
@@ -159,11 +160,15 @@ void ModuleEditor::DestroyAllEditorElements()
 
 void ModuleEditor::DrawEditorElements()
 {
+	prof_editor_elements_draw->Start();
+
 	for (std::vector<EditorElement*>::iterator it = editor_elements.begin(); it != editor_elements.end(); ++it)
 	{
 		if ((*it)->GetVisible())
 			(*it)->DrawEditor();
 	}
+
+	prof_editor_elements_draw->Finish();
 }
 
 void ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
