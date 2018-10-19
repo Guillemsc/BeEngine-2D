@@ -22,6 +22,8 @@ void ProfilerWindow::DrawEditor()
 {
 	int draw_counter = 0;
 
+	ImGui::Text("Starting Variables:");
+
 	std::list<Profile*> start_profiles = App->profiler->GetStartProfilesList();
 
 	for (std::list<Profile*>::iterator it = start_profiles.begin(); it != start_profiles.end(); ++it)
@@ -30,6 +32,8 @@ void ProfilerWindow::DrawEditor()
 	}
 
 	ImGui::Separator();
+
+	ImGui::Text("Updating Variables:");
 
 	std::list<Profile*> update_profiles = App->profiler->GetUpdateProfilesList();
 

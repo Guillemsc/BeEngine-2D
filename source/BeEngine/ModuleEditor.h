@@ -40,7 +40,8 @@ private:
 	bool		visible = true;
 	float2		window_pos = float2::zero;
 	float2	    window_size = float2::zero;
-	uint		docking_id = -1;
+
+	Profile* prof_draw = nullptr;
 };
 
 class EditorElement
@@ -76,6 +77,7 @@ public:
 	ModuleEditor();
 	~ModuleEditor();
 
+	void CreateProfiles();
 	bool Awake();
 	bool Start();
 	bool PreUpdate();
@@ -140,6 +142,8 @@ private:
 	bool load_docking_profile = true;
 	std::vector<std::string> docking_profiles;
 	std::string current_docking_profile;
+
+	Profile* prof_editor_windows_draw = nullptr;
 
 	bool demo_window_open = true;
 };

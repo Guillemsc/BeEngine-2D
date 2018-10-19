@@ -413,13 +413,13 @@ void Application::AddModule(Module* mod, const char* name)
 	{
 		mod->SetName(name);
 
-		mod->CreateProfiles();
-
 		mod->prof_module_awake = prof_app_awake->AddProfileChild("Awake " + std::string(name));
 		mod->prof_module_start = prof_app_start->AddProfileChild("Start " + std::string(name));
 		mod->prof_module_preupdate = prof_app_preupdate->AddProfileChild("PreUpdate " + std::string(name));
 		mod->prof_module_update = prof_app_update->AddProfileChild("Update " + std::string(name));
 		mod->prof_module_postupdate = prof_app_postupdate->AddProfileChild("PostUpdate " + std::string(name));
+
+		mod->CreateProfiles();
 
 		modules.push_back(mod);
 	}

@@ -23,6 +23,11 @@ ModuleEditor::~ModuleEditor()
 {
 }
 
+void ModuleEditor::CreateProfiles()
+{
+	prof_editor_windows_draw = prof_module_preupdate->AddProfileChild("Editor windows draw");
+}
+
 bool ModuleEditor::Awake()
 {
 	bool ret = true;
@@ -111,7 +116,7 @@ void ModuleEditor::EditorInput(SDL_Event event)
 	ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
-EditorElement* ModuleEditor::AddEditorElement(EditorElement * element, bool visible)
+EditorElement* ModuleEditor::AddEditorElement(EditorElement* element, bool visible)
 {
 	EditorElement* ret = nullptr;
 
@@ -132,7 +137,6 @@ EditorElement* ModuleEditor::AddEditorElement(EditorElement * element, bool visi
 			editor_elements.push_back(element);
 
 			ret = element;
-
 			ret->SetVisible(visible);
 
 			element->Start();
@@ -180,6 +184,7 @@ void ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
 		if (!exists)
 		{
 			window->name = name;
+			window->prof_draw = prof_editor_windows_draw->AddProfileChild(window->name.c_str());
 			editor_windows.push_back(window);
 
 			window->Start();
@@ -200,8 +205,12 @@ void ModuleEditor::DestroyAllEditorWindows()
 
 void ModuleEditor::DrawEditorWindows()
 {
+	prof_editor_windows_draw->Start();
+
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 	{		
+		(*it)->prof_draw->Start();
+
 		ImGuiWindowFlags flags = 0;
 		flags |= (*it)->GetWindowFlags();
 
@@ -213,12 +222,12 @@ void ModuleEditor::DrawEditorWindows()
 			(*it)->window_size = float2(win_pos.x, win_pos.y);
 			(*it)->window_size = float2(win_size.x, win_size.y);
 
-			(*it)->docking_id = ImGui::GetWindowDockId();
-
 			(*it)->DrawEditor();
 		}
 
 		ImGui::EndDock();
+
+		(*it)->prof_draw->Finish();
 	}
 
 	bool opened = true;
@@ -226,6 +235,8 @@ void ModuleEditor::DrawEditorWindows()
 	{
 	}
 	ImGui::EndDock();
+
+	prof_editor_windows_draw->Finish();
 }
 
 void ModuleEditor::SetEditorState(const EditorState & state)
