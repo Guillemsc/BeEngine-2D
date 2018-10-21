@@ -85,7 +85,7 @@ void MenuBar::DrawLayoutsEditor()
 
 	ImGui::Separator();
 
-	ImGui::Text("Created new Layout: ");
+	ImGui::Text("Create new Layout: ");
 
 	ImGui::InputText("", new_layout_name, 50);
 	if (ImGui::Button("Create"))

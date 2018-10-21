@@ -53,7 +53,7 @@ private:
 	bool created = false;
 };
 
-class Camera3D
+class Camera2D
 {
 	friend class ModuleCamera3D;
 
@@ -61,7 +61,7 @@ private:
 	void operator delete(void *) {}
 
 public:
-	Camera3D();
+	Camera2D();
 
 	void CleanUp();
 
@@ -73,7 +73,7 @@ public:
 	const float3 GetPosition();
 
 	void SetZDir(const float3& front);
-	void SetYDir(const float3& front);
+	void SetYDir(const float3& up);
 	float3 GetZDir();
 	float3 GetYDir();
 
@@ -81,8 +81,8 @@ public:
 
 	void SetNearPlaneDistance(const float& set);
 	void SetFarPlaneDistance(const float& set);
-	void SetFOV(const float& set);
-	void SetAspectRatio(const float& set);
+	void SetViewportSize(float width, float height);
+	void SetSize(float size);
 	const float GetNearPlaneDistance() const;
 	const float GetFarPlaneDistance() const;
 	const float GetVerticalFOV() const;
@@ -113,9 +113,12 @@ public:
 	Frustum GetFrustum();
 
 private:
+	void UpdateTransform();
+
+private:
 	Frustum		   frustum;
-	float		   aspect_ratio = 0.0f;
-	float          vertical_fov = 0.0f;
+	float2		   viewport_size = float2::zero;
+	float		   size = 1;
 
 	bool	       frustum_culling = true;
 
@@ -136,15 +139,15 @@ public:
 	void OnLoadConfig(JSON_Doc* config);
 	void OnSaveConfig(JSON_Doc* config);
 
-	Camera3D* CreateCamera();
-	void DestroyCamera(Camera3D* cam);
+	Camera2D* CreateCamera();
+	void DestroyCamera(Camera2D* cam);
 	void DestroyAllCameras();
-	std::vector<Camera3D*> GetCameras();
+	std::vector<Camera2D*> GetCameras();
 
-	Camera3D* GetEditorCamera() const;
+	Camera2D* GetEditorCamera() const;
 
-	void SetGameCamera(Camera3D* set);
-	Camera3D* GetGameCamera() const;
+	void SetGameCamera(Camera2D* set);
+	Camera2D* GetGameCamera() const;
 
 	void SetMouseSensitivity(const float& set);
 	void SetWheelSpeed(const float& set);
@@ -155,16 +158,20 @@ public:
 	const float GetCameraSpeed() const;
 
 private:
-	Camera3D* editor_camera = nullptr;
-	Camera3D* game_camera = nullptr;
+	Camera2D* editor_camera = nullptr;
+	Camera2D* game_camera = nullptr;
 
-	std::vector<Camera3D*> cameras;
+	std::vector<Camera2D*> cameras;
 
 	// Camera Movement
 	bool  mouse_movement = false;
 	float camera_speed = 0.0f;
 	float wheel_speed = 0.0f;
 	float mouse_sensitivity = 0.0f;
+
+	bool dragging = false;
+
+	float2 last_mouse_position = float2::zero;
 };
 
 #endif // !__MODULE_CAMERA3D_H__

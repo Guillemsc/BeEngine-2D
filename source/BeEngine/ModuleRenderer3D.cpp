@@ -240,9 +240,9 @@ bool ModuleRenderer3D::PostUpdate()
 	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
 	float4x4 model = float4x4::identity;
-	model[0][3] = 100;
-	model[1][3] = 100;
-	model[2][3] = 100;
+	model[0][3] = 1;
+	model[1][3] = 1;
+	model[2][3] = 1;
 
 	sp->UseProgram();
 

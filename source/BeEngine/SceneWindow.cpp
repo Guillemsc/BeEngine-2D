@@ -32,7 +32,7 @@ void SceneWindow::DrawEditor()
 
 		last_size = window_size;
 
-		App->camera->GetEditorCamera()->SetAspectRatio((float)window_size.x/ (float)window_size.y);
+		App->camera->GetEditorCamera()->SetViewportSize(window_size.x, window_size.y);
 	}
 
 	ImGui::PushFont(font);

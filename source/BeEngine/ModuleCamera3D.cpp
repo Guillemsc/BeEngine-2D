@@ -48,15 +48,15 @@ bool ModuleCamera3D::CleanUp()
 void ModuleCamera3D::OnLoadConfig(JSON_Doc * config)
 {
 	mouse_sensitivity = config->GetNumber("camera.mouse_sensitivity", 0.25f);
-	wheel_speed = config->GetNumber("camera.wheel_speed", 5.0f);
-	camera_speed = config->GetNumber("camera.camera_speed", 20.0f);
+	wheel_speed = 10000; //config->GetNumber("camera.wheel_speed", 5.0f);
+	camera_speed = 1000;//config->GetNumber("camera.camera_speed", 20.0f);
 
 	float3 cam_pos = config->GetNumber3("camera_position");
-	float3 z_dir = config->GetNumber3("camera_front", float3(0, 0, 1));
-	float3 y_dir = config->GetNumber3("camera_up", float3(0, 1, 0));
-	editor_camera->SetPosition(cam_pos);
-	editor_camera->SetZDir(z_dir);
-	editor_camera->SetYDir(y_dir);
+	//float3 z_dir = config->GetNumber3("camera_front", float3(0, 0, 1));
+	//float3 y_dir = config->GetNumber3("camera_up", float3(0, 1, 0));
+	editor_camera->SetPosition(float3(0, 0, 0));
+	editor_camera->SetZDir(float3(0, 0, 1));
+	editor_camera->SetYDir(float3(0, 1, 0));
 }
 
 void ModuleCamera3D::OnSaveConfig(JSON_Doc * config)
@@ -69,21 +69,21 @@ void ModuleCamera3D::OnSaveConfig(JSON_Doc * config)
 	config->SetNumber3("camera_up", editor_camera->GetYDir());
 }
 
-Camera3D * ModuleCamera3D::CreateCamera()
+Camera2D * ModuleCamera3D::CreateCamera()
 {
-	Camera3D* ret = nullptr;
+	Camera2D* ret = nullptr;
 
-	ret = new Camera3D;
+	ret = new Camera2D;
 	cameras.push_back(ret);
 
 	return ret;
 }
 
-void ModuleCamera3D::DestroyCamera(Camera3D * cam)
+void ModuleCamera3D::DestroyCamera(Camera2D * cam)
 {
 	if (cam != nullptr)
 	{
-		for (std::vector<Camera3D*>::iterator it = cameras.begin(); it != cameras.end();)
+		for (std::vector<Camera2D*>::iterator it = cameras.begin(); it != cameras.end();)
 		{
 			if (cam == (*it))
 			{
@@ -99,7 +99,7 @@ void ModuleCamera3D::DestroyCamera(Camera3D * cam)
 
 void ModuleCamera3D::DestroyAllCameras()
 {
-	for (std::vector<Camera3D*>::iterator it = cameras.begin(); it != cameras.end(); ++it)
+	for (std::vector<Camera2D*>::iterator it = cameras.begin(); it != cameras.end(); ++it)
 	{
 		(*it)->CleanUp();
 		RELEASE(*it);
@@ -108,22 +108,22 @@ void ModuleCamera3D::DestroyAllCameras()
 	cameras.clear();
 }
 
-std::vector<Camera3D*> ModuleCamera3D::GetCameras()
+std::vector<Camera2D*> ModuleCamera3D::GetCameras()
 {
 	return cameras;
 }
 
-Camera3D * ModuleCamera3D::GetEditorCamera() const
+Camera2D * ModuleCamera3D::GetEditorCamera() const
 {
 	return editor_camera;
 }
 
-void ModuleCamera3D::SetGameCamera(Camera3D * set)
+void ModuleCamera3D::SetGameCamera(Camera2D * set)
 {
 	game_camera = set;
 }
 
-Camera3D * ModuleCamera3D::GetGameCamera() const
+Camera2D * ModuleCamera3D::GetGameCamera() const
 {
 	return game_camera;
 }
@@ -181,65 +181,102 @@ bool ModuleCamera3D::Update()
 	// Mouse motion ----------------
 	if (mouse_movement)
 	{
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+		{
+			last_mouse_position = float2(App->input->GetMouseX(), App->input->GetMouseY());
+		}
+
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+		{
+			dragging = true;
+		}
+		else
+			dragging = false;
+
+		if (dragging)
+		{
+			float2 mouse_pos = float2(App->input->GetMouseX(), App->input->GetMouseY());
+
+			float2 motion = mouse_pos - last_mouse_position;
+
+			//float x_motion = App->input->GetMouseXMotion();
+
+			motion.x *= editor_camera->size;
+
+			if(motion.x > 0)
+				editor_camera->MoveLeft(motion.x);
+			if (motion.x < 0)
+				editor_camera->MoveRight(-motion.x);
+
+			//float y_motion = App->input->GetMouseYMotion();
+
+			motion.y *= editor_camera->size;
+
+			if (motion.y > 0)
+				editor_camera->MoveUp(motion.y);
+			if (motion.y < 0)
+				editor_camera->MoveDown(-motion.y);
+
+			last_mouse_position = mouse_pos;
+
+			//INTERNAL_LOG("%d", x_motion);
+		}
+
 		if (App->input->GetMouseWheel() == 1)
 		{
-			editor_camera->MoveFront(whe_speed);
+			editor_camera->SetSize(editor_camera->size - (100 * App->GetDT()));
 		}
 		else if (App->input->GetMouseWheel() == -1)
 		{
-			editor_camera->MoveBack(whe_speed);
+			editor_camera->SetSize(editor_camera->size + (100 * App->GetDT()));
 		}
+	
+		App->window->GetCursor()->Hand();
 
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-		{
-			App->window->GetCursor()->Hand();
+		//if (App->input->GetKeyRepeat(SDL_SCANCODE_Z))
+		//	editor_camera->MoveUp(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_Z))
-				editor_camera->MoveUp(cam_speed);
+		//if (App->input->GetKeyRepeat(SDL_SCANCODE_X))
+		//	editor_camera->MoveDown(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_X))
-				editor_camera->MoveDown(cam_speed);
+		if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
+			editor_camera->MoveUp(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
-				editor_camera->MoveFront(cam_speed);
+		if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
+			editor_camera->MoveDown(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
-				editor_camera->MoveBack(cam_speed);
+		if (App->input->GetKeyRepeat(SDL_SCANCODE_A))
+			editor_camera->MoveLeft(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_A))
-				editor_camera->MoveLeft(cam_speed);
+		if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
+			editor_camera->MoveRight(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
-				editor_camera->MoveRight(cam_speed);
+		//editor_camera->Rotate(-App->input->GetMouseXMotion() * mou_speed, -App->input->GetMouseYMotion()*mou_speed);
 
-			editor_camera->Rotate(-App->input->GetMouseXMotion() * mou_speed, -App->input->GetMouseYMotion()*mou_speed);
-
-			//App->gameobj->SetCanMove(false);
+		//App->gameobj->SetCanMove(false);
+		
 			
-		}
-		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
-		{
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_LALT) || App->input->GetKeyRepeat(SDL_SCANCODE_RALT))
-			{
-				if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
-					editor_camera->MoveFront(cam_speed);
+		//if (App->input->GetKeyRepeat(SDL_SCANCODE_LALT) || App->input->GetKeyRepeat(SDL_SCANCODE_RALT))
+		//{
+		//	if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
+		//		editor_camera->MoveFront(cam_speed);
 
-				if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
-					editor_camera->MoveBack(cam_speed);
+		//	if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
+		//		editor_camera->MoveBack(cam_speed);
 
-				editor_camera->Orbit(float3(0, 0, 0), -App->input->GetMouseXMotion()*mou_speed, -App->input->GetMouseYMotion()*mou_speed);
-				editor_camera->Look(float3(0, 0, 0));
+		//	editor_camera->Orbit(float3(0, 0, 0), -App->input->GetMouseXMotion()*mou_speed, -App->input->GetMouseYMotion()*mou_speed);
+		//	editor_camera->Look(float3(0, 0, 0));
 
-				App->window->GetCursor()->SizeAll();
+		//	App->window->GetCursor()->SizeAll();
 
-				//App->gameobj->SetCanMove(false);
-			}
-		}
-		else
-		{
-			//mouse_movement = false;
-			//App->gameobj->SetCanMove(true);
-		}
+		//	//App->gameobj->SetCanMove(false);
+		//}
+		
+		
+		
+		//mouse_movement = false;
+		//App->gameobj->SetCanMove(true);
+	
 	}
 
 	if (App->input->GetKeyDown("f"))
@@ -250,42 +287,42 @@ bool ModuleCamera3D::Update()
 	return ret;
 }
 
-Camera3D::Camera3D()
+Camera2D::Camera2D()
 {
+	frustum.SetOrthographic(1920, 1080);
 	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
 
 	frustum.SetPos(float3(0, 1, -1));
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
-	aspect_ratio = 0;
 
 	SetNearPlaneDistance(0.1f);
 	SetFarPlaneDistance(10000.0f);
-	SetAspectRatio(1.3f);
-	SetFOV(60);
+	//SetAspectRatio(1.3f);
+	//SetFOV(60);
 
 	render_tex = new RenderTexture();
 }
 
-void Camera3D::CleanUp()
+void Camera2D::CleanUp()
 {
-	/*render_tex->CleanUp();*/
-	//RELEASE(render_tex);
+	render_tex->CleanUp();
+	RELEASE(render_tex);
 }
 
-void Camera3D::Bind(uint width, uint heigth)
+void Camera2D::Bind(uint width, uint heigth)
 {
 	if(render_tex != nullptr)
 		render_tex->Bind(width, heigth);
 }
 
-void Camera3D::Unbind()
+void Camera2D::Unbind()
 {
 	if(render_tex != nullptr)
 		render_tex->Unbind();
 }
 
-uint Camera3D::GetTextId()
+uint Camera2D::GetTextId()
 {
 	uint ret = 0;
 
@@ -295,111 +332,113 @@ uint Camera3D::GetTextId()
 	return ret;
 }
 
-void Camera3D::SetPosition(const float3 & pos)
+void Camera2D::SetPosition(const float3 & pos)
 {
 	frustum.SetPos(pos);
 }
 
-const float3 Camera3D::GetPosition()
+const float3 Camera2D::GetPosition()
 {
 	return frustum.Pos();
 }
 
-void Camera3D::SetZDir(const float3 & front)
+void Camera2D::SetZDir(const float3 & front)
 {
 	frustum.SetFront(front.Normalized());
 }
 
-void Camera3D::SetYDir(const float3 & front)
+void Camera2D::SetYDir(const float3 & front)
 {
 	frustum.SetUp(front.Normalized());
 }
 
-float3 Camera3D::GetZDir()
+float3 Camera2D::GetZDir()
 {
 	return frustum.Front();
 }
 
-float3 Camera3D::GetYDir()
+float3 Camera2D::GetYDir()
 {
 	return frustum.Up();
 }
 
-void Camera3D::GetCorners(float3* corners)
+void Camera2D::GetCorners(float3* corners)
 {
 	frustum.GetCornerPoints(corners);
 }
 
-void Camera3D::SetNearPlaneDistance(const float & set)
+void Camera2D::SetNearPlaneDistance(const float & set)
 {
 	frustum.SetViewPlaneDistances(set, frustum.FarPlaneDistance());
 }
 
-void Camera3D::SetFarPlaneDistance(const float & set)
+void Camera2D::SetFarPlaneDistance(const float & set)
 {
 	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), set);
 }
 
-void Camera3D::SetFOV(const float & set)
+void Camera2D::SetViewportSize(float width, float height)
 {
-	if (set > 0)
+	if (width > 0 && height > 0 && size > 0)
 	{
-		vertical_fov = set * DEGTORAD;
-		frustum.SetVerticalFovAndAspectRatio(DEGTORAD * set, aspect_ratio);
+		frustum.SetOrthographic(width * size, height * size);
+
+		viewport_size = float2(width, height);
 	}
 }
 
-void Camera3D::SetAspectRatio(const float & set)
+void Camera2D::SetSize(float _size)
 {
-	if (set > 0)
+	if (_size > 0)
 	{
-		aspect_ratio = set;
-		frustum.SetVerticalFovAndAspectRatio(vertical_fov, set);
+		size = _size;
+
+		SetViewportSize(viewport_size.x, viewport_size.y);
 	}
 }
 
-const float Camera3D::GetNearPlaneDistance() const
+const float Camera2D::GetNearPlaneDistance() const
 {
 	return frustum.NearPlaneDistance();
 }
 
-const float Camera3D::GetFarPlaneDistance() const
+const float Camera2D::GetFarPlaneDistance() const
 {
 	return frustum.FarPlaneDistance();
 }
 
-const float Camera3D::GetVerticalFOV() const
+const float Camera2D::GetVerticalFOV() const
 {
 	return frustum.VerticalFov() * RADTODEG;
 }
 
-const float Camera3D::GetHorizontalFOV() const
+const float Camera2D::GetHorizontalFOV() const
 {
 	return frustum.HorizontalFov() * RADTODEG;
 }
 
-const float4x4 Camera3D::GetViewMatrix() const
+const float4x4 Camera2D::GetViewMatrix() const
 {
 	return frustum.ViewMatrix();
 }
 
-const float4x4 Camera3D::GetProjectionMatrix() const
+const float4x4 Camera2D::GetProjectionMatrix() const
 {
 	return frustum.ProjectionMatrix();
 }
 
-const float4x4 Camera3D::GetOpenGLViewMatrix() const
+const float4x4 Camera2D::GetOpenGLViewMatrix() const
 {
 	float4x4 view = frustum.ViewMatrix();
 	return view.Transposed();
 }
 
-const float4x4 Camera3D::GetOpenGLProjectionMatrix() const
+const float4x4 Camera2D::GetOpenGLProjectionMatrix() const
 {
 	return frustum.ProjectionMatrix().Transposed();
 }
 
-void Camera3D::MoveFront(const float & speed)
+void Camera2D::MoveFront(const float & speed)
 {
 	if (speed <= 0)
 		return;
@@ -407,9 +446,11 @@ void Camera3D::MoveFront(const float & speed)
 	float3 movement = float3::zero;
 	movement += frustum.Front() * speed;
 	frustum.Translate(movement);
+
+	UpdateTransform();
 }
 
-void Camera3D::MoveBack(const float & speed)
+void Camera2D::MoveBack(const float & speed)
 {
 	if (speed <= 0)
 		return;
@@ -417,9 +458,11 @@ void Camera3D::MoveBack(const float & speed)
 	float3 movement = float3::zero;
 	movement -= frustum.Front() * speed;
 	frustum.Translate(movement);
+
+	UpdateTransform();
 }
 
-void Camera3D::MoveRight(const float & speed)
+void Camera2D::MoveRight(const float & speed)
 {
 	if (speed <= 0)
 		return;
@@ -427,9 +470,11 @@ void Camera3D::MoveRight(const float & speed)
 	float3 movement = float3::zero;
 	movement += frustum.WorldRight() * speed;
 	frustum.Translate(movement);
+
+	UpdateTransform();
 }
 
-void Camera3D::MoveLeft(const float & speed)
+void Camera2D::MoveLeft(const float & speed)
 {
 	if (speed <= 0)
 		return;
@@ -437,9 +482,11 @@ void Camera3D::MoveLeft(const float & speed)
 	float3 movement = float3::zero;
 	movement -= frustum.WorldRight() * speed;
 	frustum.Translate(movement);
+
+	UpdateTransform();
 }
 
-void Camera3D::MoveUp(const float & speed)
+void Camera2D::MoveUp(const float & speed)
 {
 	if (speed <= 0)
 		return;
@@ -447,9 +494,11 @@ void Camera3D::MoveUp(const float & speed)
 	float3 movement = float3::zero;
 	movement += float3::unitY * speed;
 	frustum.Translate(movement);
+
+	UpdateTransform();
 }
 
-void Camera3D::MoveDown(const float & speed)
+void Camera2D::MoveDown(const float & speed)
 {
 	if (speed <= 0)
 		return;
@@ -457,9 +506,11 @@ void Camera3D::MoveDown(const float & speed)
 	float3 movement = float3::zero;
 	movement -= float3::unitY * speed;
 	frustum.Translate(movement);
+
+	UpdateTransform();
 }
 
-void Camera3D::Orbit(const float3 & rotate_center, const float & motion_x, const float & motion_y)
+void Camera2D::Orbit(const float3 & rotate_center, const float & motion_x, const float & motion_y)
 {
 	float3 distance = frustum.Pos() - rotate_center;
 
@@ -472,7 +523,7 @@ void Camera3D::Orbit(const float3 & rotate_center, const float & motion_x, const
 	frustum.SetPos(distance + rotate_center);
 }
 
-void Camera3D::Rotate(const float & motion_x, const float & motion_y)
+void Camera2D::Rotate(const float & motion_x, const float & motion_y)
 {
 	Quat rotation_x = Quat::RotateY(motion_x);
 	frustum.SetFront(rotation_x.Mul(frustum.Front()).Normalized());
@@ -483,7 +534,7 @@ void Camera3D::Rotate(const float & motion_x, const float & motion_y)
 	frustum.SetUp(rotation_y.Mul(frustum.Up()).Normalized());
 }
 
-void Camera3D::Look(const float3 & look_pos)
+void Camera2D::Look(const float3 & look_pos)
 {
 	float3 dir = look_pos - frustum.Pos();
 
@@ -493,7 +544,7 @@ void Camera3D::Look(const float3 & look_pos)
 	frustum.SetUp(direction_matrix.MulDir(frustum.Up()).Normalized());
 }
 
-bool Camera3D::CheckInsideFrustum(const AABB & box)
+bool Camera2D::CheckInsideFrustum(const AABB & box)
 {
 	bool ret = true;
 
@@ -524,23 +575,29 @@ bool Camera3D::CheckInsideFrustum(const AABB & box)
 	return ret;
 }
 
-void Camera3D::SetFrustumCulling(bool set)
+void Camera2D::SetFrustumCulling(bool set)
 {
 	frustum_culling = set;
 }
 
-bool Camera3D::GetFrustumCulling()
+bool Camera2D::GetFrustumCulling()
 {
 	return frustum_culling;
 }
 
 
-Frustum Camera3D::GetFrustum()
+Frustum Camera2D::GetFrustum()
 {
 	return frustum;
 }
 
-void Camera3D::Focus(const float3 & focus_center, const float & distance)
+void Camera2D::UpdateTransform()
+{
+	frustum.SetFront(frustum.Front());
+	frustum.SetUp(frustum.Up());
+}
+
+void Camera2D::Focus(const float3 & focus_center, const float & distance)
 {
 	float3 dir = frustum.Pos() - focus_center;
 	frustum.SetPos(dir.Normalized() * distance);
@@ -548,7 +605,7 @@ void Camera3D::Focus(const float3 & focus_center, const float & distance)
 	Look(focus_center);
 }
 
-void Camera3D::Focus(const AABB & aabb)
+void Camera2D::Focus(const AABB & aabb)
 {
 	Focus(aabb.CenterPoint(), aabb.Size().Length());
 }
