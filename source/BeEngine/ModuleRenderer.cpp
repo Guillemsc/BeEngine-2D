@@ -1,9 +1,9 @@
 #include "App.h"
 #include "ModuleWindow.h"
-#include "ModuleCamera3D.h"
+#include "ModuleCamera.h"
 #include "Globals.h"
 #include "App.h"
-#include "ModuleRenderer3D.h"
+#include "ModuleRenderer.h"
 #include "FBO.h"
 #include "ModuleShader.h"
 #include "ModuleEditor.h"
@@ -16,18 +16,18 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/Lib/glew32.lib") 
 
-ModuleRenderer3D::ModuleRenderer3D() : Module()
+ModuleRenderer::ModuleRenderer() : Module()
 {
 
 }
 
 // Destructor
-ModuleRenderer3D::~ModuleRenderer3D()
+ModuleRenderer::~ModuleRenderer()
 {
 }
 
 // Called before render is available
-bool ModuleRenderer3D::Awake()
+bool ModuleRenderer::Awake()
 {
 	bool ret = true;
 
@@ -131,7 +131,7 @@ bool ModuleRenderer3D::Awake()
 	return ret;
 }
 
-bool ModuleRenderer3D::Start()
+bool ModuleRenderer::Start()
 {
 	bool ret = true;
 
@@ -216,7 +216,7 @@ bool ModuleRenderer3D::Start()
 }
 
 // PreUpdate: clear buffer
-bool ModuleRenderer3D::PreUpdate()
+bool ModuleRenderer::PreUpdate()
 {
 	bool ret = true;
 
@@ -228,7 +228,7 @@ bool ModuleRenderer3D::PreUpdate()
 }
 
 // PostUpdate present buffer to screen
-bool ModuleRenderer3D::PostUpdate()
+bool ModuleRenderer::PostUpdate()
 {
 	bool ret = true;
 
@@ -294,7 +294,7 @@ bool ModuleRenderer3D::PostUpdate()
 }
 
 // Called before quitting
-bool ModuleRenderer3D::CleanUp()
+bool ModuleRenderer::CleanUp()
 {
 	bool ret = true;
 
@@ -305,17 +305,12 @@ bool ModuleRenderer3D::CleanUp()
 	return ret;
 }
 
-SDL_GLContext ModuleRenderer3D::GetSDLGLContext() const
+SDL_GLContext ModuleRenderer::GetSDLGLContext() const
 {
 	return context;
 }
 
-void ModuleRenderer3D::OnResize(int width, int height)
-{
-	
-}
-
-void ModuleRenderer3D::RenderScene()
+void ModuleRenderer::RenderScene()
 {
 	//std::vector<Camera3D*> cameras = App->camera->GetCameras();
 
@@ -338,7 +333,7 @@ void ModuleRenderer3D::RenderScene()
 	//}
 }
 
-void ModuleRenderer3D::SetPoligonModeWireframe() const
+void ModuleRenderer::SetPoligonModeWireframe() const
 {
 	bool wireframe = true;
 	bool points = false;
@@ -347,7 +342,7 @@ void ModuleRenderer3D::SetPoligonModeWireframe() const
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
-void ModuleRenderer3D::SetPoligonModePoints(float point_size) const
+void ModuleRenderer::SetPoligonModePoints(float point_size) const
 {
 	bool wireframe = false;
 	bool points = true;
@@ -357,7 +352,7 @@ void ModuleRenderer3D::SetPoligonModePoints(float point_size) const
 	glPointSize(point_size);
 }
 
-void ModuleRenderer3D::SetPoligonModeFill() const
+void ModuleRenderer::SetPoligonModeFill() const
 {
 	bool wireframe = false;
 	bool points = false;
@@ -366,7 +361,7 @@ void ModuleRenderer3D::SetPoligonModeFill() const
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void ModuleRenderer3D::SetDepthTest(const bool& set) const
+void ModuleRenderer::SetDepthTest(const bool& set) const
 {
 	if (set)
 		glEnable(GL_DEPTH_TEST);
@@ -374,7 +369,7 @@ void ModuleRenderer3D::SetDepthTest(const bool& set) const
 		glDisable(GL_DEPTH_TEST);
 }
 
-void ModuleRenderer3D::SetCullFace(const bool& set) const
+void ModuleRenderer::SetCullFace(const bool& set) const
 {
 	if (set)
 		glEnable(GL_CULL_FACE);
@@ -382,7 +377,7 @@ void ModuleRenderer3D::SetCullFace(const bool& set) const
 		glDisable(GL_CULL_FACE);
 }
 
-void ModuleRenderer3D::SetLightingState(const bool& set) const
+void ModuleRenderer::SetLightingState(const bool& set) const
 {
 	if (set)
 		glEnable(GL_LIGHTING);
@@ -390,7 +385,7 @@ void ModuleRenderer3D::SetLightingState(const bool& set) const
 		glDisable(GL_LIGHTING);
 }
 
-void ModuleRenderer3D::SetTexture2D(const bool& set) const
+void ModuleRenderer::SetTexture2D(const bool& set) const
 {
 	if (set)
 		glEnable(GL_TEXTURE_2D);
@@ -398,7 +393,7 @@ void ModuleRenderer3D::SetTexture2D(const bool& set) const
 		glDisable(GL_TEXTURE_2D);
 }
 
-void ModuleRenderer3D::SetColorMaterial(const bool& set) const
+void ModuleRenderer::SetColorMaterial(const bool& set) const
 {
 	if (set)
 		glEnable(GL_COLOR_MATERIAL);
@@ -406,7 +401,7 @@ void ModuleRenderer3D::SetColorMaterial(const bool& set) const
 		glDisable(GL_COLOR_MATERIAL);
 }
 
-void ModuleRenderer3D::SetAmbientLight(const bool & enabled, const float color[4]) const
+void ModuleRenderer::SetAmbientLight(const bool & enabled, const float color[4]) const
 {
 	glLightfv(GL_LIGHT0, GL_AMBIENT, color);
 
@@ -416,7 +411,7 @@ void ModuleRenderer3D::SetAmbientLight(const bool & enabled, const float color[4
 		glDisable(GL_LIGHT0);
 }
 
-void ModuleRenderer3D::SetDiffuseLight(const bool & enabled, const float color[4]) const
+void ModuleRenderer::SetDiffuseLight(const bool & enabled, const float color[4]) const
 {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
 
@@ -426,7 +421,7 @@ void ModuleRenderer3D::SetDiffuseLight(const bool & enabled, const float color[4
 		glDisable(GL_LIGHT1);
 }
 
-void ModuleRenderer3D::SetSpecularLight(const bool & enabled, const float color[4]) const
+void ModuleRenderer::SetSpecularLight(const bool & enabled, const float color[4]) const
 {
 	glLightfv(GL_LIGHT2, GL_SPECULAR, color);
 
@@ -436,7 +431,7 @@ void ModuleRenderer3D::SetSpecularLight(const bool & enabled, const float color[
 		glDisable(GL_LIGHT2);
 }
 
-void ModuleRenderer3D::SetViewport(uint start_x, uint start_y, uint width, uint height)
+void ModuleRenderer::SetViewport(uint start_x, uint start_y, uint width, uint height)
 {
 	glViewport(start_x, start_y, width, height);
 
@@ -447,7 +442,7 @@ void ModuleRenderer3D::SetViewport(uint start_x, uint start_y, uint width, uint 
 	}
 }
 
-void ModuleRenderer3D::GetViewport(uint & start_x, uint & start_y, uint & width, uint & height)
+void ModuleRenderer::GetViewport(uint & start_x, uint & start_y, uint & width, uint & height)
 {
 	GLint viewport[4]; glGetIntegerv(GL_VIEWPORT, viewport);
 
@@ -463,7 +458,7 @@ void ModuleRenderer3D::GetViewport(uint & start_x, uint & start_y, uint & width,
 	}
 }
 
-void ModuleRenderer3D::Clear(uint buffer)
+void ModuleRenderer::Clear(uint buffer)
 {
 	glClear(buffer);
 
@@ -474,7 +469,7 @@ void ModuleRenderer3D::Clear(uint buffer)
 	}
 }
 
-uint ModuleRenderer3D::GenBuffer() const
+uint ModuleRenderer::GenBuffer() const
 {
 	uint ret = 0;
 
@@ -483,13 +478,13 @@ uint ModuleRenderer3D::GenBuffer() const
 	return ret;
 }
 
-void ModuleRenderer3D::UnloadBuffer(uint& id)
+void ModuleRenderer::UnloadBuffer(uint& id)
 {
 	if(id > 0)
 		glDeleteBuffers(1, &id);
 }
 
-void ModuleRenderer3D::BindArrayBuffer(uint id) const
+void ModuleRenderer::BindArrayBuffer(uint id) const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 
@@ -500,7 +495,7 @@ void ModuleRenderer3D::BindArrayBuffer(uint id) const
 	}
 }
 
-void ModuleRenderer3D::BindElementArrayBuffer(uint id) const
+void ModuleRenderer::BindElementArrayBuffer(uint id) const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 
@@ -511,7 +506,7 @@ void ModuleRenderer3D::BindElementArrayBuffer(uint id) const
 	}
 }
 
-void ModuleRenderer3D::RenderElement(uint num_indices) const
+void ModuleRenderer::RenderElement(uint num_indices) const
 {
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
@@ -522,7 +517,7 @@ void ModuleRenderer3D::RenderElement(uint num_indices) const
 	}
 }
 
-void ModuleRenderer3D::UnbindArraybuffer() const
+void ModuleRenderer::UnbindArraybuffer() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	GLenum error = glGetError();
@@ -532,7 +527,7 @@ void ModuleRenderer3D::UnbindArraybuffer() const
 	}
 }
 
-void ModuleRenderer3D::UnbindElementArrayBuffer() const
+void ModuleRenderer::UnbindElementArrayBuffer() const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -543,7 +538,7 @@ void ModuleRenderer3D::UnbindElementArrayBuffer() const
 	}
 }
 
-void ModuleRenderer3D::EnableState(GLenum type) const
+void ModuleRenderer::EnableState(GLenum type) const
 {
 	glEnableClientState(type);
 
@@ -554,7 +549,7 @@ void ModuleRenderer3D::EnableState(GLenum type) const
 	}
 }
 
-void ModuleRenderer3D::DisableState(GLenum type) const
+void ModuleRenderer::DisableState(GLenum type) const
 {
 	glDisableClientState(type);
 
@@ -565,7 +560,7 @@ void ModuleRenderer3D::DisableState(GLenum type) const
 	}
 }
 
-void ModuleRenderer3D::SetVertexPointer() const
+void ModuleRenderer::SetVertexPointer() const
 {
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
@@ -576,7 +571,7 @@ void ModuleRenderer3D::SetVertexPointer() const
 	}
 }
 
-void ModuleRenderer3D::SetNormalsPointer() const
+void ModuleRenderer::SetNormalsPointer() const
 {
 	glNormalPointer(GL_FLOAT, 0, NULL);
 
@@ -587,7 +582,7 @@ void ModuleRenderer3D::SetNormalsPointer() const
 	}
 }
 
-void ModuleRenderer3D::SetTexCoordPointer()
+void ModuleRenderer::SetTexCoordPointer()
 {
 	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 
@@ -598,7 +593,7 @@ void ModuleRenderer3D::SetTexCoordPointer()
 	}
 }
 
-uint ModuleRenderer3D::GenTexture() const
+uint ModuleRenderer::GenTexture() const
 {
 	uint ret = 0;
 
@@ -607,7 +602,7 @@ uint ModuleRenderer3D::GenTexture() const
 	return ret;
 }
 
-void ModuleRenderer3D::BindTexture(uint id) const
+void ModuleRenderer::BindTexture(uint id) const
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 
@@ -618,7 +613,7 @@ void ModuleRenderer3D::BindTexture(uint id) const
 	}
 }
 
-void ModuleRenderer3D::BindTexture(uint target, uint id) const
+void ModuleRenderer::BindTexture(uint target, uint id) const
 {
 	glBindTexture((GLenum)target, id);
 
@@ -629,7 +624,7 @@ void ModuleRenderer3D::BindTexture(uint target, uint id) const
 	}
 }
 
-void ModuleRenderer3D::UnbindTexture() const
+void ModuleRenderer::UnbindTexture() const
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -640,7 +635,7 @@ void ModuleRenderer3D::UnbindTexture() const
 	}
 }
 
-void ModuleRenderer3D::UnbindTexture(uint target) const
+void ModuleRenderer::UnbindTexture(uint target) const
 {
 	glBindTexture((GLenum)target, 0);
 
@@ -651,7 +646,7 @@ void ModuleRenderer3D::UnbindTexture(uint target) const
 	}
 }
 
-void ModuleRenderer3D::DeleteTexture(uint& id) const
+void ModuleRenderer::DeleteTexture(uint& id) const
 {
 	if (id > 0)
 	{
@@ -665,7 +660,7 @@ void ModuleRenderer3D::DeleteTexture(uint& id) const
 	}
 }
 
-uint ModuleRenderer3D::GenRenderBuffer() const
+uint ModuleRenderer::GenRenderBuffer() const
 {
 	uint ret = 0;
 
@@ -674,7 +669,7 @@ uint ModuleRenderer3D::GenRenderBuffer() const
 	return ret;
 }
 
-void ModuleRenderer3D::BindRenderBuffer(uint id) const
+void ModuleRenderer::BindRenderBuffer(uint id) const
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, id);
 
@@ -685,7 +680,7 @@ void ModuleRenderer3D::BindRenderBuffer(uint id) const
 	}
 }
 
-void ModuleRenderer3D::UnbindRenderBuffer() const
+void ModuleRenderer::UnbindRenderBuffer() const
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
@@ -696,7 +691,7 @@ void ModuleRenderer3D::UnbindRenderBuffer() const
 	}
 }
 
-void ModuleRenderer3D::Set2DMultisample(uint samples, uint width, uint height)
+void ModuleRenderer::Set2DMultisample(uint samples, uint width, uint height)
 {
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, width, height, GL_TRUE);
 
@@ -707,7 +702,7 @@ void ModuleRenderer3D::Set2DMultisample(uint samples, uint width, uint height)
 	}
 }
 
-void ModuleRenderer3D::SetFrameBufferTexture2D(uint target, uint id)
+void ModuleRenderer::SetFrameBufferTexture2D(uint target, uint id)
 {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, id, 0);
 
@@ -718,7 +713,7 @@ void ModuleRenderer3D::SetFrameBufferTexture2D(uint target, uint id)
 	}
 }
 
-void ModuleRenderer3D::RenderStorageMultisample(uint samples, uint width, uint height)
+void ModuleRenderer::RenderStorageMultisample(uint samples, uint width, uint height)
 {
 	glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height);
 
@@ -729,7 +724,7 @@ void ModuleRenderer3D::RenderStorageMultisample(uint samples, uint width, uint h
 	}
 }
 
-void ModuleRenderer3D::LoadArrayToVRAM(uint size, float * values, GLenum type) const
+void ModuleRenderer::LoadArrayToVRAM(uint size, float * values, GLenum type) const
 {
 	glBufferData(GL_ARRAY_BUFFER, size, values, type);
 
@@ -740,7 +735,7 @@ void ModuleRenderer3D::LoadArrayToVRAM(uint size, float * values, GLenum type) c
 	}
 }
 
-void ModuleRenderer3D::LoadArrayToVRAM(uint size, uint * values, GLenum type) const
+void ModuleRenderer::LoadArrayToVRAM(uint size, uint * values, GLenum type) const
 {
 	glBufferData(GL_ARRAY_BUFFER, size, values, type);
 
@@ -751,7 +746,7 @@ void ModuleRenderer3D::LoadArrayToVRAM(uint size, uint * values, GLenum type) co
 	}
 }
 
-uint ModuleRenderer3D::LoadTextureToVRAM(uint w, uint h, GLubyte * tex_data, GLint format) const
+uint ModuleRenderer::LoadTextureToVRAM(uint w, uint h, GLubyte * tex_data, GLint format) const
 {
 	uint buff_id = 0;
 
@@ -779,22 +774,22 @@ uint ModuleRenderer3D::LoadTextureToVRAM(uint w, uint h, GLubyte * tex_data, GLi
 	return buff_id; uint();
 }
 
-void ModuleRenderer3D::PushMatrix()
+void ModuleRenderer::PushMatrix()
 {
 	glPushMatrix();
 }
 
-void ModuleRenderer3D::PopMatrix()
+void ModuleRenderer::PopMatrix()
 {
 	glPopMatrix();
 }
 
-void ModuleRenderer3D::MultMatrix(float * matrix)
+void ModuleRenderer::MultMatrix(float * matrix)
 {
 	glMultMatrixf(matrix);
 }
 
-uint ModuleRenderer3D::GenVertexArrayBuffer() const
+uint ModuleRenderer::GenVertexArrayBuffer() const
 {
 	uint ret = 0;
 
@@ -803,7 +798,7 @@ uint ModuleRenderer3D::GenVertexArrayBuffer() const
 	return ret;
 }
 
-void ModuleRenderer3D::BindVertexArrayBuffer(uint id) const
+void ModuleRenderer::BindVertexArrayBuffer(uint id) const
 {
 	glBindVertexArray(id);
 
@@ -814,7 +809,7 @@ void ModuleRenderer3D::BindVertexArrayBuffer(uint id) const
 	}
 }
 
-void ModuleRenderer3D::UnbindVertexArrayBuffer() const
+void ModuleRenderer::UnbindVertexArrayBuffer() const
 {
 	glBindVertexArray(0);
 
@@ -825,7 +820,7 @@ void ModuleRenderer3D::UnbindVertexArrayBuffer() const
 	}
 }
 
-uint ModuleRenderer3D::GenFrameBuffer() const
+uint ModuleRenderer::GenFrameBuffer() const
 {
 	uint ret = 0;
 
@@ -840,7 +835,7 @@ uint ModuleRenderer3D::GenFrameBuffer() const
 	return ret;
 }
 
-void ModuleRenderer3D::BindFrameBuffer(uint id) const
+void ModuleRenderer::BindFrameBuffer(uint id) const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
 
@@ -851,7 +846,7 @@ void ModuleRenderer3D::BindFrameBuffer(uint id) const
 	}
 }
 
-void ModuleRenderer3D::BindFrameBuffer(uint target, uint id) const
+void ModuleRenderer::BindFrameBuffer(uint target, uint id) const
 {
 	glBindFramebuffer(target, id);
 
@@ -862,7 +857,7 @@ void ModuleRenderer3D::BindFrameBuffer(uint target, uint id) const
 	}
 }
 
-void ModuleRenderer3D::BlitFrameBuffer(uint x, uint y, uint w, uint h) const
+void ModuleRenderer::BlitFrameBuffer(uint x, uint y, uint w, uint h) const
 {
 	glBlitFramebuffer(x, y, w, w,  // src rect
 		x, y, w, h,  // dst rect
@@ -876,7 +871,7 @@ void ModuleRenderer3D::BlitFrameBuffer(uint x, uint y, uint w, uint h) const
 	}
 }
 
-void ModuleRenderer3D::RenderFrameBuffer(uint id) const
+void ModuleRenderer::RenderFrameBuffer(uint id) const
 {
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, id);
 
@@ -887,7 +882,7 @@ void ModuleRenderer3D::RenderFrameBuffer(uint id) const
 	}
 }
 
-void ModuleRenderer3D::UnbindFrameBuffer() const
+void ModuleRenderer::UnbindFrameBuffer() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -898,7 +893,7 @@ void ModuleRenderer3D::UnbindFrameBuffer() const
 	}
 }
 
-uint ModuleRenderer3D::CheckFrameBufferStatus()
+uint ModuleRenderer::CheckFrameBufferStatus()
 {
 	uint ret = 0;
 
@@ -913,7 +908,7 @@ uint ModuleRenderer3D::CheckFrameBufferStatus()
 	return ret;
 }
 
-void ModuleRenderer3D::DeleteFrameBuffer(uint & id)
+void ModuleRenderer::DeleteFrameBuffer(uint & id)
 {
 	if (id > 0)
 	{
@@ -927,7 +922,7 @@ void ModuleRenderer3D::DeleteFrameBuffer(uint & id)
 	}
 }
 
-uint ModuleRenderer3D::CreateVertexShader(const char * source, std::string& compilation_error_msg)
+uint ModuleRenderer::CreateVertexShader(const char * source, std::string& compilation_error_msg)
 {
 	GLuint vertexShader = 0;
 
@@ -953,7 +948,7 @@ uint ModuleRenderer3D::CreateVertexShader(const char * source, std::string& comp
 	return vertexShader;
 }
 
-uint ModuleRenderer3D::CreateFragmentShader(const char * source, std::string& compilation_error_msg)
+uint ModuleRenderer::CreateFragmentShader(const char * source, std::string& compilation_error_msg)
 {
 	GLuint fragmentShader = 0;
 
@@ -979,7 +974,7 @@ uint ModuleRenderer3D::CreateFragmentShader(const char * source, std::string& co
 	return fragmentShader;
 }
 
-void ModuleRenderer3D::DeleteShader(uint shader_id)
+void ModuleRenderer::DeleteShader(uint shader_id)
 {
 	if (shader_id > 0)
 	{
@@ -993,7 +988,7 @@ void ModuleRenderer3D::DeleteShader(uint shader_id)
 	}
 }
 
-uint ModuleRenderer3D::GetProgramBinary(uint program_id, uint buff_size, char * buff) const
+uint ModuleRenderer::GetProgramBinary(uint program_id, uint buff_size, char * buff) const
 {
 	uint ret = 0;
 
@@ -1016,7 +1011,7 @@ uint ModuleRenderer3D::GetProgramBinary(uint program_id, uint buff_size, char * 
 	return ret;
 }
 
-int ModuleRenderer3D::GetProgramSize(uint program_id) const
+int ModuleRenderer::GetProgramSize(uint program_id) const
 {
 	int ret = 0;
 
@@ -1031,7 +1026,7 @@ int ModuleRenderer3D::GetProgramSize(uint program_id) const
 	return ret;
 }
 
-void ModuleRenderer3D::LoadProgramFromBinary(uint program_id, uint buff_size, const char * buff)
+void ModuleRenderer::LoadProgramFromBinary(uint program_id, uint buff_size, const char * buff)
 {
 	GLint formats = 0;
 	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &formats);
@@ -1048,7 +1043,7 @@ void ModuleRenderer3D::LoadProgramFromBinary(uint program_id, uint buff_size, co
 	}
 }
 
-void ModuleRenderer3D::EnableVertexAttributeArray(uint id)
+void ModuleRenderer::EnableVertexAttributeArray(uint id)
 {
 	glEnableVertexAttribArray(id);
 
@@ -1059,7 +1054,7 @@ void ModuleRenderer3D::EnableVertexAttributeArray(uint id)
 	}
 }
 
-void ModuleRenderer3D::DisableVertexAttributeArray(uint id)
+void ModuleRenderer::DisableVertexAttributeArray(uint id)
 {
 	glDisableVertexAttribArray(id);
 
@@ -1070,7 +1065,7 @@ void ModuleRenderer3D::DisableVertexAttributeArray(uint id)
 	}
 }
 
-void ModuleRenderer3D::SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap)
+void ModuleRenderer::SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap)
 {
 	glVertexAttribPointer(id, element_size, GL_FLOAT, GL_FALSE, elements_gap * sizeof(GLfloat), (void*)(infogap * sizeof(GLfloat)));
 
@@ -1081,7 +1076,7 @@ void ModuleRenderer3D::SetVertexAttributePointer(uint id, uint element_size, uin
 	}
 }
 
-uint ModuleRenderer3D::GetAttributesCount(uint program)
+uint ModuleRenderer::GetAttributesCount(uint program)
 {
 	uint ret = 0;
 
@@ -1099,7 +1094,7 @@ uint ModuleRenderer3D::GetAttributesCount(uint program)
 	return ret;
 }
 
-void ModuleRenderer3D::GetAttributesInfo(uint program, uint index, std::string & name, GLenum & type)
+void ModuleRenderer::GetAttributesInfo(uint program, uint index, std::string & name, GLenum & type)
 {
 	const GLsizei bufSize = 100;
 	GLchar c_name[bufSize];
@@ -1117,7 +1112,7 @@ void ModuleRenderer3D::GetAttributesInfo(uint program, uint index, std::string &
 	name = c_name;
 }
 
-void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, const float * data)
+void ModuleRenderer::SetUniformMatrix(uint program, const char * name, const float * data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
 
@@ -1131,7 +1126,7 @@ void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, const f
 	}
 }
 
-void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float data)
+void ModuleRenderer::SetUniformFloat(uint program, const char * name, float data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
 
@@ -1145,7 +1140,7 @@ void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float da
 	}
 }
 
-void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data)
+void ModuleRenderer::SetUniformBool(uint program, const char * name, bool data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
 
@@ -1159,7 +1154,7 @@ void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data
 	}
 }
 
-void ModuleRenderer3D::SetUniformVec3(uint program, const char * name, float3 data)
+void ModuleRenderer::SetUniformVec3(uint program, const char * name, float3 data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
 
@@ -1173,7 +1168,7 @@ void ModuleRenderer3D::SetUniformVec3(uint program, const char * name, float3 da
 	}
 }
 
-uint ModuleRenderer3D::GetUniformsCount(uint program)
+uint ModuleRenderer::GetUniformsCount(uint program)
 {
 	uint ret = 0;
 
@@ -1191,7 +1186,7 @@ uint ModuleRenderer3D::GetUniformsCount(uint program)
 	return ret;
 }
 
-void ModuleRenderer3D::GetUniformInfo(uint program, uint index, std::string& name, GLenum& type)
+void ModuleRenderer::GetUniformInfo(uint program, uint index, std::string& name, GLenum& type)
 {
 	const GLsizei bufSize = 100;
 	GLchar c_name[bufSize];
@@ -1209,7 +1204,7 @@ void ModuleRenderer3D::GetUniformInfo(uint program, uint index, std::string& nam
 	name = c_name;
 }
 
-uint ModuleRenderer3D::CreateShaderProgram()
+uint ModuleRenderer::CreateShaderProgram()
 {
 	uint ret = glCreateProgram();
 
@@ -1222,7 +1217,7 @@ uint ModuleRenderer3D::CreateShaderProgram()
 	return ret;
 }
 
-void ModuleRenderer3D::UseShaderProgram(uint id)
+void ModuleRenderer::UseShaderProgram(uint id)
 {
 	glUseProgram(id);
 
@@ -1233,7 +1228,7 @@ void ModuleRenderer3D::UseShaderProgram(uint id)
 	}
 }
 
-void ModuleRenderer3D::AttachShaderToProgram(uint program_id, uint shader_id)
+void ModuleRenderer::AttachShaderToProgram(uint program_id, uint shader_id)
 {
 	if (program_id > 0 && shader_id > 0)
 	{
@@ -1247,7 +1242,7 @@ void ModuleRenderer3D::AttachShaderToProgram(uint program_id, uint shader_id)
 	}
 }
 
-bool ModuleRenderer3D::LinkProgram(uint program_id)
+bool ModuleRenderer::LinkProgram(uint program_id)
 {
 	bool ret = false;
 
@@ -1275,7 +1270,7 @@ bool ModuleRenderer3D::LinkProgram(uint program_id)
 	return ret;
 }
 
-void ModuleRenderer3D::DeleteProgram(uint program_id)
+void ModuleRenderer::DeleteProgram(uint program_id)
 {
 	if (program_id > 0)
 	{
@@ -1289,7 +1284,7 @@ void ModuleRenderer3D::DeleteProgram(uint program_id)
 	}
 }
 
-bool ModuleRenderer3D::RenderEditorAsync()
+bool ModuleRenderer::RenderEditorAsync()
 {
 	App->editor->RenderEditor();
 

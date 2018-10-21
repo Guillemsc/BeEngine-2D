@@ -13,11 +13,11 @@
 class FBO;
 class ShaderProgram;
 
-class ModuleRenderer3D : public Module
+class ModuleRenderer : public Module
 {
 public:
-	ModuleRenderer3D();
-	~ModuleRenderer3D();
+	ModuleRenderer();
+	~ModuleRenderer();
 
 	bool Awake();
 	bool Start();
@@ -26,8 +26,6 @@ public:
 	bool CleanUp();
 
 	SDL_GLContext GetSDLGLContext() const;
-
-	void OnResize(int width, int height);
 
 	void RenderScene();
 

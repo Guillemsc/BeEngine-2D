@@ -75,13 +75,7 @@
     <ClInclude Include="ModuleAudio.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleCamera3D.h">
-      <Filter>Sources\2. Modules ==============</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleInput.h">
-      <Filter>Sources\2. Modules ==============</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleRenderer3D.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
     <ClInclude Include="ModuleWindow.h">
@@ -408,18 +402,18 @@
     <ClInclude Include="imgui_docking.h">
       <Filter>Sources\7. ThirdParties ============\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleCamera.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRenderer.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleCamera3D.cpp">
-      <Filter>Sources\2. Modules ==============</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleInput.cpp">
-      <Filter>Sources\2. Modules ==============</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleRenderer3D.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
     <ClCompile Include="ModuleWindow.cpp">
@@ -643,6 +637,12 @@
     </ClCompile>
     <ClCompile Include="imgui_docking.cpp">
       <Filter>Sources\7. ThirdParties ============\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCamera.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRenderer.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

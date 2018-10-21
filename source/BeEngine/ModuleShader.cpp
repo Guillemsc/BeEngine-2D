@@ -1,6 +1,6 @@
 #include "ModuleShader.h"
 #include "App.h"
-#include "ModuleRenderer3D.h"
+#include "ModuleRenderer.h"
 
 ModuleShader::ModuleShader() : Module()
 {
@@ -124,7 +124,7 @@ Shader::Shader(ShaderType _type)
 void Shader::CleanUp()
 {
 	if (id > 0)
-		App->renderer3D->DeleteShader(id);
+		App->renderer->DeleteShader(id);
 }
 
 bool Shader::SetShaderCode(const char * code)
@@ -132,7 +132,7 @@ bool Shader::SetShaderCode(const char * code)
 	bool ret = false;
 
 	if (id > 0)
-		App->renderer3D->DeleteShader(id);
+		App->renderer->DeleteShader(id);
 
 	id = 0;
 	compiles = false;
@@ -140,10 +140,10 @@ bool Shader::SetShaderCode(const char * code)
 	switch (type)
 	{
 	case ShaderType::VERTEX:
-		id = App->renderer3D->CreateVertexShader(code, compilation_error);
+		id = App->renderer->CreateVertexShader(code, compilation_error);
 		break;
 	case ShaderType::FRAGMENT:
-		id = App->renderer3D->CreateFragmentShader(code, compilation_error);
+		id = App->renderer->CreateFragmentShader(code, compilation_error);
 		break;
 	}
 
@@ -188,7 +188,7 @@ ShaderProgram::ShaderProgram()
 void ShaderProgram::CleanUp()
 {
 	if (id > 0)
-		App->renderer3D->DeleteProgram(id);
+		App->renderer->DeleteProgram(id);
 }
 
 void ShaderProgram::AddShader(Shader * set)
@@ -279,19 +279,19 @@ bool ShaderProgram::LinkProgram()
 
 		if (all_compile)
 		{
-			id = App->renderer3D->CreateShaderProgram();
+			id = App->renderer->CreateShaderProgram();
 
 			for (std::vector<Shader*>::iterator it = vertex_shaders.begin(); it != vertex_shaders.end(); ++it)
 			{
-				App->renderer3D->AttachShaderToProgram(id, (*it)->GetID());
+				App->renderer->AttachShaderToProgram(id, (*it)->GetID());
 			}
 
 			for (std::vector<Shader*>::iterator it = fragment_shaders.begin(); it != fragment_shaders.end(); ++it)
 			{
-				App->renderer3D->AttachShaderToProgram(id, (*it)->GetID());
+				App->renderer->AttachShaderToProgram(id, (*it)->GetID());
 			}
 
-			linked = App->renderer3D->LinkProgram(id);
+			linked = App->renderer->LinkProgram(id);
 
 			if (linked)
 				ret = true;
@@ -305,7 +305,7 @@ void ShaderProgram::UseProgram()
 {
 	if (id > 0 && linked)
 	{
-		App->renderer3D->UseShaderProgram(id);
+		App->renderer->UseShaderProgram(id);
 	}
 }
 
@@ -313,14 +313,14 @@ void ShaderProgram::SetProgramParameters(ShaderProgramParameters para)
 {
 	if (id > 0 && linked)
 	{
-		int count = App->renderer3D->GetUniformsCount(id);
+		int count = App->renderer->GetUniformsCount(id);
 
 		for (int i = 0; i < count; ++i)
 		{
 			std::string uniform_name;
 			GLenum uniform_type;
 
-			App->renderer3D->GetUniformInfo(id, i, uniform_name, uniform_type);
+			App->renderer->GetUniformInfo(id, i, uniform_name, uniform_type);
 
 			switch (uniform_type)
 			{
@@ -336,7 +336,7 @@ void ShaderProgram::SetProgramParameters(ShaderProgramParameters para)
 					{
 						float3 val = vector3_vals[uniform_name];
 
-						App->renderer3D->SetUniformVec3(id, uniform_name.c_str(), val);
+						App->renderer->SetUniformVec3(id, uniform_name.c_str(), val);
 					}
 				}
 			}
@@ -372,7 +372,7 @@ uint ShaderProgram::GetID() const
 void ShaderProgram::UnlinkProgram()
 {
 	if (id > 0)
-		App->renderer3D->DeleteProgram(id);
+		App->renderer->DeleteProgram(id);
 
 	id = 0;
 	linked = false;

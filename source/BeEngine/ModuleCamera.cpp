@@ -1,15 +1,16 @@
 #include "Globals.h"
 #include "App.h"
 #include "ModuleInput.h"
-#include "ModuleCamera3D.h"
+#include "ModuleCamera.h"
 #include "ModuleWindow.h"
 #include "Cursor.h"
 #include "imgui.h"
-#include "ModuleRenderer3D.h"
+#include "ModuleRenderer.h"
 #include "ModuleJson.h"
 #include "ModuleAction.h"
+#include "ModuleEditor.h"
 
-ModuleCamera3D::ModuleCamera3D() : Module()
+ModuleCamera::ModuleCamera() : Module()
 {
 	editor_camera = CreateCamera();
 	game_camera = CreateCamera();
@@ -17,10 +18,10 @@ ModuleCamera3D::ModuleCamera3D() : Module()
 	game_camera->SetFrustumCulling(false);
 }
 
-ModuleCamera3D::~ModuleCamera3D()
+ModuleCamera::~ModuleCamera()
 {}
 
-bool ModuleCamera3D::Awake()
+bool ModuleCamera::Awake()
 {
 	bool ret = true;
 
@@ -29,14 +30,14 @@ bool ModuleCamera3D::Awake()
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::Start()
+bool ModuleCamera::Start()
 {
 	bool ret = true;
 	return ret;
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::CleanUp()
+bool ModuleCamera::CleanUp()
 {
 	bool ret = true;
 
@@ -45,31 +46,149 @@ bool ModuleCamera3D::CleanUp()
 	return ret;
 }
 
-void ModuleCamera3D::OnLoadConfig(JSON_Doc * config)
+void ModuleCamera::OnLoadConfig(JSON_Doc * config)
 {
-	mouse_sensitivity = config->GetNumber("camera.mouse_sensitivity", 0.25f);
-	wheel_speed = 10000; //config->GetNumber("camera.wheel_speed", 5.0f);
-	camera_speed = 1000;//config->GetNumber("camera.camera_speed", 20.0f);
+	wheel_speed = config->GetNumber("camera.wheel_speed", 10000.0f);
+	camera_speed = config->GetNumber("camera.drag_speed", 1000.0f);
 
-	float3 cam_pos = config->GetNumber3("camera_position");
-	//float3 z_dir = config->GetNumber3("camera_front", float3(0, 0, 1));
-	//float3 y_dir = config->GetNumber3("camera_up", float3(0, 1, 0));
-	editor_camera->SetPosition(float3(0, 0, 0));
-	editor_camera->SetZDir(float3(0, 0, 1));
-	editor_camera->SetYDir(float3(0, 1, 0));
+	float2 cam_pos = config->GetNumber2("camera.position");
+	editor_camera->SetPosition(cam_pos);
+
+	float camera_size = config->GetNumber("camera.size", 1.0f);
+	editor_camera->SetSize(camera_size);
 }
 
-void ModuleCamera3D::OnSaveConfig(JSON_Doc * config)
+void ModuleCamera::OnSaveConfig(JSON_Doc * config)
 {
-	config->SetNumber("camera.mouse_sensitivity", mouse_sensitivity);
 	config->SetNumber("camera.wheel_speed", wheel_speed);
 	config->SetNumber("camera.camera_speed", camera_speed);
-	config->SetNumber3("camera_position", editor_camera->GetPosition());
-	config->SetNumber3("camera_front", editor_camera->GetZDir());
-	config->SetNumber3("camera_up", editor_camera->GetYDir());
+	config->SetNumber2("camera.position", editor_camera->GetPosition());
+	config->SetNumber("camera.size", editor_camera->GetSize());
 }
 
-Camera2D * ModuleCamera3D::CreateCamera()
+void ModuleCamera::UpdateEditorCameraInput()
+{
+	if (editor_camera != nullptr)
+	{
+		float cam_speed = camera_speed * App->GetDT();
+		float whe_speed = wheel_speed * App->GetDT();
+
+		if (App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT))
+			cam_speed = camera_speed / 2 * App->GetDT();
+
+		//if (IsMouseInsideWindow())
+		//{
+		mouse_movement = true;
+		//}
+
+		// Mouse motion ----------------
+		if (mouse_movement)
+		{
+			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+			{
+				last_mouse_position = float2(App->input->GetMouseX(), App->input->GetMouseY());
+
+				if (App->editor->scene_window->GetMouseInsideWindow())
+					dragging = true;
+			}
+
+			if (dragging && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_DOWN)
+				dragging = false;
+
+			if (dragging)
+			{
+				float2 mouse_pos = App->input->GetMouse();
+
+				float2 motion = mouse_pos - last_mouse_position;
+
+				//float x_motion = App->input->GetMouseXMotion();
+
+				motion.x *= editor_camera->size;
+
+				if (motion.x > 0)
+					editor_camera->MoveLeft(motion.x);
+				if (motion.x < 0)
+					editor_camera->MoveRight(-motion.x);
+
+				//float y_motion = App->input->GetMouseYMotion();
+
+				motion.y *= editor_camera->size;
+
+				if (motion.y > 0)
+					editor_camera->MoveUp(motion.y);
+				if (motion.y < 0)
+					editor_camera->MoveDown(-motion.y);
+
+				last_mouse_position = mouse_pos;
+
+				//INTERNAL_LOG("%d", x_motion);
+			}
+
+			if (App->input->GetMouseWheel() == 1)
+			{
+				editor_camera->SetSize(editor_camera->size - (100 * App->GetDT()));
+			}
+			else if (App->input->GetMouseWheel() == -1)
+			{
+				editor_camera->SetSize(editor_camera->size + (100 * App->GetDT()));
+			}
+
+			App->window->GetCursor()->Hand();
+
+			//if (App->input->GetKeyRepeat(SDL_SCANCODE_Z))
+			//	editor_camera->MoveUp(cam_speed);
+
+			//if (App->input->GetKeyRepeat(SDL_SCANCODE_X))
+			//	editor_camera->MoveDown(cam_speed);
+
+			if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
+				editor_camera->MoveUp(cam_speed);
+
+			if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
+				editor_camera->MoveDown(cam_speed);
+
+			if (App->input->GetKeyRepeat(SDL_SCANCODE_A))
+				editor_camera->MoveLeft(cam_speed);
+
+			if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
+				editor_camera->MoveRight(cam_speed);
+
+			//editor_camera->Rotate(-App->input->GetMouseXMotion() * mou_speed, -App->input->GetMouseYMotion()*mou_speed);
+
+			//App->gameobj->SetCanMove(false);
+
+
+			//if (App->input->GetKeyRepeat(SDL_SCANCODE_LALT) || App->input->GetKeyRepeat(SDL_SCANCODE_RALT))
+			//{
+			//	if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
+			//		editor_camera->MoveFront(cam_speed);
+
+			//	if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
+			//		editor_camera->MoveBack(cam_speed);
+
+			//	editor_camera->Orbit(float3(0, 0, 0), -App->input->GetMouseXMotion()*mou_speed, -App->input->GetMouseYMotion()*mou_speed);
+			//	editor_camera->Look(float3(0, 0, 0));
+
+			//	App->window->GetCursor()->SizeAll();
+
+			//	//App->gameobj->SetCanMove(false);
+			//}
+
+
+
+			//mouse_movement = false;
+			//App->gameobj->SetCanMove(true);
+
+		}
+
+		if (App->input->GetKeyDown("f"))
+		{
+			editor_camera->Focus(float3(0, 0, 0), 10);
+		}
+	}
+}
+
+Camera2D* ModuleCamera::CreateCamera()
 {
 	Camera2D* ret = nullptr;
 
@@ -79,7 +198,7 @@ Camera2D * ModuleCamera3D::CreateCamera()
 	return ret;
 }
 
-void ModuleCamera3D::DestroyCamera(Camera2D * cam)
+void ModuleCamera::DestroyCamera(Camera2D* cam)
 {
 	if (cam != nullptr)
 	{
@@ -97,7 +216,7 @@ void ModuleCamera3D::DestroyCamera(Camera2D * cam)
 	}
 }
 
-void ModuleCamera3D::DestroyAllCameras()
+void ModuleCamera::DestroyAllCameras()
 {
 	for (std::vector<Camera2D*>::iterator it = cameras.begin(); it != cameras.end(); ++it)
 	{
@@ -108,198 +227,69 @@ void ModuleCamera3D::DestroyAllCameras()
 	cameras.clear();
 }
 
-std::vector<Camera2D*> ModuleCamera3D::GetCameras()
+std::vector<Camera2D*> ModuleCamera::GetCameras()
 {
 	return cameras;
 }
 
-Camera2D * ModuleCamera3D::GetEditorCamera() const
+Camera2D* ModuleCamera::GetEditorCamera() const
 {
 	return editor_camera;
 }
 
-void ModuleCamera3D::SetGameCamera(Camera2D * set)
+void ModuleCamera::SetGameCamera(Camera2D * set)
 {
 	game_camera = set;
 }
 
-Camera2D * ModuleCamera3D::GetGameCamera() const
+Camera2D* ModuleCamera::GetGameCamera() const
 {
 	return game_camera;
 }
 
-void ModuleCamera3D::SetMouseSensitivity(const float& set)
-{
-	mouse_sensitivity = set;
-}
-
-void ModuleCamera3D::SetWheelSpeed(const float& set)
+void ModuleCamera::SetWheelSpeed(const float& set)
 {
 	wheel_speed = set;
 }
 
-void ModuleCamera3D::SetCameraSpeed(const float& set)
+void ModuleCamera::SetCameraSpeed(const float& set)
 {
 	camera_speed = set;
 }
 
-const float ModuleCamera3D::GetMouseSensitivity() const
-{
-	return mouse_sensitivity;
-}
-
-const float ModuleCamera3D::GetWheelSpeed() const
+const float ModuleCamera::GetWheelSpeed() const
 {
 	return wheel_speed;
 }
 
-const float ModuleCamera3D::GetCameraSpeed() const
+const float ModuleCamera::GetCameraSpeed() const
 {
 	return camera_speed;
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::Update()
+bool ModuleCamera::Update()
 {
 	bool ret = true;
 
-	if (editor_camera == nullptr)
-		return true;
-
-	float cam_speed = camera_speed * App->GetDT();
-	float whe_speed = wheel_speed * App->GetDT();
-	float mou_speed = mouse_sensitivity * App->GetDT();
-
-	if (App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT))
-		cam_speed = camera_speed / 2 * App->GetDT();
-
-	//if (IsMouseInsideWindow())
-	//{
-	mouse_movement = true;
-	//}
-
-	// Mouse motion ----------------
-	if (mouse_movement)
-	{
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
-		{
-			last_mouse_position = float2(App->input->GetMouseX(), App->input->GetMouseY());
-		}
-
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT || App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
-		{
-			dragging = true;
-		}
-		else
-			dragging = false;
-
-		if (dragging)
-		{
-			float2 mouse_pos = float2(App->input->GetMouseX(), App->input->GetMouseY());
-
-			float2 motion = mouse_pos - last_mouse_position;
-
-			//float x_motion = App->input->GetMouseXMotion();
-
-			motion.x *= editor_camera->size;
-
-			if(motion.x > 0)
-				editor_camera->MoveLeft(motion.x);
-			if (motion.x < 0)
-				editor_camera->MoveRight(-motion.x);
-
-			//float y_motion = App->input->GetMouseYMotion();
-
-			motion.y *= editor_camera->size;
-
-			if (motion.y > 0)
-				editor_camera->MoveUp(motion.y);
-			if (motion.y < 0)
-				editor_camera->MoveDown(-motion.y);
-
-			last_mouse_position = mouse_pos;
-
-			//INTERNAL_LOG("%d", x_motion);
-		}
-
-		if (App->input->GetMouseWheel() == 1)
-		{
-			editor_camera->SetSize(editor_camera->size - (100 * App->GetDT()));
-		}
-		else if (App->input->GetMouseWheel() == -1)
-		{
-			editor_camera->SetSize(editor_camera->size + (100 * App->GetDT()));
-		}
-	
-		App->window->GetCursor()->Hand();
-
-		//if (App->input->GetKeyRepeat(SDL_SCANCODE_Z))
-		//	editor_camera->MoveUp(cam_speed);
-
-		//if (App->input->GetKeyRepeat(SDL_SCANCODE_X))
-		//	editor_camera->MoveDown(cam_speed);
-
-		if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
-			editor_camera->MoveUp(cam_speed);
-
-		if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
-			editor_camera->MoveDown(cam_speed);
-
-		if (App->input->GetKeyRepeat(SDL_SCANCODE_A))
-			editor_camera->MoveLeft(cam_speed);
-
-		if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
-			editor_camera->MoveRight(cam_speed);
-
-		//editor_camera->Rotate(-App->input->GetMouseXMotion() * mou_speed, -App->input->GetMouseYMotion()*mou_speed);
-
-		//App->gameobj->SetCanMove(false);
-		
-			
-		//if (App->input->GetKeyRepeat(SDL_SCANCODE_LALT) || App->input->GetKeyRepeat(SDL_SCANCODE_RALT))
-		//{
-		//	if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
-		//		editor_camera->MoveFront(cam_speed);
-
-		//	if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
-		//		editor_camera->MoveBack(cam_speed);
-
-		//	editor_camera->Orbit(float3(0, 0, 0), -App->input->GetMouseXMotion()*mou_speed, -App->input->GetMouseYMotion()*mou_speed);
-		//	editor_camera->Look(float3(0, 0, 0));
-
-		//	App->window->GetCursor()->SizeAll();
-
-		//	//App->gameobj->SetCanMove(false);
-		//}
-		
-		
-		
-		//mouse_movement = false;
-		//App->gameobj->SetCanMove(true);
-	
-	}
-
-	if (App->input->GetKeyDown("f"))
-	{
-		editor_camera->Focus(float3(0, 0, 0), 10);
-	}
+	UpdateEditorCameraInput();
 
 	return ret;
 }
 
 Camera2D::Camera2D()
 {
-	frustum.SetOrthographic(1920, 1080);
+	SetViewportSize(1280, 720);
+	SetSize(1);
+
 	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
 
-	frustum.SetPos(float3(0, 1, -1));
-	frustum.SetFront(float3::unitZ);
-	frustum.SetUp(float3::unitY);
+	SetPosition(float2(0, 0));
+	SetZDir(float3(0, 0, 1));
+	SetYDir(float3(0, 1, 0));
 
 	SetNearPlaneDistance(0.1f);
 	SetFarPlaneDistance(10000.0f);
-	//SetAspectRatio(1.3f);
-	//SetFOV(60);
 
 	render_tex = new RenderTexture();
 }
@@ -332,14 +322,15 @@ uint Camera2D::GetTextId()
 	return ret;
 }
 
-void Camera2D::SetPosition(const float3 & pos)
+void Camera2D::SetPosition(const float2& pos)
 {
-	frustum.SetPos(pos);
+	frustum.SetPos(float3(pos.x, pos.y, 0));
 }
 
-const float3 Camera2D::GetPosition()
+const float2 Camera2D::GetPosition()
 {
-	return frustum.Pos();
+	float3 pos = frustum.Pos();
+	return float2(pos.x, pos.y);
 }
 
 void Camera2D::SetZDir(const float3 & front)
@@ -397,6 +388,11 @@ void Camera2D::SetSize(float _size)
 	}
 }
 
+const float Camera2D::GetSize() const
+{
+	return size;
+}
+
 const float Camera2D::GetNearPlaneDistance() const
 {
 	return frustum.NearPlaneDistance();
@@ -405,16 +401,6 @@ const float Camera2D::GetNearPlaneDistance() const
 const float Camera2D::GetFarPlaneDistance() const
 {
 	return frustum.FarPlaneDistance();
-}
-
-const float Camera2D::GetVerticalFOV() const
-{
-	return frustum.VerticalFov() * RADTODEG;
-}
-
-const float Camera2D::GetHorizontalFOV() const
-{
-	return frustum.HorizontalFov() * RADTODEG;
 }
 
 const float4x4 Camera2D::GetViewMatrix() const
@@ -638,42 +624,42 @@ bool RenderTexture::Create(uint _width, uint _height)
 		height = 1;
 
 	// Create MSAA framebufer
-	fbo_msaa_id = App->renderer3D->GenFrameBuffer();
-	App->renderer3D->BindFrameBuffer(fbo_msaa_id);
+	fbo_msaa_id = App->renderer->GenFrameBuffer();
+	App->renderer->BindFrameBuffer(fbo_msaa_id);
 
 	// Create a multisampled color attachment texture
-	texture_msaa_id = App->renderer3D->GenTexture();
-	App->renderer3D->BindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
-	App->renderer3D->Set2DMultisample(current_msaa_samples, width, height);
-	App->renderer3D->UnbindTexture(GL_TEXTURE_2D_MULTISAMPLE);
+	texture_msaa_id = App->renderer->GenTexture();
+	App->renderer->BindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
+	App->renderer->Set2DMultisample(current_msaa_samples, width, height);
+	App->renderer->UnbindTexture(GL_TEXTURE_2D_MULTISAMPLE);
 
-	App->renderer3D->SetFrameBufferTexture2D(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
+	App->renderer->SetFrameBufferTexture2D(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
 
 	// Create a renderbuffer for depth and stencil
-	rbo_id = App->renderer3D->GenRenderBuffer();
-	App->renderer3D->BindRenderBuffer(rbo_id);
-	App->renderer3D->RenderStorageMultisample(current_msaa_samples, width, height);
-	App->renderer3D->UnbindRenderBuffer();
+	rbo_id = App->renderer->GenRenderBuffer();
+	App->renderer->BindRenderBuffer(rbo_id);
+	App->renderer->RenderStorageMultisample(current_msaa_samples, width, height);
+	App->renderer->UnbindRenderBuffer();
 	
-	App->renderer3D->RenderFrameBuffer(rbo_id);
-	App->renderer3D->UnbindFrameBuffer();
+	App->renderer->RenderFrameBuffer(rbo_id);
+	App->renderer->UnbindFrameBuffer();
 
 	// Configure post-processing framebuffer
-	fbo_id = App->renderer3D->GenFrameBuffer();
-	App->renderer3D->BindFrameBuffer(fbo_id);
+	fbo_id = App->renderer->GenFrameBuffer();
+	App->renderer->BindFrameBuffer(fbo_id);
 
 	// Create the color attachment texture
-	texture_id = App->renderer3D->GenTexture();
-	App->renderer3D->BindTexture(texture_id);
+	texture_id = App->renderer->GenTexture();
+	App->renderer->BindTexture(texture_id);
 	
 	// Set Parameters
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	App->renderer3D->SetFrameBufferTexture2D(GL_TEXTURE_2D, texture_id);
+	App->renderer->SetFrameBufferTexture2D(GL_TEXTURE_2D, texture_id);
 
-	App->renderer3D->UnbindTexture();
+	App->renderer->UnbindTexture();
 
 	created = true;
 
@@ -695,15 +681,15 @@ void RenderTexture::Bind(uint _width, uint _height)
 	if (width != _width || height != _height)
 		Resize(_width, _height);
 	
-	App->renderer3D->BindFrameBuffer(fbo_msaa_id);
-	App->renderer3D->SetViewport(0, 0, width, height);
-	App->renderer3D->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	App->renderer->BindFrameBuffer(fbo_msaa_id);
+	App->renderer->SetViewport(0, 0, width, height);
+	App->renderer->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderTexture::Unbind()
 {
-	App->renderer3D->BindFrameBuffer(GL_READ_FRAMEBUFFER, fbo_msaa_id);
-	App->renderer3D->BindFrameBuffer(GL_DRAW_FRAMEBUFFER, fbo_id);
+	App->renderer->BindFrameBuffer(GL_READ_FRAMEBUFFER, fbo_msaa_id);
+	App->renderer->BindFrameBuffer(GL_DRAW_FRAMEBUFFER, fbo_id);
 	//
 	//App->renderer3D->BlitFrameBuffer(0, 0, width, height);
 
@@ -712,8 +698,8 @@ void RenderTexture::Unbind()
 		GL_COLOR_BUFFER_BIT, // buffer mask
 		GL_NEAREST); // scale filter
 
-	App->renderer3D->UnbindFrameBuffer();
-	App->renderer3D->SetViewport(last_x, last_y, last_width, last_height);
+	App->renderer->UnbindFrameBuffer();
+	App->renderer->SetViewport(last_x, last_y, last_width, last_height);
 }
 
 void RenderTexture::ChangeMSAALevel(int MSAA_level)
@@ -727,11 +713,11 @@ void RenderTexture::ChangeMSAALevel(int MSAA_level)
 
 void RenderTexture::Destroy()
 {
-	App->renderer3D->DeleteTexture(texture_id);
-	App->renderer3D->DeleteTexture(texture_msaa_id);
-	App->renderer3D->DeleteFrameBuffer(fbo_id);
-	App->renderer3D->DeleteFrameBuffer(fbo_msaa_id);
-	App->renderer3D->DeleteFrameBuffer(rbo_id);
+	App->renderer->DeleteTexture(texture_id);
+	App->renderer->DeleteTexture(texture_msaa_id);
+	App->renderer->DeleteFrameBuffer(fbo_id);
+	App->renderer->DeleteFrameBuffer(fbo_msaa_id);
+	App->renderer->DeleteFrameBuffer(rbo_id);
 
 	texture_id = 0;
 	texture_msaa_id = 0;

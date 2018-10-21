@@ -186,9 +186,9 @@
     <ClInclude Include="Math\TransformOps.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="mmgr\nommgr.h" />
-    <ClInclude Include="ModuleCamera3D.h" />
+    <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleFileSystem.h" />
-    <ClInclude Include="ModuleRenderer3D.h" />
+    <ClInclude Include="ModuleRenderer.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAudio.h" />
     <ClInclude Include="ModuleInput.h" />
@@ -268,10 +268,10 @@
     <ClCompile Include="Math\TransformOps.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
-    <ClCompile Include="ModuleCamera3D.cpp" />
+    <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
-    <ClCompile Include="ModuleRenderer3D.cpp" />
+    <ClCompile Include="ModuleRenderer.cpp" />
     <ClCompile Include="ModuleShader.cpp" />
     <ClCompile Include="ModuleThreadTask.cpp" />
     <ClCompile Include="ModuleTimeSlicedTask.cpp" />

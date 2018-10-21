@@ -183,6 +183,13 @@ void JSON_Doc::SetNumber(const std::string& set, double nu)
 	json_object_dotset_number(object, set.c_str(), nu);
 }
 
+void JSON_Doc::SetNumber2(const std::string & set, float2 val)
+{
+	SetArray(set);
+	AddNumberToArray(set, val.x);
+	AddNumberToArray(set, val.y);
+}
+
 void JSON_Doc::SetNumber3(const std::string& set, float3 val)
 {
 	SetArray(set);
@@ -212,7 +219,7 @@ bool JSON_Doc::ArrayExists(const std::string & arr)
 {
 	bool ret = false;
 
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 		ret = true;
@@ -222,7 +229,7 @@ bool JSON_Doc::ArrayExists(const std::string & arr)
 
 void JSON_Doc::ClearArray(const std::string& arr)
 {
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -232,7 +239,7 @@ void JSON_Doc::ClearArray(const std::string& arr)
 
 void JSON_Doc::RemoveArrayIndex(const std::string & arr, int index)
 {
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -244,7 +251,7 @@ const int JSON_Doc::GetArrayCount(const std::string& set) const
 {
 	int ret = 0;
 
-	JSON_Array* array = json_object_get_array(object, set.c_str());
+	JSON_Array* array = json_object_dotget_array(object, set.c_str());
 
 	if (array != nullptr)
 	{
@@ -258,7 +265,7 @@ const char * JSON_Doc::GetStringFromArray(const std::string& arr, int index)
 {
 	const char* ret = nullptr;
 
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -275,7 +282,7 @@ const bool JSON_Doc::GetBoolFromArray(const std::string& arr, int index)
 {
 	bool ret = false;
 
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -292,7 +299,7 @@ const double JSON_Doc::GetNumberFromArray(const std::string& arr, int index)
 {
 	double ret = 0;
 
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -307,7 +314,7 @@ const double JSON_Doc::GetNumberFromArray(const std::string& arr, int index)
 
 void JSON_Doc::AddStringToArray(const std::string& arr, const char * str)
 {
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -317,7 +324,7 @@ void JSON_Doc::AddStringToArray(const std::string& arr, const char * str)
 
 void JSON_Doc::AddBoolToArray(const std::string& arr, bool bo)
 {
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -327,7 +334,7 @@ void JSON_Doc::AddBoolToArray(const std::string& arr, bool bo)
 
 void JSON_Doc::AddNumberToArray(const std::string& arr, double set)
 {
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -337,7 +344,7 @@ void JSON_Doc::AddNumberToArray(const std::string& arr, double set)
 
 void JSON_Doc::AddSectionToArray(const std::string& arr)
 {
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -349,7 +356,7 @@ bool JSON_Doc::MoveToSectionFromArray(const std::string& arr, int index)
 {
 	bool ret = false;
 
-	JSON_Array* array = json_object_get_array(object, arr.c_str());
+	JSON_Array* array = json_object_dotget_array(object, arr.c_str());
 
 	if (array != nullptr)
 	{
@@ -392,13 +399,30 @@ const double JSON_Doc::GetNumber(const std::string& str, double defaul)
 	return ret;
 }
 
+const float2 JSON_Doc::GetNumber2(const std::string & fl, float2 defaul)
+{
+	float2 ret = float2::zero;
+
+	ret = defaul;
+
+	JSON_Array* array = json_object_dotget_array(object, fl.c_str());
+
+	if (array != nullptr)
+	{
+		ret.x = GetNumberFromArray(fl, 0);
+		ret.y = GetNumberFromArray(fl, 1);
+	}
+
+	return ret;
+}
+
 const float3 JSON_Doc::GetNumber3(const std::string& fl, float3 defaul)
 {
 	float3 ret = float3::zero;
 
 	ret = defaul;
 
-	JSON_Array* array = json_object_get_array(object, fl.c_str());
+	JSON_Array* array = json_object_dotget_array(object, fl.c_str());
 
 	if (array != nullptr)
 	{
@@ -416,7 +440,7 @@ const float4 JSON_Doc::GetNumber4(const std::string& fl, float4 defaul)
 
 	ret = defaul;
 
-	JSON_Array* array = json_object_get_array(object, fl.c_str());
+	JSON_Array* array = json_object_dotget_array(object, fl.c_str());
 
 	if(array != nullptr)
 	{
@@ -503,7 +527,7 @@ bool JSON_Doc::FindArrayValue(const char * arr, int index, json_value_type type)
 {
 	bool ret = false;
 
-	JSON_Array* array = json_object_get_array(object, arr);
+	JSON_Array* array = json_object_dotget_array(object, arr);
 
 	if (array != nullptr)
 	{

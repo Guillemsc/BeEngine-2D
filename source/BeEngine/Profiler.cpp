@@ -313,7 +313,7 @@ const int Profile::GetLastFrameMs() const
 	return ret;
 }
 
-const float Profile::GetAverageMs() const
+const float Profile::GetLastSecondAverageMs() const
 {
 	return last_second_ms;
 }

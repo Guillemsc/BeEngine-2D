@@ -17,11 +17,13 @@ public:
 	void SetString(const std::string& set, const char* str);
 	void SetBool(const std::string& set, bool bo);
 	void SetNumber(const std::string& set, double nu);
+	void SetNumber2(const std::string& set, float2 val);
 	void SetNumber3(const std::string& set, float3 val);
 	void SetNumber4(const std::string& set, float4 val);
 	const char* GetString(const std::string& str, const char* defaul = "");
 	const bool GetBool(const std::string& bo, bool defaul = false);
 	const double GetNumber(const std::string& nu, double defaul = 0);
+	const float2 GetNumber2(const std::string& fl, float2 defaul = float2(0, 0));
 	const float3 GetNumber3(const std::string& fl, float3 defaul = float3(0, 0, 0));
 	const float4 GetNumber4(const std::string& fl, float4 defaul = float4(0, 0, 0, 0));
 

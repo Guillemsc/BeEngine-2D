@@ -55,7 +55,7 @@ private:
 
 class Camera2D
 {
-	friend class ModuleCamera3D;
+	friend class ModuleCamera;
 
 private:
 	void operator delete(void *) {}
@@ -69,8 +69,8 @@ public:
 	void Unbind();
 	uint GetTextId();
 
-	void SetPosition(const float3& pos);
-	const float3 GetPosition();
+	void SetPosition(const float2& pos);
+	const float2 GetPosition();
 
 	void SetZDir(const float3& front);
 	void SetYDir(const float3& up);
@@ -83,10 +83,11 @@ public:
 	void SetFarPlaneDistance(const float& set);
 	void SetViewportSize(float width, float height);
 	void SetSize(float size);
+
+	const float GetSize() const;
 	const float GetNearPlaneDistance() const;
 	const float GetFarPlaneDistance() const;
-	const float GetVerticalFOV() const;
-	const float GetHorizontalFOV() const;
+
 	const float4x4 GetViewMatrix() const;
 	const float4x4 GetProjectionMatrix() const;
 	const float4x4 GetOpenGLViewMatrix() const;
@@ -125,11 +126,11 @@ private:
 	RenderTexture* render_tex = nullptr;
 };
 
-class ModuleCamera3D : public Module
+class ModuleCamera : public Module
 {
 public:
-	ModuleCamera3D();
-	~ModuleCamera3D();
+	ModuleCamera();
+	~ModuleCamera();
 
 	bool Awake();
 	bool Start();
@@ -138,6 +139,8 @@ public:
 
 	void OnLoadConfig(JSON_Doc* config);
 	void OnSaveConfig(JSON_Doc* config);
+
+	void UpdateEditorCameraInput();
 
 	Camera2D* CreateCamera();
 	void DestroyCamera(Camera2D* cam);
@@ -149,11 +152,9 @@ public:
 	void SetGameCamera(Camera2D* set);
 	Camera2D* GetGameCamera() const;
 
-	void SetMouseSensitivity(const float& set);
 	void SetWheelSpeed(const float& set);
 	void SetCameraSpeed(const float& set);
 
-	const float GetMouseSensitivity() const;
 	const float GetWheelSpeed() const;
 	const float GetCameraSpeed() const;
 
@@ -167,7 +168,6 @@ private:
 	bool  mouse_movement = false;
 	float camera_speed = 0.0f;
 	float wheel_speed = 0.0f;
-	float mouse_sensitivity = 0.0f;
 
 	bool dragging = false;
 

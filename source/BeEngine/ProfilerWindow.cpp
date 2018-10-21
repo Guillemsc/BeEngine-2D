@@ -63,7 +63,7 @@ void ProfilerWindow::DrawProfileRecursive(Profile * prof, int& draw_counter, boo
 		if (!profiles_update)
 			frame_data = prof->GetLastFrameMs();
 		else
-			frame_data = prof->GetAverageMs();
+			frame_data = prof->GetLastSecondAverageMs();
 
 		bool opened = ImGui::TreeNodeEx(prof->GetName(), flags);
 

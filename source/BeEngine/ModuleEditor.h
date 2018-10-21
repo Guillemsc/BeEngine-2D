@@ -33,6 +33,7 @@ public:
 	bool GetVisible() const;
 	bool GetOpened() const;
 	float2 GetWindowSize() const;
+	bool GetMouseInsideWindow() const;
 
 private:
 	std::string name;
@@ -106,7 +107,7 @@ private:
 	void DestroyAllEditorElements();
 	void DrawEditorElements();
 
-	void AddEditorWindow(const char* name, EditorWindow* window);
+	EditorWindow* AddEditorWindow(const char* name, EditorWindow* window);
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
 
@@ -128,6 +129,8 @@ public:
 	ToolsBar*       tools_bar = nullptr;
 	ProjectManager* project_manager = nullptr;
 	ProgressWindow* progress_window = nullptr;
+
+	EditorWindow*   scene_window = nullptr;
 
 private:
 	EditorState editor_state;

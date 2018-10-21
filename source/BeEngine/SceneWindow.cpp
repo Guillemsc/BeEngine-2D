@@ -1,7 +1,7 @@
 #include "SceneWindow.h"
 #include "App.h"
 #include "ModuleWindow.h"
-#include "ModuleCamera3D.h"
+#include "ModuleCamera.h"
 #include "ModuleEvent.h"
 #include "Event.h"
 

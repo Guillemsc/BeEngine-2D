@@ -24,7 +24,7 @@ public:
 	const int GetLastFrameTick() const;
 	const int GetLastFrameMs() const;
 
-	const float GetAverageMs() const;
+	const float GetLastSecondAverageMs() const;
 
 	Profile* AddProfileChild(std::string name);
 	int GetChildProfilesCount();

@@ -2,7 +2,7 @@
 #include "App.h"
 #include "GeometryMath.h"
 #include "ModuleWindow.h"
-#include "ModuleRenderer3D.h"
+#include "ModuleRenderer.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "MenuBar.h"
@@ -12,6 +12,7 @@
 #include "ProjectManager.h"
 #include "ProgressWindow.h"
 #include "ProfilerWindow.h"
+#include "ModuleInput.h"
 #include "imgui_docking.h"
 
 ModuleEditor::ModuleEditor()
@@ -41,7 +42,7 @@ bool ModuleEditor::Awake()
 	project_manager = (ProjectManager*)AddEditorElement(new ProjectManager(), true);
 	progress_window = (ProgressWindow*)AddEditorElement(new ProgressWindow(), true);
 
-	AddEditorWindow("Scene", new SceneWindow());
+	scene_window = AddEditorWindow("Scene", new SceneWindow());
 	AddEditorWindow("Profiler", new ProfilerWindow());
 
 	LoadDockingProfiles();
@@ -171,8 +172,10 @@ void ModuleEditor::DrawEditorElements()
 	prof_editor_elements_draw->Finish();
 }
 
-void ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
+EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
 {
+	EditorWindow* ret = nullptr;;
+
 	if (window != nullptr)
 	{
 		bool exists = false;
@@ -193,8 +196,12 @@ void ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
 			editor_windows.push_back(window);
 
 			window->Start();
+
+			ret = window;
 		}
 	}
+
+	return ret;
 }
 
 void ModuleEditor::DestroyAllEditorWindows()
@@ -224,7 +231,7 @@ void ModuleEditor::DrawEditorWindows()
 			ImVec2 win_pos = ImGui::GetWindowPos();
 			ImVec2 win_size = ImGui::GetWindowSize();
 
-			(*it)->window_size = float2(win_pos.x, win_pos.y);
+			(*it)->window_pos = float2(win_pos.x, win_pos.y);
 			(*it)->window_size = float2(win_size.x, win_size.y);
 
 			(*it)->DrawEditor();
@@ -290,7 +297,7 @@ void ModuleEditor::ImGuiInit()
 	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer3D->GetSDLGLContext());
+	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer->GetSDLGLContext());
 
 	const char* glsl_version = "#version 130";
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -660,6 +667,23 @@ bool EditorWindow::GetOpened() const
 float2 EditorWindow::GetWindowSize() const
 {
 	return window_size;
+}
+
+bool EditorWindow::GetMouseInsideWindow() const
+{
+	bool ret = false;
+	
+	float2 mouse_pos = App->input->GetMouse();
+
+	if (mouse_pos.x > window_pos.x && mouse_pos.x < window_pos.x + window_size.x)
+	{
+		if (mouse_pos.y > window_pos.y && mouse_pos.y < window_pos.y + window_size.y)
+		{
+			ret = true;
+		}
+	}
+
+	return ret;
 }
 
 EditorElement::EditorElement()

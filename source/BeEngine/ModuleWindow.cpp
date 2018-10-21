@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "App.h"
 #include "ModuleWindow.h"
-#include "ModuleRenderer3D.h"
+#include "ModuleRenderer.h"
 #include "Cursor.h"
 #include "ModuleJson.h"
 
@@ -178,9 +178,6 @@ void ModuleWindow::SetWindowSize(const int _width, const int _height)
 
 		height = _height;
 		SDL_SetWindowSize(window, width, height);
-
-		if(!fullscreen)
-			App->renderer3D->OnResize(width, height);
 	}
 }
 

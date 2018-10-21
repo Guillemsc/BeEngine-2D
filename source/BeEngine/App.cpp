@@ -2,8 +2,8 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
+#include "ModuleRenderer.h"
+#include "ModuleCamera.h"
 #include "ModuleFileSystem.h"
 #include "ModuleJson.h"
 #include "ModuleShader.h"
@@ -32,8 +32,8 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	window      = new ModuleWindow();
 	input       = new ModuleInput();
 	audio       = new ModuleAudio();
-	renderer3D  = new ModuleRenderer3D();
-	camera      = new ModuleCamera3D();
+	renderer    = new ModuleRenderer();
+	camera      = new ModuleCamera();
 	shader      = new ModuleShader();
 	editor      = new ModuleEditor();
 	event       = new ModuleEvent();
@@ -63,7 +63,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(project, "Module Project");
 
 	// Renderers
-	AddModule(renderer3D, "Module Renderer");
+	AddModule(renderer, "Module Renderer");
 	AddModule(editor, "Module Editor");
 }
 
