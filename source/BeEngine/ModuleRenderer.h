@@ -138,6 +138,7 @@ private:
 	SDL_GLContext context;
 
 	ShaderProgram* sp;
+	ShaderProgram* sp_grid;
 };
 
 #endif // !__MODULE_RENDERER_H__

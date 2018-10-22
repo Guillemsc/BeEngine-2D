@@ -408,6 +408,9 @@
     <ClInclude Include="ModuleRenderer.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleResource.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -642,6 +645,9 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
     <ClCompile Include="ModuleRenderer.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResource.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>

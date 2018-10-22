@@ -114,6 +114,13 @@ bool ModuleWindow::Update()
 	return ret;
 }
 
+bool ModuleWindow::PostUpdate()
+{
+	bool ret = true;
+
+	return ret;
+}
+
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {

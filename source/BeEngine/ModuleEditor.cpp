@@ -242,12 +242,6 @@ void ModuleEditor::DrawEditorWindows()
 		(*it)->prof_draw->Finish();
 	}
 
-	bool opened = true;
-	if (ImGui::BeginDock("Dumyyyyyy", &opened))
-	{
-	}
-	ImGui::EndDock();
-
 	prof_editor_windows_draw->Finish();
 }
 

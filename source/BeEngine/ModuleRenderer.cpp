@@ -212,6 +212,38 @@ bool ModuleRenderer::Start()
 	sp->LinkProgram();
 	// ----------------------------------------
 
+	// Shaders testing 2 ----------------------
+
+	//const char* vertex_code_grid =
+	//	"#version 330 core\n \
+	//	void main()\
+	//	{\
+	//	}";
+
+	//const char* fragment_code_grid =
+	//	"#version 330 core\n \
+	//	#define PI 3.141592\
+	//	out vec3 color; \
+	//	void main()\
+	//	{\
+	//		vec2 Coord = cos(PI/N*Coord);\
+	//		color = vec4(1.0) - 0.5*smoothstep(0.9, 1.0, max(Coord.x, Coord.y));\
+	//	}";
+
+	//Shader* vsh_grid = App->shader->CreateShader(ShaderType::VERTEX);
+	//vsh->SetShaderCode(vertex_code_grid);
+
+	//Shader* fsh_grid = App->shader->CreateShader(ShaderType::FRAGMENT);
+	//user_fsh->SetShaderCode(fragment_code_grid);
+
+	//sp_grid = App->shader->CreateShaderProgram();
+	//sp_grid->AddShader(vsh_grid);
+	//sp_grid->AddShader(fsh_grid);
+
+	//sp_grid->LinkProgram();
+
+	// ----------------------------------------
+
 	return ret;
 }
 

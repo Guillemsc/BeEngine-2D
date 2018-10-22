@@ -43,6 +43,7 @@ public:
 	void OnSaveConfig(JSON_Doc* config);
 	bool Awake();
 	bool Update();
+	bool PostUpdate();
 	bool CleanUp();
 
 	void SetWindowTitle(const char* title);

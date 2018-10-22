@@ -13,6 +13,7 @@
 #include "ModuleThreadTask.h"
 #include "ModuleTimeSlicedTask.h"
 #include "ModuleProject.h"
+#include "ModuleResource.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -42,6 +43,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	thread      = new ModuleThreadTask();
 	time_sliced = new ModuleTimeSlicedTask();
 	project	    = new ModuleProject();
+	resource	= new ModuleResource();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -58,9 +60,9 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(camera, "Module Camera");
 	AddModule(input, "Module Input");
 	AddModule(audio, "Module Audio");
-	AddModule(audio, "Module Audio");
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");
+	AddModule(resource, "Module Resource");
 
 	// Renderers
 	AddModule(renderer, "Module Renderer");

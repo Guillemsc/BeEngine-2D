@@ -9,6 +9,7 @@
 #include "ModuleJson.h"
 #include "ModuleAction.h"
 #include "ModuleEditor.h"
+#include "imgui.h"
 
 ModuleCamera::ModuleCamera() : Module()
 {
@@ -76,11 +77,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 		if (App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT))
 			cam_speed = camera_speed / 2 * App->GetDT();
 
-		//if (IsMouseInsideWindow())
-		//{
-		mouse_movement = true;
-		//}
-
 		// Mouse motion ----------------
 		if (mouse_movement)
 		{
@@ -97,11 +93,11 @@ void ModuleCamera::UpdateEditorCameraInput()
 
 			if (dragging)
 			{
+				ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
 				float2 mouse_pos = App->input->GetMouse();
 
 				float2 motion = mouse_pos - last_mouse_position;
-
-				//float x_motion = App->input->GetMouseXMotion();
 
 				motion.x *= editor_camera->size;
 
@@ -109,8 +105,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 					editor_camera->MoveLeft(motion.x);
 				if (motion.x < 0)
 					editor_camera->MoveRight(-motion.x);
-
-				//float y_motion = App->input->GetMouseYMotion();
 
 				motion.y *= editor_camera->size;
 
@@ -120,8 +114,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 					editor_camera->MoveDown(-motion.y);
 
 				last_mouse_position = mouse_pos;
-
-				//INTERNAL_LOG("%d", x_motion);
 			}
 
 			if (App->input->GetMouseWheel() == 1)
@@ -132,14 +124,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 			{
 				editor_camera->SetSize(editor_camera->size + (100 * App->GetDT()));
 			}
-
-			App->window->GetCursor()->Hand();
-
-			//if (App->input->GetKeyRepeat(SDL_SCANCODE_Z))
-			//	editor_camera->MoveUp(cam_speed);
-
-			//if (App->input->GetKeyRepeat(SDL_SCANCODE_X))
-			//	editor_camera->MoveDown(cam_speed);
 
 			if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
 				editor_camera->MoveUp(cam_speed);
@@ -153,37 +137,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 			if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
 				editor_camera->MoveRight(cam_speed);
 
-			//editor_camera->Rotate(-App->input->GetMouseXMotion() * mou_speed, -App->input->GetMouseYMotion()*mou_speed);
-
-			//App->gameobj->SetCanMove(false);
-
-
-			//if (App->input->GetKeyRepeat(SDL_SCANCODE_LALT) || App->input->GetKeyRepeat(SDL_SCANCODE_RALT))
-			//{
-			//	if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
-			//		editor_camera->MoveFront(cam_speed);
-
-			//	if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
-			//		editor_camera->MoveBack(cam_speed);
-
-			//	editor_camera->Orbit(float3(0, 0, 0), -App->input->GetMouseXMotion()*mou_speed, -App->input->GetMouseYMotion()*mou_speed);
-			//	editor_camera->Look(float3(0, 0, 0));
-
-			//	App->window->GetCursor()->SizeAll();
-
-			//	//App->gameobj->SetCanMove(false);
-			//}
-
-
-
-			//mouse_movement = false;
-			//App->gameobj->SetCanMove(true);
-
-		}
-
-		if (App->input->GetKeyDown("f"))
-		{
-			editor_camera->Focus(float3(0, 0, 0), 10);
 		}
 	}
 }
@@ -206,7 +159,9 @@ void ModuleCamera::DestroyCamera(Camera2D* cam)
 		{
 			if (cam == (*it))
 			{
+				(*it)->CleanUp();
 				RELEASE(*it);
+
 				cameras.erase(it);
 				break;
 			}
