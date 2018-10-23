@@ -107,6 +107,8 @@
     <ClInclude Include="ProgressWindow.h" />
     <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="ModuleResource.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="Geometry\AABB.h" />
     <ClInclude Include="Geometry\AABB2D.h" />
@@ -219,6 +221,8 @@
     <ClCompile Include="ProgressWindow.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="ModuleResource.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Geometry\AABB.cpp" />
     <ClCompile Include="Geometry\Capsule.cpp" />

@@ -70,6 +70,9 @@
     <Filter Include="Sources\3. Editor ================\Elements">
       <UniqueIdentifier>{74765075-780e-49e6-9458-564271a36b10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\4. Resources =============\Loaders">
+      <UniqueIdentifier>{85e9095d-cde4-4525-8480-02117404a4df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -411,6 +414,12 @@
     <ClInclude Include="ModuleResource.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceLoader.h">
+      <Filter>Sources\4. Resources =============\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\4. Resources =============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -649,6 +658,12 @@
     </ClCompile>
     <ClCompile Include="ModuleResource.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceLoader.cpp">
+      <Filter>Sources\4. Resources =============\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\4. Resources =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
