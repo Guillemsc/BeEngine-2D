@@ -3,6 +3,8 @@
 #include "ModuleWindow.h"
 #include "ModuleProject.h"
 #include "ModuleFileSystem.h"
+#include "Event.h"
+#include "ModuleEvent.h"
 
 ProjectManager::ProjectManager()
 {
@@ -123,7 +125,10 @@ void ProjectManager::DrawProjectSelector()
 			if (ImGui::Button((*it)->GetName().c_str()))
 			{
 				App->project->SetCurrProject((*it));
+
 				App->editor->SetEditorState(EditorState::MAIN_ENGINE);
+
+				App->event->SendEvent(new EventProjectSelected());
 			}
 
 			ImGui::PopFont();

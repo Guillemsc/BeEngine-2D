@@ -11,8 +11,14 @@ enum ResourceType
 
 class Resource
 {
+	friend class ResourceLoader;
+	friend class ModuleResource;
+
+private:
+	void operator delete(void *) {}
+
 public:
-	Resource(ResourceType resource_type);
+	Resource(std::string uid, ResourceType resource_type);
 
 	const ResourceType GetType() const;
 	std::string GetUID() const;

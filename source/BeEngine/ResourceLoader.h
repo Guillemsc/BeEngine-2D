@@ -12,6 +12,7 @@ class ResourceLoader
 public:
 	ResourceLoader(ResourceType resources_to_load_type);
 
+	virtual void Start() {};
 	virtual void CleanUp() {};
 
 	ResourceType GetResourcesToLoadType() const;
@@ -34,7 +35,7 @@ public:
 	virtual void CreateLibraryFolder() {};
 
 	// Loads a file from outside the engine as a new resource
-	virtual bool LoadFileToEngine(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources) { return false; };
+	virtual bool ImportAssetToEngine(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources) { return false; };
 
 	// Unloads all the asset engine information
 	virtual bool ClearAssetDataFromEngine(DecomposedFilePath decomposed_file_path) { return false; };
@@ -51,13 +52,15 @@ public:
 	// Exports resource into the library folder with own format
 	virtual bool ExportResourceToLibrary(Resource* resource) { return false; };
 
-private:
+protected:
 	ResourceType resources_to_load_type;
 
 	std::map<std::string, Resource*> resources;
 
 	std::vector<std::string> assets_extensions_to_load;
 	std::vector<std::string> library_extensions_to_load;
+
+	std::string library_path;
 };
 
 #endif // !__RESOURCE_LOADER_H__

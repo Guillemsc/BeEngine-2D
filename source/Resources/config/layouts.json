@@ -72,7 +72,7 @@
     },
     "curr_layout": "Test1",
     "Test1": {
-        "Docks_Size": 4,
+        "Docks_Size": 3,
         "Dock0": {
             "Label": "Scene",
             "pos_X": 569,
@@ -87,7 +87,7 @@
             "child1": -1,
             "prev_tab": -1,
             "next_tab": -1,
-            "parent": 3
+            "parent": 2
         },
         "Dock1": {
             "Label": "Profiler",
@@ -102,26 +102,10 @@
             "child0": -1,
             "child1": -1,
             "prev_tab": -1,
-            "next_tab": 2,
-            "parent": 3
+            "next_tab": -1,
+            "parent": 2
         },
         "Dock2": {
-            "Label": "Dumyyyyyy",
-            "pos_X": -2,
-            "pos_Y": 53,
-            "size_X": 571,
-            "size_Y": 984,
-            "status": 0,
-            "active": false,
-            "opened": true,
-            "location": "1",
-            "child0": -1,
-            "child1": -1,
-            "prev_tab": 1,
-            "next_tab": -1,
-            "parent": 3
-        },
-        "Dock3": {
             "Label": "",
             "pos_X": -2,
             "pos_Y": 53,

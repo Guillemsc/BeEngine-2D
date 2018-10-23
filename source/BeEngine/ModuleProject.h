@@ -64,7 +64,7 @@ private:
 	void SerializeProjects();
 	bool ProjectExists(const char* project_path);
 
-	void OnEvent(Event*ev);
+	void OnEvent(Event* ev);
 
 private:
 	std::vector<Project*> projects;

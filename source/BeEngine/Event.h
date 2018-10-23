@@ -29,6 +29,8 @@ enum EventType
 	THREAD_TASK_FINISHED,
 
 	SCENE_WINDOW_RESIZE,
+
+	PROJECT_SELECTED,
 };
 
 class EventTimeSlicedTaskFinished : public Event
@@ -104,6 +106,15 @@ public:
 private:
 	float2 last_size = float2::zero;
 	float2 new_size = float2::zero;
+};
+
+class EventProjectSelected : public Event
+{
+public:
+	EventProjectSelected() : Event(EventType::PROJECT_SELECTED)
+	{
+
+	}
 };
 
 #endif // !__EVENT_H__
