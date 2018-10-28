@@ -72,9 +72,19 @@ std::string ModuleResource::GetNewUID()
 	return GetUIDRandomHexadecimal();
 }
 
+std::string ModuleResource::GetCurrentAssetsPath()
+{
+	return current_assets_folder;
+}
+
 std::string ModuleResource::GetLibraryPath()
 {
 	return library_folder;
+}
+
+std::string ModuleResource::GetAssetsPath()
+{
+	return assets_folder;
 }
 
 ResourceLoader * ModuleResource::AddLoader(ResourceLoader * loader)
@@ -129,9 +139,15 @@ void ModuleResource::OnEvent(Event* ev)
 	{
 	case EventType::PROJECT_SELECTED:
 		{
+			assets_folder = App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "assets");
 			library_folder = App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "library");
 
+			current_assets_folder = assets_folder;
+
 			CreateLibraryPaths();
+
+			LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Files\\37311279_p0.jpg");
+
 			break;
 		}
 	default:
@@ -290,7 +306,7 @@ bool ModuleResource::LoadFileToEngine(const char * filepath, std::vector<Resourc
 
 		if (can_load)
 		{
-			ret = ImportAssetToEngine(filepath, resources);
+			ret = ImportAssetToEngine(new_path.c_str(), resources);
 
 			if(ret)
 				ret = ExportResourcesToLibrary(resources);
@@ -385,7 +401,7 @@ bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
 	return ret;
 }
 
-bool ModuleResource::IsMetaFile(const char * filepath, const char * metapath)
+bool ModuleResource::IsMetaOfFile(const char * filepath, const char * metapath)
 {
 	bool ret = false;
 
@@ -400,6 +416,21 @@ bool ModuleResource::IsMetaFile(const char * filepath, const char * metapath)
 				ret = true;
 			}
 		}
+	}
+
+	return ret;
+}
+
+bool ModuleResource::IsMeta(const char * filepath)
+{
+	bool ret = false;
+
+	if (App->file_system->FileExists(filepath))
+	{
+		DecomposedFilePath deco_file = App->file_system->DecomposeFilePath(filepath);
+
+		if (deco_file.file_extension == "meta")
+			ret = true;
 	}
 
 	return ret;
@@ -474,4 +505,190 @@ bool ModuleResource::ExportResourcesToLibrary(const std::vector<Resource*>& reso
 	}
 
 	return ret;
+}
+
+CheckAssetsErrorsTimeSlicedTask::CheckAssetsErrorsTimeSlicedTask(ModuleResource * module_proj) : TimeSlicedTask(TimeSlicedTaskType::FOCUS)
+{
+	
+}
+
+void CheckAssetsErrorsTimeSlicedTask::Start()
+{
+	state = CheckErrorsState::CHECK_ASSET_FILES;
+
+	all_asset_files = App->file_system->GetFilesInPathAndChilds(App->resource->GetAssetsPath().c_str());
+
+	asset_files_to_check = all_asset_files;
+}
+
+void CheckAssetsErrorsTimeSlicedTask::Update()
+{
+	switch (state)
+	{
+	case CheckAssetsErrorsTimeSlicedTask::CHECK_ASSET_FILES:
+		CheckAssetFiles();
+		break;
+	case CheckAssetsErrorsTimeSlicedTask::CHECK_ASSET_META_FILES:
+		CheckAssetMetaFiles();
+		break;
+	case CheckAssetsErrorsTimeSlicedTask::DELETE_UNNECESSARY_FILES:
+		DeleteUnnecessaryFiles();
+		break;
+	case CheckAssetsErrorsTimeSlicedTask::REIMPORT_ASSETS:
+		ReimportAssets();
+		break;
+	default:
+		break;
+	}
+}
+
+void CheckAssetsErrorsTimeSlicedTask::Finish()
+{
+}
+
+void CheckAssetsErrorsTimeSlicedTask::CheckAssetFiles()
+{
+	if (!asset_files_to_check.empty())
+	{
+		float progress = 100 - ((float)all_asset_files.size() / 100.0f) * asset_files_to_check.size();
+		SetPercentageProgress(progress);
+		SetDescription("Checking asset files");
+
+		std::string curr_file = *asset_files_to_check.begin();
+
+		bool is_meta = App->resource->IsMeta(curr_file.c_str());
+
+		if (is_meta)
+		{
+			asset_metas_to_check.push_back(curr_file);
+			all_asset_metas_to_check_count = asset_metas_to_check.size();
+		}
+		else
+		{
+			std::vector<std::string> library_files_to_check;
+			bool correct = App->resource->IsAssetOnLibrary(curr_file.c_str(), library_files_to_check);
+
+			if (correct)
+			{
+				library_files_used.insert(library_files_used.end(), library_files_to_check.begin(), library_files_to_check.end());
+			}
+			else
+			{
+				assets_to_reimport.push_back(curr_file);
+				all_assets_to_reimport_count = assets_to_reimport.size();
+			}
+		}
+
+		asset_files_to_check.erase(asset_files_to_check.begin());
+	}
+	else
+	{
+		asset_files_to_check = all_asset_files;
+
+		state = CheckErrorsState::CHECK_ASSET_META_FILES;
+	}
+}
+
+void CheckAssetsErrorsTimeSlicedTask::CheckAssetMetaFiles()
+{
+	if (!asset_metas_to_check.empty())
+	{
+		float progress = 100 - ((float)all_asset_metas_to_check_count / 100.0f) * asset_metas_to_check.size();
+		SetPercentageProgress(progress);
+		SetDescription("Checking asset meta files");
+
+		std::string curr_file = *asset_metas_to_check.begin();
+
+		bool used = false;
+		for (std::vector<std::string>::iterator it = asset_files_to_check.begin(); it != asset_files_to_check.end();)
+		{
+			bool is_meta = App->resource->IsMeta((*it).c_str());
+
+			if (!is_meta)
+			{
+				if (App->resource->IsMetaOfFile((*it).c_str(), curr_file.c_str()))
+				{
+					used = true;
+					it = asset_files_to_check.erase(it);
+					break;
+				}
+				else
+					++it;
+			}
+			else
+			{
+				it = asset_files_to_check.erase(it);
+			}
+		}
+
+		if (!used)
+		{
+			App->file_system->FileDelete(curr_file.c_str());
+		}
+
+		asset_metas_to_check.erase(asset_metas_to_check.begin());
+	}
+	else
+	{
+		library_files_to_check = App->file_system->GetFilesInPathAndChilds(App->resource->GetLibraryPath().c_str());
+		all_library_files_to_check_count = library_files_to_check.size();
+
+		state = CheckErrorsState::DELETE_UNNECESSARY_FILES;
+	}
+}
+
+void CheckAssetsErrorsTimeSlicedTask::DeleteUnnecessaryFiles()
+{
+	if (!library_files_to_check.empty())
+	{
+		float progress = 100 - ((float)all_library_files_to_check_count / 100.0f) * library_files_to_check.size();
+		SetPercentageProgress(progress);
+		SetDescription("Deleting library garbage");
+
+		std::string curr_file = *library_files_to_check.begin();
+
+		bool to_delete = true;
+		for (std::vector<std::string>::iterator it = library_files_used.begin(); it != library_files_used.end(); ++it)
+		{
+			if ((*it) == curr_file)
+			{
+				library_files_used.erase(it);
+				to_delete = false;
+				break;
+			}
+		}
+
+		if (to_delete)
+		{
+			App->file_system->FileDelete(curr_file.c_str());
+		}
+
+		library_files_to_check.erase(library_files_to_check.begin());
+	}
+	else
+	{
+		state = CheckErrorsState::REIMPORT_ASSETS;
+	}
+}
+
+void CheckAssetsErrorsTimeSlicedTask::ReimportAssets()
+{
+	if (!assets_to_reimport.empty())
+	{
+		float progress = 100 - ((float)all_assets_to_reimport_count / 100.0f) * assets_to_reimport.size();
+		SetPercentageProgress(progress);
+		SetDescription("Reimporting assets");
+
+		std::string curr_file = *assets_to_reimport.begin();
+
+		App->resource->ImportAssetToEngine(curr_file.c_str());
+
+		assets_to_reimport.erase(assets_to_reimport.begin());
+	}
+	else
+	{
+		SetPercentageProgress(100);
+
+		FinishTask();
+	}
 }

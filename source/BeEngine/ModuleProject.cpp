@@ -286,16 +286,6 @@ bool ModuleProject::ProjectExists(const char* project_path)
 
 void ModuleProject::OnEvent(Event* ev)
 {
-	if (ev->GetType() == EventType::THREAD_TASK_FINISHED)
-	{
-		EventThreadTaskFinished* th_event = (EventThreadTaskFinished*)ev;
-
-		if (task == th_event->GetTask())
-		{
-			projects_loaded = true;
-		}
-	}
-
 	if (ev->GetType() == EventType::TIME_SLICED_TASK_FINISHED)
 	{
 		EventTimeSlicedTaskFinished* th_sliced = (EventTimeSlicedTaskFinished*)ev;
@@ -343,66 +333,6 @@ std::string Project::GetName() const
 std::string Project::GetLastTimeOpened() const
 {
 	return last_time_opened;
-}
-
-LoadProjectsThreadTask::LoadProjectsThreadTask(ModuleProject * module)
-{
-	module_proj = module;
-}
-
-void LoadProjectsThreadTask::Start()
-{
-}
-
-void LoadProjectsThreadTask::Update()
-{
-	module_proj->projects_json_filepath = App->GetBasePath() + std::string("Projects.json");
-
-	JSON_Doc* doc = App->json->LoadJSON(module_proj->projects_json_filepath.c_str());
-
-	if (doc == nullptr)
-		doc = App->json->CreateJSON(module_proj->projects_json_filepath.c_str());
-
-	if (doc != nullptr)
-	{
-		int projects_count = doc->GetNumber("projects_count");
-
-		for (int i = 0; i < projects_count; ++i)
-		{
-			JSON_Doc section_node = doc->GetNode();
-
-			std::string proj_section = "project_" + std::to_string(i);
-
-			if (section_node.MoveToSection(proj_section))
-			{
-				std::string name = section_node.GetString("name");
-				std::string path = section_node.GetString("path");
-
-				if (App->file_system->FolderExists(path.c_str()))
-				{
-					std::string project_doc_path = path + "project.beproject";
-					if (App->file_system->FileExists(project_doc_path.c_str()))
-					{
-						Project* proj = new Project();
-						proj->SetName(name.c_str());
-						proj->SetPath(path.c_str());
-						
-						module_proj->projects_lock.lock();
-						module_proj->projects.push_back(proj);
-						module_proj->projects_lock.unlock();
-					}
-				}
-			}
-		}
-
-		App->json->UnloadJSON(doc);
-	}
-
-	FinishTask();
-}
-
-void LoadProjectsThreadTask::Finish()
-{
 }
 
 LoadProjectsTimeSlicedTask::LoadProjectsTimeSlicedTask() : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 2, "Loading Projects")

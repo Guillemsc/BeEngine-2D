@@ -22,6 +22,9 @@ public:
 	bool IsAssetOnLibrary(DecomposedFilePath decomposed_file_path, std::vector<std::string>& library_files_used);
 	bool ImportResourceFromLibrary(DecomposedFilePath decomposed_file_path);
 	bool ExportResourceToLibrary(Resource* resource);
+
+private:
+	void OnDestroyResource(Resource* res);
 };
 
 #endif // !__RESOURCE_TEXTURE_LOADER_H__

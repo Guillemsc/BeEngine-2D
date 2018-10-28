@@ -73,23 +73,7 @@ private:
 
 	std::string projects_json_filepath;
 
-	LoadProjectsThreadTask* task = nullptr;
-	std::mutex projects_lock;
-
 	LoadProjectsTimeSlicedTask* time_sliced_load_projects_task = nullptr;
-};
-
-class LoadProjectsThreadTask : public ThreadTask
-{
-public:
-	LoadProjectsThreadTask(ModuleProject* module_proj);
-
-	void Start();
-	void Update();
-	void Finish();
-
-private:
-	ModuleProject* module_proj = nullptr;
 };
 
 class LoadProjectsTimeSlicedTask : public TimeSlicedTask

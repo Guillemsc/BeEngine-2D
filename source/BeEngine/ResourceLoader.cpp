@@ -73,6 +73,8 @@ bool ResourceLoader::DestroyResource(std::string unique_id)
 
 	if (it != resources.end())
 	{
+		OnDestroyResource((*it).second);
+
 		(*it).second->CleanUp();
 		RELEASE(it->second);
 
@@ -92,6 +94,8 @@ bool ResourceLoader::DestroyResource(Resource* res)
 	{
 		if (res == (*it).second)
 		{
+			OnDestroyResource((*it).second);
+
 			res->CleanUp();
 			RELEASE(res);
 
@@ -110,6 +114,8 @@ void ResourceLoader::DestroyAllResources()
 {
 	for (std::map<std::string, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
 	{		
+		OnDestroyResource((*it).second);
+
 		(*it).second->CleanUp();
 		RELEASE((*it).second);
 	}
@@ -131,4 +137,3 @@ std::map<std::string, Resource*> ResourceLoader::GetResources() const
 {
 	return resources;
 }
-

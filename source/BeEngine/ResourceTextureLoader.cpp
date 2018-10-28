@@ -44,9 +44,7 @@ bool ResourceTextureLoader::ImportAssetToEngine(DecomposedFilePath d_filepath, s
 {
 	bool ret = false;
 
-	ret = ilLoad(IL_TYPE_UNKNOWN, d_filepath.file_path.c_str());
-
-	if (ret)
+	if (ilLoad(IL_TYPE_UNKNOWN, d_filepath.file_path.c_str()))
 	{
 		// Get texture info
 		ILinfo ImageInfo;
@@ -61,18 +59,21 @@ bool ResourceTextureLoader::ImportAssetToEngine(DecomposedFilePath d_filepath, s
 		ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
 		ILubyte* data = ilGetData();
+		uint data_id = ImageInfo.Id;
 		uint data_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
 		uint image_width = ilGetInteger(IL_IMAGE_WIDTH);
 		uint image_height = ilGetInteger(IL_IMAGE_HEIGHT);
 		uint format = ilGetInteger(IL_IMAGE_FORMAT);
+		uint type = ilGetInteger(IL_IMAGE_TYPE);
 
 		if (data_size > 0)
 		{
 			ResourceTexture* r_tex = (ResourceTexture*)App->resource->CreateResource(ResourceType::TEXTURE);
+			r_tex->SetData(data_id, data, data_size);
 
 			resources.push_back(r_tex);
 
-			// Crate meta
+			// Crate assets meta
 			std::string assets_meta_path = d_filepath.file_path + ".meta";
 
 			if (App->file_system->FileExists(assets_meta_path.c_str()))
@@ -86,11 +87,13 @@ bool ResourceTextureLoader::ImportAssetToEngine(DecomposedFilePath d_filepath, s
 				doc->Save();
 				App->json->UnloadJSON(doc);
 			}
+
+			ret = true;
 		}
 		else
 			ret = false;
 
-		ilDeleteImages(1, &ImageInfo.Id);
+		ilBindImage(0);
 	}
 
 	return ret;
@@ -118,5 +121,45 @@ bool ResourceTextureLoader::ImportResourceFromLibrary(DecomposedFilePath decompo
 
 bool ResourceTextureLoader::ExportResourceToLibrary(Resource * resource)
 {
-	return false;
+	bool ret = false;
+
+	if (resource != nullptr)
+	{
+		ILuint image;
+		ilGenImages(1, &image);
+		ilBindImage(image);
+
+		ResourceTexture* resource_txt = (ResourceTexture*)resource;
+
+		ILenum imageType = ilDetermineTypeL(resource_txt->GetData(), resource_txt->GetDataSize());
+
+		ilBindImage(resource_txt->GetDataId());
+
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+
+		ilEnable(IL_FILE_OVERWRITE);
+
+		uint size = ilSaveL(IL_DDS, NULL, 0);
+		byte* data = new byte[size];
+
+		if (ilSaveL(IL_DDS, data, size) > 0)
+		{
+			ret = App->file_system->FileSave(library_path.c_str(), (char*)data, resource_txt->GetUID().c_str(), "dds", size);
+		}
+
+		ilBindImage(0);
+	}
+
+	return ret;
+}
+
+void ResourceTextureLoader::OnDestroyResource(Resource * res)
+{
+	if (res != nullptr)
+	{
+		ResourceTexture* resource_txt = (ResourceTexture*)res;
+
+		ILuint id = resource_txt->GetDataId();
+		ilDeleteImages(1, &id);
+	}
 }

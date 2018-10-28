@@ -52,6 +52,9 @@ public:
 	// Exports resource into the library folder with own format
 	virtual bool ExportResourceToLibrary(Resource* resource) { return false; };
 
+private:
+	virtual void OnDestroyResource(Resource* res) {};
+
 protected:
 	ResourceType resources_to_load_type;
 
