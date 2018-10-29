@@ -13,6 +13,8 @@ class Event;
 
 class ModuleResource : public Module
 {
+	friend class CheckAssetsErrorsTimeSlicedTask;
+
 public:
 	ModuleResource();
 	~ModuleResource();
@@ -43,19 +45,21 @@ public:
 	bool DestroyResource(std::string unique_id);
 	bool DestroyResource(Resource* res);
 
+public:
 	bool LoadFileToEngine(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
 	bool UnloadAssetFromEngine(const char* filepath);
-	bool DeleteAssetResources(const char* filepath);
-	bool ClearAssetDataFromEngine(const char* filepath);
-	bool ImportAssetToEngine(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
 	bool ReimportAssetToEngine(const char* filepath);
 	bool RenameAsset(const char* filepath, const char* new_name);
+	bool ExportResourceToLibrary(Resource* resource);
+
+private:
+	bool DeleteAssetResources(const char* filepath);
+	bool ClearAssetDataFromEngine(const char* filepath);
+	bool ExportAssetToLibrary(const char* filepath);
+	bool IsAssetOnLibrary(const char* filepath, std::vector<std::string>& library_files_used = std::vector<std::string>());
+	bool ImportAssetFromLibrary(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
 	bool IsMetaOfFile(const char* filepath, const char* metapath);
 	bool IsMeta(const char * filepath);
-	bool IsAssetOnLibrary(const char* filepath, std::vector<std::string>& library_files_used = std::vector<std::string>());
-	bool ImportResourceFromLibrary(const char* filepath);
-	bool ExportResourceToLibrary(Resource* resource);
-	bool ExportResourcesToLibrary(const std::vector<Resource*>& resources);
 
 private:
 	ResourceLoader* AddLoader(ResourceLoader* loader);

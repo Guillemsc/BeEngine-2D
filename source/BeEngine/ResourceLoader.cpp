@@ -137,3 +137,8 @@ std::map<std::string, Resource*> ResourceLoader::GetResources() const
 {
 	return resources;
 }
+
+std::string ResourceLoader::GetLibraryPath()
+{
+	return library_path;
+}

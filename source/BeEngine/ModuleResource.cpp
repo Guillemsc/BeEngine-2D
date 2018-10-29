@@ -146,8 +146,6 @@ void ModuleResource::OnEvent(Event* ev)
 
 			CreateLibraryPaths();
 
-			LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Files\\37311279_p0.jpg");
-
 			break;
 		}
 	default:
@@ -306,10 +304,10 @@ bool ModuleResource::LoadFileToEngine(const char * filepath, std::vector<Resourc
 
 		if (can_load)
 		{
-			ret = ImportAssetToEngine(new_path.c_str(), resources);
+			ret = ExportAssetToLibrary(new_path.c_str());
 
-			if(ret)
-				ret = ExportResourcesToLibrary(resources);
+			if (ret)
+				ret = ImportAssetFromLibrary(new_path.c_str(), resources);
 		}
 	}
 
@@ -374,7 +372,7 @@ bool ModuleResource::ClearAssetDataFromEngine(const char * filepath)
 	return ret;
 }
 
-bool ModuleResource::ImportAssetToEngine(const char * filepath, std::vector<Resource*>& resources)
+bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 {
 	bool ret = false;
 
@@ -388,7 +386,8 @@ bool ModuleResource::ImportAssetToEngine(const char * filepath, std::vector<Reso
 
 		if (loader != nullptr)
 		{
-			ret = loader->ImportAssetToEngine(deco_file, resources);
+			std::string new_uid = GetNewUID();
+			ret = loader->ExportAssetToLibrary(deco_file, new_uid);
 		}
 	}
 
@@ -404,7 +403,8 @@ bool ModuleResource::ReimportAssetToEngine(const char * filepath)
 		DeleteAssetResources(filepath);
 		ClearAssetDataFromEngine(filepath);
 
-		ret = ImportAssetToEngine(filepath);
+		ExportAssetToLibrary(filepath);
+		ImportAssetFromLibrary(filepath);
 	}
 
 	return ret;
@@ -481,19 +481,19 @@ bool ModuleResource::IsAssetOnLibrary(const char * filepath, std::vector<std::st
 	return ret;
 }
 
-bool ModuleResource::ImportResourceFromLibrary(const char * filepath)
+bool ModuleResource::ImportAssetFromLibrary(const char * filepath, std::vector<Resource*>& resources)
 {
 	bool ret = false;
 
 	DecomposedFilePath deco_file = App->file_system->DecomposeFilePath(filepath);
 
-	ResourceType type = LibraryExtensionToType(deco_file.file_extension.c_str());
+	ResourceType type = AssetExtensionToType(deco_file.file_extension.c_str());
 
 	ResourceLoader* loader = GetLoader(type);
 
 	if (loader != nullptr)
 	{
-		ret = loader->ImportResourceFromLibrary(deco_file);
+		ret = loader->ImportAssetFromLibrary(deco_file);
 	}
 
 	return ret;
@@ -514,21 +514,6 @@ bool ModuleResource::ExportResourceToLibrary(Resource * resource)
 				ret = loader->ExportResourceToLibrary(resource);
 			}
 		}
-	}
-
-	return ret;
-}
-
-bool ModuleResource::ExportResourcesToLibrary(const std::vector<Resource*>& resources)
-{
-	bool ret = false;
-
-	for (std::vector<Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
-	{
-		ret = ExportResourceToLibrary((*it));
-
-		if (!ret)
-			break;
 	}
 
 	return ret;
@@ -708,7 +693,7 @@ void CheckAssetsErrorsTimeSlicedTask::ReimportAssets()
 
 		std::string curr_file = *assets_to_reimport.begin();
 
-		App->resource->ImportAssetToEngine(curr_file.c_str());
+		App->resource->ExportAssetToLibrary(curr_file.c_str());
 
 		assets_to_reimport.erase(assets_to_reimport.begin());
 	}

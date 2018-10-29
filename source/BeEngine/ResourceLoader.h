@@ -32,16 +32,18 @@ public:
 
 	virtual Resource* CreateResource(std::string new_uid) { return nullptr; };
 
+	std::string GetLibraryPath();
+
 	virtual void CreateLibraryFolder() {};
 
 	// Loads a file from outside the engine as a new resource
-	virtual bool ImportAssetToEngine(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources) { return false; };
+	virtual bool ExportAssetToLibrary(DecomposedFilePath decomposed_file_path, std::string new_uid) { return false; };
 
 	// Unloads all the asset engine information
 	virtual bool ClearAssetDataFromEngine(DecomposedFilePath decomposed_file_path) { return false; };
 
 	// Deletes all resources related to an assets
-	virtual bool DeleteAssetResources(DecomposedFilePath decomposed_file_path) {};
+	virtual bool DeleteAssetResources(DecomposedFilePath decomposed_file_path) { return false; };
 
 	// Renames the library resource and all other necessary files
 	virtual bool RenameAsset(DecomposedFilePath decomposed_file_path, const char* new_name) { return false; };
@@ -50,7 +52,7 @@ public:
 	virtual bool IsAssetOnLibrary(DecomposedFilePath decomposed_file_path, std::vector<std::string>& library_files_used) { return false; };
 
 	// Imports the resource into memory from the library folder
-	virtual bool ImportResourceFromLibrary(DecomposedFilePath decomposed_file_path) { return false; };
+	virtual bool ImportAssetFromLibrary(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources = std::vector<Resource*>()) { return false; };
 
 	// Exports resource into the library folder with own format
 	virtual bool ExportResourceToLibrary(Resource* resource) { return false; };
