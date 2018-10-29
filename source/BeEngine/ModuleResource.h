@@ -45,6 +45,7 @@ public:
 
 	bool LoadFileToEngine(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
 	bool UnloadAssetFromEngine(const char* filepath);
+	bool DeleteAssetResources(const char* filepath);
 	bool ClearAssetDataFromEngine(const char* filepath);
 	bool ImportAssetToEngine(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
 	bool ReimportAssetToEngine(const char* filepath);

@@ -104,6 +104,11 @@ bool ResourceTextureLoader::ClearAssetDataFromEngine(DecomposedFilePath decompos
 	return false;
 }
 
+bool ResourceTextureLoader::DeleteAssetResources(DecomposedFilePath decomposed_file_path)
+{
+	return false;
+}
+
 bool ResourceTextureLoader::RenameAsset(DecomposedFilePath decomposed_file_path, const char * new_name)
 {
 	return false;
@@ -146,6 +151,8 @@ bool ResourceTextureLoader::ExportResourceToLibrary(Resource * resource)
 		{
 			ret = App->file_system->FileSave(library_path.c_str(), (char*)data, resource_txt->GetUID().c_str(), "dds", size);
 		}
+
+		RELEASE_ARRAY(data);
 
 		ilBindImage(0);
 	}

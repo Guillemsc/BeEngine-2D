@@ -40,6 +40,9 @@ public:
 	// Unloads all the asset engine information
 	virtual bool ClearAssetDataFromEngine(DecomposedFilePath decomposed_file_path) { return false; };
 
+	// Deletes all resources related to an assets
+	virtual bool DeleteAssetResources(DecomposedFilePath decomposed_file_path) {};
+
 	// Renames the library resource and all other necessary files
 	virtual bool RenameAsset(DecomposedFilePath decomposed_file_path, const char* new_name) { return false; };
 

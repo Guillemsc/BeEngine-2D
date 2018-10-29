@@ -18,6 +18,7 @@ public:
 
 	bool ImportAssetToEngine(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources);
 	bool ClearAssetDataFromEngine(DecomposedFilePath decomposed_file_path);
+	bool DeleteAssetResources(DecomposedFilePath decomposed_file_path);
 	bool RenameAsset(DecomposedFilePath decomposed_file_path, const char* new_name);
 	bool IsAssetOnLibrary(DecomposedFilePath decomposed_file_path, std::vector<std::string>& library_files_used);
 	bool ImportResourceFromLibrary(DecomposedFilePath decomposed_file_path);

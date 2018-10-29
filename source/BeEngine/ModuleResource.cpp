@@ -320,10 +320,36 @@ bool ModuleResource::UnloadAssetFromEngine(const char * filepath)
 {
 	bool ret = false;
 
-	ret = ClearAssetDataFromEngine(filepath);
+	if (App->file_system->FileExists(filepath))
+	{
+		ClearAssetDataFromEngine(filepath);
 
-	if(ret)
+		DeleteAssetResources(filepath);
+
 		App->file_system->FileDelete(filepath);
+
+		ret = true;
+	}
+
+	return ret;
+}
+
+bool ModuleResource::DeleteAssetResources(const char * filepath)
+{
+	bool ret = false;
+
+	if (App->file_system->FileExists(filepath))
+	{
+		DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(filepath);
+
+		ResourceType type = AssetExtensionToType(d_filepath.file_extension.c_str());
+		ResourceLoader* loader = GetLoader(type);
+
+		if (loader != nullptr)
+		{
+			ret = loader->DeleteAssetResources(d_filepath);
+		}
+	}
 
 	return ret;
 }
@@ -375,6 +401,7 @@ bool ModuleResource::ReimportAssetToEngine(const char * filepath)
 
 	if (App->file_system->FileExists(filepath))
 	{
+		DeleteAssetResources(filepath);
 		ClearAssetDataFromEngine(filepath);
 
 		ret = ImportAssetToEngine(filepath);
