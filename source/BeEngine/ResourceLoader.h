@@ -36,10 +36,10 @@ public:
 
 	virtual void CreateLibraryFolder() {};
 
-	// Loads a file from outside the engine as a new resource
+	// Exports an asset file into the library folder
 	virtual bool ExportAssetToLibrary(DecomposedFilePath decomposed_file_path, std::string new_uid) { return false; };
 
-	// Unloads all the asset engine information
+	// Unloads all the asset engine files
 	virtual bool ClearAssetDataFromEngine(DecomposedFilePath decomposed_file_path) { return false; };
 
 	// Deletes all resources related to an assets
@@ -54,7 +54,7 @@ public:
 	// Imports the resource into memory from the library folder
 	virtual bool ImportAssetFromLibrary(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources = std::vector<Resource*>()) { return false; };
 
-	// Exports resource into the library folder with own format
+	// Exports resource into the library folder
 	virtual bool ExportResourceToLibrary(Resource* resource) { return false; };
 
 private:
