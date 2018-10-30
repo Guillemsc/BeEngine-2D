@@ -145,6 +145,8 @@ private:
 	ShaderProgram* sp_grid;
 
 	LineGuizmoRenderer* line_renderer = nullptr;
+
+	Profile* test = nullptr;
 };
 
 #endif // !__MODULE_RENDERER_H__

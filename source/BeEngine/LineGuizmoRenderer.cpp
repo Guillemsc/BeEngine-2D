@@ -12,61 +12,36 @@ LineGuizmoRenderer::~LineGuizmoRenderer()
 
 void LineGuizmoRenderer::Start()
 {
-	const char* user_vertex_code =
-		"#version 330 core\n \
-		layout(location = 1) in vec3 col;\n \
-		out vec3 oColour;	\
-		uniform vec3 Colour;\
-		void UserShader()\
-		{\
-			oColour = col;\
-		}";
-
-	const char* user_fragment_code =
-		"#version 330 core\n \
-		in vec3 oColour;\
-		out vec3 color; \
-		void UserShader()\
-		{\
-			color = oColour;\
-		}";
-
 	const char* vertex_code =
 		"#version 330 core\n \
 		layout(location = 0) in vec3 position;\n \
+		layout(location = 1) in vec3 col;\n \
 		uniform mat4 Model; \
 		uniform mat4 View; \
 		uniform mat4 Projection; \
-		void UserShader();\
+		out vec3 oColour;	\
 		void main()\
 		{\
-			UserShader();\
 			gl_Position = Projection * View * Model * vec4(position, 1);\
+			oColour = col; \
 		}";
 
 	const char* fragment_code =
 		"#version 330 core\n \
-		void UserShader();\
+		in vec3 oColour;\
+		out vec3 color; \
 		void main()\
 		{\
-			UserShader();\
+			color = oColour;\
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
 	vsh->SetShaderCode(vertex_code);
 
-	Shader* user_vsh = App->shader->CreateShader(ShaderType::VERTEX);
-	user_vsh->SetShaderCode(user_vertex_code);
-
 	Shader* fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
 	fsh->SetShaderCode(fragment_code);
 
-	Shader* user_fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
-	user_fsh->SetShaderCode(user_fragment_code);
-
 	program = App->shader->CreateShaderProgram();
-	program->AddShader(user_vsh);
-	program->AddShader(user_fsh);
 	program->AddShader(vsh);
 	program->AddShader(fsh);
 
@@ -78,7 +53,7 @@ void LineGuizmoRenderer::Start()
 	vbo = App->renderer->GenBuffer();
 	App->renderer->BindArrayBuffer(vbo);
 
-	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_STREAM_DRAW);
+	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 }
 
 void LineGuizmoRenderer::CleanUp()
@@ -89,7 +64,7 @@ void LineGuizmoRenderer::CleanUp()
 void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection)
 {
 	App->renderer->BindArrayBuffer(vbo);
-	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_STREAM_DRAW);
+	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 
 	float4x4 model = float4x4::identity;
 	model[0][3] = 1;
@@ -98,9 +73,9 @@ void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection
 
 	program->UseProgram();
 
-	ShaderProgramParameters par;
-	par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
-	program->SetProgramParameters(par);
+	//ShaderProgramParameters par;
+	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
+	//program->SetProgramParameters(par);
 
 	GLint posAttrib = glGetAttribLocation(program->GetID(), "position");
 	App->renderer->EnableVertexAttributeArray(posAttrib);
@@ -114,7 +89,7 @@ void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection
 	App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-	glLineWidth(25);
+	glLineWidth(20);
 
 	glDrawArrays(GL_LINES, 0, lines_count * 2);
 

@@ -138,6 +138,8 @@ bool ModuleRenderer::Awake()
 bool ModuleRenderer::Start()
 {
 	bool ret = true;
+	
+	test = prof_module_postupdate->AddProfileChild("lines");
 
 	line_renderer->Start();
 
@@ -290,10 +292,14 @@ bool ModuleRenderer::PostUpdate()
 
 	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
+	test->Start();
 
-	int i = 0;
-	line_renderer->DrawLine(float2(0, 50 * ++i), float2(1000, 30 * i), float3(1, 1, 0));
+	for (int i = 0; i < 1000; ++i)
+	{
+		line_renderer->DrawLine(float2(0, 50 * i), float2(1000, 50 * i), float3(i * 0.01f, 1, 0));
+	}
 
+	test->Finish();
 
 
 
