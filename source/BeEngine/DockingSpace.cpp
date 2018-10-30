@@ -30,13 +30,11 @@ void DockingSpace::DrawEditor()
 
 	float2 docking_pos = float2(margins_left_up.x - 2, margins_left_up.y - 5);
 	float2 docking_size = float2(window_size.x - margins_right_down.x + 0 - margins_left_up.x,
-		window_size.y - margins_right_down.y + 25 - margins_left_up.y);
+		window_size.y - margins_right_down.y + 5 - margins_left_up.y);
 
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
 		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
-	ImGui::SetNextWindowPos(ImVec2(docking_pos.x, docking_pos.y));
-	ImGui::SetNextWindowSize(ImVec2(docking_size.x, docking_size.y));
 
 	ImGui::PushFont(font);
 

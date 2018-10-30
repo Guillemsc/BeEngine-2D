@@ -13,6 +13,7 @@
 #include "ProgressWindow.h"
 #include "ProfilerWindow.h"
 #include "ModuleInput.h"
+#include "ResourcesWindow.h"
 #include "imgui_docking.h"
 
 ModuleEditor::ModuleEditor()
@@ -42,8 +43,10 @@ bool ModuleEditor::Awake()
 	project_manager = (ProjectManager*)AddEditorElement(new ProjectManager(), true);
 	progress_window = (ProgressWindow*)AddEditorElement(new ProgressWindow(), true);
 
+
 	scene_window = AddEditorWindow("Scene", new SceneWindow());
 	AddEditorWindow("Profiler", new ProfilerWindow());
+	AddEditorWindow("Resources", new ResourcesWindow());
 
 	LoadDockingProfiles();
 
@@ -218,9 +221,9 @@ void ModuleEditor::DestroyAllEditorWindows()
 void ModuleEditor::DrawEditorWindows()
 {
 	prof_editor_windows_draw->Start();
-
+	
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
-	{		
+	{
 		(*it)->prof_draw->Start();
 
 		ImGuiWindowFlags flags = 0;
@@ -234,13 +237,15 @@ void ModuleEditor::DrawEditorWindows()
 			(*it)->window_pos = float2(win_pos.x, win_pos.y);
 			(*it)->window_size = float2(win_size.x, win_size.y);
 
-			(*it)->DrawEditor();
+			if(draw_editor)
+				(*it)->DrawEditor();
 		}
 
 		ImGui::EndDock();
 
 		(*it)->prof_draw->Finish();
 	}
+	
 
 	prof_editor_windows_draw->Finish();
 }
@@ -280,6 +285,11 @@ ImFont* ModuleEditor::GetLoadedFont(const char * name)
 	ret = editor_fonts[name];
 
 	return ret;
+}
+
+void ModuleEditor::SetDrawEditor(bool set)
+{
+	draw_editor = set;
 }
 
 void ModuleEditor::ImGuiInit()

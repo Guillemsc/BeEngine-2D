@@ -13,7 +13,7 @@
 #pragma comment (lib, "Devil/libx86/ILU.lib")
 #pragma comment (lib, "Devil/libx86/ILUT.lib")
 
-ResourceTextureLoader::ResourceTextureLoader() : ResourceLoader(ResourceType::TEXTURE)
+ResourceTextureLoader::ResourceTextureLoader() : ResourceLoader(ResourceType::TEXTURE, "Textures")
 {
 	ilInit();
 	iluInit();
@@ -192,7 +192,11 @@ bool ResourceTextureLoader::IsAssetOnLibrary(DecomposedFilePath d_filepath, std:
 		std::string resource_filepath = library_path + resource;
 
 		if (App->file_system->FileExists(resource_filepath.c_str()))
+		{
+			library_files_used.push_back(resource_filepath);
+
 			ret = true;
+		}
 
 		App->json->UnloadJSON(doc);
 	}

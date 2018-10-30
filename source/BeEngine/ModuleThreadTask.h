@@ -14,11 +14,7 @@ class ThreadTask
 public:
 	ThreadTask();
 
-	virtual void Start() {};
-	virtual void Update() {};
-	virtual void Finish() {};
-
-	void FinishTask();
+	virtual void DoTask() {};
 
 private:
 	bool finished = false;

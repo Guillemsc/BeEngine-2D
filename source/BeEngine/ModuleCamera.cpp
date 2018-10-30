@@ -78,7 +78,7 @@ void ModuleCamera::UpdateEditorCameraInput()
 			cam_speed = camera_speed / 2 * App->GetDT();
 
 		// Mouse motion ----------------
-		if (mouse_movement)
+		if (1)
 		{
 			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 			{
@@ -116,13 +116,16 @@ void ModuleCamera::UpdateEditorCameraInput()
 				last_mouse_position = mouse_pos;
 			}
 
-			if (App->input->GetMouseWheel() == 1)
+			if (App->editor->scene_window->GetMouseInsideWindow())
 			{
-				editor_camera->SetSize(editor_camera->size - (100 * App->GetDT()));
-			}
-			else if (App->input->GetMouseWheel() == -1)
-			{
-				editor_camera->SetSize(editor_camera->size + (100 * App->GetDT()));
+				if (App->input->GetMouseWheel() == 1)
+				{
+					editor_camera->SetSize(editor_camera->size - (100 * App->GetDT()));
+				}
+				else if (App->input->GetMouseWheel() == -1)
+				{
+					editor_camera->SetSize(editor_camera->size + (100 * App->GetDT()));
+				}
 			}
 
 			if (App->input->GetKeyRepeat(SDL_SCANCODE_W))

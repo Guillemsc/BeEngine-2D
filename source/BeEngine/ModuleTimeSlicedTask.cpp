@@ -49,6 +49,8 @@ bool ModuleTimeSlicedTask::PostUpdate()
 {
 	bool ret = true;
 
+	DeleteTimeSlicedFinishedTasks();
+
 	return ret;
 }
 
@@ -94,9 +96,14 @@ void ModuleTimeSlicedTask::FinishTimeSlicedTask(TimeSlicedTask * task)
 
 void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 {
+	bool draw_editor = true;
+
 	for (std::vector<TimeSlicedTask*>::iterator it = running_tasks.begin(); it != running_tasks.end();)
 	{
 		TimeSlicedTask* curr = (*it);
+
+		if (curr->GetMode() == TimeSlicedTaskType::FOCUS)
+			draw_editor = false;
 
 		if (!curr->finished)
 		{
@@ -124,17 +131,32 @@ void ModuleTimeSlicedTask::UpdateTimeSlicedTasks()
 		}
 		else
 		{
-			curr->Finish();
-
-			if (curr->on_finish)
-				curr->on_finish(curr);
-
-			App->event->SendEvent(new EventTimeSlicedTaskFinished(curr));
-
-			RELEASE(*it);
+			finished_tasks.push_back(curr);
 
 			it = running_tasks.erase(it);
 		}
+	}
+
+	App->editor->SetDrawEditor(draw_editor);
+}
+
+void ModuleTimeSlicedTask::DeleteTimeSlicedFinishedTasks()
+{
+	for (std::vector<TimeSlicedTask*>::iterator it = finished_tasks.begin(); it != finished_tasks.end();)
+	{
+		TimeSlicedTask* curr = (*it);
+		
+		curr->Finish();
+
+		if (curr->on_finish)
+			curr->on_finish(curr);
+
+		App->event->SendEvent(new EventTimeSlicedTaskFinished(curr));
+
+		RELEASE(*it);
+
+		it = finished_tasks.erase(it);
+		
 	}
 }
 

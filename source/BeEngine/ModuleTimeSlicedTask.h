@@ -68,10 +68,12 @@ public:
 
 private:
 	void UpdateTimeSlicedTasks();
+	void DeleteTimeSlicedFinishedTasks();
 	void UpdateEditor();
 
 private:
 	std::vector<TimeSlicedTask*> running_tasks;
+	std::vector<TimeSlicedTask*> finished_tasks;
 };
 
 #endif // !__MODULE_TIME_SLICED_TASK_H__

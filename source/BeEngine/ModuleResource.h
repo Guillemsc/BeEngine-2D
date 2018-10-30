@@ -14,6 +14,7 @@ class Event;
 class ModuleResource : public Module
 {
 	friend class CheckAssetsErrorsTimeSlicedTask;
+	friend class LoadAssetsResourcesTimeSlicedTask;
 
 public:
 	ModuleResource();
@@ -44,6 +45,8 @@ public:
 	bool DestroyResource(std::string unique_id, ResourceType type);
 	bool DestroyResource(std::string unique_id);
 	bool DestroyResource(Resource* res);
+
+	std::map<ResourceType, ResourceLoader*> GetLoaders() const;
 
 public:
 	bool LoadFileToEngine(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
@@ -81,6 +84,9 @@ private:
 	std::string current_assets_folder;
 	std::string assets_folder;
 	std::string library_folder;
+
+	CheckAssetsErrorsTimeSlicedTask* check_assets_time_sliced = nullptr;
+	LoadAssetsResourcesTimeSlicedTask* loading_assets_resources_time_sliced = nullptr;
 };
 
 class CheckAssetsErrorsTimeSlicedTask : public TimeSlicedTask
@@ -126,6 +132,22 @@ private:
 	int all_assets_to_reimport_count = 0;
 
 	CheckErrorsState state = CheckErrorsState::CHECK_ASSET_FILES;
+};
+
+class LoadAssetsResourcesTimeSlicedTask : public TimeSlicedTask
+{
+public:
+	LoadAssetsResourcesTimeSlicedTask(ModuleResource* module_proj);
+
+	void Start();
+	void Update();
+	void Finish();
+
+private:
+	ModuleResource * module_proj = nullptr;
+
+	std::vector<std::string> asset_files_to_load;
+	int all_asset_files_to_load_count = 0;
 };
 
 #endif // !__MODULE_RESOURCE_H__

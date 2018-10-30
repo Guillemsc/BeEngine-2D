@@ -7,6 +7,7 @@
 #include "Functions.h"
 #include "tinyfiledialogs.h"
 
+
 FileSystem::FileSystem() : Module()
 {
 
@@ -26,8 +27,6 @@ bool FileSystem::Awake()
 bool FileSystem::Start()
 {
 	bool ret = true;
-
-	FolderWatch(assets_path.c_str(), Changed, true);
 
 	return ret;
 }
@@ -58,59 +57,7 @@ bool FileSystem::CleanUp()
 {
 	bool ret = true;
 
-	UnwatchAllFolders();
-
 	return ret;
-}
-
-std::string FileSystem::GetAssetsPath()
-{
-	return assets_path;
-}
-
-std::string FileSystem::GetLibraryPath()
-{
-	return library_path;
-}
-
-std::string FileSystem::GetLibraryMeshPath()
-{
-	return library_mesh_path;
-}
-
-std::string FileSystem::GetLibraryPrefabPath()
-{
-	return library_prefab_path;
-}
-
-std::string FileSystem::GetLibraryTexturePath()
-{
-	return library_texture_path;
-}
-
-std::string FileSystem::GetLibraryScenePath()
-{
-	return library_scene_path;
-}
-
-std::string FileSystem::GetLibraryShadersPath()
-{
-	return library_shaders_path;
-}
-
-std::string FileSystem::GetSettingsPath()
-{
-	return settings_path;
-}
-
-std::string FileSystem::GetLookingPath()
-{
-	return looking_path;
-}
-
-void FileSystem::SetLookingPath(const std::string& new_path)
-{
-	looking_path = new_path;
 }
 
 DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
@@ -842,19 +789,19 @@ std::vector<std::string> FileSystem::GetFilesInPathAndChilds(const char * path)
 
 		while (folders_to_look.size() > 0)
 		{
-			//std::vector<std::string>::iterator fol_it = folders_to_look.begin();
+			std::vector<std::string>::iterator fol_it = folders_to_look.begin();
 
-			//std::vector<std::string> files = App->file_system->GetFilesInPath((*fol_it).c_str());
+			std::vector<std::string> files = App->file_system->GetFilesInPath((*fol_it).c_str());
 
-			//if(files.size() > 0)
-			//	ret.insert(ret.begin(), files.begin(), files.end());
+			if(files.size() > 0)
+				ret.insert(ret.begin(), files.begin(), files.end());
 
-			//std::vector<std::string> new_directories = App->file_system->GetFoldersInPath((*fol_it).c_str());
+			std::vector<std::string> new_directories = App->file_system->GetFoldersInPath((*fol_it).c_str());
 
-			//if(new_directories.size() > 0)
-			//	folders_to_look.insert(folders_to_look.end(), new_directories.begin(), new_directories.end());
+			if(new_directories.size() > 0)
+				folders_to_look.insert(folders_to_look.end(), new_directories.begin(), new_directories.end());
 
-			//folders_to_look.erase(folders_to_look.begin());
+			folders_to_look.erase(folders_to_look.begin());
 		}
 	}
 
@@ -896,11 +843,6 @@ Folder FileSystem::GetFoldersRecursive(const char * path)
 	}
 
 	return ret;
-}
-
-void FileSystem::UnwatchAllFolders()
-{
-
 }
 
 bool FileSystem::FileExists(const char * path, const char * name, const char * extension)
@@ -1024,24 +966,11 @@ std::string FileSystem::FileRenameOnNameCollision(const char * path, const char*
 	return ret;
 }
 
-bool FileSystem::FolderWatch(const char * path, const std::function<void(const std::experimental::filesystem::path&)> &callback, bool watch_subfolders)
+WatchFolderThreadTask::WatchFolderThreadTask(const char * folder_to_watch)
 {
-	bool ret = false;
-
-	if (FolderExists(path))
-	{
-	/*	WatchingFloder wfolder;
-		wfolder.folder = path;
-		wfolder.last_time = std::experimental::filesystem::last_write_time(path);
-		watching_folders.push_back(wfolder);*/
-	}
-
-	return ret;
+	folder = folder_to_watch;
 }
 
-void Changed(const std::experimental::filesystem::path & path)
+void WatchFolderThreadTask::DoTask()
 {
-	INTERNAL_LOG(" -----------------------enter-----------------------");
-	int i = 0;
-	++i;
 }

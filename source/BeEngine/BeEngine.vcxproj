@@ -101,8 +101,10 @@
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DockingSpace.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="FileWatch.h" />
     <ClInclude Include="FBO.h" />
+    <ClInclude Include="FileWatcher\FileWatcher.h" />
+    <ClInclude Include="FileWatcher\FileWatcherImpl.h" />
+    <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="imgui_docking.h" />
     <ClInclude Include="ModuleProject.h" />
@@ -112,6 +114,7 @@
     <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="ResourcesWindow.h" />
     <ClInclude Include="ResourceTexture.h" />
     <ClInclude Include="ResourceTextureLoader.h" />
     <ClInclude Include="SceneWindow.h" />
@@ -219,6 +222,8 @@
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DockingSpace.cpp" />
     <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="FileWatcher\FileWatcher.cpp" />
+    <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
@@ -228,6 +233,7 @@
     <ClCompile Include="ModuleResource.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="ResourcesWindow.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
     <ClCompile Include="ResourceTextureLoader.cpp" />
     <ClCompile Include="SceneWindow.cpp" />

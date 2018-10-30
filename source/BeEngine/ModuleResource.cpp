@@ -5,6 +5,7 @@
 #include "ResourceTextureLoader.h"
 #include "ModuleEvent.h"
 #include "ModuleProject.h"
+#include "ModuleEditor.h"
 
 ModuleResource::ModuleResource()
 {
@@ -20,6 +21,7 @@ bool ModuleResource::Awake()
 	bool ret = true;
 
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
 
 	texture_loader = (ResourceTextureLoader*)AddLoader(new ResourceTextureLoader());
 
@@ -114,7 +116,14 @@ void ModuleResource::DestroyAllLoaders()
 
 ResourceLoader* ModuleResource::GetLoader(ResourceType type)
 {
-	return loaders[type];
+	ResourceLoader* ret = nullptr;
+
+	std::map<ResourceType, ResourceLoader*>::iterator it = loaders.find(type);
+
+	if (it != loaders.end())
+		ret = it->second;
+
+	return ret;
 }
 
 void ModuleResource::CreateLibraryPaths()
@@ -146,8 +155,25 @@ void ModuleResource::OnEvent(Event* ev)
 
 			CreateLibraryPaths();
 
+			LoadFileToEngine("C:\\Users\\guillemsc1\\Desktop\\di.jpg");
+
+			check_assets_time_sliced = new CheckAssetsErrorsTimeSlicedTask(this);
+			App->time_sliced->StartTimeSlicedTask(check_assets_time_sliced);
+
 			break;
 		}
+	case EventType::TIME_SLICED_TASK_FINISHED:
+	{		
+		EventTimeSlicedTaskFinished* th_sliced = (EventTimeSlicedTaskFinished*)ev;
+
+		if (check_assets_time_sliced == th_sliced->GetTask())
+		{
+			loading_assets_resources_time_sliced = new LoadAssetsResourcesTimeSlicedTask(this);
+			App->time_sliced->StartTimeSlicedTask(loading_assets_resources_time_sliced);
+		}
+		
+		break;
+	}
 	default:
 		break;
 	}
@@ -155,7 +181,7 @@ void ModuleResource::OnEvent(Event* ev)
 
 ResourceType ModuleResource::AssetExtensionToType(const char * extension)
 {
-	ResourceType ret;
+	ResourceType ret = ResourceType::UNKWNOWN;
 
 	for (std::map<ResourceType, ResourceLoader*>::iterator it = loaders.begin(); it != loaders.end(); ++it)
 	{
@@ -171,7 +197,7 @@ ResourceType ModuleResource::AssetExtensionToType(const char * extension)
 
 ResourceType ModuleResource::LibraryExtensionToType(const char * extension)
 {
-	ResourceType ret;
+	ResourceType ret = ResourceType::UNKWNOWN;
 
 	for (std::map<ResourceType, ResourceLoader*>::iterator it = loaders.begin(); it != loaders.end(); ++it)
 	{
@@ -291,6 +317,11 @@ bool ModuleResource::DestroyResource(Resource* res)
 	}
 
 	return ret;
+}
+
+std::map<ResourceType, ResourceLoader*> ModuleResource::GetLoaders() const
+{
+	return loaders;
 }
 
 bool ModuleResource::LoadFileToEngine(const char * filepath, std::vector<Resource*>& resources)
@@ -519,7 +550,7 @@ bool ModuleResource::ExportResourceToLibrary(Resource * resource)
 	return ret;
 }
 
-CheckAssetsErrorsTimeSlicedTask::CheckAssetsErrorsTimeSlicedTask(ModuleResource * module_proj) : TimeSlicedTask(TimeSlicedTaskType::FOCUS)
+CheckAssetsErrorsTimeSlicedTask::CheckAssetsErrorsTimeSlicedTask(ModuleResource * module_proj) : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 20)
 {
 	
 }
@@ -562,7 +593,9 @@ void CheckAssetsErrorsTimeSlicedTask::CheckAssetFiles()
 {
 	if (!asset_files_to_check.empty())
 	{
-		float progress = 100 - ((float)all_asset_files.size() / 100.0f) * asset_files_to_check.size();
+		float progress = 100 - (100.0f / (float)all_asset_files.size()) * (float)asset_files_to_check.size();
+		progress *= 0.25f;
+		progress += 0;
 		SetPercentageProgress(progress);
 		SetDescription("Checking asset files");
 
@@ -605,7 +638,9 @@ void CheckAssetsErrorsTimeSlicedTask::CheckAssetMetaFiles()
 {
 	if (!asset_metas_to_check.empty())
 	{
-		float progress = 100 - ((float)all_asset_metas_to_check_count / 100.0f) * asset_metas_to_check.size();
+		float progress = 100 - (100.0f / (float)all_asset_metas_to_check_count) * (float)asset_metas_to_check.size();
+		progress *= 0.25f;
+		progress += 25;
 		SetPercentageProgress(progress);
 		SetDescription("Checking asset meta files");
 
@@ -653,7 +688,9 @@ void CheckAssetsErrorsTimeSlicedTask::DeleteUnnecessaryFiles()
 {
 	if (!library_files_to_check.empty())
 	{
-		float progress = 100 - ((float)all_library_files_to_check_count / 100.0f) * library_files_to_check.size();
+		float progress = 100 - (100.0f / (float)all_library_files_to_check_count) * (float)library_files_to_check.size();
+		progress *= 0.25f;
+		progress += 50;
 		SetPercentageProgress(progress);
 		SetDescription("Deleting library garbage");
 
@@ -687,7 +724,9 @@ void CheckAssetsErrorsTimeSlicedTask::ReimportAssets()
 {
 	if (!assets_to_reimport.empty())
 	{
-		float progress = 100 - ((float)all_assets_to_reimport_count / 100.0f) * assets_to_reimport.size();
+		float progress = 100 - (100.0f / (float)all_assets_to_reimport_count) * (float)assets_to_reimport.size();
+		progress *= 0.25f;
+		progress += 75;
 		SetPercentageProgress(progress);
 		SetDescription("Reimporting assets");
 
@@ -703,4 +742,41 @@ void CheckAssetsErrorsTimeSlicedTask::ReimportAssets()
 
 		FinishTask();
 	}
+}
+
+LoadAssetsResourcesTimeSlicedTask::LoadAssetsResourcesTimeSlicedTask(ModuleResource * _module_proj) : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 10)
+{
+	module_proj = _module_proj;
+}
+
+void LoadAssetsResourcesTimeSlicedTask::Start()
+{
+	asset_files_to_load = App->file_system->GetFilesInPathAndChilds(module_proj->GetAssetsPath().c_str());
+	all_asset_files_to_load_count = asset_files_to_load.size();
+}
+
+void LoadAssetsResourcesTimeSlicedTask::Update()
+{
+	if (!asset_files_to_load.empty())
+	{
+		float progress = 100 - (100.0f / (float)all_asset_files_to_load_count) * (float)asset_files_to_load.size();
+		SetPercentageProgress(progress);
+		SetDescription("Loading resources");
+
+		std::string curr_file = *asset_files_to_load.begin();
+
+		module_proj->ImportAssetFromLibrary(curr_file.c_str());
+
+		asset_files_to_load.erase(asset_files_to_load.begin());
+	}
+	else
+	{
+		SetPercentageProgress(100.0f);
+		FinishTask();
+	}
+}
+
+void LoadAssetsResourcesTimeSlicedTask::Finish()
+{
+
 }

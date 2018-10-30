@@ -61,9 +61,6 @@
     <Filter Include="Sources\7. ThirdParties ============\tinyfile">
       <UniqueIdentifier>{f5f16706-eac0-4e6b-8184-32e70f3e036c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\7. ThirdParties ============\FileWatch">
-      <UniqueIdentifier>{ba1d51e3-f9e7-4b87-8e5d-e3893b9f1e6c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\3. Editor ================\Windows">
       <UniqueIdentifier>{83e38b5a-1583-4376-8413-91eff97cc1bb}</UniqueIdentifier>
     </Filter>
@@ -72,6 +69,9 @@
     </Filter>
     <Filter Include="Sources\4. Resources =============\Loaders">
       <UniqueIdentifier>{85e9095d-cde4-4525-8480-02117404a4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\7. ThirdParties ============\FileWatcher">
+      <UniqueIdentifier>{91e25aad-c55c-4c9a-a2d0-224cc5d19340}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -321,9 +321,6 @@
     <ClInclude Include="tinyfiledialogs.h">
       <Filter>Sources\7. ThirdParties ============\tinyfile</Filter>
     </ClInclude>
-    <ClInclude Include="FileWatch.h">
-      <Filter>Sources\7. ThirdParties ============\FileWatch</Filter>
-    </ClInclude>
     <ClInclude Include="Profiler.h">
       <Filter>Sources\6. Utilities ===============</Filter>
     </ClInclude>
@@ -425,6 +422,18 @@
     </ClInclude>
     <ClInclude Include="ResourceTexture.h">
       <Filter>Sources\4. Resources =============</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcesWindow.h">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="FileWatcher\FileWatcher.h">
+      <Filter>Sources\7. ThirdParties ============\FileWatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="FileWatcher\FileWatcherImpl.h">
+      <Filter>Sources\7. ThirdParties ============\FileWatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="FileWatcher\FileWatcherWin32.h">
+      <Filter>Sources\7. ThirdParties ============\FileWatcher</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -676,6 +685,15 @@
     </ClCompile>
     <ClCompile Include="ResourceTexture.cpp">
       <Filter>Sources\4. Resources =============</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesWindow.cpp">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="FileWatcher\FileWatcher.cpp">
+      <Filter>Sources\7. ThirdParties ============\FileWatcher</Filter>
+    </ClCompile>
+    <ClCompile Include="FileWatcher\FileWatcherWin32.cpp">
+      <Filter>Sources\7. ThirdParties ============\FileWatcher</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

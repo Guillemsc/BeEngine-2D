@@ -57,7 +57,7 @@ void ProfilerWindow::DrawProfileRecursive(Profile * prof, int& draw_counter, boo
 		if (prof->GetChildProfilesCount() == 0)
 			flags |= ImGuiTreeNodeFlags_Leaf;
 
-		ImGui::PushID(draw_counter);
+		ImGui::PushID(prof->GetName());
 
 		float frame_data = 0.0f;
 		if (!profiles_update)

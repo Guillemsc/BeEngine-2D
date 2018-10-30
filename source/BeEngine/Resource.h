@@ -5,6 +5,7 @@
 
 enum ResourceType
 {
+	UNKWNOWN,
 	TEXTURE,
 	SHADER,
 };
@@ -26,7 +27,7 @@ public:
 	virtual void CleanUp();
 
 private:
-	ResourceType type;
+	ResourceType type = ResourceType::UNKWNOWN;
 
 	std::string uid;
 };

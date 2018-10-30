@@ -93,6 +93,8 @@ public:
 
 	ImFont* GetLoadedFont(const char* name);
 
+	void SetDrawEditor(bool set);
+
 	bool SetCurrentDockingProfile(const char* set, bool load = true);
 	bool SaveCurrentDockingProfile();
 	const char* GetCurrentDockingProfile() const;
@@ -148,6 +150,8 @@ private:
 
 	Profile* prof_editor_windows_draw = nullptr;
 	Profile* prof_editor_elements_draw = nullptr;
+
+	bool draw_editor = true;
 
 	bool demo_window_open = true;
 };

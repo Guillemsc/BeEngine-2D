@@ -4,6 +4,7 @@
 #include "Module.h"
 #include <filesystem>
 #include <functional>
+#include "ModuleThreadTask.h"
 
 struct DecomposedFilePath
 {
@@ -65,20 +66,6 @@ public:
 	bool FolderExists(const char* path);
 	std::string FileRenameOnNameCollision(const char* path, const char* name, const char* extension);
 
-	bool FolderWatch(const char * path, const std::function<void(const std::experimental::filesystem::path&)> &callback, bool watch_subfolders = false);
-
-	std::string GetAssetsPath();
-	std::string GetLibraryPath();
-	std::string GetLibraryMeshPath();
-	std::string GetLibraryPrefabPath();
-	std::string GetLibraryTexturePath();
-	std::string GetLibraryScenePath();
-	std::string GetLibraryShadersPath();
-	std::string GetSettingsPath();
-
-	std::string GetLookingPath();
-	void SetLookingPath(const std::string & new_path);
-
 	DecomposedFilePath DecomposeFilePath(std::string file_path);
 
 	std::string SelectFolderDialog(bool& canceled);
@@ -110,25 +97,18 @@ private:
 	int GetFileNameNumber(const char* filename);
 	std::string SetFileNameNumber(const char* filename, int number);
 
-
 	Folder GetFoldersRecursive(const char* path);
-	void UnwatchAllFolders();
-
-private:
-	std::string assets_path;
-	std::string library_path;
-	std::string library_mesh_path;
-	std::string library_prefab_path;
-	std::string library_texture_path;
-	std::string library_scene_path;
-	std::string library_shaders_path;
-	std::string settings_path;
-
-	std::string looking_path;
-
-	std::vector<WatchingFloder> watching_folders;
 };
 
-void Changed(const std::experimental::filesystem::path& path);
+class WatchFolderThreadTask : public ThreadTask
+{
+public:
+	WatchFolderThreadTask(const char* folder_to_watch);
+
+	void DoTask();
+
+private:
+	std::string folder;
+};
 
 #endif // !__MODULE_FILE_SYSTEM_H__

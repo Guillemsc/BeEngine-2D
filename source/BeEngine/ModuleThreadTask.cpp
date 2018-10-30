@@ -89,12 +89,7 @@ bool ModuleThreadTask::ThreadFunction(ThreadTask * task)
 {
 	if (task != nullptr)
 	{
-		task->Start();
-
-		while (!task->finished)
-			task->Update();
-
-		task->Finish();
+		task->DoTask();
 
 		return true;
 	}
@@ -147,9 +142,4 @@ bool Thread::GetFinished()
 
 ThreadTask::ThreadTask()
 {
-}
-
-void ThreadTask::FinishTask()
-{
-	finished = true;
 }

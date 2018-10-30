@@ -2,14 +2,20 @@
 #include "ResourceLoader.h"
 #include "Functions.h"
 
-ResourceLoader::ResourceLoader(ResourceType to_load_type)
+ResourceLoader::ResourceLoader(ResourceType to_load_type, std::string to_load_name)
 {
 	resources_to_load_type = to_load_type;
+	resources_to_load_name = to_load_name;
 }
 
 ResourceType ResourceLoader::GetResourcesToLoadType() const
 {
 	return resources_to_load_type;
+}
+
+std::string ResourceLoader::GetResourcesToLoadName() const
+{
+	return resources_to_load_name;
 }
 
 void ResourceLoader::AddAssetExtensionToLoad(const char * extension)

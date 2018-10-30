@@ -10,12 +10,13 @@
 class ResourceLoader 
 {
 public:
-	ResourceLoader(ResourceType resources_to_load_type);
+	ResourceLoader(ResourceType resources_to_load_type, std::string resources_to_load_name);
 
 	virtual void Start() {};
 	virtual void CleanUp() {};
 
 	ResourceType GetResourcesToLoadType() const;
+	std::string GetResourcesToLoadName() const;
 
 	void AddAssetExtensionToLoad(const char* extension);
 	void AddLibraryExtensionToLoad(const char* extension);
@@ -62,6 +63,7 @@ private:
 
 protected:
 	ResourceType resources_to_load_type;
+	std::string  resources_to_load_name;
 
 	std::map<std::string, Resource*> resources;
 
