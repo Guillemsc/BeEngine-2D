@@ -1,4 +1,4 @@
-#include "App.h"
+﻿#include "App.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
 #include "Globals.h"
@@ -11,6 +11,8 @@
 #include "ImGuizmo.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include "LineGuizmoRenderer.h"
+#include "VertexBuffer.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -126,6 +128,8 @@ bool ModuleRenderer::Awake()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glDisable(GL_CULL_FACE);
+
+		line_renderer = new LineGuizmoRenderer();
 	}
 
 	return ret;
@@ -135,6 +139,8 @@ bool ModuleRenderer::Start()
 {
 	bool ret = true;
 
+	line_renderer->Start();
+
 	// Shaders testing -----------------------
 
 	uint vao = GenVertexArrayBuffer();
@@ -143,22 +149,35 @@ bool ModuleRenderer::Start()
 	uint vbo = GenBuffer();
 	BindArrayBuffer(vbo);
 
-	float g_vertex_buffer_data[] =
-	{
-		0, 0, 0,
-		1000.0f, 0, 0.0f,
-		1000.0f, 1000.0f, 0.0f,
-	};
+	VertexBuffer vb;
+	vb.AddFloat3(float3(0, 0, 1));
 
-	LoadArrayToVRAM(sizeof(g_vertex_buffer_data), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
+	vb.AddFloat3(float3(0, 0, 1));
+
+	vb.AddFloat3(float3(1000, 0, 0));
+
+	vb.AddFloat3(float3(1, 0, 0));
+
+	//vb.AddFloat3(float3(2000.0f, 0, 0));
+
+	//vb.AddFloat3(float3(1, 1, 1));
+
+	//vb.AddFloat3(float3(3000.0f, 0, 0));
+
+	//vb.AddFloat3(float3(1, 1, 1));
+
+	//vb.AddFloat3(float3(1000.0f, 1000.0f, 0));
+
+	LoadArrayToVRAM(vb.GetSize(), vb.GetBuffer(), GL_STATIC_DRAW);
 
 	const char* user_vertex_code = 
 		"#version 330 core\n \
+		layout(location = 1) in vec3 col;\n \
 		out vec3 oColour;	\
 		uniform vec3 Colour;\
 		void UserShader()\
 		{\
-			oColour = Colour;\
+			oColour = col;\
 		}";
 
 	const char* user_fragment_code = 		
@@ -271,6 +290,10 @@ bool ModuleRenderer::PostUpdate()
 
 	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
+	BindArrayBuffer(1);
+
+	glDisable(GL_CULL_FACE);
+
 	float4x4 model = float4x4::identity;
 	model[0][3] = 1;
 	model[1][3] = 1;
@@ -279,20 +302,24 @@ bool ModuleRenderer::PostUpdate()
 	sp->UseProgram();
 
 	ShaderProgramParameters par;
-	par.SetVector3("Colour", float3(0.0f, 0.45f, 0.8f));
+	par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
 	sp->SetProgramParameters(par);
 
 	GLint posAttrib = glGetAttribLocation(sp->GetID(), "position");
 	EnableVertexAttributeArray(posAttrib);
-	SetVertexAttributePointer(posAttrib, 3, 0, 0);
+	SetVertexAttributePointer(posAttrib, 3, 6, 0);
+
+	GLint posAttribCol = glGetAttribLocation(sp->GetID(), "col");
+	EnableVertexAttributeArray(posAttribCol);
+	SetVertexAttributePointer(posAttribCol, 3, 6, 3);
 
 	SetUniformMatrix(sp->GetID(), "Model", model.Transposed().ptr());
 	SetUniformMatrix(sp->GetID(), "View", App->camera->GetEditorCamera()->GetOpenGLViewMatrix().ptr());
 	SetUniformMatrix(sp->GetID(), "Projection", App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix().ptr());
 
-	BindArrayBuffer(1);
+	glLineWidth(25);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_LINES, 0, 2);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
@@ -301,6 +328,7 @@ bool ModuleRenderer::PostUpdate()
 	}
 
 	DisableVertexAttributeArray(posAttrib);
+	DisableVertexAttributeArray(posAttribCol);
 
 	App->camera->GetEditorCamera()->Unbind();
 
@@ -756,7 +784,7 @@ void ModuleRenderer::RenderStorageMultisample(uint samples, uint width, uint hei
 	}
 }
 
-void ModuleRenderer::LoadArrayToVRAM(uint size, float * values, GLenum type) const
+void ModuleRenderer::LoadArrayToVRAM(uint size, const float * values, GLenum type) const
 {
 	glBufferData(GL_ARRAY_BUFFER, size, values, type);
 
@@ -1004,6 +1032,32 @@ uint ModuleRenderer::CreateFragmentShader(const char * source, std::string& comp
 	}
 
 	return fragmentShader;
+}
+
+uint ModuleRenderer::CreateGeometryShader(const char * source, std::string & compilation_error_msg)
+{
+	GLuint geometryShader = 0;
+
+	geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+
+	glShaderSource(geometryShader, 1, &source, NULL);
+	glCompileShader(geometryShader);
+
+	GLint success;
+	GLchar infoLog[512];
+	glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &success);
+
+	if (success == 0)
+	{
+		glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
+		INTERNAL_LOG("Shader compilation error:\n %s", infoLog);
+		glDeleteShader(geometryShader);
+
+		compilation_error_msg = infoLog;
+		geometryShader = 0;
+	}
+
+	return geometryShader;
 }
 
 void ModuleRenderer::DeleteShader(uint shader_id)

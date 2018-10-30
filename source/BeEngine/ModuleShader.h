@@ -13,7 +13,8 @@ class ShaderProgramParameters;
 enum ShaderType
 {
 	VERTEX,
-	FRAGMENT
+	FRAGMENT,
+	GEOMETRY,
 };
 
 class Shader
@@ -66,6 +67,7 @@ public:
 
 	std::vector<Shader*> GetVertexShaders() const;
 	std::vector<Shader*> GetFragmentShaders() const;
+	std::vector<Shader*> GetGeometryShaders() const;
 
 	bool GetLinked() const;
 	uint GetID() const;
@@ -79,6 +81,7 @@ private:
 
 	std::vector<Shader*> vertex_shaders;
 	std::vector<Shader*> fragment_shaders;
+	std::vector<Shader*> geometry_shaders;
 
 	bool linked = false;
 };

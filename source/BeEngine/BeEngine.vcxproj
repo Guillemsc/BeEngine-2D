@@ -107,6 +107,8 @@
     <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="imgui_docking.h" />
+    <ClInclude Include="ModuleGameObject.h" />
+    <ClInclude Include="LineGuizmoRenderer.h" />
     <ClInclude Include="ModuleProject.h" />
     <ClInclude Include="ProfilerWindow.h" />
     <ClInclude Include="ProgressWindow.h" />
@@ -214,6 +216,7 @@
     <ClInclude Include="Time\Clock.h" />
     <ClInclude Include="tinyfiledialogs.h" />
     <ClInclude Include="ToolsBar.h" />
+    <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm\GJK.cpp" />
@@ -226,6 +229,8 @@
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
+    <ClCompile Include="ModuleGameObject.cpp" />
+    <ClCompile Include="LineGuizmoRenderer.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
     <ClCompile Include="ProfilerWindow.cpp" />
     <ClCompile Include="ProgressWindow.cpp" />
@@ -302,6 +307,7 @@
     <ClCompile Include="Time\Clock.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />
     <ClCompile Include="ToolsBar.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico" />

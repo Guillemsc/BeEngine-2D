@@ -13,15 +13,6 @@
     <Filter Include="Sources\3. Editor ================">
       <UniqueIdentifier>{1b8b97ed-0dc8-445e-8a4a-41b9de1e945f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\4. Resources =============">
-      <UniqueIdentifier>{75424721-2dd7-49d4-966b-8416936704ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\5. GameObjects ===========">
-      <UniqueIdentifier>{99ae2367-b349-443b-94d3-f8aebcab11e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\6. Utilities ===============">
-      <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\7. ThirdParties ============">
       <UniqueIdentifier>{d707505e-29f6-45fb-a5e8-eca927b5eed6}</UniqueIdentifier>
     </Filter>
@@ -67,11 +58,26 @@
     <Filter Include="Sources\3. Editor ================\Elements">
       <UniqueIdentifier>{74765075-780e-49e6-9458-564271a36b10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\4. Resources =============\Loaders">
-      <UniqueIdentifier>{85e9095d-cde4-4525-8480-02117404a4df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\7. ThirdParties ============\FileWatcher">
       <UniqueIdentifier>{91e25aad-c55c-4c9a-a2d0-224cc5d19340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\5. Resources =============">
+      <UniqueIdentifier>{75424721-2dd7-49d4-966b-8416936704ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\5. Resources =============\Loaders">
+      <UniqueIdentifier>{85e9095d-cde4-4525-8480-02117404a4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\6. GameObjects ===========">
+      <UniqueIdentifier>{99ae2367-b349-443b-94d3-f8aebcab11e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\7. Utilities ===============">
+      <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\4. Rendering =============">
+      <UniqueIdentifier>{4fab38b3-ff53-4995-b7de-9e6d8857ecc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\4. Rendering =============\Renderers">
+      <UniqueIdentifier>{0f41f913-277f-41fc-9620-72d6b21f30cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,19 +91,19 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
     <ClInclude Include="Functions.h">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClInclude>
     <ClInclude Include="PerfTimer.h">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClInclude>
     <ClInclude Include="Parson\parson.h">
       <Filter>Sources\7. ThirdParties ============\Parson</Filter>
     </ClInclude>
     <ClInclude Include="GeometryMath.h">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClInclude>
     <ClInclude Include="mmgr\mmgr.h">
       <Filter>Sources\7. ThirdParties ============\mmgr</Filter>
@@ -112,10 +118,10 @@
       <Filter>Sources\7. ThirdParties ============\gpudetect</Filter>
     </ClInclude>
     <ClInclude Include="FBO.h">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClInclude>
     <ClInclude Include="Cursor.h">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClInclude>
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Sources\2. Modules ==============</Filter>
@@ -322,7 +328,7 @@
       <Filter>Sources\7. ThirdParties ============\tinyfile</Filter>
     </ClInclude>
     <ClInclude Include="Profiler.h">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClInclude>
     <ClInclude Include="ModuleJson.h">
       <Filter>Sources\2. Modules ==============</Filter>
@@ -412,16 +418,16 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
     <ClInclude Include="ResourceLoader.h">
-      <Filter>Sources\4. Resources =============\Loaders</Filter>
+      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>Sources\4. Resources =============</Filter>
+      <Filter>Sources\5. Resources =============</Filter>
     </ClInclude>
     <ClInclude Include="ResourceTextureLoader.h">
-      <Filter>Sources\4. Resources =============\Loaders</Filter>
+      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="ResourceTexture.h">
-      <Filter>Sources\4. Resources =============</Filter>
+      <Filter>Sources\5. Resources =============</Filter>
     </ClInclude>
     <ClInclude Include="ResourcesWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
@@ -435,6 +441,15 @@
     <ClInclude Include="FileWatcher\FileWatcherWin32.h">
       <Filter>Sources\7. ThirdParties ============\FileWatcher</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleGameObject.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="LineGuizmoRenderer.h">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Sources\4. Rendering =============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -447,13 +462,13 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
     <ClCompile Include="Functions.cpp">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClCompile>
     <ClCompile Include="PerfTimer.cpp">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClCompile>
     <ClCompile Include="Parson\parson.c">
       <Filter>Sources\7. ThirdParties ============\Parson</Filter>
@@ -465,10 +480,10 @@
       <Filter>Sources\7. ThirdParties ============\gpudetect</Filter>
     </ClCompile>
     <ClCompile Include="FBO.cpp">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClCompile>
     <ClCompile Include="Cursor.cpp">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClCompile>
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
@@ -597,7 +612,7 @@
       <Filter>Sources\1. App =================</Filter>
     </ClCompile>
     <ClCompile Include="Profiler.cpp">
-      <Filter>Sources\6. Utilities ===============</Filter>
+      <Filter>Sources\7. Utilities ===============</Filter>
     </ClCompile>
     <ClCompile Include="ModuleJson.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
@@ -675,16 +690,16 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
     <ClCompile Include="ResourceLoader.cpp">
-      <Filter>Sources\4. Resources =============\Loaders</Filter>
+      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">
-      <Filter>Sources\4. Resources =============</Filter>
+      <Filter>Sources\5. Resources =============</Filter>
     </ClCompile>
     <ClCompile Include="ResourceTextureLoader.cpp">
-      <Filter>Sources\4. Resources =============\Loaders</Filter>
+      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="ResourceTexture.cpp">
-      <Filter>Sources\4. Resources =============</Filter>
+      <Filter>Sources\5. Resources =============</Filter>
     </ClCompile>
     <ClCompile Include="ResourcesWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
@@ -694,6 +709,15 @@
     </ClCompile>
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp">
       <Filter>Sources\7. ThirdParties ============\FileWatcher</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGameObject.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="LineGuizmoRenderer.cpp">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Sources\4. Rendering =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

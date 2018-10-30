@@ -145,6 +145,8 @@ bool Shader::SetShaderCode(const char * code)
 	case ShaderType::FRAGMENT:
 		id = App->renderer->CreateFragmentShader(code, compilation_error);
 		break;
+	case ShaderType::GEOMETRY:
+		id = App->renderer->CreateGeometryShader(code, compilation_error);
 	}
 
 	if (id > 0)
@@ -203,6 +205,9 @@ void ShaderProgram::AddShader(Shader * set)
 		case ShaderType::FRAGMENT:
 			fragment_shaders.push_back(set);
 			break;
+		case ShaderType::GEOMETRY:
+			geometry_shaders.push_back(set);
+			break;
 		}
 
 		UnlinkProgram();
@@ -235,6 +240,16 @@ void ShaderProgram::RemoveShader(Shader * sh)
 				}
 			}
 			break;
+		case ShaderType::GEOMETRY:
+			for (std::vector<Shader*>::iterator it = geometry_shaders.begin(); it != geometry_shaders.end(); ++it)
+			{
+				if ((*it) == sh)
+				{
+					geometry_shaders.erase(it);
+					break;
+				}
+			}
+			break;
 		}
 
 		UnlinkProgram();
@@ -245,6 +260,7 @@ void ShaderProgram::RemoveShaders()
 {
 	vertex_shaders.clear();
 	fragment_shaders.clear();
+	geometry_shaders.clear();
 
 	UnlinkProgram();
 }
@@ -277,11 +293,25 @@ bool ShaderProgram::LinkProgram()
 			}
 		}
 
+		for (std::vector<Shader*>::iterator it = geometry_shaders.begin(); it != geometry_shaders.end(); ++it)
+		{
+			if (!(*it)->GetCompiles())
+			{
+				all_compile = false;
+				break;
+			}
+		}
+
 		if (all_compile)
 		{
 			id = App->renderer->CreateShaderProgram();
 
 			for (std::vector<Shader*>::iterator it = vertex_shaders.begin(); it != vertex_shaders.end(); ++it)
+			{
+				App->renderer->AttachShaderToProgram(id, (*it)->GetID());
+			}
+
+			for (std::vector<Shader*>::iterator it = geometry_shaders.begin(); it != geometry_shaders.end(); ++it)
 			{
 				App->renderer->AttachShaderToProgram(id, (*it)->GetID());
 			}
@@ -357,6 +387,11 @@ std::vector<Shader*> ShaderProgram::GetVertexShaders() const
 std::vector<Shader*> ShaderProgram::GetFragmentShaders() const
 {
 	return fragment_shaders;
+}
+
+std::vector<Shader*> ShaderProgram::GetGeometryShaders() const
+{
+	return geometry_shaders;
 }
 
 bool ShaderProgram::GetLinked() const

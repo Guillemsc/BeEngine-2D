@@ -12,6 +12,7 @@
 
 class FBO;
 class ShaderProgram;
+class LineGuizmoRenderer;
 
 class ModuleRenderer : public Module
 {
@@ -79,7 +80,7 @@ public:
 	void SetFrameBufferTexture2D(uint target, uint id);
 	void RenderStorageMultisample(uint samples, uint width, uint height);
 
-	void LoadArrayToVRAM(uint size, float* values, GLenum type = GL_STATIC_DRAW) const;
+	void LoadArrayToVRAM(uint size, const float* values, GLenum type = GL_STATIC_DRAW) const;
 	void LoadArrayToVRAM(uint size, uint* values, GLenum type = GL_STATIC_DRAW) const;
 	uint LoadTextureToVRAM(uint w, uint h, GLubyte* tex_data, GLint format) const;
 
@@ -104,6 +105,7 @@ public:
 
 	uint CreateVertexShader(const char* source, std::string& compilation_error_msg = std::string());
 	uint CreateFragmentShader(const char* source, std::string& compilation_error_msg = std::string());
+	uint CreateGeometryShader(const char* source, std::string& compilation_error_msg = std::string());
 	void DeleteShader(uint shader_id);
 
 	uint GetProgramBinary(uint program_id, uint buff_size, char* buff) const;
@@ -139,6 +141,8 @@ private:
 
 	ShaderProgram* sp;
 	ShaderProgram* sp_grid;
+
+	LineGuizmoRenderer* line_renderer = nullptr;
 };
 
 #endif // !__MODULE_RENDERER_H__

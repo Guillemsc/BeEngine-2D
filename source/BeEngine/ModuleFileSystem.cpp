@@ -6,7 +6,8 @@
 #include <ctype.h>
 #include "Functions.h"
 #include "tinyfiledialogs.h"
-
+#include "Event.h"
+#include "ModuleEvent.h"
 
 FileSystem::FileSystem() : Module()
 {
@@ -21,12 +22,18 @@ bool FileSystem::Awake()
 {
 	bool ret = true;
 
+	App->event->Suscribe(std::bind(&FileSystem::OnEvent, this, std::placeholders::_1), EventType::THREAD_TASK_FINISHED);
+
 	return ret;
 }
 
 bool FileSystem::Start()
 {
 	bool ret = true;
+
+	std::string folder = "C:\\Users\\Guillem\\Desktop\\Test\\assets\\";
+
+	WatchDirectory(folder.c_str());
 
 	return ret;
 }
@@ -58,6 +65,35 @@ bool FileSystem::CleanUp()
 	bool ret = true;
 
 	return ret;
+}
+
+void FileSystem::OnEvent(Event * ev)
+{
+	switch (ev->GetType())
+	{
+	case EventType::THREAD_TASK_FINISHED:
+	{
+		EventThreadTaskFinished* ev_thread = (EventThreadTaskFinished*)ev;
+
+		for (std::vector<WatchingDirectory>::iterator it = watching_directories.begin(); it != watching_directories.end(); ++it)
+		{
+			if ((*it).task == ev_thread->GetTask())
+			{
+				(*it).task = new WatchFolderThreadTask((*it).folder.c_str());
+
+				App->event->SendEvent(new EventWatchDirectory((*it).folder));
+
+				App->thread->StartThread((*it).task);
+			}
+		}
+
+		int i = 0;
+
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
@@ -167,6 +203,41 @@ std::string FileSystem::SelectFileDilog(bool & canceled, const char* filter[])
 	}
 
 	return ret;
+}
+
+void FileSystem::WatchDirectory(const char * dir)
+{
+	bool exists = false;
+	for (std::vector<WatchingDirectory>::iterator it = watching_directories.begin(); it != watching_directories.end(); ++it)
+	{
+		if ((*it).folder.compare(dir) == 0)
+			exists = true;
+	}
+
+	WatchingDirectory wd;
+	wd.folder = dir;
+	wd.task = new WatchFolderThreadTask(dir);
+
+	App->thread->StartThread(wd.task);
+
+	watching_directories.push_back(wd);
+}
+
+void FileSystem::StopWatchingDirectory(const char * dir)
+{
+	for (std::vector<WatchingDirectory>::iterator it = watching_directories.begin(); it != watching_directories.end(); ++it)
+	{
+		if ((*it).folder.compare(dir) == 0)
+		{
+			watching_directories.erase(it);
+			break;
+		}
+	}
+}
+
+void FileSystem::StopWatchingAllDirectories()
+{
+	watching_directories.clear();
 }
 
 std::string FileSystem::NewNameForFileNameCollision(const char * filename)
@@ -973,4 +1044,22 @@ WatchFolderThreadTask::WatchFolderThreadTask(const char * folder_to_watch)
 
 void WatchFolderThreadTask::DoTask()
 {
+	DWORD dwWaitStatus;
+	HANDLE dwChangeHandles[2];
+	TCHAR lpDrive[4];
+	TCHAR lpFile[_MAX_FNAME];
+	TCHAR lpExt[_MAX_EXT];
+
+	dwChangeHandles[0] = FindFirstChangeNotification(
+		folder.c_str(),                         // directory to watch 
+		TRUE,                         // do not watch subtree 
+		FILE_NOTIFY_CHANGE_FILE_NAME); // watch file name changes 
+
+	dwChangeHandles[1] = FindFirstChangeNotification(
+		folder.c_str(),                       // directory to watch 
+		TRUE,                          // watch the subtree 
+		FILE_NOTIFY_CHANGE_DIR_NAME);  // watch dir name changes 
+
+	dwWaitStatus = WaitForMultipleObjects(2, dwChangeHandles,
+		FALSE, INFINITE);
 }

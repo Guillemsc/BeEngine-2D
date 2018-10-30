@@ -59,14 +59,18 @@ public:
 	bool CleanUp();
 
 	void StartThread(ThreadTask* task);
+	void StopThread(ThreadTask* task);
 
 private:
 	void CheckThreadsStatus();
+	void DeleteThreadsFinished();
 
 	bool ThreadFunction(ThreadTask* task);
 
 private:
 	std::vector<Thread*> threads;
+	std::vector<Thread*> finished_threads;
+
 };
 
 #endif // !__MODULE_THREAD_H__

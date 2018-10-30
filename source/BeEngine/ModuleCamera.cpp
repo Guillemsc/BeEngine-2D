@@ -240,7 +240,7 @@ Camera2D::Camera2D()
 	SetViewportSize(1280, 720);
 	SetSize(1);
 
-	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
+	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumLeftHanded);
 
 	SetPosition(float2(0, 0));
 	SetZDir(float3(0, 0, 1));

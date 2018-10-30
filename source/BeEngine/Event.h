@@ -31,6 +31,8 @@ enum EventType
 	SCENE_WINDOW_RESIZE,
 
 	PROJECT_SELECTED,
+
+	WATCH_DIRECTORY
 };
 
 class EventTimeSlicedTaskFinished : public Event
@@ -115,6 +117,23 @@ public:
 	{
 
 	}
+};
+
+class EventWatchDirectory : public Event
+{
+public:
+	EventWatchDirectory(std::string directory) : Event(EventType::WATCH_DIRECTORY)
+	{
+		dir = directory;
+	}
+
+	std::string GetDirectory()
+	{
+		return dir;
+	}
+
+private:
+	std::string dir;
 };
 
 #endif // !__EVENT_H__

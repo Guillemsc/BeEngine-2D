@@ -5,6 +5,9 @@
 #include <filesystem>
 #include <functional>
 #include "ModuleThreadTask.h"
+#include "Event.h"
+
+class WatchFolderThreadTask;
 
 struct DecomposedFilePath
 {
@@ -26,6 +29,13 @@ public:
 	bool valid = false;
 };
 
+class WatchingDirectory
+{
+public:
+	std::string folder;
+	WatchFolderThreadTask* task = nullptr;
+};
+
 class WatchingFloder
 {
 public:
@@ -43,6 +53,7 @@ public:
 	bool Start();
 	bool Update();
 	bool CleanUp();
+	void OnEvent(Event* ev);
 
 	std::string CreateFolder(const char* path, const char* name);
 	void FileMove(const char* filepath, const char* new_path, bool replace_existing = false);
@@ -71,6 +82,10 @@ public:
 	std::string SelectFolderDialog(bool& canceled);
 	std::string SelectFileDilog(bool& canceled, const char* filter[]);
 
+	void WatchDirectory(const char* dir);
+	void StopWatchingDirectory(const char* dir);
+	void StopWatchingAllDirectories();
+
 	// DEPRECATED ---------------------------------------------------
 
 	// Example file.ex -> .ex
@@ -98,6 +113,9 @@ private:
 	std::string SetFileNameNumber(const char* filename, int number);
 
 	Folder GetFoldersRecursive(const char* path);
+
+private:
+	std::vector<WatchingDirectory> watching_directories;
 };
 
 class WatchFolderThreadTask : public ThreadTask

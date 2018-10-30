@@ -45,6 +45,8 @@ bool ModuleThreadTask::PostUpdate()
 {
 	bool ret = true;
 
+	DeleteThreadsFinished();
+
 	return ret;
 }
 
@@ -69,19 +71,34 @@ void ModuleThreadTask::StartThread(ThreadTask* task)
 	}
 }
 
+void ModuleThreadTask::StopThread(ThreadTask * task)
+{
+}
+
 void ModuleThreadTask::CheckThreadsStatus()
 {
 	for (std::vector<Thread*>::iterator it = threads.begin(); it != threads.end(); )
 	{
 		if ((*it)->GetFinished())
 		{
-			App->event->SendEvent(new EventThreadTaskFinished((*it)->task));
+			finished_threads.push_back(*it);
 
-			RELEASE(*it);
 			it = threads.erase(it);
 		}
 		else
 			++it;
+	}
+}
+
+void ModuleThreadTask::DeleteThreadsFinished()
+{
+	for (std::vector<Thread*>::iterator it = finished_threads.begin(); it != finished_threads.end(); )
+	{
+		App->event->SendEvent(new EventThreadTaskFinished((*it)->task));
+
+		RELEASE(*it);
+
+		it = finished_threads.erase(it);
 	}
 }
 

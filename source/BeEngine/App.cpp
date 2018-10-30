@@ -14,6 +14,7 @@
 #include "ModuleTimeSlicedTask.h"
 #include "ModuleProject.h"
 #include "ModuleResource.h"
+#include "ModuleGameObject.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -44,6 +45,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	time_sliced = new ModuleTimeSlicedTask();
 	project	    = new ModuleProject();
 	resource	= new ModuleResource();
+	gameobject  = new ModuleGameObject();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -63,6 +65,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");
 	AddModule(resource, "Module Resource");
+	AddModule(gameobject, "Module GameObject");
 
 	// Renderers
 	AddModule(renderer, "Module Renderer");
