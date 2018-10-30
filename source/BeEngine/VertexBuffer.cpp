@@ -6,36 +6,48 @@ VertexBuffer::VertexBuffer()
 
 void VertexBuffer::AddFloat(float set)
 {
-	AddSpace(1);
+	if(NeedsResize(buffer_used + 1))
+		AddSpace(1);
 
 	buffer[buffer_size - 1] = set;
+
+	buffer_used += 1;
 }
 
 void VertexBuffer::AddFloat2(const float2& set)
 {
-	AddSpace(2);
+	if (NeedsResize(buffer_used + 2))
+		AddSpace(2);
 
 	buffer[buffer_size - 2] = set.x;
 	buffer[buffer_size - 1] = set.y;
+
+	buffer_used += 2;
 }
 
 void VertexBuffer::AddFloat3(const float3& set)
 {
-	AddSpace(3);
+	if (NeedsResize(buffer_used + 3))
+		AddSpace(3);
 
 	buffer[buffer_size - 3] = set.x;
 	buffer[buffer_size - 2] = set.y;
 	buffer[buffer_size - 1] = set.z;
+
+	buffer_used += 3;
 }
 
 void VertexBuffer::AddFloat4(const float4 & set)
 {
-	AddSpace(4);
+	if (NeedsResize(buffer_used + 4))
+		AddSpace(4);
 
 	buffer[buffer_size - 4] = set.x;
 	buffer[buffer_size - 3] = set.y;
 	buffer[buffer_size - 2] = set.w;
 	buffer[buffer_size - 1] = set.z;
+
+	buffer_used += 4;
 }
 
 const float * VertexBuffer::GetBuffer() const
@@ -52,6 +64,7 @@ void VertexBuffer::Clear()
 {
 	RELEASE_ARRAY(buffer);
 	buffer_size = 0;
+	buffer_used = 0;
 }
 
 void VertexBuffer::Resize(int size)
@@ -73,4 +86,14 @@ void VertexBuffer::Resize(int size)
 void VertexBuffer::AddSpace(int add)
 {
 	Resize(buffer_size + add);
+}
+
+bool VertexBuffer::NeedsResize(int new_size)
+{
+	bool ret = false;
+
+	if (buffer_used + new_size > buffer_size)
+		ret = true;
+
+	return ret;
 }

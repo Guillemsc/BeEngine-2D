@@ -149,14 +149,14 @@ bool ModuleRenderer::Start()
 	uint vbo = GenBuffer();
 	BindArrayBuffer(vbo);
 
-	VertexBuffer vb;
-	vb.AddFloat3(float3(0, 0, 1));
+	//VertexBuffer vb;
+	//vb.AddFloat3(float3(0, 0, 1));
 
-	vb.AddFloat3(float3(0, 0, 1));
+	//vb.AddFloat3(float3(0, 0, 1));
 
-	vb.AddFloat3(float3(1000, 0, 0));
+	//vb.AddFloat3(float3(1000, 0, 0));
 
-	vb.AddFloat3(float3(1, 0, 0));
+	//vb.AddFloat3(float3(1, 0, 0));
 
 	//vb.AddFloat3(float3(2000.0f, 0, 0));
 
@@ -168,7 +168,7 @@ bool ModuleRenderer::Start()
 
 	//vb.AddFloat3(float3(1000.0f, 1000.0f, 0));
 
-	LoadArrayToVRAM(vb.GetSize(), vb.GetBuffer(), GL_STATIC_DRAW);
+	//LoadArrayToVRAM(vb.GetSize(), vb.GetBuffer(), GL_STATIC_DRAW);
 
 	const char* user_vertex_code = 
 		"#version 330 core\n \
@@ -290,45 +290,54 @@ bool ModuleRenderer::PostUpdate()
 
 	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
-	BindArrayBuffer(1);
 
-	glDisable(GL_CULL_FACE);
+	int i = 0;
+	line_renderer->DrawLine(float2(0, 50 * ++i), float2(1000, 30 * i), float3(1, 1, 0));
 
-	float4x4 model = float4x4::identity;
-	model[0][3] = 1;
-	model[1][3] = 1;
-	model[2][3] = 1;
 
-	sp->UseProgram();
 
-	ShaderProgramParameters par;
-	par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
-	sp->SetProgramParameters(par);
 
-	GLint posAttrib = glGetAttribLocation(sp->GetID(), "position");
-	EnableVertexAttributeArray(posAttrib);
-	SetVertexAttributePointer(posAttrib, 3, 6, 0);
+	//BindArrayBuffer(1);
 
-	GLint posAttribCol = glGetAttribLocation(sp->GetID(), "col");
-	EnableVertexAttributeArray(posAttribCol);
-	SetVertexAttributePointer(posAttribCol, 3, 6, 3);
+	//glDisable(GL_CULL_FACE);
 
-	SetUniformMatrix(sp->GetID(), "Model", model.Transposed().ptr());
-	SetUniformMatrix(sp->GetID(), "View", App->camera->GetEditorCamera()->GetOpenGLViewMatrix().ptr());
-	SetUniformMatrix(sp->GetID(), "Projection", App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix().ptr());
+	//float4x4 model = float4x4::identity;
+	//model[0][3] = 1;
+	//model[1][3] = 1;
+	//model[2][3] = 1;
 
-	glLineWidth(25);
+	//sp->UseProgram();
 
-	glDrawArrays(GL_LINES, 0, 2);
+	//ShaderProgramParameters par;
+	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
+	//sp->SetProgramParameters(par);
 
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
-	}
+	//GLint posAttrib = glGetAttribLocation(sp->GetID(), "position");
+	//EnableVertexAttributeArray(posAttrib);
+	//SetVertexAttributePointer(posAttrib, 3, 6, 0);
 
-	DisableVertexAttributeArray(posAttrib);
-	DisableVertexAttributeArray(posAttribCol);
+	//GLint posAttribCol = glGetAttribLocation(sp->GetID(), "col");
+	//EnableVertexAttributeArray(posAttribCol);
+	//SetVertexAttributePointer(posAttribCol, 3, 6, 3);
+
+	//SetUniformMatrix(sp->GetID(), "Model", model.Transposed().ptr());
+	//SetUniformMatrix(sp->GetID(), "View", App->camera->GetEditorCamera()->GetOpenGLViewMatrix().ptr());
+	//SetUniformMatrix(sp->GetID(), "Projection", App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix().ptr());
+
+	//glLineWidth(25);
+
+	//glDrawArrays(GL_LINES, 0, 2);
+
+	//GLenum error = glGetError();
+	//if (error != GL_NO_ERROR)
+	//{
+	//	INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
+	//}
+
+	//DisableVertexAttributeArray(posAttrib);
+	//DisableVertexAttributeArray(posAttribCol);
+
+	line_renderer->Render(App->camera->GetEditorCamera()->GetOpenGLViewMatrix(), App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix());
 
 	App->camera->GetEditorCamera()->Unbind();
 
@@ -832,6 +841,17 @@ uint ModuleRenderer::LoadTextureToVRAM(uint w, uint h, GLubyte * tex_data, GLint
 	}
 
 	return buff_id; uint();
+}
+
+void ModuleRenderer::UpdateVRAMArray(uint size, const float * values, GLenum type) const
+{
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, values);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error load array to vram: %s\n", gluErrorString(error));
+	}
 }
 
 void ModuleRenderer::PushMatrix()

@@ -84,6 +84,8 @@ public:
 	void LoadArrayToVRAM(uint size, uint* values, GLenum type = GL_STATIC_DRAW) const;
 	uint LoadTextureToVRAM(uint w, uint h, GLubyte* tex_data, GLint format) const;
 
+	void UpdateVRAMArray(uint size, const float* values, GLenum type = GL_STATIC_DRAW) const;
+
 	void PushMatrix();
 	void PopMatrix();
 	void MultMatrix(float* matrix);

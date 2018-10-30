@@ -450,6 +450,9 @@
     <ClInclude Include="VertexBuffer.h">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
+    <ClInclude Include="GuizmoRenderer.h">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -718,6 +721,9 @@
     </ClCompile>
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Sources\4. Rendering =============</Filter>
+    </ClCompile>
+    <ClCompile Include="GuizmoRenderer.cpp">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

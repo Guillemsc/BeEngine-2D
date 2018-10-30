@@ -18,15 +18,18 @@ public:
 	const float* GetBuffer() const;
 	const uint GetSize() const;
 
+	void AddSpace(int add);
+
 	void Clear();
 
 private:
 	void Resize(int size);
-	void AddSpace(int add);
+	bool NeedsResize(int new_size);
 
 private:
 	float* buffer = nullptr;
 	uint buffer_size = 0;
+	uint buffer_used = 0;
 };
 
 #endif // !__VERTEX_BUFFER_H__
