@@ -1,21 +1,21 @@
-#include "LineGuizmoRenderer.h"
+#include "GridGuizmoRenderer.h"
 #include "App.h"
-#include "VertexBuffer.h"
 
-LineGuizmoRenderer::LineGuizmoRenderer()
+GridGuizmoRenderer::GridGuizmoRenderer()
 {
 }
 
-LineGuizmoRenderer::~LineGuizmoRenderer()
+GridGuizmoRenderer::~GridGuizmoRenderer()
 {
 }
 
-void LineGuizmoRenderer::Start()
+void GridGuizmoRenderer::Start()
 {
 	const char* vertex_code =
 		"#version 330 core\n \
 		layout(location = 0) in vec3 position;\n \
 		layout(location = 1) in vec3 col;\n \
+		layout(location = 2) in vec2 uv;\n \
 		uniform mat4 Model; \
 		uniform mat4 View; \
 		uniform mat4 Projection; \
@@ -53,45 +53,63 @@ void LineGuizmoRenderer::Start()
 	vbo = App->renderer->GenBuffer();
 	App->renderer->BindArrayBuffer(vbo);
 
-	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
+	VertexBuffer vb;
+	vb.AddFloat3(float3(0, 0, 0));
+	vb.AddFloat3(float3(1, 1, 1));
+	vb.AddFloat2(float2(0, 0));
+
+	vb.AddFloat3(float3(1, 0, 0));
+	vb.AddFloat3(float3(1, 1, 1));
+	vb.AddFloat2(float2(1, 0));
+
+	vb.AddFloat3(float3(0, 1, 0));
+	vb.AddFloat3(float3(1, 1, 1));
+	vb.AddFloat2(float2(0, 1));
+
+	vb.AddFloat3(float3(1, 0, 0));
+	vb.AddFloat3(float3(1, 1, 1));
+	vb.AddFloat2(float2(1, 0));
+
+	vb.AddFloat3(float3(1, 1, 0));
+	vb.AddFloat3(float3(1, 1, 1));
+	vb.AddFloat2(float2(1, 1));
+
+	vb.AddFloat3(float3(0, 1, 0));
+	vb.AddFloat3(float3(1, 1, 1));
+	vb.AddFloat2(float2(0, 1));
+
+	App->renderer->LoadArrayToVRAM(vb.GetSize(), vb.GetBuffer(), GL_DYNAMIC_DRAW);
 }
 
-void LineGuizmoRenderer::CleanUp()
+void GridGuizmoRenderer::CleanUp()
 {
-
 }
 
-void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection)
+void GridGuizmoRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
 	App->renderer->BindArrayBuffer(vbo);
-	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 
-	float4x4 model = float4x4::identity;
-	model[0][3] = 0;
-	model[1][3] = 0;
-	model[2][3] = 0;
+	float4x4 model = float4x4::FromTRS(float3::zero, Quat::identity, float3(100, 100, 1));
 
 	program->UseProgram();
 
-	//ShaderProgramParameters par;
-	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
-	//program->SetProgramParameters(par);
-
 	GLint posAttrib = glGetAttribLocation(program->GetID(), "position");
 	App->renderer->EnableVertexAttributeArray(posAttrib);
-	App->renderer->SetVertexAttributePointer(posAttrib, 3, 6, 0);
+	App->renderer->SetVertexAttributePointer(posAttrib, 3, 8, 0);
 
 	GLint posAttribCol = glGetAttribLocation(program->GetID(), "col");
 	App->renderer->EnableVertexAttributeArray(posAttribCol);
-	App->renderer->SetVertexAttributePointer(posAttribCol, 3, 6, 3);
+	App->renderer->SetVertexAttributePointer(posAttribCol, 3, 8, 3);
+
+	GLint posAttribUv = glGetAttribLocation(program->GetID(), "uv");
+	App->renderer->EnableVertexAttributeArray(posAttribUv);
+	App->renderer->SetVertexAttributePointer(posAttribUv, 2, 8, 6);
 
 	App->renderer->SetUniformMatrix(program->GetID(), "Model", model.Transposed().ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-	glLineWidth(2);
-
-	glDrawArrays(GL_LINES, 0, lines_count * 2);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
@@ -101,19 +119,5 @@ void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection
 
 	App->renderer->DisableVertexAttributeArray(posAttrib);
 	App->renderer->DisableVertexAttributeArray(posAttribCol);
-
-	lines_vb.Clear();
-	lines_count = 0;
 }
 
-void LineGuizmoRenderer::DrawLine(float2 start, float2 end, float3 colour)
-{
-	lines_vb.AddSpace(12);
-
-	lines_vb.AddFloat3(float3(start.x, start.y, 0));
-	lines_vb.AddFloat3(colour);
-	lines_vb.AddFloat3(float3(end.x, end.y, 0));
-	lines_vb.AddFloat3(colour);
-
-	++lines_count;
-}

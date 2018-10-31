@@ -50,7 +50,7 @@ bool ModuleCamera::CleanUp()
 void ModuleCamera::OnLoadConfig(JSON_Doc * config)
 {
 	wheel_speed = config->GetNumber("camera.wheel_speed", 10000.0f);
-	camera_speed = config->GetNumber("camera.drag_speed", 1000.0f);
+	camera_speed = config->GetNumber("camera.camera_speed", 1000.0f);
 
 	float2 cam_pos = config->GetNumber2("camera.position");
 	editor_camera->SetPosition(cam_pos);
@@ -120,11 +120,11 @@ void ModuleCamera::UpdateEditorCameraInput()
 			{
 				if (App->input->GetMouseWheel() == 1)
 				{
-					editor_camera->SetSize(editor_camera->size - (100 * App->GetDT()));
+					editor_camera->SetSize(editor_camera->size - (wheel_speed * App->GetDT()));
 				}
 				else if (App->input->GetMouseWheel() == -1)
 				{
-					editor_camera->SetSize(editor_camera->size + (100 * App->GetDT()));
+					editor_camera->SetSize(editor_camera->size + (wheel_speed * App->GetDT()));
 				}
 			}
 
@@ -282,7 +282,8 @@ uint Camera2D::GetTextId()
 
 void Camera2D::SetPosition(const float2& pos)
 {
-	frustum.SetPos(float3(pos.x, pos.y, 0));
+
+	frustum.SetPos(float3(pos.x, pos.y, -1));
 }
 
 const float2 Camera2D::GetPosition()
@@ -337,13 +338,14 @@ void Camera2D::SetViewportSize(float width, float height)
 }
 
 void Camera2D::SetSize(float _size)
-{
-	if (_size > 0)
-	{
-		size = _size;
+{	
+	size = _size;
 
-		SetViewportSize(viewport_size.x, viewport_size.y);
-	}
+	if (size < 0.001f)
+		size = 0.001f;
+
+	SetViewportSize(viewport_size.x, viewport_size.y);
+	
 }
 
 const float Camera2D::GetSize() const

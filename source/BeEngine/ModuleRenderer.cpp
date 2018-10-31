@@ -12,6 +12,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "LineGuizmoRenderer.h"
+#include "GridGuizmoRenderer.h"
 #include "VertexBuffer.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -130,6 +131,7 @@ bool ModuleRenderer::Awake()
 		glDisable(GL_CULL_FACE);
 
 		line_renderer = new LineGuizmoRenderer();
+		grid_renderer = new GridGuizmoRenderer();
 	}
 
 	return ret;
@@ -142,6 +144,7 @@ bool ModuleRenderer::Start()
 	test = prof_module_postupdate->AddProfileChild("lines");
 
 	line_renderer->Start();
+	grid_renderer->Start();
 
 	// Shaders testing -----------------------
 
@@ -294,14 +297,9 @@ bool ModuleRenderer::PostUpdate()
 
 	test->Start();
 
-	for (int i = 0; i < 1000; ++i)
-	{
-		line_renderer->DrawLine(float2(0, 50 * i), float2(1000, 50 * i), float3(i * 0.01f, 1, 0));
-	}
+	line_renderer->DrawLine(float2(0, 50), float2(50, 50), float3(0.01f, 1, 0));
 
 	test->Finish();
-
-
 
 	//BindArrayBuffer(1);
 
@@ -344,6 +342,7 @@ bool ModuleRenderer::PostUpdate()
 	//DisableVertexAttributeArray(posAttribCol);
 
 	line_renderer->Render(App->camera->GetEditorCamera()->GetOpenGLViewMatrix(), App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix());
+	grid_renderer->Render(App->camera->GetEditorCamera()->GetOpenGLViewMatrix(), App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix());
 
 	App->camera->GetEditorCamera()->Unbind();
 

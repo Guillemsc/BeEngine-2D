@@ -106,6 +106,7 @@
     <ClInclude Include="FileWatcher\FileWatcherImpl.h" />
     <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="GridGuizmoRenderer.h" />
     <ClInclude Include="GuizmoRenderer.h" />
     <ClInclude Include="imgui_docking.h" />
     <ClInclude Include="ModuleGameObject.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="FileWatcher\FileWatcher.cpp" />
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="Functions.cpp" />
+    <ClCompile Include="GridGuizmoRenderer.cpp" />
     <ClCompile Include="GuizmoRenderer.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />

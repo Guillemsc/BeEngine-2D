@@ -20,7 +20,7 @@ void VertexBuffer::AddFloat2(const float2& set)
 		AddSpace(2);
 
 	buffer[buffer_used] = set.x;
-	buffer[buffer_size + 1] = set.y;
+	buffer[buffer_used + 1] = set.y;
 
 	buffer_used += 2;
 }

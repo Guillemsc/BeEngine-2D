@@ -450,8 +450,11 @@
     <ClInclude Include="VertexBuffer.h">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
-    <ClInclude Include="GuizmoRenderer.h">
+    <ClInclude Include="GridGuizmoRenderer.h">
       <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GuizmoRenderer.h">
+      <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -722,8 +725,11 @@
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClCompile>
-    <ClCompile Include="GuizmoRenderer.cpp">
+    <ClCompile Include="GridGuizmoRenderer.cpp">
       <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GuizmoRenderer.cpp">
+      <Filter>Sources\4. Rendering =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

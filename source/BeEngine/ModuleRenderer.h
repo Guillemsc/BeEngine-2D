@@ -13,6 +13,7 @@
 class FBO;
 class ShaderProgram;
 class LineGuizmoRenderer;
+class GridGuizmoRenderer;
 
 class ModuleRenderer : public Module
 {
@@ -145,6 +146,7 @@ private:
 	ShaderProgram* sp_grid;
 
 	LineGuizmoRenderer* line_renderer = nullptr;
+	GridGuizmoRenderer* grid_renderer = nullptr;
 
 	Profile* test = nullptr;
 };
