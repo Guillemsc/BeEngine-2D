@@ -1,17 +1,16 @@
-#include "LineRenderer.h"
+#include "TriangleRenderer.h"
 #include "App.h"
-#include "VertexBuffer.h"
-#include "Functions.h"
+#include "ModuleShader.h"
 
-LineRenderer::LineRenderer()
+TriangleRenderer::TriangleRenderer()
 {
 }
 
-LineRenderer::~LineRenderer()
+TriangleRenderer::~TriangleRenderer()
 {
 }
 
-void LineRenderer::Start()
+void TriangleRenderer::Start()
 {
 	const char* vertex_code =
 		"#version 330 core\n \
@@ -54,23 +53,23 @@ void LineRenderer::Start()
 	vbo = App->renderer->GenBuffer();
 	App->renderer->BindArrayBuffer(vbo);
 
-	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
+	App->renderer->LoadArrayToVRAM(triangles_vb.GetSize(), triangles_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 }
 
-void LineRenderer::CleanUp()
+void TriangleRenderer::CleanUp()
 {
-	lines_vb.Clear();
-	lines_count = 0;
+	triangles_vb.Clear();
+	triangles_count = 0;
 }
 
-void LineRenderer::Render(const float4x4& view, const float4x4& projection)
+void TriangleRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
 	glEnable(GL_BLEND);
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	App->renderer->BindArrayBuffer(vbo);
-	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
+	App->renderer->LoadArrayToVRAM(triangles_vb.GetSize(), triangles_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 
 	float4x4 model = float4x4::identity;
 	model[0][3] = 0;
@@ -79,23 +78,19 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 
 	program->UseProgram();
 
-	//ShaderProgramParameters par;
-	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
-	//program->SetProgramParameters(par);
-
 	GLint posAttrib = App->renderer->GetVertexAttributeArray(program->GetID(), "position");
 	App->renderer->EnableVertexAttributeArray(posAttrib);
 	App->renderer->SetVertexAttributePointer(posAttrib, 3, 7, 0);
 
 	GLint posAttribCol = App->renderer->GetVertexAttributeArray(program->GetID(), "col");
 	App->renderer->EnableVertexAttributeArray(posAttribCol);
-	App->renderer->SetVertexAttributePointer(posAttribCol, 4, 7, 3);
+	App->renderer->SetVertexAttributePointer(posAttribCol, 3, 7, 3);
 
 	App->renderer->SetUniformMatrix(program->GetID(), "Model", model.Transposed().ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-	glDrawArrays(GL_TRIANGLES, 0, lines_count * 6);
+	glDrawArrays(GL_TRIANGLES, 0, triangles_count * 3);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
@@ -106,59 +101,30 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 	App->renderer->DisableVertexAttributeArray(posAttrib);
 	App->renderer->DisableVertexAttributeArray(posAttribCol);
 
-	lines_vb.Clear();
-	lines_count = 0;
+	triangles_vb.Clear();
+	triangles_count = 0;
 
 	glDisable(GL_BLEND);
 }
 
-void LineRenderer::DrawLine(const float2& start, const float2& end, const float3& colour, float alpha, float tickness)
+void TriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, const float3 & colour, float alpha)
 {
-	float delta_y = end.y - start.y;
-	float delta_x = end.x - start.x;
+	float2 half_size = float2(size.x * 0.5f, size.y * 0.5f);
 
-	float angle1 = atan2(delta_y, delta_x);
-	float angle2 = angle1 + (180.0f * DEGTORAD);
+	float3 final_1 = float3(pos.x - half_size.x, pos.y - half_size.y, 0);
+	float3 final_2 = float3(pos.x + half_size.x, pos.y - half_size.y, 0);
+	float3 final_3 = float3(pos.x, pos.y + half_size.y, 0);
 
-	float half_width = tickness * 0.5;
-
-	float new_p1_1_x = start.x - (sin(angle1) * half_width);
-	float new_p1_1_y = start.y + (cos(angle1) * half_width);
-
-	float new_p1_2_x = start.x - (sin(angle2) * half_width);
-	float new_p1_2_y = start.y + (cos(angle2) * half_width);
-
-	float new_p2_1_x = end.x - (sin(angle1) * half_width);
-	float new_p2_1_y = end.y + (cos(angle1) * half_width);
-
-	float new_p2_2_x = end.x - (sin(angle2) * half_width);
-	float new_p2_2_y = end.y + (cos(angle2) * half_width);
-
-	float3 final_1 = float3(new_p1_2_x, new_p1_2_y, 0);
-
-	float3 final_2 = float3(new_p2_2_x, new_p2_2_y, 0);
-
-	float3 final_3 = float3(new_p2_1_x, new_p2_1_y, 0);
-
-	float3 final_4 = float3(new_p1_1_x, new_p1_1_y, 0);
-
-	lines_vb.AddSpace(42);
+	triangles_vb.AddSpace(21);
 
 	float4 full_colour = float4(colour.x, colour.y, alpha, colour.z);
 
-	lines_vb.AddFloat3(final_2);
-	lines_vb.AddFloat4(full_colour);
-	lines_vb.AddFloat3(final_4);
-	lines_vb.AddFloat4(full_colour);
-	lines_vb.AddFloat3(final_3);
-	lines_vb.AddFloat4(full_colour);
+	triangles_vb.AddFloat3(final_1);
+	triangles_vb.AddFloat4(full_colour);
+	triangles_vb.AddFloat3(final_2);
+	triangles_vb.AddFloat4(full_colour);
+	triangles_vb.AddFloat3(final_3);
+	triangles_vb.AddFloat4(full_colour);
 
-	lines_vb.AddFloat3(final_2);
-	lines_vb.AddFloat4(full_colour);
-	lines_vb.AddFloat3(final_4);
-	lines_vb.AddFloat4(full_colour);
-	lines_vb.AddFloat3(final_1);
-	lines_vb.AddFloat4(full_colour);
-
-	++lines_count;
+	++triangles_count;
 }

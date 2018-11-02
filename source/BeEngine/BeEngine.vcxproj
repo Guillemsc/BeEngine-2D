@@ -107,6 +107,7 @@
     <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="GridRenderer.h" />
+    <ClInclude Include="QuadRenderer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="imgui_docking.h" />
     <ClInclude Include="ModuleGameObject.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Time\Clock.h" />
     <ClInclude Include="tinyfiledialogs.h" />
     <ClInclude Include="ToolsBar.h" />
+    <ClInclude Include="TriangleRenderer.h" />
     <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +241,7 @@
     <ClCompile Include="ProgressWindow.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="ModuleResource.cpp" />
+    <ClCompile Include="QuadRenderer.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="ResourcesWindow.cpp" />
@@ -310,6 +313,7 @@
     <ClCompile Include="Time\Clock.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />
     <ClCompile Include="ToolsBar.cpp" />
+    <ClCompile Include="TriangleRenderer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -456,6 +456,12 @@
     <ClInclude Include="Renderer.h">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
+    <ClInclude Include="QuadRenderer.h">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleRenderer.h">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -726,6 +732,12 @@
       <Filter>Sources\4. Rendering =============\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="LineRenderer.cpp">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadRenderer.cpp">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleRenderer.cpp">
       <Filter>Sources\4. Rendering =============\Renderers</Filter>
     </ClCompile>
   </ItemGroup>

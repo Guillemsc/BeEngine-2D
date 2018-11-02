@@ -1,5 +1,5 @@
-#ifndef __LINE_RENDERER_H__
-#define __LINE_RENDERER_H__
+#ifndef __QUAD_RENDERER_H__
+#define __QUAD_RENDERER_H__
 
 #include "Renderer.h"
 
@@ -7,27 +7,27 @@
 #include "ModuleShader.h"
 #include "VertexBuffer.h"
 
-class LineRenderer : public Renderer
+class QuadRenderer : public Renderer
 {
 public:
-	LineRenderer();
-	~LineRenderer();
+	QuadRenderer();
+	~QuadRenderer();
 
 	void Start();
 	void CleanUp();
 	void Render(const float4x4& view, const float4x4& projection);
 
-	void DrawLine(const float2& start, const float2& end, const float3& colour, float alpha = 1.0f, float tickness = 10.0f);
+	void DrawQuad(const float2& pos, const float2& size, const float3& colour, float alpha = 1.0f);
 
 private:
 	ShaderProgram* program = nullptr;
 
-	VertexBuffer lines_vb;
+	VertexBuffer quads_vb;
 
 	uint vao = 0;
 	uint vbo = 0;
 
-	uint lines_count = 0;
+	uint quads_count = 0;
 };
 
 #endif // !__LINE_RENDERER_H__

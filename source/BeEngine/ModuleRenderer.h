@@ -14,6 +14,8 @@ class FBO;
 class ShaderProgram;
 class Renderer;
 class LineRenderer;
+class QuadRenderer;
+class TriangleRenderer;
 
 class ModuleRenderer : public Module
 {
@@ -146,7 +148,9 @@ private:
 	void DestroyAllRenderers();
 
 public:
-	LineRenderer* line_renderer = nullptr;
+	LineRenderer*	  line_renderer = nullptr;
+	QuadRenderer*	  quad_renderer = nullptr;
+	TriangleRenderer* triangle_renderer = nullptr;
 
 private:
 	SDL_GLContext context;

@@ -13,6 +13,8 @@
 #include <gl/GLU.h>
 #include "LineRenderer.h"
 #include "GridRenderer.h"
+#include "QuadRenderer.h"
+#include "TriangleRenderer.h"
 #include "VertexBuffer.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -131,6 +133,8 @@ bool ModuleRenderer::Awake()
 		glDisable(GL_CULL_FACE);
 
 		line_renderer = (LineRenderer*)AddRenderer(new LineRenderer());
+		quad_renderer = (QuadRenderer*)AddRenderer(new QuadRenderer());
+		triangle_renderer = (TriangleRenderer*)AddRenderer(new TriangleRenderer());
 		//AddRenderer(new GridRenderer());
 	}
 
@@ -170,8 +174,12 @@ bool ModuleRenderer::PostUpdate()
 
 	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
-	line_renderer->DrawLine(float2(0, 0), float2(0, 50), float3(178.0f/255.0f, 242.0f / 255.0f, 82.0f / 255.0f), 1);
-	line_renderer->DrawLine(float2(0, 0), float2(50, 0), float3(220.0f / 255.0f, 61.0f / 255.0f, 30.0f / 255.0f), 1);
+	line_renderer->DrawLine(float2(0, 0), float2(0, 50), float3(178.0f/255.0f, 242.0f / 255.0f, 82.0f / 255.0f), 0.1f, 1);
+	line_renderer->DrawLine(float2(0, 0), float2(50, 0), float3(220.0f / 255.0f, 61.0f / 255.0f, 30.0f / 255.0f), 1, 1);
+
+	quad_renderer->DrawQuad(float2(-100, 0), float2(50, 50), float3(1, 1, 1));
+
+	triangle_renderer->DrawTriangle(float2(-100, 100), float2(7, 20), float3(1, 1, 1));
 
 	RenderRenderers();
 
