@@ -1,15 +1,15 @@
-#include "GridGuizmoRenderer.h"
+#include "GridRenderer.h"
 #include "App.h"
 
-GridGuizmoRenderer::GridGuizmoRenderer()
+GridRenderer::GridRenderer()
 {
 }
 
-GridGuizmoRenderer::~GridGuizmoRenderer()
+GridRenderer::~GridRenderer()
 {
 }
 
-void GridGuizmoRenderer::Start()
+void GridRenderer::Start()
 {
 	const char* vertex_code =
 		"#version 330 core\n \
@@ -81,11 +81,11 @@ void GridGuizmoRenderer::Start()
 	App->renderer->LoadArrayToVRAM(vb.GetSize(), vb.GetBuffer(), GL_DYNAMIC_DRAW);
 }
 
-void GridGuizmoRenderer::CleanUp()
+void GridRenderer::CleanUp()
 {
 }
 
-void GridGuizmoRenderer::Render(const float4x4 & view, const float4x4 & projection)
+void GridRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
 	App->renderer->BindArrayBuffer(vbo);
 

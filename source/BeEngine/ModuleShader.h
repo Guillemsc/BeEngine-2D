@@ -70,6 +70,8 @@ public:
 	std::vector<Shader*> GetGeometryShaders() const;
 
 	bool GetLinked() const;
+	const char* GetLinkError() const;
+
 	uint GetID() const;
 
 private:
@@ -84,6 +86,7 @@ private:
 	std::vector<Shader*> geometry_shaders;
 
 	bool linked = false;
+	std::string link_error;
 };
 
 class ShaderProgramParameters

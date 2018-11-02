@@ -1,17 +1,17 @@
-#ifndef __GRID_GUIZMO_RENDERER_H__
-#define __GRID_GUIZMO_RENDERER_H__
+#ifndef __GRID_RENDERER_H__
+#define __GRID_RENDERER_H__
 
-#include "GuizmoRenderer.h"
+#include "Renderer.h"
 
 #include "ModuleRenderer.h"
 #include "ModuleShader.h"
 #include "VertexBuffer.h"
 
-class GridGuizmoRenderer : public GuizmoRenderer
+class GridRenderer : public Renderer
 {
 public:
-	GridGuizmoRenderer();
-	~GridGuizmoRenderer();
+	GridRenderer();
+	~GridRenderer();
 
 	void Start();
 	void CleanUp();
@@ -24,4 +24,4 @@ private:
 	uint vbo = 0;
 };
 
-#endif // !__GRID_GUIZMO_RENDERER_H__
+#endif // !__GRID_RENDERER_H__

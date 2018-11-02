@@ -12,8 +12,8 @@
 
 class FBO;
 class ShaderProgram;
-class LineGuizmoRenderer;
-class GridGuizmoRenderer;
+class Renderer;
+class LineRenderer;
 
 class ModuleRenderer : public Module
 {
@@ -115,6 +115,7 @@ public:
 	int GetProgramSize(uint program_id) const;
 	void LoadProgramFromBinary(uint program_id, uint buff_size, const char* buff);
 
+	GLint GetVertexAttributeArray(uint program, const char* name);
 	void EnableVertexAttributeArray(uint id);
 	void DisableVertexAttributeArray(uint id);
 	void SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap);
@@ -133,20 +134,24 @@ public:
 	uint CreateShaderProgram();
 	void UseShaderProgram(uint id);
 	void AttachShaderToProgram(uint program_id, uint shader_id);
-	bool LinkProgram(uint program_id);
+	bool LinkProgram(uint program_id, std::string& link_error = std::string());
 	void DeleteProgram(uint program_id);
 	// --------------------------------------------------------
 
 	bool RenderEditorAsync();
 
 private:
+	Renderer* AddRenderer(Renderer* gm);
+	void RenderRenderers();
+	void DestroyAllRenderers();
+
+public:
+	LineRenderer* line_renderer = nullptr;
+
+private:
 	SDL_GLContext context;
 
-	ShaderProgram* sp;
-	ShaderProgram* sp_grid;
-
-	LineGuizmoRenderer* line_renderer = nullptr;
-	GridGuizmoRenderer* grid_renderer = nullptr;
+	std::vector<Renderer*> renderers;
 
 	Profile* test = nullptr;
 };

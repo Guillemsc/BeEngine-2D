@@ -1,17 +1,17 @@
-#ifndef __GUIZMO_RENDERER_H__
-#define __GUIZMO_RENDERER_H__
+#ifndef __RENDERER_H__
+#define __RENDERER_H__
 
 #include "GeometryMath.h"
 
-class GuizmoRenderer
+class Renderer
 {
 public:
-	GuizmoRenderer() {};
-	~GuizmoRenderer() {};
+	Renderer() {};
+	~Renderer() {};
 
 	virtual void Start() {};
 	virtual void CleanUp() {};
 	virtual void Render(const float4x4& view, const float4x4& projection) {};
 };
 
-#endif // !__GUIZMO_RENDERER_H__
+#endif // !__RENDERER_H__

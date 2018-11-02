@@ -1,23 +1,23 @@
-#ifndef __LINE_GUIZMO_RENDERER_H__
-#define __LINE_GUIZMO_RENDERER_H__
+#ifndef __LINE_RENDERER_H__
+#define __LINE_RENDERER_H__
 
-#include "GuizmoRenderer.h"
+#include "Renderer.h"
 
 #include "ModuleRenderer.h"
 #include "ModuleShader.h"
 #include "VertexBuffer.h"
 
-class LineGuizmoRenderer : public GuizmoRenderer
+class LineRenderer : public Renderer
 {
 public:
-	LineGuizmoRenderer();
-	~LineGuizmoRenderer();
+	LineRenderer();
+	~LineRenderer();
 
 	void Start();
 	void CleanUp();
 	void Render(const float4x4& view, const float4x4& projection);
 
-	void DrawLine(float2 start, float2 end, float3 colour);
+	void DrawLine(const float2& start, const float2& end, const float3& colour, float tickness = 10);
 
 private:
 	ShaderProgram* program = nullptr;
@@ -30,4 +30,4 @@ private:
 	uint lines_count = 0;
 };
 
-#endif // !__LINE_GUIZMO_RENDERER_H__
+#endif // !__LINE_RENDERER_H__

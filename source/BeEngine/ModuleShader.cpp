@@ -321,7 +321,7 @@ bool ShaderProgram::LinkProgram()
 				App->renderer->AttachShaderToProgram(id, (*it)->GetID());
 			}
 
-			linked = App->renderer->LinkProgram(id);
+			linked = App->renderer->LinkProgram(id, link_error);
 
 			if (linked)
 				ret = true;
@@ -397,6 +397,11 @@ std::vector<Shader*> ShaderProgram::GetGeometryShaders() const
 bool ShaderProgram::GetLinked() const
 {
 	return linked;
+}
+
+const char * ShaderProgram::GetLinkError() const
+{
+	return link_error.c_str();
 }
 
 uint ShaderProgram::GetID() const

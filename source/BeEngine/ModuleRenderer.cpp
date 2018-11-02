@@ -11,8 +11,8 @@
 #include "ImGuizmo.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "LineGuizmoRenderer.h"
-#include "GridGuizmoRenderer.h"
+#include "LineRenderer.h"
+#include "GridRenderer.h"
 #include "VertexBuffer.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -130,8 +130,8 @@ bool ModuleRenderer::Awake()
 
 		glDisable(GL_CULL_FACE);
 
-		line_renderer = new LineGuizmoRenderer();
-		grid_renderer = new GridGuizmoRenderer();
+		line_renderer = (LineRenderer*)AddRenderer(new LineRenderer());
+		//AddRenderer(new GridRenderer());
 	}
 
 	return ret;
@@ -142,131 +142,6 @@ bool ModuleRenderer::Start()
 	bool ret = true;
 	
 	test = prof_module_postupdate->AddProfileChild("lines");
-
-	line_renderer->Start();
-	grid_renderer->Start();
-
-	// Shaders testing -----------------------
-
-	uint vao = GenVertexArrayBuffer();
-	BindVertexArrayBuffer(vao);
-
-	uint vbo = GenBuffer();
-	BindArrayBuffer(vbo);
-
-	//VertexBuffer vb;
-	//vb.AddFloat3(float3(0, 0, 1));
-
-	//vb.AddFloat3(float3(0, 0, 1));
-
-	//vb.AddFloat3(float3(1000, 0, 0));
-
-	//vb.AddFloat3(float3(1, 0, 0));
-
-	//vb.AddFloat3(float3(2000.0f, 0, 0));
-
-	//vb.AddFloat3(float3(1, 1, 1));
-
-	//vb.AddFloat3(float3(3000.0f, 0, 0));
-
-	//vb.AddFloat3(float3(1, 1, 1));
-
-	//vb.AddFloat3(float3(1000.0f, 1000.0f, 0));
-
-	//LoadArrayToVRAM(vb.GetSize(), vb.GetBuffer(), GL_STATIC_DRAW);
-
-	const char* user_vertex_code = 
-		"#version 330 core\n \
-		layout(location = 1) in vec3 col;\n \
-		out vec3 oColour;	\
-		uniform vec3 Colour;\
-		void UserShader()\
-		{\
-			oColour = col;\
-		}";
-
-	const char* user_fragment_code = 		
-		"#version 330 core\n \
-		in vec3 oColour;\
-		out vec3 color; \
-		void UserShader()\
-		{\
-			color = oColour;\
-		}";
-
-	const char* vertex_code =
-		"#version 330 core\n \
-		layout(location = 0) in vec3 position;\n \
-		uniform mat4 Model; \
-		uniform mat4 View; \
-		uniform mat4 Projection; \
-		void UserShader();\
-		void main()\
-		{\
-			UserShader();\
-			gl_Position = Projection * View * Model * vec4(position, 1);\
-		}";
-
-	const char* fragment_code =
-		"#version 330 core\n \
-		void UserShader();\
-		void main()\
-		{\
-			UserShader();\
-		}";
-
-	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
-	vsh->SetShaderCode(vertex_code);
-
-	Shader* user_vsh = App->shader->CreateShader(ShaderType::VERTEX);
-	user_vsh->SetShaderCode(user_vertex_code);
-
-	Shader* fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
-	fsh->SetShaderCode(fragment_code);
-
-	Shader* user_fsh = App->shader->CreateShader(ShaderType::FRAGMENT);
-	user_fsh->SetShaderCode(user_fragment_code);
-
-	sp = App->shader->CreateShaderProgram();
-	sp->AddShader(user_vsh);
-	sp->AddShader(user_fsh);
-	sp->AddShader(vsh);
-	sp->AddShader(fsh);
-
-	sp->LinkProgram();
-	// ----------------------------------------
-
-	// Shaders testing 2 ----------------------
-
-	//const char* vertex_code_grid =
-	//	"#version 330 core\n \
-	//	void main()\
-	//	{\
-	//	}";
-
-	//const char* fragment_code_grid =
-	//	"#version 330 core\n \
-	//	#define PI 3.141592\
-	//	out vec3 color; \
-	//	void main()\
-	//	{\
-	//		vec2 Coord = cos(PI/N*Coord);\
-	//		color = vec4(1.0) - 0.5*smoothstep(0.9, 1.0, max(Coord.x, Coord.y));\
-	//	}";
-
-	//Shader* vsh_grid = App->shader->CreateShader(ShaderType::VERTEX);
-	//vsh->SetShaderCode(vertex_code_grid);
-
-	//Shader* fsh_grid = App->shader->CreateShader(ShaderType::FRAGMENT);
-	//user_fsh->SetShaderCode(fragment_code_grid);
-
-	//sp_grid = App->shader->CreateShaderProgram();
-	//sp_grid->AddShader(vsh_grid);
-	//sp_grid->AddShader(fsh_grid);
-
-	//sp_grid->LinkProgram();
-
-	// ----------------------------------------
 
 	return ret;
 }
@@ -295,54 +170,10 @@ bool ModuleRenderer::PostUpdate()
 
 	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
-	test->Start();
+	line_renderer->DrawLine(float2(0, 0), float2(0, 50), float3(178.0f/255.0f, 242.0f / 255.0f, 82.0f / 255.0f), 1);
+	line_renderer->DrawLine(float2(0, 0), float2(50, 0), float3(220.0f / 255.0f, 61.0f / 255.0f, 30.0f / 255.0f), 1);
 
-	line_renderer->DrawLine(float2(0, 50), float2(50, 50), float3(0.01f, 1, 0));
-
-	test->Finish();
-
-	//BindArrayBuffer(1);
-
-	//glDisable(GL_CULL_FACE);
-
-	//float4x4 model = float4x4::identity;
-	//model[0][3] = 1;
-	//model[1][3] = 1;
-	//model[2][3] = 1;
-
-	//sp->UseProgram();
-
-	//ShaderProgramParameters par;
-	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
-	//sp->SetProgramParameters(par);
-
-	//GLint posAttrib = glGetAttribLocation(sp->GetID(), "position");
-	//EnableVertexAttributeArray(posAttrib);
-	//SetVertexAttributePointer(posAttrib, 3, 6, 0);
-
-	//GLint posAttribCol = glGetAttribLocation(sp->GetID(), "col");
-	//EnableVertexAttributeArray(posAttribCol);
-	//SetVertexAttributePointer(posAttribCol, 3, 6, 3);
-
-	//SetUniformMatrix(sp->GetID(), "Model", model.Transposed().ptr());
-	//SetUniformMatrix(sp->GetID(), "View", App->camera->GetEditorCamera()->GetOpenGLViewMatrix().ptr());
-	//SetUniformMatrix(sp->GetID(), "Projection", App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix().ptr());
-
-	//glLineWidth(25);
-
-	//glDrawArrays(GL_LINES, 0, 2);
-
-	//GLenum error = glGetError();
-	//if (error != GL_NO_ERROR)
-	//{
-	//	INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
-	//}
-
-	//DisableVertexAttributeArray(posAttrib);
-	//DisableVertexAttributeArray(posAttribCol);
-
-	line_renderer->Render(App->camera->GetEditorCamera()->GetOpenGLViewMatrix(), App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix());
-	grid_renderer->Render(App->camera->GetEditorCamera()->GetOpenGLViewMatrix(), App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix());
+	RenderRenderers();
 
 	App->camera->GetEditorCamera()->Unbind();
 
@@ -373,6 +204,8 @@ bool ModuleRenderer::CleanUp()
 	bool ret = true;
 
 	INTERNAL_LOG("Destroying 3D Renderer");
+
+	DestroyAllRenderers();
 
 	SDL_GL_DeleteContext(context);
 
@@ -1154,6 +987,21 @@ void ModuleRenderer::LoadProgramFromBinary(uint program_id, uint buff_size, cons
 	}
 }
 
+GLint ModuleRenderer::GetVertexAttributeArray(uint program, const char * name)
+{
+	GLint ret = -1;
+
+	ret = glGetAttribLocation(program, name);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error getting vertex attribute array %s\n", gluErrorString(error));
+	}
+
+	return ret;
+}
+
 void ModuleRenderer::EnableVertexAttributeArray(uint id)
 {
 	glEnableVertexAttribArray(id);
@@ -1353,7 +1201,7 @@ void ModuleRenderer::AttachShaderToProgram(uint program_id, uint shader_id)
 	}
 }
 
-bool ModuleRenderer::LinkProgram(uint program_id)
+bool ModuleRenderer::LinkProgram(uint program_id, std::string& link_error)
 {
 	bool ret = false;
 
@@ -1373,6 +1221,8 @@ bool ModuleRenderer::LinkProgram(uint program_id)
 			GLchar infoLog[512];
 			glGetProgramInfoLog(program_id, 512, NULL, infoLog);
 			INTERNAL_LOG("Shader link error: %s", infoLog);
+
+			link_error = infoLog;
 
 			ret = false;
 		}
@@ -1400,4 +1250,42 @@ bool ModuleRenderer::RenderEditorAsync()
 	App->editor->RenderEditor();
 
 	return false;
+}
+
+Renderer* ModuleRenderer::AddRenderer(Renderer * gm)
+{
+	Renderer* ret = nullptr;
+
+	if (gm != nullptr)
+	{
+		gm->Start();
+
+		renderers.push_back(gm);
+
+		ret = gm;
+	}
+
+	return ret;
+}
+
+void ModuleRenderer::RenderRenderers()
+{
+	float4x4 view_mat = App->camera->GetEditorCamera()->GetOpenGLViewMatrix();
+	float4x4 projection_mat = App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix();
+
+	for (std::vector<Renderer*>::iterator it = renderers.begin(); it != renderers.end(); ++it)
+	{
+		(*it)->Render(view_mat, projection_mat);
+	}
+}
+
+void ModuleRenderer::DestroyAllRenderers()
+{
+	for (std::vector<Renderer*>::iterator it = renderers.begin(); it != renderers.end(); ++it)
+	{
+		(*it)->CleanUp();
+		RELEASE(*it);
+	}
+
+	renderers.clear();
 }

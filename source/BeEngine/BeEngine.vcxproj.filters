@@ -444,16 +444,16 @@
     <ClInclude Include="ModuleGameObject.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
-    <ClInclude Include="LineGuizmoRenderer.h">
-      <Filter>Sources\4. Rendering =============\Renderers</Filter>
-    </ClInclude>
     <ClInclude Include="VertexBuffer.h">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
-    <ClInclude Include="GridGuizmoRenderer.h">
+    <ClInclude Include="GridRenderer.h">
       <Filter>Sources\4. Rendering =============\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="GuizmoRenderer.h">
+    <ClInclude Include="LineRenderer.h">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
   </ItemGroup>
@@ -719,17 +719,14 @@
     <ClCompile Include="ModuleGameObject.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
-    <ClCompile Include="LineGuizmoRenderer.cpp">
-      <Filter>Sources\4. Rendering =============\Renderers</Filter>
-    </ClCompile>
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClCompile>
-    <ClCompile Include="GridGuizmoRenderer.cpp">
+    <ClCompile Include="GridRenderer.cpp">
       <Filter>Sources\4. Rendering =============\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="GuizmoRenderer.cpp">
-      <Filter>Sources\4. Rendering =============</Filter>
+    <ClCompile Include="LineRenderer.cpp">
+      <Filter>Sources\4. Rendering =============\Renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

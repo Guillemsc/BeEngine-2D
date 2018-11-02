@@ -1,29 +1,30 @@
-#include "LineGuizmoRenderer.h"
+#include "LineRenderer.h"
 #include "App.h"
 #include "VertexBuffer.h"
+#include "Functions.h"
 
-LineGuizmoRenderer::LineGuizmoRenderer()
+LineRenderer::LineRenderer()
 {
 }
 
-LineGuizmoRenderer::~LineGuizmoRenderer()
+LineRenderer::~LineRenderer()
 {
 }
 
-void LineGuizmoRenderer::Start()
+void LineRenderer::Start()
 {
 	const char* vertex_code =
 		"#version 330 core\n \
-		layout(location = 0) in vec3 position;\n \
-		layout(location = 1) in vec3 col;\n \
+		layout(location = 0) in vec3 position; \n \
+		layout(location = 1) in vec3 col; \n \
 		uniform mat4 Model; \
 		uniform mat4 View; \
 		uniform mat4 Projection; \
 		out vec3 oColour;	\
 		void main()\
 		{\
-			gl_Position = Projection * View * Model * vec4(position, 1);\
 			oColour = col; \
+			gl_Position = Projection * View * Model * vec4(position, 1);\
 		}";
 
 	const char* fragment_code =
@@ -34,6 +35,7 @@ void LineGuizmoRenderer::Start()
 		{\
 			color = oColour;\
 		}";
+
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
 	vsh->SetShaderCode(vertex_code);
@@ -56,12 +58,13 @@ void LineGuizmoRenderer::Start()
 	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 }
 
-void LineGuizmoRenderer::CleanUp()
+void LineRenderer::CleanUp()
 {
-
+	lines_vb.Clear();
+	lines_count = 0;
 }
 
-void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection)
+void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 {
 	App->renderer->BindArrayBuffer(vbo);
 	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
@@ -77,11 +80,11 @@ void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection
 	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
 	//program->SetProgramParameters(par);
 
-	GLint posAttrib = glGetAttribLocation(program->GetID(), "position");
+	GLint posAttrib = App->renderer->GetVertexAttributeArray(program->GetID(), "position");
 	App->renderer->EnableVertexAttributeArray(posAttrib);
 	App->renderer->SetVertexAttributePointer(posAttrib, 3, 6, 0);
 
-	GLint posAttribCol = glGetAttribLocation(program->GetID(), "col");
+	GLint posAttribCol = App->renderer->GetVertexAttributeArray(program->GetID(), "col");
 	App->renderer->EnableVertexAttributeArray(posAttribCol);
 	App->renderer->SetVertexAttributePointer(posAttribCol, 3, 6, 3);
 
@@ -89,9 +92,7 @@ void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection
 	App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-	glLineWidth(2);
-
-	glDrawArrays(GL_LINES, 0, lines_count * 2);
+	glDrawArrays(GL_TRIANGLES, 0, lines_count * 6);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
@@ -106,13 +107,50 @@ void LineGuizmoRenderer::Render(const float4x4& view, const float4x4& projection
 	lines_count = 0;
 }
 
-void LineGuizmoRenderer::DrawLine(float2 start, float2 end, float3 colour)
+void LineRenderer::DrawLine(const float2& start, const float2& end, const float3& colour, float tickness)
 {
-	lines_vb.AddSpace(12);
+	float delta_y = end.y - start.y;
+	float delta_x = end.x - start.x;
 
-	lines_vb.AddFloat3(float3(start.x, start.y, 0));
+	float angle1 = atan2(delta_y, delta_x);
+	float angle2 = angle1 + (180.0f * DEGTORAD);
+
+	float half_width = tickness * 0.5;
+
+	float new_p1_1_x = start.x - (sin(angle1) * half_width);
+	float new_p1_1_y = start.y + (cos(angle1) * half_width);
+
+	float new_p1_2_x = start.x - (sin(angle2) * half_width);
+	float new_p1_2_y = start.y + (cos(angle2) * half_width);
+
+	float new_p2_1_x = end.x - (sin(angle1) * half_width);
+	float new_p2_1_y = end.y + (cos(angle1) * half_width);
+
+	float new_p2_2_x = end.x - (sin(angle2) * half_width);
+	float new_p2_2_y = end.y + (cos(angle2) * half_width);
+
+	float3 final_1 = float3(new_p1_2_x, new_p1_2_y, 0);
+
+	float3 final_2 = float3(new_p2_2_x, new_p2_2_y, 0);
+
+	float3 final_3 = float3(new_p2_1_x, new_p2_1_y, 0);
+
+	float3 final_4 = float3(new_p1_1_x, new_p1_1_y, 0);
+
+	lines_vb.AddSpace(36);
+
+	lines_vb.AddFloat3(final_2);
 	lines_vb.AddFloat3(colour);
-	lines_vb.AddFloat3(float3(end.x, end.y, 0));
+	lines_vb.AddFloat3(final_4);
+	lines_vb.AddFloat3(colour);
+	lines_vb.AddFloat3(final_3);
+	lines_vb.AddFloat3(colour);
+
+	lines_vb.AddFloat3(final_2);
+	lines_vb.AddFloat3(colour);
+	lines_vb.AddFloat3(final_4);
+	lines_vb.AddFloat3(colour);
+	lines_vb.AddFloat3(final_1);
 	lines_vb.AddFloat3(colour);
 
 	++lines_count;
