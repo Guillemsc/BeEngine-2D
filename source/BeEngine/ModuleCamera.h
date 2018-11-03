@@ -100,12 +100,7 @@ public:
 	void MoveUp(const float& speed);
 	void MoveDown(const float& speed);
 
-	void Orbit(const float3& rotate_center, const float& motion_x, const float& motion_y);
-	void Rotate(const float& motion_x, const float& motion_y);
-	void Focus(const float3& focus_center, const float& distance);
-	void Focus(const AABB& aabb);
-
-	void Look(const float3& look_pos);
+	LineSegment ShootRay(const Rect& bounds_rect, const float2& shoot_pos);
 
 	bool CheckInsideFrustum(const AABB& box);
 	void SetFrustumCulling(bool set);

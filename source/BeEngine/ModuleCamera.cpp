@@ -456,38 +456,17 @@ void Camera2D::MoveDown(const float & speed)
 	UpdateTransform();
 }
 
-void Camera2D::Orbit(const float3 & rotate_center, const float & motion_x, const float & motion_y)
+LineSegment Camera2D::ShootRay(const Rect& bounds_rect, const float2& shoot_pos)
 {
-	float3 distance = frustum.Pos() - rotate_center;
+	float first_normalized_x = (shoot_pos.x - bounds_rect.left) / (bounds_rect.right - bounds_rect.left);
+	float first_normalized_y = (shoot_pos.y - bounds_rect.top) / (bounds_rect.bottom - bounds_rect.top);
 
-	Quat X(frustum.WorldRight(), motion_y);
-	Quat Y(frustum.Up(), motion_x);
+	float normalized_x = (first_normalized_x * 2) - 1;
+	float normalized_y = 1 - (first_normalized_y * 2);
 
-	distance = X.Transform(distance);
-	distance = Y.Transform(distance);
+	LineSegment ret = frustum.UnProjectLineSegment(normalized_x, normalized_y);
 
-	frustum.SetPos(distance + rotate_center);
-}
-
-void Camera2D::Rotate(const float & motion_x, const float & motion_y)
-{
-	Quat rotation_x = Quat::RotateY(motion_x);
-	frustum.SetFront(rotation_x.Mul(frustum.Front()).Normalized());
-	frustum.SetUp(rotation_x.Mul(frustum.Up()).Normalized());
-
-	Quat rotation_y = Quat::RotateAxisAngle(frustum.WorldRight(), motion_y);
-	frustum.SetFront(rotation_y.Mul(frustum.Front()).Normalized());
-	frustum.SetUp(rotation_y.Mul(frustum.Up()).Normalized());
-}
-
-void Camera2D::Look(const float3 & look_pos)
-{
-	float3 dir = look_pos - frustum.Pos();
-
-	float3x3 direction_matrix = float3x3::LookAt(frustum.Front(), dir.Normalized(), frustum.Up(), float3::unitY);
-
-	frustum.SetFront(direction_matrix.MulDir(frustum.Front()).Normalized());
-	frustum.SetUp(direction_matrix.MulDir(frustum.Up()).Normalized());
+	return ret;
 }
 
 bool Camera2D::CheckInsideFrustum(const AABB & box)
@@ -541,19 +520,6 @@ void Camera2D::UpdateTransform()
 {
 	frustum.SetFront(frustum.Front());
 	frustum.SetUp(frustum.Up());
-}
-
-void Camera2D::Focus(const float3 & focus_center, const float & distance)
-{
-	float3 dir = frustum.Pos() - focus_center;
-	frustum.SetPos(dir.Normalized() * distance);
-
-	Look(focus_center);
-}
-
-void Camera2D::Focus(const AABB & aabb)
-{
-	Focus(aabb.CenterPoint(), aabb.Size().Length());
 }
 
 RenderTexture::RenderTexture()

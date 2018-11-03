@@ -33,6 +33,8 @@ public:
 	bool GetVisible() const;
 	bool GetOpened() const;
 	float2 GetWindowSize() const;
+	float2 GetWindowPos() const;
+	Rect GetWindowRect();
 	bool GetMouseInsideWindow() const;
 
 private:

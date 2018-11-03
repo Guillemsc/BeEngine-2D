@@ -17,7 +17,7 @@ public:
 	void CleanUp();
 	void Render(const float4x4& view, const float4x4& projection);
 
-	void DrawTriangle(const float2& pos, const float2& size, const float3& colour, float alpha = 1.0f);
+	void DrawTriangle(const float2& pos, const float2& size, float rotation_degrees, const float3& colour, float alpha = 1.0f);
 
 private:
 	ShaderProgram* program = nullptr;

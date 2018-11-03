@@ -16,6 +16,7 @@
 #include "QuadRenderer.h"
 #include "TriangleRenderer.h"
 #include "VertexBuffer.h"
+#include "ModuleGuizmo.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -170,35 +171,28 @@ bool ModuleRenderer::PostUpdate()
 	// Draw scene
 	//RenderScene();
 
-	// Shaders testing -----------------------
+	// ---------------------------------------------------------------------
 
 	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
 
-	line_renderer->DrawLine(float2(0, 0), float2(0, 50), float3(178.0f/255.0f, 242.0f / 255.0f, 82.0f / 255.0f), 0.1f, 1);
-	line_renderer->DrawLine(float2(0, 0), float2(50, 0), float3(220.0f / 255.0f, 61.0f / 255.0f, 30.0f / 255.0f), 1, 1);
+	//line_renderer->DrawLine(float2(0, 0), float2(0, 50), float3(178.0f/255.0f, 242.0f / 255.0f, 82.0f / 255.0f), 0.1f, 1);
+	//line_renderer->DrawLine(float2(0, 0), float2(50, 0), float3(220.0f / 255.0f, 61.0f / 255.0f, 30.0f / 255.0f), 1, 1);
 
-	quad_renderer->DrawQuad(float2(-100, 0), float2(50, 50), float3(1, 1, 1));
+	//quad_renderer->DrawQuad(float2(-100, 0), float2(50, 50), float3(1, 1, 1));
 
-	triangle_renderer->DrawTriangle(float2(-100, 100), float2(7, 20), float3(1, 1, 1));
+	App->guizmo->RenderGuizmos();
 
 	RenderRenderers();
 
-	App->camera->GetEditorCamera()->Unbind();
+	App->camera->GetEditorCamera()->Unbind(); 
+
+	// ---------------------------------------------------------------------
+
+	// ---------------------------------------------------------------------
 
 	App->editor->RenderEditor();
 
-	// ----------------------------------------
-
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//// Disable light
-	//SetLightingState(false);
-
-	//// Draw editor
-	////App->editorUI->DrawEditor();
-
-	//// Enable light
-	//SetLightingState(true);
+	// ---------------------------------------------------------------------
 
 	// Swap
 	SDL_GL_SwapWindow(App->window->GetWindow());

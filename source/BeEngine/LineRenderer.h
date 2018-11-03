@@ -18,6 +18,7 @@ public:
 	void Render(const float4x4& view, const float4x4& projection);
 
 	void DrawLine(const float2& start, const float2& end, const float3& colour, float alpha = 1.0f, float tickness = 10.0f);
+	void DrawDashedLine(const float2& start, const float2& end, const float3& colour, float alpha = 1.0f, float dash_lenght = 40.0f, float tickness = 10.0f);
 
 private:
 	ShaderProgram* program = nullptr;

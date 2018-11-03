@@ -23,6 +23,7 @@ class ModuleTimeSlicedTask;
 class ModuleProject;
 class ModuleResource;
 class ModuleGameObject;
+class ModuleGuizmo;
 
 class Profiler;
 class JSON_Doc;
@@ -96,6 +97,7 @@ public:
 	ModuleProject*		  project = nullptr;
 	ModuleResource*		  resource = nullptr;
 	ModuleGameObject*	  gameobject = nullptr;
+	ModuleGuizmo*		  guizmo = nullptr;
 
 	Profiler*			  profiler = nullptr;
 

@@ -1,4 +1,4 @@
-#include "TriangleRenderer.h"
+﻿#include "TriangleRenderer.h"
 #include "App.h"
 #include "ModuleShader.h"
 
@@ -84,7 +84,7 @@ void TriangleRenderer::Render(const float4x4 & view, const float4x4 & projection
 
 	GLint posAttribCol = App->renderer->GetVertexAttributeArray(program->GetID(), "col");
 	App->renderer->EnableVertexAttributeArray(posAttribCol);
-	App->renderer->SetVertexAttributePointer(posAttribCol, 3, 7, 3);
+	App->renderer->SetVertexAttributePointer(posAttribCol, 4, 7, 3);
 
 	App->renderer->SetUniformMatrix(program->GetID(), "Model", model.Transposed().ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
@@ -107,13 +107,28 @@ void TriangleRenderer::Render(const float4x4 & view, const float4x4 & projection
 	glDisable(GL_BLEND);
 }
 
-void TriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, const float3 & colour, float alpha)
+void TriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, float rotation_degrees, const float3 & colour, float alpha)
 {
 	float2 half_size = float2(size.x * 0.5f, size.y * 0.5f);
 
-	float3 final_1 = float3(pos.x - half_size.x, pos.y - half_size.y, 0);
-	float3 final_2 = float3(pos.x + half_size.x, pos.y - half_size.y, 0);
-	float3 final_3 = float3(pos.x, pos.y + half_size.y, 0);
+	float rotation = rotation_degrees * DEGTORAD;
+
+	float2 point1 = float2(pos.x - half_size.x, pos.y - half_size.y);
+	float2 point2 = float2(pos.x + half_size.x, pos.y - half_size.y);
+	float2 point3 = float2(pos.x, pos.y + half_size.y);
+
+	float new_pos_1_x = ((point1.x - pos.x) * cos(rotation)) - ((point1.y - pos.y) * sin(rotation)) + pos.x;
+	float new_pos_1_y = ((point1.x - pos.x) * sin(rotation)) + ((point1.y - pos.y) * cos(rotation)) + pos.y;
+
+	float new_pos_2_x = ((point2.x - pos.x) * cos(rotation)) - ((point2.y - pos.y) * sin(rotation)) + pos.x;
+	float new_pos_2_y = ((point2.x - pos.x) * sin(rotation)) + ((point2.y - pos.y) * cos(rotation)) + pos.y;
+
+	float new_pos_3_x = ((point3.x - pos.x) * cos(rotation)) - ((point3.y - pos.y) * sin(rotation)) + pos.x;
+	float new_pos_3_y = ((point3.x - pos.x) * sin(rotation)) + ((point3.y - pos.y) * cos(rotation)) + pos.y;
+
+	float3 final_1 = float3(new_pos_1_x, new_pos_1_y, 0);
+	float3 final_2 = float3(new_pos_2_x, new_pos_2_y, 0);
+	float3 final_3 = float3(new_pos_3_x, new_pos_3_y, 0);
 
 	triangles_vb.AddSpace(21);
 

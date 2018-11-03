@@ -673,6 +673,16 @@ float2 EditorWindow::GetWindowSize() const
 	return window_size;
 }
 
+float2 EditorWindow::GetWindowPos() const
+{
+	return window_pos;
+}
+
+Rect EditorWindow::GetWindowRect()
+{
+	return Rect(window_pos.x, window_pos.y, window_size.x, window_size.y);
+}
+
 bool EditorWindow::GetMouseInsideWindow() const
 {
 	bool ret = false;

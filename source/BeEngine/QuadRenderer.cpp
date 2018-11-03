@@ -31,7 +31,7 @@ void QuadRenderer::Start()
 		in vec4 oColour;\
 		void main()\
 		{\
-			gl_FragColor  = oColour;\
+			gl_FragColor = oColour;\
 		}";
 
 
@@ -84,7 +84,7 @@ void QuadRenderer::Render(const float4x4 & view, const float4x4 & projection)
 
 	GLint posAttribCol = App->renderer->GetVertexAttributeArray(program->GetID(), "col");
 	App->renderer->EnableVertexAttributeArray(posAttribCol);
-	App->renderer->SetVertexAttributePointer(posAttribCol, 3, 7, 3);
+	App->renderer->SetVertexAttributePointer(posAttribCol, 4, 7, 3);
 
 	App->renderer->SetUniformMatrix(program->GetID(), "Model", model.Transposed().ptr());
 	App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());

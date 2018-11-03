@@ -162,3 +162,7 @@ void LineRenderer::DrawLine(const float2& start, const float2& end, const float3
 
 	++lines_count;
 }
+
+void LineRenderer::DrawDashedLine(const float2 & start, const float2 & end, const float3 & colour, float alpha, float dash_lenght, float tickness)
+{
+}
