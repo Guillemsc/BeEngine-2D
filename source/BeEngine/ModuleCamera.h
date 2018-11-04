@@ -165,8 +165,6 @@ private:
 	float wheel_speed = 0.0f;
 
 	bool dragging = false;
-
-	float2 last_mouse_position = float2::zero;
 };
 
 #endif // !__MODULE_CAMERA3D_H__

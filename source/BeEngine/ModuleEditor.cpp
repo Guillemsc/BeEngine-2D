@@ -44,7 +44,7 @@ bool ModuleEditor::Awake()
 	progress_window = (ProgressWindow*)AddEditorElement(new ProgressWindow(), true);
 
 
-	scene_window = AddEditorWindow("Scene", new SceneWindow());
+	scene_window = (SceneWindow*)AddEditorWindow("Scene", new SceneWindow());
 	AddEditorWindow("Profiler", new ProfilerWindow());
 	AddEditorWindow("Resources", new ResourcesWindow());
 

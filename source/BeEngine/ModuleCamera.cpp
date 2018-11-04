@@ -9,6 +9,7 @@
 #include "ModuleJson.h"
 #include "ModuleAction.h"
 #include "ModuleEditor.h"
+#include "SceneWindow.h"
 #include "imgui.h"
 
 ModuleCamera::ModuleCamera() : Module()
@@ -82,8 +83,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 		{
 			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 			{
-				last_mouse_position = float2(App->input->GetMouseX(), App->input->GetMouseY());
-
 				if (App->editor->scene_window->GetMouseInsideWindow())
 					dragging = true;
 			}
@@ -97,7 +96,7 @@ void ModuleCamera::UpdateEditorCameraInput()
 
 				float2 mouse_pos = App->input->GetMouse();
 
-				float2 motion = mouse_pos - last_mouse_position;
+				float2 motion = float2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
 
 				motion.x *= editor_camera->size;
 
@@ -112,8 +111,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 					editor_camera->MoveUp(motion.y);
 				if (motion.y < 0)
 					editor_camera->MoveDown(-motion.y);
-
-				last_mouse_position = mouse_pos;
 			}
 
 			if (App->editor->scene_window->GetMouseInsideWindow())

@@ -77,6 +77,9 @@ bool ModuleInput::PreUpdate()
 	keys_repeat.clear();
 	keys_up.clear();
 
+	last_mouse_x = mouse_x;
+	last_mouse_y = mouse_y;
+
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
 	for (int i = 0; i < MAX_KEYS; ++i)
@@ -113,7 +116,6 @@ bool ModuleInput::PreUpdate()
 	mouse_x /= SCREEN_SIZE;
 	mouse_y /= SCREEN_SIZE;
 	mouse_wheel = 0;
-	mouse_x_motion = mouse_y_motion = 0;
 
 	for (int i = 0; i < 5; ++i)
 	{
@@ -176,9 +178,6 @@ bool ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 			mouse_x = e.motion.x / SCREEN_SIZE;
 			mouse_y = e.motion.y / SCREEN_SIZE;
-
-			mouse_x_motion = e.motion.xrel / SCREEN_SIZE;
-			mouse_y_motion = e.motion.yrel / SCREEN_SIZE;
 			break;
 
 		case SDL_TEXTINPUT:
@@ -411,10 +410,10 @@ int ModuleInput::GetMouseWheel() const
 
 int ModuleInput::GetMouseXMotion() const
 {
-	return mouse_x_motion;
+	return mouse_x - last_mouse_x;
 }
 
 int ModuleInput::GetMouseYMotion() const
 {
-	return mouse_y_motion;
+	return  mouse_y - last_mouse_y;
 }

@@ -6,6 +6,7 @@
 #include "QuadRenderer.h"
 #include "ModuleInput.h"
 #include "ModuleEditor.h"
+#include "SceneWindow.h"
 
 ModuleGuizmo::ModuleGuizmo()
 {
@@ -91,17 +92,33 @@ void ModuleGuizmo::RenderGuizmos()
 
 			for (int i = 0; i < handlers_count; ++i)
 			{
+				bool inside_window = App->editor->scene_window->GetMouseInsideWindow();
+
 				GuizmoHandler* handler = (*it)->GetHandler(i);
 
 				if (render_handlers)
 					App->renderer->quad_renderer->DrawQuad(handler->GetPos(), handler->GetSize(), float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
 
-				LineSegment ls = App->camera->GetEditorCamera()->ShootRay(App->editor->scene_window->GetWindowRect(), App->input->GetMouse());
+				LineSegment ls = App->camera->GetEditorCamera()->ShootRay(App->editor->scene_window->GetSceneRect(), App->input->GetMouse());
 
 				if (handler->CheckRay(ls))
-					handler->hovered = true;
+				{
+					if(inside_window)
+						handler->hovered = true;
+
+					if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && inside_window)
+						handler->pressed = true;
+				}
 				else
 					handler->hovered = false;
+
+				if (handler->pressed)
+				{
+					if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_DOWN)
+					{
+						handler->pressed = false;
+					}
+				}
 			}
 			
 			float relative_size = 1;

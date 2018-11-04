@@ -100,9 +100,10 @@ private:
 
 	int				   mouse_x = 0;
 	int				   mouse_y = 0;
+	int				   last_mouse_x = 0;
+	int				   last_mouse_y = 0;
+
 	int				   mouse_wheel = 0;
-	int				   mouse_x_motion = 0;
-	int				   mouse_y_motion = 0;
 
 public:
 	bool			   right_clicking = false;

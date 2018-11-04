@@ -28,7 +28,10 @@ void SceneWindow::DrawEditor()
 	float2 window_size = GetWindowSize();
 	float2 window_pos = GetWindowPos();
 
+	float2 image_pos = float2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y);
 	float2 image_size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+
+	scene_viewport_rect = Rect(window_pos.x + image_pos.x, window_pos.y + image_pos.y, image_size.x, image_size.y);
 
 	if (last_size.x != image_size.x || last_size.y != image_size.y)
 	{
@@ -54,11 +57,15 @@ void SceneWindow::DrawEditor()
 	}
 	ImGui::PopFont();
 	
-
 	ImGui::Image((void*)App->camera->GetEditorCamera()->GetTextId(), { image_size.x, image_size.y}, ImVec2(0, 1), ImVec2(1, 0));
 }
 
 ImGuiWindowFlags SceneWindow::GetWindowFlags()
 {
 	return ImGuiWindowFlags_MenuBar;
+}
+
+Rect SceneWindow::GetSceneRect() const
+{
+	return scene_viewport_rect;
 }

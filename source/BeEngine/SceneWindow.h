@@ -20,10 +20,14 @@ public:
 	void DrawEditor();
 	ImGuiWindowFlags GetWindowFlags();
 
+	Rect GetSceneRect() const;
+
 private:
 	float2 last_size = float2::zero;
 
 	ImFont* font = nullptr;
+
+	Rect scene_viewport_rect;
 };
 
 #endif // !__SCENE_WINDOW_H__

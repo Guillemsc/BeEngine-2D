@@ -13,8 +13,10 @@ void GuizmoHandler::SetTransfroms(const float2 & _pos, const float2 & _size)
 	pos = _pos;
 	size = _size;
 
+	float2 half_size = size * 0.5f;
+
 	bbox.SetNegativeInfinity();
-	bbox = AABB(float3(_pos.x - size.x, _pos.y - size.y, -1), float3(_pos.x + size.x, _pos.y + size.y, 1));
+	bbox = AABB(float3(_pos.x - half_size.x, _pos.y - half_size.y, -1), float3(_pos.x + half_size.x, _pos.y + half_size.y, 1));
 }
 
 bool GuizmoHandler::CheckRay(const LineSegment & ray)
@@ -35,6 +37,11 @@ float2 GuizmoHandler::GetSize() const
 bool GuizmoHandler::GetHovered() const
 {
 	return hovered;
+}
+
+bool GuizmoHandler::GetPressed() const
+{
+	return pressed;
 }
 
 void Guizmo::CleanUp()

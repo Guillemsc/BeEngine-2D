@@ -53,12 +53,14 @@ public:
 	float2 GetSize() const;
 
 	bool GetHovered() const;
+	bool GetPressed() const;
 
 private:
 	float2 pos = float2::zero;
 	float2 size = float2::zero;
 
 	bool hovered = false;
+	bool pressed = false;
 
 	AABB bbox;
 };
