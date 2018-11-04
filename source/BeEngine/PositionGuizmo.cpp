@@ -33,6 +33,7 @@ void PositionGuizmo::Render(float relative_size)
 	float lines_lenght = 80 * relative_size;
 
 	float3 hovered_colour = float3(247.0f / 255.0f, 188.0f / 255.0f, 43.0f / 255.0f);
+	float3 disabled_colour = float3(56.0f / 255.0f, 56.0f / 255.0f, 56.0f / 255.0f);
 
 	float3 line_up_colour = float3(63.0f / 255.0f, 211.0f / 255.0f, 115.0f / 255.0f);
 	
@@ -40,14 +41,27 @@ void PositionGuizmo::Render(float relative_size)
 
 	float3 center_colour = float3(1, 1, 1);
 
-	if (han_up_arrow->GetHovered())
+	if (han_up_arrow->GetHovered() || han_up_arrow->GetPressed() || han_center->GetPressed())
 		line_up_colour = hovered_colour;
 	
-	if (han_right_arrow->GetHovered())
+	if (han_right_arrow->GetHovered() || han_right_arrow->GetPressed() || han_center->GetPressed())
 		line_right_colour = hovered_colour;
 
-	if (han_center->GetHovered())
+	if (han_center->GetHovered() || han_center->GetPressed())
 		center_colour = hovered_colour;
+
+	if (han_up_arrow->GetPressed())
+	{
+		center_colour = disabled_colour;
+		line_right_colour = disabled_colour;
+	}
+
+	if (han_right_arrow->GetPressed())
+	{
+		center_colour = disabled_colour;
+		line_up_colour = disabled_colour;
+	}
+
 
 	float half_quad_size = quad_size * 0.5f;
 	float half_triangle_height = triangles_height * 0.5f;

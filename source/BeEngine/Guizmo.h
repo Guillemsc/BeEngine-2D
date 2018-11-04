@@ -18,6 +18,7 @@ public:
 	virtual void Render(float relative_size) {};
 	virtual void UpdateTransform(float4x4& transform) {};
 
+
 	void CleanUp();
 
 	uint GetHandlersCount() const;
@@ -35,7 +36,7 @@ protected:
 private:
 	float4x4 internal_transform = float4x4::identity;
 	bool	 visible = true;
-	bool	 keep_size = true;
+	bool	 keep_size = true; 
 };
 
 class GuizmoHandler
