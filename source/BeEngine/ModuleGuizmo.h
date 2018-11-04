@@ -29,7 +29,7 @@ private:
 private:
 	std::vector<Guizmo*> guizmos;
 
-	bool render_handlers = true;
+	bool render_handlers = false;
 };
 
 #endif // !__MODULE_GUIZMO_H__
