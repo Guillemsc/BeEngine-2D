@@ -68,7 +68,7 @@ Shader * ModuleShader::CreateShader(ShaderType type)
 	return shader;
 }
 
-void ModuleShader::DeleteShader(Shader * sh)
+void ModuleShader::DestroyShader(Shader * sh)
 {
 	if (sh != nullptr)
 	{

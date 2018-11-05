@@ -130,7 +130,7 @@ public:
 	bool CleanUp();
 
 	Shader* CreateShader(ShaderType type);
-	void DeleteShader(Shader* sh);
+	void DestroyShader(Shader* sh);
 
 	ShaderProgram* CreateShaderProgram();
 	void DeleteShaderProgram(ShaderProgram* sp);

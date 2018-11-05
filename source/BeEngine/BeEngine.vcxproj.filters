@@ -474,6 +474,12 @@
     <ClInclude Include="PositionGuizmo.h">
       <Filter>Sources\6. Guizmos =============</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Sources\7. GameObjects ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectComponent.h">
+      <Filter>Sources\7. GameObjects ===========</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -759,6 +765,9 @@
       <Filter>Sources\6. Guizmos =============</Filter>
     </ClCompile>
     <ClCompile Include="Guizmo.cpp" />
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Sources\7. GameObjects ===========</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
