@@ -28,6 +28,8 @@ public:
 	bool IsChild(GameObject* go);
 	bool IsInChildTree(GameObject* go);
 
+	GameObject* GetParent() const; 
+
 private:
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> childs;

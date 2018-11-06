@@ -111,3 +111,8 @@ bool GameObject::IsInChildTree(GameObject* go)
 
 	return ret;
 }
+
+GameObject* GameObject::GetParent() const
+{
+	return parent;
+}
