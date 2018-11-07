@@ -8,9 +8,18 @@ namespace BeEngineScriptCompiler
 {
     public class CSharpCompiler
     {
-        public void InitCompiler(List<string> referenced_assemblies)
+        public bool InitCompiler(List<string> referenced_assemblies)
         {
-            ref_assemblies = referenced_assemblies;
+            bool ret = false;
+
+            if (referenced_assemblies != null)
+            {
+                ref_assemblies = referenced_assemblies;
+
+                ret = true;
+            }
+
+            return ret;
         }
 
         public bool CompileScript(string script_path, string script_name, ref List<string> compile_errors)
