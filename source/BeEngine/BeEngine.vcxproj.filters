@@ -480,6 +480,9 @@
     <ClInclude Include="GameObjectComponent.h">
       <Filter>Sources\7. GameObjects ===========</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleScripting.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -764,9 +767,14 @@
     <ClCompile Include="PositionGuizmo.cpp">
       <Filter>Sources\6. Guizmos =============</Filter>
     </ClCompile>
-    <ClCompile Include="Guizmo.cpp" />
     <ClCompile Include="GameObject.cpp">
       <Filter>Sources\7. GameObjects ===========</Filter>
+    </ClCompile>
+    <ClCompile Include="Guizmo.cpp">
+      <Filter>Sources\6. Guizmos =============</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScripting.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,7 @@ class ModuleProject;
 class ModuleResource;
 class ModuleGameObject;
 class ModuleGuizmo;
+class ModuleScripting;
 
 class Profiler;
 class JSON_Doc;
@@ -98,6 +99,7 @@ public:
 	ModuleResource*		  resource = nullptr;
 	ModuleGameObject*	  gameobject = nullptr;
 	ModuleGuizmo*		  guizmo = nullptr;
+	ModuleScripting*	  scripting = nullptr;
 
 	Profiler*			  profiler = nullptr;
 

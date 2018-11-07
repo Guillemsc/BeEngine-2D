@@ -16,6 +16,7 @@
 #include "ModuleResource.h"
 #include "ModuleGameObject.h"
 #include "ModuleGuizmo.h"
+#include "ModuleScripting.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -48,6 +49,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	resource	= new ModuleResource();
 	gameobject  = new ModuleGameObject();
 	guizmo		= new ModuleGuizmo();
+	scripting   = new ModuleScripting();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -67,6 +69,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");
 	AddModule(resource, "Module Resource");
+	AddModule(scripting, "Module Scripting");
 	AddModule(gameobject, "Module GameObject");
 	AddModule(guizmo, "Module Guizmo");
 

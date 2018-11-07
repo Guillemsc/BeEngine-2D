@@ -66,6 +66,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <AdditionalIncludeDirectories>..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -84,6 +85,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -111,6 +113,7 @@
     <ClInclude Include="GridRenderer.h" />
     <ClInclude Include="Guizmo.h" />
     <ClInclude Include="ModuleGuizmo.h" />
+    <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="PositionGuizmo.h" />
     <ClInclude Include="QuadRenderer.h" />
     <ClInclude Include="Renderer.h" />
@@ -245,6 +248,7 @@
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="ModuleGuizmo.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
+    <ClCompile Include="ModuleScripting.cpp" />
     <ClCompile Include="PositionGuizmo.cpp" />
     <ClCompile Include="ProfilerWindow.cpp" />
     <ClCompile Include="ProgressWindow.cpp" />
