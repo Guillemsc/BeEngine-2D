@@ -10,8 +10,6 @@ namespace BeEngine
     {   
         public IntPtr SetPtr(IntPtr set)
         {
-            AssemblyFactory factory = new AssemblyFactory();
-
             ptr = set;
 
             return set;

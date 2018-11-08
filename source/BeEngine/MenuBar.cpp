@@ -31,37 +31,39 @@ void MenuBar::DrawEditor()
 
 		if (ImGui::MenuItem("File"))
 		{
-
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::MenuItem("Edit"))
 		{
-
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::MenuItem("Assets"))
 		{
-
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::MenuItem("GameObjects"))
 		{
-
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::MenuItem("Components"))
 		{
-
+			ImGui::EndMenu();
 		}
 
-		if (ImGui::MenuItem("Windows"))
+		if (ImGui::BeginMenu("Windows"))
 		{
+			DrawWindowsEditor();
 
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::MenuItem("About"))
 		{
-
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Layouts"))
@@ -127,5 +129,17 @@ void MenuBar::DrawLayoutsEditor()
 		}
 
 		ImGui::PopID();
+	}
+}
+
+void MenuBar::DrawWindowsEditor()
+{
+	std::vector<EditorWindow*> editor_windows = App->editor->GetEditorWindows();
+
+	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
+	{
+		EditorWindow* curr_window = *it;
+
+		ImGui::MenuItem(curr_window->GetName().c_str(), NULL, &curr_window->opened);
 	}
 }

@@ -1,4 +1,5 @@
 #include "ModuleGameObject.h"
+#include "Functions.h"
 
 ModuleGameObject::ModuleGameObject()
 {
@@ -59,10 +60,16 @@ GameObject* ModuleGameObject::CreateGameObject()
 {
 	GameObject* ret = nullptr;
 
-	ret = new GameObject();
+	ret = new GameObject(GetUIDRandomHexadecimal());
+
+	std::string name = "GameObject" + std::to_string(game_objects.size());
+	ret->SetName(name.c_str());
+
 	ret->Start();
 
 	game_objects.push_back(ret);
+
+	AddGameObjectToRoot(ret);
 
 	return ret;
 }
@@ -102,11 +109,90 @@ void ModuleGameObject::DestroyGameObject(GameObject * go)
 				game_objects_to_destroy.push_back(curr);
 			}
 
+			if(curr->GetSelected())
+				RemoveGameObjectFromSelected(curr);
+
 			to_check.erase(to_check.begin());
 
 			to_check.insert(to_check.begin(), curr->childs.begin(), curr->childs.end());
 		}
 	}
+}
+
+GameObject * ModuleGameObject::GetGameObjectByUID(const char * uid)
+{
+	GameObject* ret = nullptr;
+
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		if ((*it)->GetUID().compare(uid) == 0)
+		{
+			ret = *it;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+std::vector<GameObject*> ModuleGameObject::GetRootGameObjects() const
+{
+	return game_objects_root;
+}
+
+void ModuleGameObject::AddGameObjectToSelected(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		bool found = false;
+		for (std::vector<GameObject*>::iterator it = game_objects_selected.begin(); it != game_objects_selected.end(); ++it)
+		{
+			if (go == (*it))
+			{
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			go->selected = true;
+
+			game_objects_selected.push_back(go);
+		}
+	}
+}
+
+void ModuleGameObject::RemoveGameObjectFromSelected(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::vector<GameObject*>::iterator it = game_objects_selected.begin(); it != game_objects_selected.end(); ++it)
+		{
+			if (go == (*it))
+			{
+				go->selected = false;
+
+				game_objects_selected.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+void ModuleGameObject::RemoveAllGameObjectsFromSelected()
+{
+	for (std::vector<GameObject*>::iterator it = game_objects_selected.begin(); it != game_objects_selected.end(); ++it)
+	{
+		(*it)->selected = false;
+	}
+
+	game_objects_selected.clear();
+}
+
+std::vector<GameObject*> ModuleGameObject::GetSelectedGameObjects() const
+{
+	return game_objects_selected;
 }
 
 void ModuleGameObject::DestroyAllGameObjects()
@@ -139,4 +225,40 @@ void ModuleGameObject::ActuallyDestroyGameObjects()
 	}
 
 	game_objects_to_destroy.clear();
+}
+
+void ModuleGameObject::AddGameObjectToRoot(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		bool found = false;
+		for (std::vector<GameObject*>::iterator it = game_objects_root.begin(); it != game_objects_root.end(); ++it)
+		{
+			if (go == (*it))
+			{
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			game_objects_root.push_back(go);
+		}
+	}
+}
+
+void ModuleGameObject::RemoveGameObjectFromRoot(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::vector<GameObject*>::iterator it = game_objects_root.begin(); it != game_objects_root.end(); ++it)
+		{
+			if (go == (*it))
+			{
+				game_objects_root.erase(it);
+				break;
+			}
+		}
+	}
 }

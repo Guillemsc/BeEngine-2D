@@ -1,4 +1,11 @@
 #include "GameObject.h"
+#include "App.h"
+#include "ModuleGameObject.h"
+
+GameObject::GameObject(std::string _uid)
+{
+	uid = _uid;
+}
 
 void GameObject::Start()
 {
@@ -11,6 +18,16 @@ void GameObject::CleanUp()
 void GameObject::SetName(const char * set)
 {
 	name = set;
+}
+
+const char * GameObject::GetName()
+{
+	return name.c_str();
+}
+
+std::string GameObject::GetUID()
+{
+	return uid;
 }
 
 void GameObject::SetParent(GameObject* set)
@@ -39,8 +56,14 @@ void GameObject::SetParent(GameObject* set)
 			if (!set->IsChild(this))
 			{
 				set->childs.push_back(this);
+
+				if (parent == nullptr)
+					App->gameobject->RemoveGameObjectFromRoot(this);
 			}
 		}
+
+		if (set == nullptr && parent != nullptr)
+			App->gameobject->AddGameObjectToRoot(this);
 
 		parent = set;
 	}
@@ -115,4 +138,9 @@ bool GameObject::IsInChildTree(GameObject* go)
 GameObject* GameObject::GetParent() const
 {
 	return parent;
+}
+
+bool GameObject::GetSelected() const
+{
+	return selected;
 }

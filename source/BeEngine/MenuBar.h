@@ -20,6 +20,7 @@ public:
 
 private:
 	void DrawLayoutsEditor();
+	void DrawWindowsEditor();
 
 private:
 	ImFont* font = nullptr;

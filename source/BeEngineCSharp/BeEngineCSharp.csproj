@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyFactory.cs" />
     <Compile Include="BeEngineReference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

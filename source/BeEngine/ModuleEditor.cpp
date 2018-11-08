@@ -14,6 +14,7 @@
 #include "ProfilerWindow.h"
 #include "ModuleInput.h"
 #include "ResourcesWindow.h"
+#include "HierarchyWindow.h"
 #include "imgui_docking.h"
 
 ModuleEditor::ModuleEditor()
@@ -43,10 +44,10 @@ bool ModuleEditor::Awake()
 	project_manager = (ProjectManager*)AddEditorElement(new ProjectManager(), true);
 	progress_window = (ProgressWindow*)AddEditorElement(new ProgressWindow(), true);
 
-
 	scene_window = (SceneWindow*)AddEditorWindow("Scene", new SceneWindow());
 	AddEditorWindow("Profiler", new ProfilerWindow());
 	AddEditorWindow("Resources", new ResourcesWindow());
+	AddEditorWindow("Hierarchy", new HierarchyWindow());
 
 	LoadDockingProfiles();
 
@@ -599,6 +600,11 @@ bool ModuleEditor::RemoveCurrentDockingProfile()
 std::vector<std::string> ModuleEditor::GetDockingProfiles() const
 {
 	return docking_profiles;
+}
+
+std::vector<EditorWindow*> ModuleEditor::GetEditorWindows() const
+{
+	return editor_windows;
 }
 
 bool ModuleEditor::SaveCurrentDockingProfile()

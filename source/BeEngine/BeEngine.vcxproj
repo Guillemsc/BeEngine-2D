@@ -112,6 +112,7 @@
     <ClInclude Include="GameObjectComponent.h" />
     <ClInclude Include="GridRenderer.h" />
     <ClInclude Include="Guizmo.h" />
+    <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="ModuleGuizmo.h" />
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="PositionGuizmo.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GridRenderer.cpp" />
     <ClCompile Include="Guizmo.cpp" />
+    <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="LineRenderer.cpp" />

@@ -17,6 +17,7 @@ class SceneWindow;
 class EditorWindow
 {
 	friend class ModuleEditor;
+	friend class MenuBar;
 
 protected:
 	void operator delete(void *) {}
@@ -106,6 +107,8 @@ public:
 	bool RemoveDockingProfile(const char* name);
 	bool RemoveCurrentDockingProfile();
 	std::vector<std::string> GetDockingProfiles() const;
+
+	std::vector<EditorWindow*> GetEditorWindows() const;
 
 private:
 	EditorElement* AddEditorElement(EditorElement* element, bool visible = true);
