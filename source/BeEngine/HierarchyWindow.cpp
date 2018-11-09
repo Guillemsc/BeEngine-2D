@@ -53,31 +53,61 @@ void HierarchyWindow::DrawMenuBar()
 }
 
 void HierarchyWindow::GameObjectInput(GameObject* go)
-{
-	if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
+{	
+	//If ctrl is pressed do multiselection
+	
+	if ((App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL)) && ImGui::IsItemClicked(0))
 	{
-		//If ctrl is pressed do multiselection
-		if (App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL))
+		if(!go->GetSelected())
+			App->gameobject->AddGameObjectToSelected(go);
+		else
+			App->gameobject->RemoveGameObjectFromSelected(go);
+
+		disable_button_up = true;
+	}
+
+	// If shift is pressed do fill gap selection
+	else if ((App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT) || App->input->GetKeyRepeat(SDL_SCANCODE_RSHIFT)) && ImGui::IsItemClicked(0))
+	{
+
+	}
+	
+
+	// Monoselection
+	else
+	{
+		if (ImGui::IsItemClicked(0) && !go->GetSelected())
 		{
+			App->gameobject->RemoveAllGameObjectsFromSelected();
 			App->gameobject->AddGameObjectToSelected(go);
 		}
-
-		// If shift is pressed do fill gap selection
-		else if (App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT) || App->input->GetKeyRepeat(SDL_SCANCODE_RSHIFT))
+		else if(ImGui::IsItemClicked(1) && go->GetSelected())
 		{
-
-		}
-
-		// Monoselection
-		else
-		{
-			if (!ImGui::IsItemClicked(1) || !go->GetSelected())
+			if (App->gameobject->GetSelectedGameObjectsCount() == 1)
 			{
-				App->gameobject->RemoveAllGameObjectsFromSelected();
-				App->gameobject->AddGameObjectToSelected(go);
+				App->gameobject->RemoveGameObjectFromSelected(go);
 			}
 		}
+		else if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered())
+		{
+			if (!disable_button_up)
+			{
+				if (App->gameobject->GetSelectedGameObjectsCount() > 1)
+				{
+					App->gameobject->RemoveAllGameObjectsFromSelected();
+					App->gameobject->AddGameObjectToSelected(go);
+				}
+			}
+			else
+				disable_button_up = false;
+		}
+
+		if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsAnyItemHovered())
+		{
+			App->gameobject->RemoveAllGameObjectsFromSelected();
+		}
 	}
+	
 }
 
 void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, bool is_root)
@@ -97,14 +127,23 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, bool is_root)
 		ImGui::PushID(go->GetUID().c_str());
 		bool opened = ImGui::TreeNodeEx(go->GetName(), flags);
 
+		// -----
+
+
+		GameObjectInput(go);
+
+		uint drag_drop_flags = ImGuiDragDropFlags_SourceNoDisableHover;
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
 			int size = sizeof(go);
 			ImGui::SetDragDropPayload("test", go, size);
 
-			go_to_drag = go;
+			std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 
-			ImGui::Text(go->GetName());
+			for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+			{
+				ImGui::Text((*it)->GetName());
+			}
 
 			ImGui::EndDragDropSource();
 		}
@@ -113,13 +152,11 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, bool is_root)
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("test"))
 			{
-				if (go_to_drag != nullptr)
+				std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
+
+				for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
 				{
-					std::string uid = (const char*)payload->Data;
-
-					go_to_drag->SetParent(go);
-
-					go_to_drag = nullptr;
+					(*it)->SetParent(go);
 				}
 			}
 			ImGui::EndDragDropTarget();
@@ -129,24 +166,24 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, bool is_root)
 		{
 			ImGui::Separator();
 
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("test"))
-				{
-					if (go_to_drag != nullptr)
-					{
-						std::string uid = (const char*)payload->Data;
+			//if (ImGui::BeginDragDropTarget())
+			//{
+			//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("test"))
+			//	{
+			//		if (go_to_drag != nullptr)
+			//		{
+			//			std::string uid = (const char*)payload->Data;
 
-						go_to_drag->SetParent(nullptr);
+			//			go_to_drag->SetParent(nullptr);
 
-						go_to_drag = nullptr;
-					}
-				}
-				ImGui::EndDragDropTarget();
-			}
+			//			go_to_drag = nullptr;
+			//		}
+			//	}
+			//	ImGui::EndDragDropTarget();
+			//}
 		}
 
-		GameObjectInput(go);
+		// -----
 
 		ImGui::PopID();
 

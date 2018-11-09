@@ -195,6 +195,11 @@ std::vector<GameObject*> ModuleGameObject::GetSelectedGameObjects() const
 	return game_objects_selected;
 }
 
+uint ModuleGameObject::GetSelectedGameObjectsCount() const
+{
+	return game_objects_selected.size();
+}
+
 void ModuleGameObject::DestroyAllGameObjects()
 {
 	std::vector<GameObject*> all_game_objects = game_objects;

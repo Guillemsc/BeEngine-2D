@@ -30,7 +30,7 @@ private:
 private:
 	ImFont* font = nullptr;
 
-	GameObject* go_to_drag = nullptr;
+	bool disable_button_up = true;
 };
 
 #endif // !__HIERARCHY_WINDOW_H__

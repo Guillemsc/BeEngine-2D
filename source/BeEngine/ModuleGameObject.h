@@ -30,6 +30,7 @@ public:
 	void RemoveGameObjectFromSelected(GameObject* go);
 	void RemoveAllGameObjectsFromSelected();
 	std::vector<GameObject*> GetSelectedGameObjects() const;
+	uint GetSelectedGameObjectsCount() const;
 
 private:
 	void DestroyAllGameObjects();
