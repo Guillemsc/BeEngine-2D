@@ -7,6 +7,7 @@
 class ModuleGameObject : public Module
 {
 	friend class GameObject;
+	friend class HierarchyWindow;
 
 public:
 	ModuleGameObject();
@@ -38,6 +39,9 @@ private:
 
 	void AddGameObjectToRoot(GameObject* go);
 	void RemoveGameObjectFromRoot(GameObject* go);
+
+	void ChangeGameObjectPositionOnRootList(GameObject* go, uint new_pos);
+	void ChangeGameObjectPositionOnParentChildren(GameObject* go, uint new_pos);
 
 private:
 	std::vector<GameObject*> game_objects;

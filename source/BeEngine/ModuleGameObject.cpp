@@ -65,11 +65,11 @@ GameObject* ModuleGameObject::CreateGameObject()
 	std::string name = "GameObject" + std::to_string(game_objects.size());
 	ret->SetName(name.c_str());
 
-	ret->Start();
-
 	game_objects.push_back(ret);
 
 	AddGameObjectToRoot(ret);
+
+	ret->Start();
 
 	return ret;
 }
@@ -265,5 +265,49 @@ void ModuleGameObject::RemoveGameObjectFromRoot(GameObject * go)
 				break;
 			}
 		}
+	}
+}
+
+void ModuleGameObject::ChangeGameObjectPositionOnRootList(GameObject * go, uint new_pos)
+{
+	if (go != nullptr)
+	{
+		bool exists = false;
+		for (std::vector<GameObject*>::iterator it = game_objects_root.begin(); it != game_objects_root.end(); ++it)
+		{
+			if ((*it) == go)
+			{
+				game_objects_root.erase(it);
+				break;
+			}
+		}
+
+		if (new_pos > game_objects_root.size())
+			new_pos = game_objects_root.size();
+
+		game_objects_root.insert(game_objects_root.begin() + new_pos, go);
+	}
+}
+
+void ModuleGameObject::ChangeGameObjectPositionOnParentChildren(GameObject * go, uint new_pos)
+{
+	if (go != nullptr && go->GetParent() != nullptr)
+	{
+		GameObject* parent = go->GetParent();
+
+		bool exists = false;
+		for (std::vector<GameObject*>::iterator it = parent->childs.begin(); it != parent->childs.end(); ++it)
+		{
+			if ((*it) == go)
+			{
+				parent->childs.erase(it);
+				break;
+			}
+		}
+
+		if (new_pos > parent->childs.size())
+			new_pos = parent->childs.size();
+
+		parent->childs.insert(parent->childs.begin() + new_pos, go);
 	}
 }

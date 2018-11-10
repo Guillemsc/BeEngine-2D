@@ -9,6 +9,7 @@ GameObject::GameObject(std::string _uid)
 
 void GameObject::Start()
 {
+
 }
 
 void GameObject::CleanUp()
@@ -133,6 +134,11 @@ bool GameObject::IsInChildTree(GameObject* go)
 	}
 
 	return ret;
+}
+
+std::vector<GameObject*> GameObject::GetChilds() const
+{
+	return childs;
 }
 
 GameObject* GameObject::GetParent() const
