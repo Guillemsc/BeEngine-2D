@@ -14,7 +14,7 @@ HierarchyWindow::~HierarchyWindow()
 
 void HierarchyWindow::Start()
 {
-	
+	font = App->editor->GetLoadedFont("RobotoMedium_15");
 }
 
 void HierarchyWindow::CleanUp()
@@ -27,6 +27,8 @@ void HierarchyWindow::DrawEditor()
 
 	std::vector<GameObject*> root_game_objects = App->gameobject->GetRootGameObjects();
 	
+	ImGui::PushFont(font);
+
 	uint go_count = 0;
 
 	uint root_index = 0;
@@ -36,6 +38,8 @@ void HierarchyWindow::DrawEditor()
 
 		++root_index;
 	}
+
+	ImGui::PopFont();
 }
 
 ImGuiWindowFlags HierarchyWindow::GetWindowFlags()
