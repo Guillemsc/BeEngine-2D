@@ -224,7 +224,7 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 		if (go->GetSelected())
 			flags |= ImGuiTreeNodeFlags_Selected;
 
-		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 30 + ( go_count * 20)));
+		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 32 + ( go_count * 20)));
 		ImGui::PushID(go->GetUID().c_str());
 		bool opened = ImGui::TreeNodeEx(go->GetName().c_str(), flags);
 
@@ -310,7 +310,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 		// Slot in between on top of go become drop target
 		if (child_index == 0)
 		{
-			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 27 + (go_count * 20)));
+			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 28 + (go_count * 20)));
 			ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
 			if (ImGui::BeginDragDropTarget())
@@ -344,7 +344,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 		{
 			if (go->GetParent() == nullptr || (go->GetParent() != nullptr && child_index != go->GetParent()->GetChildsCount() - 1))
 			{
-				ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 48 + (go_count * 20)));
+				ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 49 + (go_count * 20)));
 				ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
 				if (ImGui::BeginDragDropTarget())
@@ -385,7 +385,7 @@ void HierarchyWindow::DragAndDropAfterChilds(GameObject * go, uint child_index, 
 {
 	if (go->GetChildsCount() > 0 && go->GetParent() == nullptr && dragging)
 	{
-		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 27 + (go_count * 20)));
+		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 28 + (go_count * 20)));
 		ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
 		if (ImGui::BeginDragDropTarget())
