@@ -21,9 +21,9 @@ void GameObject::SetName(const char * set)
 	name = set;
 }
 
-const char * GameObject::GetName()
+std::string GameObject::GetName()
 {
-	return name.c_str();
+	return name;
 }
 
 std::string GameObject::GetUID()

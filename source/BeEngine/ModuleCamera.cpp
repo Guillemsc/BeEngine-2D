@@ -125,17 +125,17 @@ void ModuleCamera::UpdateEditorCameraInput()
 				}
 			}
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
-				editor_camera->MoveUp(cam_speed);
+			//if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
+			//	editor_camera->MoveUp(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
-				editor_camera->MoveDown(cam_speed);
+			//if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
+			//	editor_camera->MoveDown(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_A))
-				editor_camera->MoveLeft(cam_speed);
+			//if (App->input->GetKeyRepeat(SDL_SCANCODE_A))
+			//	editor_camera->MoveLeft(cam_speed);
 
-			if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
-				editor_camera->MoveRight(cam_speed);
+			//if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
+			//	editor_camera->MoveRight(cam_speed);
 
 		}
 	}

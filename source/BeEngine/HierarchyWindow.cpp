@@ -67,11 +67,80 @@ void HierarchyWindow::DrawGameObjectsPopup(GameObject * go, bool left_clicked, b
 		ImGui::OpenPopupOnItemClick("HerarchyPopup", 1);
 	}
 
+	bool open_rename = false;
+
+	std::vector<GameObject*> selected = App->gameobject->GetSelectedGameObjects();
+
 	if (ImGui::BeginPopupContextItem("HerarchyPopup"))
 	{
-		if (ImGui::Button("Rename"))
+		if (selected.size() == 1)
 		{
+			if (ImGui::Button("Rename"))
+			{
+				ImGui::CloseCurrentPopup();
+				open_rename = true;
+			}
+		}
 
+		if (ImGui::Button("Duplicate"))
+		{
+			for (std::vector<GameObject*>::iterator it = selected.begin(); it != selected.end(); ++it)
+			{
+				//App->gameobject->DestroyGameObject(*it);
+			}
+		}
+
+		if (ImGui::Button("Delete"))
+		{
+			for (std::vector<GameObject*>::iterator it = selected.begin(); it != selected.end(); ++it)
+			{
+				App->gameobject->DestroyGameObject(*it);
+			}
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (open_rename)
+	{
+		ImGui::OpenPopup("RenamePopup");
+
+		if (selected.size() > 0)
+		{
+			GameObject* sel_go = *selected.begin();
+
+			int size = sel_go->GetName().size();
+
+			if (size > 50)
+				size = 50;
+
+			memset(change_name_tmp, 0, sizeof(char) * 50);
+
+			strcpy_s(change_name_tmp, sizeof(char) * size + 1, sel_go->GetName().c_str());
+		}
+	}
+
+	if (ImGui::BeginPopup("RenamePopup"))
+	{
+		if (ImGui::InputText("Name: ", change_name_tmp, sizeof(char) * 50));
+
+		if (ImGui::Button("Accept"))
+		{
+			if (selected.size() > 0)
+			{
+				GameObject* sel_go = *selected.begin();
+
+				sel_go->SetName(change_name_tmp);
+			}
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
 		}
 
 		ImGui::EndPopup();
@@ -105,13 +174,20 @@ void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool ri
 		{
 			App->gameobject->RemoveAllGameObjectsFromSelected();
 			App->gameobject->AddGameObjectToSelected(go);
+
+			disable_button_up = true;
 		}
-		else if(left_clicked && go->GetSelected())
+		else if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && go->GetSelected())
 		{
-			if (App->gameobject->GetSelectedGameObjectsCount() == 1)
+			if (!disable_button_up)
 			{
-				App->gameobject->RemoveGameObjectFromSelected(go);
+				if (App->gameobject->GetSelectedGameObjectsCount() == 1)
+				{
+					App->gameobject->RemoveGameObjectFromSelected(go);
+				}
 			}
+			else
+				disable_button_up = false;
 		}
 		else if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered())
 		{
@@ -150,7 +226,7 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 
 		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 30 + ( go_count * 20)));
 		ImGui::PushID(go->GetUID().c_str());
-		bool opened = ImGui::TreeNodeEx(go->GetName(), flags);
+		bool opened = ImGui::TreeNodeEx(go->GetName().c_str(), flags);
 
 		bool left_clicked = false;
 		bool right_clicked = false;
@@ -198,13 +274,13 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
 		int size = sizeof(go);
-		ImGui::SetDragDropPayload("test", go, size);
+		ImGui::SetDragDropPayload("GameObjects", go, size);
 
 		std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 
 		for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
 		{
-			ImGui::Text((*it)->GetName());
+			ImGui::Text((*it)->GetName().c_str());
 		}
 
 		dragging = true;
@@ -215,7 +291,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 	// GO slot become drop target
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("test"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
 		{
 			std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 
@@ -239,7 +315,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 
 			if (ImGui::BeginDragDropTarget())
 			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("test"))
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
 				{
 					std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 					for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
@@ -273,7 +349,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 
 				if (ImGui::BeginDragDropTarget())
 				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("test"))
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
 					{
 						std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 						for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
@@ -314,7 +390,7 @@ void HierarchyWindow::DragAndDropAfterChilds(GameObject * go, uint child_index, 
 
 		if (ImGui::BeginDragDropTarget())
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("test"))
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
 			{
 				std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 				for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)

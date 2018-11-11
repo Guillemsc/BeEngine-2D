@@ -35,6 +35,8 @@ private:
 
 	bool disable_button_up = true;
 	bool dragging = false;
+
+	char change_name_tmp[50];
 };
 
 #endif // !__HIERARCHY_WINDOW_H__

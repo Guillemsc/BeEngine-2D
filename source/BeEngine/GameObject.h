@@ -20,7 +20,7 @@ public:
 	void CleanUp();
 
 	void SetName(const char* set);
-	const char* GetName();
+	std::string GetName();
 
 	std::string GetUID();
 
