@@ -225,6 +225,8 @@ void ModuleGameObject::ActuallyDestroyGameObjects()
 
 		(*it)->RemoveParent();
 
+		RemoveGameObjectFromRoot((*it));
+
 		(*it)->CleanUp();
 		RELEASE(*it);
 	}

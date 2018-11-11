@@ -81,7 +81,7 @@ bool ModuleEditor::Update()
 {
 	bool ret = true;
 
-	//ImGui::ShowDemoWindow(&demo_window_open);
+	ImGui::ShowDemoWindow(&demo_window_open);
 	
 	return ret;
 }

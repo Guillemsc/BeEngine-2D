@@ -60,7 +60,25 @@ void HierarchyWindow::DrawMenuBar()
 	}
 }
 
-void HierarchyWindow::GameObjectInput(GameObject* go)
+void HierarchyWindow::DrawGameObjectsPopup(GameObject * go, bool left_clicked, bool right_clicked)
+{
+	if (right_clicked)
+	{
+		ImGui::OpenPopupOnItemClick("HerarchyPopup", 1);
+	}
+
+	if (ImGui::BeginPopupContextItem("HerarchyPopup"))
+	{
+		if (ImGui::Button("Rename"))
+		{
+
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked)
 {	
 	//If ctrl is pressed do multiselection
 	
@@ -83,12 +101,12 @@ void HierarchyWindow::GameObjectInput(GameObject* go)
 	// Monoselection
 	else
 	{
-		if (ImGui::IsItemClicked(0) && !go->GetSelected())
+		if ((left_clicked || right_clicked) && !go->GetSelected())
 		{
 			App->gameobject->RemoveAllGameObjectsFromSelected();
 			App->gameobject->AddGameObjectToSelected(go);
 		}
-		else if(ImGui::IsItemClicked(1) && go->GetSelected())
+		else if(left_clicked && go->GetSelected())
 		{
 			if (App->gameobject->GetSelectedGameObjectsCount() == 1)
 			{
@@ -134,9 +152,20 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 		ImGui::PushID(go->GetUID().c_str());
 		bool opened = ImGui::TreeNodeEx(go->GetName(), flags);
 
+		bool left_clicked = false;
+		bool right_clicked = false;
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			left_clicked = true;
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+			right_clicked = true;
+		
 		// -----
 
-		GameObjectInput(go);
+		GameObjectInput(go, left_clicked, right_clicked);
+
+		DrawGameObjectsPopup(go, left_clicked, right_clicked);
 
 		DragAndDropBeforeChilds(go, child_index, go_count);
 
