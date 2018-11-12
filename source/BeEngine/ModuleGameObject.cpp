@@ -35,6 +35,8 @@ bool ModuleGameObject::Update()
 {
 	bool ret = true;
 
+	UpdateGameObjects();
+
 	return ret;
 }
 
@@ -51,7 +53,7 @@ bool ModuleGameObject::CleanUp()
 {
 	bool ret = true;
 
-	DestroyAllGameObjects();
+	DestroyAllGameObjectsNow();
 
 	return ret;
 }
@@ -200,7 +202,20 @@ uint ModuleGameObject::GetSelectedGameObjectsCount() const
 	return game_objects_selected.size();
 }
 
-void ModuleGameObject::DestroyAllGameObjects()
+void ModuleGameObject::UpdateGameObjects()
+{
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		(*it)->Update();
+	}
+
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		(*it)->ActuallyDestroyComponents();
+	}
+}
+
+void ModuleGameObject::DestroyAllGameObjectsNow()
 {
 	std::vector<GameObject*> all_game_objects = game_objects;
 

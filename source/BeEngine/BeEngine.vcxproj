@@ -100,6 +100,7 @@
     <ClInclude Include="Algorithm\Random\LCG.h" />
     <ClInclude Include="Algorithm\SAT.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="ComponentTransfrom.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DockingSpace.h" />
     <ClInclude Include="Event.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="GridRenderer.h" />
     <ClInclude Include="Guizmo.h" />
     <ClInclude Include="HierarchyWindow.h" />
+    <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="ModuleGuizmo.h" />
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="PositionGuizmo.h" />
@@ -242,10 +244,12 @@
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectComponent.cpp" />
     <ClCompile Include="GridRenderer.cpp" />
     <ClCompile Include="Guizmo.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
+    <ClCompile Include="InspectorWindow.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="ModuleGuizmo.cpp" />
@@ -328,6 +332,7 @@
     <ClCompile Include="Time\Clock.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />
     <ClCompile Include="ToolsBar.cpp" />
+    <ClCompile Include="ComponentTransfrom.cpp" />
     <ClCompile Include="TriangleRenderer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>

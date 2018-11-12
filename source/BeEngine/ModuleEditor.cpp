@@ -15,6 +15,7 @@
 #include "ModuleInput.h"
 #include "ResourcesWindow.h"
 #include "HierarchyWindow.h"
+#include "InspectorWindow.h"
 #include "imgui_docking.h"
 
 ModuleEditor::ModuleEditor()
@@ -48,6 +49,7 @@ bool ModuleEditor::Awake()
 	AddEditorWindow("Profiler", new ProfilerWindow());
 	AddEditorWindow("Resources", new ResourcesWindow());
 	AddEditorWindow("Hierarchy", new HierarchyWindow());
+	inspector_window = (InspectorWindow*)AddEditorWindow("Inspector", new InspectorWindow());
 
 	LoadDockingProfiles();
 

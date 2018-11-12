@@ -82,6 +82,9 @@
     <Filter Include="Sources\8. Utilities ===============">
       <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\7. GameObjects ===========\Components">
+      <UniqueIdentifier>{c384d477-08e1-4ba8-b4ea-684bb9921c8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -486,6 +489,12 @@
     <ClInclude Include="HierarchyWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentTransfrom.h">
+      <Filter>Sources\7. GameObjects ===========\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorWindow.h">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -780,6 +789,15 @@
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
     <ClCompile Include="HierarchyWindow.cpp">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectComponent.cpp">
+      <Filter>Sources\7. GameObjects ===========</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTransfrom.cpp">
+      <Filter>Sources\7. GameObjects ===========\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
   </ItemGroup>

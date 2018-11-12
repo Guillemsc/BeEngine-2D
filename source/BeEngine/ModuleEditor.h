@@ -13,6 +13,7 @@ class DockingSpace;
 class ProjectManager;
 class ProgressWindow;
 class SceneWindow;
+class InspectorWindow;
 
 class EditorWindow
 {
@@ -132,13 +133,14 @@ private:
 	bool DockingProfileExists(const char* name);
 
 public:
-	DockingSpace*   docking_space = nullptr;
-	MenuBar*        menu_bar = nullptr;
-	ToolsBar*       tools_bar = nullptr;
-	ProjectManager* project_manager = nullptr;
-	ProgressWindow* progress_window = nullptr;
+	DockingSpace*    docking_space = nullptr;
+	MenuBar*         menu_bar = nullptr;
+	ToolsBar*        tools_bar = nullptr;
+	ProjectManager*  project_manager = nullptr;
+	ProgressWindow*  progress_window = nullptr;
 
-	SceneWindow*    scene_window = nullptr;
+	SceneWindow*     scene_window = nullptr;
+	InspectorWindow* inspector_window = nullptr;
 
 private:
 	EditorState editor_state;

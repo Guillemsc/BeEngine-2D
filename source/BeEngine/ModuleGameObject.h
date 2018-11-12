@@ -34,7 +34,9 @@ public:
 	uint GetSelectedGameObjectsCount() const;
 
 private:
-	void DestroyAllGameObjects();
+	void UpdateGameObjects();
+
+	void DestroyAllGameObjectsNow();
 	void ActuallyDestroyGameObjects();
 
 	void AddGameObjectToRoot(GameObject* go);

@@ -122,7 +122,11 @@ void HierarchyWindow::DrawGameObjectsPopup(GameObject * go, bool left_clicked, b
 
 	if (ImGui::BeginPopup("RenamePopup"))
 	{
-		if (ImGui::InputText("Name: ", change_name_tmp, sizeof(char) * 50));
+		ImGui::Text("Name: ");
+
+		ImGui::SameLine();
+
+		ImGui::InputText("", change_name_tmp, sizeof(char) * 50, ImGuiInputTextFlags_AutoSelectAll);
 
 		if (ImGui::Button("Accept"))
 		{
@@ -151,6 +155,8 @@ void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool ri
 {	
 	//If ctrl is pressed do multiselection
 	
+	int selected_count = App->gameobject->GetSelectedGameObjectsCount();
+
 	if ((App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL)) && ImGui::IsItemClicked(0))
 	{
 		if(!go->GetSelected())
@@ -177,14 +183,11 @@ void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool ri
 
 			disable_button_up = true;
 		}
-		else if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && go->GetSelected())
+		else if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && go->GetSelected() && selected_count == 1)
 		{
 			if (!disable_button_up)
-			{
-				if (App->gameobject->GetSelectedGameObjectsCount() == 1)
-				{
-					App->gameobject->RemoveGameObjectFromSelected(go);
-				}
+			{				
+				App->gameobject->RemoveGameObjectFromSelected(go);
 			}
 			else
 				disable_button_up = false;
@@ -193,7 +196,7 @@ void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool ri
 		{
 			if (!disable_button_up)
 			{
-				if (App->gameobject->GetSelectedGameObjectsCount() > 1)
+				if (selected_count > 1)
 				{
 					App->gameobject->RemoveAllGameObjectsFromSelected();
 					App->gameobject->AddGameObjectToSelected(go);
@@ -203,7 +206,7 @@ void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool ri
 				disable_button_up = false;
 		}
 
-		if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsAnyItemHovered())
+		if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow())
 		{
 			App->gameobject->RemoveAllGameObjectsFromSelected();
 		}

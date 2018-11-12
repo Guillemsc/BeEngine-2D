@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "App.h"
 #include "ModuleGameObject.h"
+#include "ComponentTransfrom.h"
 
 GameObject::GameObject(std::string _uid)
 {
@@ -9,11 +10,19 @@ GameObject::GameObject(std::string _uid)
 
 void GameObject::Start()
 {
+	transform = (ComponentTransform*)CreateComponent(ComponentType::TRANSFORM);
+	CreateComponent(ComponentType::TRANSFORM);
+	DestroyComponent(transform);
+}
+
+void GameObject::Update()
+{
 
 }
 
 void GameObject::CleanUp()
 {
+	DestroyAllComponentsNow();
 }
 
 void GameObject::SetName(const char * set)
@@ -74,6 +83,12 @@ void GameObject::RemoveParent()
 {
 	SetParent(nullptr);
 }
+
+GameObject* GameObject::GetParent() const
+{
+	return parent;
+}
+
 
 uint GameObject::GetChildsCount() const
 {
@@ -141,12 +156,119 @@ std::vector<GameObject*> GameObject::GetChilds() const
 	return childs;
 }
 
-GameObject* GameObject::GetParent() const
+GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 {
-	return parent;
+	GameObjectComponent* ret = nullptr;
+
+	switch (type)
+	{
+	case ComponentType::TRANSFORM:
+		ret = new ComponentTransform();
+		break;
+	default:
+		break;
+	}
+
+	if (ret != nullptr)
+	{
+		if (ret->unique_per_game_object)
+		{
+			if (GetHasComponent(type) )
+			{
+				RELEASE(ret);
+				ret = nullptr;
+			}
+		}
+		
+		if (ret != nullptr)
+		{
+			ret->owner = this;
+			components.push_back(ret);
+			ret->Start();
+		}
+	}
+
+	return ret;
+}
+
+void GameObject::DestroyComponent(GameObjectComponent * component, bool check_can_destroy)
+{
+	if (component != nullptr)
+	{
+		if (component->can_destroy || !check_can_destroy)
+		{
+			for (std::vector<GameObjectComponent*>::iterator it = components.begin(); it != components.end(); ++it)
+			{
+				if ((*it) == component)
+				{
+					components.erase(it);
+					break;
+				}
+			}
+
+			bool exists = false;
+			for (std::vector<GameObjectComponent*>::iterator it = components_to_destroy.begin(); it != components_to_destroy.end(); ++it)
+			{
+				if ((*it) == component)
+				{
+					exists = true;
+					break;
+				}
+			}
+
+			if (!exists)
+			{
+				components_to_destroy.push_back(component);
+			}
+		}
+	}
+}
+
+bool GameObject::GetHasComponent(const ComponentType & type) const
+{
+	bool ret = false;
+
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		if ((*it)->GetType() == type)
+		{
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+std::vector<GameObjectComponent*> GameObject::GetComponents() const
+{
+	return components;
 }
 
 bool GameObject::GetSelected() const
 {
 	return selected;
+}
+
+void GameObject::DestroyAllComponentsNow()
+{
+	std::vector<GameObjectComponent*> all_components = components;
+
+	for (std::vector<GameObjectComponent*>::const_iterator it = all_components.begin(); it != all_components.end(); ++it)
+	{
+		DestroyComponent(*it, false);
+	}
+
+	ActuallyDestroyComponents();
+}
+
+void GameObject::ActuallyDestroyComponents()
+{
+	for (std::vector<GameObjectComponent*>::iterator it = components_to_destroy.begin(); it != components_to_destroy.end(); ++it)
+	{
+		(*it)->CleanUp();
+		RELEASE(*it);
+	}
+
+	components_to_destroy.clear();
 }
