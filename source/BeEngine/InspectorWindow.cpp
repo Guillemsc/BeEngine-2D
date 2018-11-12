@@ -51,17 +51,38 @@ void InspectorWindow::DrawEditor()
 			{
 				GameObjectComponent* curr_component = (*com);
 
-				if (ImGui::Button("X"))
+				ImGui::Separator();
+
+				if (ImGui::SmallButton("Delete Component"))
 				{
 
 				}
 
 				ImGui::SameLine();
 
-				if (ImGui::CollapsingHeader(curr_component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+				if (ImGui::SmallButton("Move Up"))
 				{
 
 				}
+
+				ImGui::SameLine();
+
+
+				if (ImGui::SmallButton("Move Down"))
+				{
+
+				}
+
+				if (ImGui::CollapsingHeader(curr_component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Indent(15);
+
+					curr_component->EditorDraw();
+
+					ImGui::Indent(-15);
+				}
+
+				ImGui::Separator();
 			}
 		}
 

@@ -1,7 +1,8 @@
 #include "ComponentTransfrom.h"
 #include "GameObject.h"
+#include "imgui.h"
 
-ComponentTransform::ComponentTransform() : GameObjectComponent("Transform", ComponentType::TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
+ComponentTransform::ComponentTransform() : GameObjectComponent("Transform", ComponentType::TRANSFORM, ComponentGroup::TRANSFORMATIONS, false, false)
 {
 }
 
@@ -9,8 +10,20 @@ ComponentTransform::~ComponentTransform()
 {
 }
 
-void ComponentTransform::OnEditorDraw()
+void ComponentTransform::EditorDraw()
 {
+	float2 position = GetPosition();
+	float rotation = GetRotation();
+	float2 scale = GetScale();
+
+	if (ImGui::DragFloat2("Position", (float*)&position, 0.1f))
+		SetPosition(position);
+
+	if (ImGui::DragFloat("Rotation", (float*)&rotation, 0.1f))
+		SetRotationAngles(rotation);
+
+	if (ImGui::DragFloat2("Scale", (float*)&scale, 0.1f, 0.0f))
+		SetScale(scale);
 }
 
 void ComponentTransform::Start()
@@ -102,8 +115,10 @@ void ComponentTransform::UpdateLocalTransform()
 
 void ComponentTransform::UpdateChildsTreeGlobalTransform()
 {
-	if(owner->GetParent() != nullptr)
+	if (owner->GetParent() != nullptr)
 		global_transform = owner->GetParent()->transform->GetGlobalTransform() * local_transform;
+	else
+		global_transform = local_transform;
 
 	std::vector<GameObject*> childs = owner->GetChilds();
 

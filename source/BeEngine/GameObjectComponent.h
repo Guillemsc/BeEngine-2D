@@ -29,7 +29,7 @@ public:
 	GameObjectComponent(std::string name, const ComponentType& type, const ComponentGroup& group, bool unique_per_game_object = false, bool can_destroy = true);
 	~GameObjectComponent() {};
 
-	virtual void OnEditorDraw() {};
+	virtual void EditorDraw() {};
 
 	virtual void Start() {};
 	virtual void CleanUp() {};

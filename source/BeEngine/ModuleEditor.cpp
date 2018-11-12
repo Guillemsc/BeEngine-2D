@@ -363,17 +363,11 @@ void ModuleEditor::LoadCustomStyle()
 
 	ImVec4* colors = ImGui::GetStyle().Colors;
 
-	//style->WindowPadding = ImVec2(15, 15);
+	style->PopupRounding = 7;
+	style->IndentSpacing = 18;
+	style->ChildRounding = 0;
+	style->FrameRounding = 3;
 	style->WindowRounding = 3.0f;
-	//style->FramePadding = ImVec2(5, 5);
-	//style->FrameRounding = 4.0f;
-	//style->ItemSpacing = ImVec2(12, 8);
-	//style->ItemInnerSpacing = ImVec2(8, 6);
-	//style->IndentSpacing = 25.0f;
-	//style->ScrollbarSize = 15.0f;
-	//style->ScrollbarRounding = 9.0f;
-	//style->GrabMinSize = 5.0f;
-	//style->GrabRounding = 3.0f;
 
 	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -382,9 +376,9 @@ void ModuleEditor::LoadCustomStyle()
 	colors[ImGuiCol_PopupBg] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
 	colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.50f);
 	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	colors[ImGuiCol_FrameBg] = ImVec4(0.00f, 0.51f, 0.87f, 0.65f);
-	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
-	colors[ImGuiCol_FrameBgActive] = ImVec4(0.49f, 0.78f, 0.98f, 0.65f);
+	colors[ImGuiCol_FrameBg] = ImVec4(0.28f, 0.28f, 0.28f, 0.65f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.40f, 0.40f, 0.40f, 0.65f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.52f, 0.52f, 0.52f, 0.65f);
 	colors[ImGuiCol_TitleBg] = ImVec4(0.19f, 0.19f, 0.19f, 0.90f);
 	colors[ImGuiCol_TitleBgActive] = ImVec4(0.00f, 0.45f, 0.76f, 1.00f);
 	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);

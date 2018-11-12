@@ -18,7 +18,7 @@ public:
 	ComponentTransform();
 	~ComponentTransform();
 
-	void OnEditorDraw();
+	void EditorDraw();
 
 	void Start();
 	void CleanUp();
