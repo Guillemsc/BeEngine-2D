@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BeEngine", "BeEngine\BeEngine.vcxproj", "{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeEngineCSharp", "BeEngineCSharp\BeEngineCSharp.csproj", "{A5DA9C7F-526A-4203-BA25-7ED88F6C5480}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeEngineScripting", "BeEngineScripting\BeEngineScripting.csproj", "{A5DA9C7F-526A-4203-BA25-7ED88F6C5480}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeEngineScriptCompiler", "BeEngineScriptCompiler\BeEngineScriptCompiler.csproj", "{C3394921-EFA8-406B-B63B-33C50FAA7B29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeEngineScriptingInternal", "BeEngineScriptingInternal\BeEngineScriptingInternal.csproj", "{C3394921-EFA8-406B-B63B-33C50FAA7B29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

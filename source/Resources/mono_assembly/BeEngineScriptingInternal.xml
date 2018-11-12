@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>BeEngineScriptCompiler</name>
+        <name>BeEngineScriptingInternal</name>
     </assembly>
     <members>
     </members>

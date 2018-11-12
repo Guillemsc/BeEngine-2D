@@ -1,5 +1,10 @@
 #include "ModuleScripting.h"
 #include "App.h"
+#include "ModuleProject.h"
+#include "ModuleFileSystem.h"
+#include "Event.h"
+#include "ModuleEvent.h"
+#include "ScriptingObjectCompiler.h"
 
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 
@@ -17,6 +22,8 @@ bool ModuleScripting::Awake()
 
 	INTERNAL_LOG("Init Mono Envirnoment");
 
+	App->event->Suscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+
 	mono_base_path = "mono\\";
 	assembly_base_path = "mono_assembly\\";
 
@@ -26,65 +33,54 @@ bool ModuleScripting::Awake()
 
 	base_domain = mono_jit_init(App->GetAppName());
 
-	std::string assembly_base_project_path = assembly_base_path + "BeEngineCSharp.dll";
-	std::string assembly_compiler_path = assembly_base_path + "BeEngineScriptCompiler.dll";
+	std::string scripting_assembly_path = assembly_base_path + "BeEngineScripting.dll";
+	std::string scripting_internal_assembly_path = assembly_base_path + "BeEngineScriptingInternal.dll";
 
-	base_project_assembly = CreateAssembly(assembly_base_project_path.c_str());
-	compiler_assembly = CreateAssembly(assembly_compiler_path.c_str());
+	scripting_assembly = CreateAssembly(scripting_assembly_path.c_str());
+	scripting_internal_assembly = CreateAssembly(scripting_internal_assembly_path.c_str());
 
-	if (compiler_assembly == nullptr)
-	{
-		INTERNAL_LOG("Mono compiler assembly not loaded");
+	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
 
-		ret = false;
-	}
 
-	if (!InitCompiler())
-	{
-		INTERNAL_LOG("Mono compiler not loaded");
-	}
+	//MonoClass* test_class = GetMonoClass(base_project_assembly, "BeEngine", "BeEngineReference");
 
-	MonoClass* test_class = GetMonoClass(base_project_assembly, "BeEngine", "BeEngineReference");
+	//CreatedMonoObject obj = CreateMonoObject(test_class);
 
-	CreatedMonoObject obj = CreateMonoObject(test_class);
+	//MonoMethod* init_method = GetMonoMethod(test_class, "SetPtr", 1);
 
-	MonoMethod* init_method = GetMonoMethod(test_class, "SetPtr", 1);
+	//class PeneClasse
+	//{
+	//public:
+	//	int pene = 5;
+	//};
 
-	class PeneClasse
-	{
-	public:
-		int pene = 5;
-	};
+	//PeneClasse* pc = new PeneClasse();
+	//pc->pene = 10;
 
-	PeneClasse* pc = new PeneClasse();
-	pc->pene = 10;
+	//float* test = new float[1];
+	//test[0] = 4;
 
-	float* test = new float[1];
-	test[0] = 4;
+	//void *args[1];
+	//*args = pc;
 
-	void *args[1];
-	*args = pc;
+	//float* tp = (float*)*args;
 
-	float* tp = (float*)*args;
+	//void* ret_obj = *args;
+	//
+	//tp = (float*)ret_obj;
 
-	void* ret_obj = *args;
-	
-	tp = (float*)ret_obj;
+	//// --
 
-	// --
+	//MonoObject* exception = nullptr;
 
-	MonoObject* exception = nullptr;
+	//MonoObject* ret_oj = nullptr;
+	//ret_oj = mono_runtime_invoke(init_method, obj.GetMonoObject(), args, &exception);
 
-	MonoObject* ret_oj = nullptr;
-	ret_oj = mono_runtime_invoke(init_method, obj.GetMonoObject(), args, &exception);
+	//ret_obj = mono_object_unbox(ret_oj);
 
-	ret_obj = mono_object_unbox(ret_oj);
+	//// --
 
-	// --
-
-	PeneClasse* pc2 = (PeneClasse*)ret_obj;
-
-	INTERNAL_LOG("sdl");
+	//PeneClasse* pc2 = (PeneClasse*)ret_obj;
 
 	return ret;
 }
@@ -121,50 +117,66 @@ bool ModuleScripting::CleanUp()
 {
 	bool ret = true;
 
-	DestroyMonoObject(compiler_object);
+	DestroyAllScriptingObjects();
+
+	DestroyAllAssemblys();
 
 	mono_jit_cleanup(base_domain);
 
 	return ret;
 }
 
-bool ModuleScripting::InitCompiler()
+void ModuleScripting::OnEvent(Event * ev)
 {
-	bool ret = false;
-
-	if (compiler_assembly != nullptr && compiler_assembly->GetAssemblyLoaded())
+	switch (ev->GetType())
 	{
-		MonoClass* compiler_class = GetMonoClass(compiler_assembly, "BeEngineScriptCompiler", "CSharpCompiler");
+	case EventType::PROJECT_SELECTED:
+	{
+		EventProjectSelected* pje = (EventProjectSelected*)ev;
 
-		compiler_object = CreateMonoObject(compiler_class);
+		break;
+	}
+	default:
+		break;
+	}
+}
 
-		MonoMethod* init_method = GetMonoMethod(compiler_class, "InitCompiler", 1);
+ScriptingObject* ModuleScripting::AddScriptingObject(ScriptingObject * obj)
+{
+	ScriptingObject* ret = nullptr;
 
-		std::vector<MonoObject*> assemblys_objects;
-		for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
+	if (obj != nullptr)
+	{
+		if (!obj->loaded)
 		{
-			const char* path = (*it)->GetPath();
+			obj->Start();
 
-			MonoObject* obj = (MonoObject*)MonoStringFromString(path);
+			scripting_objects.push_back(obj);
 
-			assemblys_objects.push_back(obj);
+			obj->loaded = true;
 		}
 
-		MonoArray* assemblys_array = MonoArrayFromVector(mono_get_string_class(), assemblys_objects);
-
-		void *args[1];
-		args[0] = assemblys_array;
-
-		if (compiler_object.GetLoaded())
-		{
-			MonoObject* ret_obj = nullptr;
-			InvokeMonoMethod(compiler_object.GetMonoObject(), init_method, args, ret_obj);
-
-			ret = BoolFromMonoBool((MonoBoolean*)ret_obj);
-		}
+		ret = obj;
 	}
 
 	return ret;
+}
+
+void ModuleScripting::DestroyScriptingObject(ScriptingObject* obj)
+{
+	if (obj != nullptr)
+	{
+		for (std::vector<ScriptingObject*>::iterator it = scripting_objects.begin(); it != scripting_objects.end(); ++it)
+		{
+			if ((*it) == obj)
+			{
+				(*it)->CleanUp();
+				RELEASE(*it);
+				scripting_objects.erase(it);
+				break;
+			}
+		}
+	}
 }
 
 ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path)
@@ -186,28 +198,44 @@ ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path)
 
 	return ret;
 }
-
-bool ModuleScripting::CompileScript(const char * filepath, std::string & compile_errors)
+void ModuleScripting::DestroyAssembly(ScriptingAssembly* assembly)
 {
-	if (compiler_assembly->GetAssemblyLoaded())
+	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
 	{
-		MonoClass* compiler_class = compiler_assembly->GetClass("BeEngineScriptCompiler", "CSharpCompiler");
-
-		MonoMethod* compile_method = GetMonoMethod(compiler_class, "CompileScript", 3);
-
-		void* args[3];
-		const char* script_path = "";
-		const char* script_name = "";
-		
-		//args[0] = &value;
-
-
-
-		//string script_path, string script_name, ref List<string> compile_errors
+		if ((*it) == assembly)
+		{
+			RELEASE(*it);
+			assemblys.erase(it);
+			break;
+		}
 	}
-
-	return false;
 }
+std::vector<ScriptingAssembly*> ModuleScripting::GetScriptingAssemblys() const
+{
+	return assemblys;
+}
+//
+//bool ModuleScripting::CompileScript(const char * filepath, std::string & compile_errors)
+//{
+//	//if (compiler_assembly->GetAssemblyLoaded())
+//	//{
+//	//	MonoClass* compiler_class = compiler_assembly->GetClass("BeEngineScriptCompiler", "CSharpCompiler");
+//
+//	//	MonoMethod* compile_method = GetMonoMethod(compiler_class, "CompileScript", 3);
+//
+//	//	void* args[3];
+//	//	const char* script_path = "";
+//	//	const char* script_name = "";
+//	//	
+//	//	//args[0] = &value;
+//
+//
+//
+//	//	//string script_path, string script_name, ref List<string> compile_errors
+//	//}
+//
+//	return false;
+//}
 
 MonoClass* ModuleScripting::GetMonoClass(ScriptingAssembly * assembly, const char * class_namepsace, const char * class_name)
 {
@@ -428,6 +456,18 @@ std::vector<MonoObject*> ModuleScripting::VectorFromMonoArray(MonoClass* objects
 	return ret;
 }
 
+uint ModuleScripting::MonoArrayCount(MonoArray * mono_array) const
+{
+	uint ret = 0;
+
+	if (mono_array != nullptr)
+	{
+		ret = mono_array_length(mono_array);
+	}
+
+	return ret;
+}
+
 bool ModuleScripting::BoolFromMonoBool(MonoBoolean * mono_bool)
 {
 	bool ret = false;
@@ -440,17 +480,127 @@ bool ModuleScripting::BoolFromMonoBool(MonoBoolean * mono_bool)
 	return ret;
 }
 
-uint ModuleScripting::MonoArrayCount(MonoArray * mono_array) const
+void ModuleScripting::DestroyAllScriptingObjects()
 {
-	uint ret = 0;
-
-	if (mono_array != nullptr)
-	{
-		ret = mono_array_length(mono_array);
+	for (std::vector<ScriptingObject*>::iterator it = scripting_objects.begin(); it != scripting_objects.end(); ++it)
+	{		
+		(*it)->CleanUp();
+		RELEASE(*it);		
 	}
 
-	return ret;
+	scripting_objects.clear();
 }
+
+void ModuleScripting::DestroyAllAssemblys()
+{
+	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
+	{		
+		RELEASE(*it);		
+	}
+
+	assemblys.clear();
+}
+
+//bool ModuleScripting::InitCompiler()
+//{
+//	bool ret = false;
+//
+//	/*if (compiler_assembly != nullptr && compiler_assembly->GetAssemblyLoaded())
+//	{
+//		MonoClass* compiler_class = GetMonoClass(compiler_assembly, "BeEngineScriptCompiler", "CSharpCompiler");
+//
+//		compiler_object = CreateMonoObject(compiler_class);
+//
+//		MonoMethod* init_method = GetMonoMethod(compiler_class, "InitCompiler", 1);
+//
+//		std::vector<MonoObject*> assemblys_objects;
+//		for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
+//		{
+//			const char* path = (*it)->GetPath();
+//
+//			MonoObject* obj = (MonoObject*)MonoStringFromString(path);
+//
+//			assemblys_objects.push_back(obj);
+//		}
+//
+//		MonoArray* assemblys_array = MonoArrayFromVector(mono_get_string_class(), assemblys_objects);
+//
+//		void *args[1];
+//		args[0] = assemblys_array;
+//
+//		if (compiler_object.GetLoaded())
+//		{
+//			MonoObject* ret_obj = nullptr;
+//			InvokeMonoMethod(compiler_object.GetMonoObject(), init_method, args, ret_obj);
+//
+//			ret = BoolFromMonoBool((MonoBoolean*)ret_obj);
+//		}
+//	}*/
+//
+//	return ret;
+//}
+
+//bool ModuleScripting::GetIsSolutionCreated(const char* project_path, const char* solution_path)
+//{
+//	bool ret = false;
+//
+//	if (App->file_system->FileExists(project_path) && App->file_system->FileExists(solution_path))
+//		ret = true;
+//
+//	return ret;
+//}
+//
+//bool ModuleScripting::CreateSolution()
+//{
+//	bool ret = false;
+//
+//	/*std::string proj_path = App->project->GetCurrProjectBasePath() + "Assembly-CSharp.csproj";
+//	std::string solution_path = App->project->GetCurrProjectBasePath() + "SolutionTest.sln";
+//
+//	if (!GetIsSolutionCreated(proj_path.c_str(), solution_path.c_str()))
+//	{
+//		std::string proj_template_path = project_template_base_path + "Assembly-CSharp.csproj";
+//		std::string solution_template_path = project_template_base_path + "SolutionTest.sln";
+//
+//		App->file_system->FileCopyPaste(proj_template_path.c_str(), App->project->GetCurrProjectBasePath().c_str(), true);
+//		App->file_system->FileCopyPaste(solution_template_path.c_str(), App->project->GetCurrProjectBasePath().c_str(), true);
+//
+//		ret = true;
+//	}
+//*/
+//	return ret;
+//}
+
+//bool ModuleScripting::InitSolution()
+//{
+//	bool ret = false;
+//
+//	/*if (compiler_assembly != nullptr && compiler_assembly->GetAssemblyLoaded())
+//	{
+//		MonoClass* solution_manager_class = GetMonoClass(compiler_assembly, "BeEngineScriptCompiler", "CSharpSolutionManager");
+//
+//		solution_manager_object = CreateMonoObject(solution_manager_class);
+//
+//		MonoMethod* init_method = GetMonoMethod(solution_manager_class, "Init", 1);
+//
+//		std::string proj_path = App->project->GetCurrProjectBasePath() + "Assembly-CSharp.csproj";
+//
+//		MonoString* path_mono_string = MonoStringFromString(proj_path.c_str());
+//
+//		void *args[1];
+//		args[0] = path_mono_string;
+//
+//		if (solution_manager_object.GetLoaded())
+//		{
+//			MonoObject* ret_obj = nullptr;
+//			InvokeMonoMethod(solution_manager_object.GetMonoObject(), init_method, args, ret_obj);
+//
+//			ret = BoolFromMonoBool((MonoBoolean*)ret_obj);
+//		}
+//	}*/
+//
+//	return ret;
+//}
 
 ScriptingAssembly::ScriptingAssembly(MonoDomain* dom, const char * assembly_path)
 {

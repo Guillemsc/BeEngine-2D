@@ -7,6 +7,11 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 
+#include "ScriptingObject.h"
+
+class Event;
+class ScriptingObjectCompiler;
+
 class ScriptingAssembly
 {
 public:
@@ -52,14 +57,6 @@ private:
 	bool loaded = false;
 };
 
-class TestMono : public MonoObject
-{
-public:
-	TestMono() {};
-
-	int i = 2;
-};
-
 class ModuleScripting : public Module
 {
 public:
@@ -72,14 +69,18 @@ public:
 	bool Update();
 	bool PostUpdate();
 	bool CleanUp();
+	
+	void OnEvent(Event* ev);
 
-	bool InitCompiler();
+	ScriptingObject* AddScriptingObject(ScriptingObject* obj);
+	void DestroyScriptingObject(ScriptingObject* obj);
 
+	// Assembly management
 	ScriptingAssembly* CreateAssembly(const char* assembly_path);
 	void DestroyAssembly(ScriptingAssembly* assembly);
+	std::vector<ScriptingAssembly*> GetScriptingAssemblys() const;
 
-	bool CompileScript(const char* filepath, std::string& compile_errors = std::string());
-
+	// Script management
 	MonoClass* GetMonoClass(ScriptingAssembly* assembly, const char* class_namepsace, const char* class_name);
 	MonoClass* GetMonoClass(MonoObject* obj);
 	const char* GetMonoClassNamespace(MonoClass* mono_class);
@@ -89,15 +90,28 @@ public:
 	bool InvokeStaticMonoMethod(MonoMethod* mono_method, void **args, MonoObject*& return_object);
 	bool InvokeMonoMethod(MonoObject* obj, MonoMethod* mono_method, void **args, MonoObject*& return_object);
 	bool InvokeMonoMethodUnmanaged(MonoObject* obj, MonoMethod* mono_method, void **args, void*& return_object);
+
 	CreatedMonoObject CreateMonoObject(MonoClass* mono_class);
 	void DestroyMonoObject(CreatedMonoObject& created_mono_object);
 
+	// Box
 	MonoString* MonoStringFromString(const char* str) const;
 	MonoArray* MonoArrayFromVector(MonoClass* objects_mono_class, const std::vector<MonoObject*>& vec);
-	std::vector<MonoObject*> VectorFromMonoArray(MonoClass* objects_mono_class, MonoArray* mono_array);
-	bool BoolFromMonoBool(MonoBoolean* mono_bool);
-	uint MonoArrayCount(MonoArray* mono_array) const;
 
+	// Unbox
+	std::vector<MonoObject*> VectorFromMonoArray(MonoClass* objects_mono_class, MonoArray* mono_array);
+	uint MonoArrayCount(MonoArray* mono_array) const;
+	bool BoolFromMonoBool(MonoBoolean* mono_bool);
+
+private:
+	void DestroyAllScriptingObjects();
+	void DestroyAllAssemblys();
+
+public:
+	ScriptingAssembly* scripting_assembly = nullptr;
+	ScriptingAssembly* scripting_internal_assembly = nullptr;
+
+	ScriptingObjectCompiler* compiler = nullptr;
 
 private:
 	std::string mono_base_path;
@@ -106,11 +120,7 @@ private:
 	MonoDomain* base_domain = nullptr;
 
 	std::vector<ScriptingAssembly*> assemblys;
-
-	ScriptingAssembly* base_project_assembly = nullptr;
-	ScriptingAssembly* compiler_assembly = nullptr;
-
-	CreatedMonoObject  compiler_object;
+	std::vector<ScriptingObject*> scripting_objects;
 };
 
 #endif // !__MODULE_SCRIPTING_H__
