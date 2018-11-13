@@ -19,8 +19,10 @@ public:
 	void Start();
 	void CleanUp();
 
+	bool CompileScript(const char* script_path, std::vector<std::string>& compile_errors = std::vector<std::string>());
+
 private:
-	CreatedMonoObject script_compiler_object;
+	ScriptingClassInstance* script_compiler_instance = nullptr;
 };
 
 #endif // !__SCRIPTING_OBJECT_COMPILER_H__

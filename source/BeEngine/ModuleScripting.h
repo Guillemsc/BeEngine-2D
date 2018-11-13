@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include "GeometryMath.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -11,20 +12,26 @@
 
 class Event;
 class ScriptingObjectCompiler;
+class ScriptingObjectSolutionManager;
+class ScriptingClass;
 
 class ScriptingAssembly
 {
+	friend class ModuleScripting;
+
 public:
 	ScriptingAssembly(MonoDomain* domain, const char* assembly_path);
 
-	void LoadAssembly();
 	bool GetAssemblyLoaded() const;
 
 	MonoAssembly* GetAssembly();
 	MonoImage* GetImage();
 	const char* GetPath();
 
-	MonoClass* GetClass(const char* class_namepsace, const char* class_name);
+	ScriptingClass GetClass(const char* class_namepsace, const char* class_name);
+
+private:
+	void LoadAssembly();
 
 private:
 	bool loaded = false;
@@ -36,27 +43,48 @@ private:
 	std::string path;
 };
 
-class CreatedMonoObject
+class ScriptingClass
 {
-	friend class ModuleScripting;
+	friend class ScriptingClassInstance;
 
 public:
-	CreatedMonoObject();
-	CreatedMonoObject(MonoObject* mono_objec, uint id);
+	ScriptingClass();
+	ScriptingClass(MonoClass* mono_class);
 
-	MonoObject* GetMonoObject() const;
-	uint GetId() const;
+	const char* GetNamespace() const;
 
-	bool GetLoaded() const;
+	bool InvokeStaticMonoMethod(const char* method_name, void **args, uint args_count, MonoObject*& return_object);
+
+	ScriptingClassInstance* CreateInstance();
 
 private:
+	MonoClass* mono_class = nullptr;
+};
+
+class ScriptingClassInstance
+{
+	friend class ScriptingClass;
+
+public:
+	ScriptingClassInstance(ScriptingClass sci, MonoObject* mono_objec, uint id);
+
+	void CleanUp();
+
+	ScriptingClass GetClass();
+
+	bool InvokeMonoMethod(const char* method_name, void **args, uint args_count, MonoObject*& return_object);
+	bool InvokeMonoMethodUnmanaged(const char* method_name, void **args, uint args_count, void*& return_object);
+
+private:
+	ScriptingClass scripting_class;
 	MonoObject* mono_object = nullptr;
 	uint id = 0;
-	bool loaded = false;
 };
 
 class ModuleScripting : public Module
 {
+	friend class ScriptingClass;
+
 public:
 	ModuleScripting();
 	~ModuleScripting();
@@ -79,46 +107,48 @@ public:
 	std::vector<ScriptingAssembly*> GetScriptingAssemblys() const;
 
 	// Script management
-	MonoClass* GetMonoClass(ScriptingAssembly* assembly, const char* class_namepsace, const char* class_name);
 	MonoClass* GetMonoClass(MonoObject* obj);
-	const char* GetMonoClassNamespace(MonoClass* mono_class);
 	MonoType* GetMonoType(MonoClass* mono_class);
 	const char* GetMonoTypeName(MonoType* mono_type);
-	MonoMethod* GetMonoMethod(MonoClass* mono_class, const char* method_name, uint args_count);
-	bool InvokeStaticMonoMethod(MonoMethod* mono_method, void **args, MonoObject*& return_object);
-	bool InvokeMonoMethod(MonoObject* obj, MonoMethod* mono_method, void **args, MonoObject*& return_object);
-	bool InvokeMonoMethodUnmanaged(MonoObject* obj, MonoMethod* mono_method, void **args, void*& return_object);
 
-	CreatedMonoObject CreateMonoObject(MonoClass* mono_class);
-	void DestroyMonoObject(CreatedMonoObject& created_mono_object);
+	// Boxing
+	MonoString* BoxString(const char* val);
+	MonoObject* BoxBool(bool val);
+	MonoObject* BoxInt(int val);
+	MonoObject* BoxUint(uint val);
+	MonoObject* BoxFloat(float val);
+	MonoObject* BoxFloat2(const float2& val);
+	MonoArray* BoxArray(MonoClass* objects_mono_class, const std::vector<MonoObject*>& vec);
 
-	// Box
-	MonoString* MonoStringFromString(const char* str) const;
-	MonoArray* MonoArrayFromVector(MonoClass* objects_mono_class, const std::vector<MonoObject*>& vec);
-
-	// Unbox
-	std::vector<MonoObject*> VectorFromMonoArray(MonoClass* objects_mono_class, MonoArray* mono_array);
-	uint MonoArrayCount(MonoArray* mono_array) const;
-	bool BoolFromMonoBool(MonoBoolean* mono_bool);
+	// Unboxing
+	std::string UnboxString(MonoString* val);
+	bool UnboxBool(MonoObject* val);
+	int UnboxInt(MonoObject* val);
+	uint UnboxUint(MonoObject* val);
+	float UnboxFloat(MonoObject* val);
+	float2 UnboxFloat2(MonoObject* val);
+	std::vector<MonoObject*> UnboxArray(MonoClass* mono_class, MonoArray* val);
+	uint UnboxArrayCount(MonoArray* val);
 
 private:
-	void DestroyAllScriptingObjects();
 	void DestroyAllAssemblys();
+	void DestroyAllScriptingObjects();
 
 public:
 	ScriptingAssembly* scripting_assembly = nullptr;
 	ScriptingAssembly* scripting_internal_assembly = nullptr;
 
 	ScriptingObjectCompiler* compiler = nullptr;
+	ScriptingObjectSolutionManager* solution_manager = nullptr;
 
 private:
 	std::string mono_base_path;
 	std::string assembly_base_path;
 
 	MonoDomain* base_domain = nullptr;
-
-	std::vector<ScriptingAssembly*> assemblys;
+	
 	std::vector<ScriptingObject*> scripting_objects;
+	std::vector<ScriptingAssembly*> assemblys;
 };
 
 #endif // !__MODULE_SCRIPTING_H__

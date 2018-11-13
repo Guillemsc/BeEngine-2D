@@ -1,3 +1,7 @@
 {
-    "projects_count": 0
+    "projects_count": 1,
+    "project_0": {
+        "name": "Test",
+        "path": "C:\\Users\\Guillem\\Desktop\\Test\\"
+    }
 }

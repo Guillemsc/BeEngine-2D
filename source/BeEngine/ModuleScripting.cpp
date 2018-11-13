@@ -5,6 +5,7 @@
 #include "Event.h"
 #include "ModuleEvent.h"
 #include "ScriptingObjectCompiler.h"
+#include "ScriptingObjectSolutionManager.h"
 
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 
@@ -40,6 +41,7 @@ bool ModuleScripting::Awake()
 	scripting_internal_assembly = CreateAssembly(scripting_internal_assembly_path.c_str());
 
 	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
+	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 
 
 	//MonoClass* test_class = GetMonoClass(base_project_assembly, "BeEngine", "BeEngineReference");
@@ -133,6 +135,8 @@ void ModuleScripting::OnEvent(Event * ev)
 	case EventType::PROJECT_SELECTED:
 	{
 		EventProjectSelected* pje = (EventProjectSelected*)ev;
+
+		solution_manager->CreateSolutionManagerInstance();
 
 		break;
 	}
@@ -237,21 +241,6 @@ std::vector<ScriptingAssembly*> ModuleScripting::GetScriptingAssemblys() const
 //	return false;
 //}
 
-MonoClass* ModuleScripting::GetMonoClass(ScriptingAssembly * assembly, const char * class_namepsace, const char * class_name)
-{
-	MonoClass* ret = nullptr;
-
-	if (assembly != nullptr)
-	{
-		if (assembly->GetAssemblyLoaded())
-		{
-			ret = assembly->GetClass(class_namepsace, class_name);
-		}
-	}
-
-	return ret;
-}
-
 MonoClass * ModuleScripting::GetMonoClass(MonoObject * obj)
 {
 	MonoClass* ret = nullptr;
@@ -262,16 +251,6 @@ MonoClass * ModuleScripting::GetMonoClass(MonoObject * obj)
 	}
 
 	return ret;
-}
-
-const char * ModuleScripting::GetMonoClassNamespace(MonoClass * mono_class)
-{
-	std::string ret = "";
-
-	if (mono_class != nullptr)
-		ret = mono_class_get_namespace(mono_class);
-
-	return ret.c_str();
 }
 
 MonoType* ModuleScripting::GetMonoType(MonoClass * mono_class)
@@ -294,127 +273,57 @@ const char * ModuleScripting::GetMonoTypeName(MonoType * mono_type)
 	return ret;
 }
 
-MonoMethod* ModuleScripting::GetMonoMethod(MonoClass * mono_class, const char * method_name, uint args_count)
-{
-	MonoMethod* ret = nullptr;
-
-	if (mono_class != nullptr)
-		ret = mono_class_get_method_from_name(mono_class, method_name, args_count);
-
-	return ret;
-}
-
-bool ModuleScripting::InvokeStaticMonoMethod(MonoMethod* mono_method, void ** args, MonoObject *& return_object)
-{
-	bool ret = false;
-
-	if (mono_method != nullptr)
-	{
-		MonoObject* exception = nullptr;
-		return_object = mono_runtime_invoke(mono_method, NULL, args, &exception);
-
-		if (exception != nullptr)
-		{
-			mono_print_unhandled_exception(exception);
-		}
-		else
-		{
-			ret = true;
-		}
-	}
-
-	return ret;
-}
-
-bool ModuleScripting::InvokeMonoMethod(MonoObject* obj, MonoMethod * mono_method, void ** args, MonoObject *& return_object)
-{
-	bool ret = false;
-
-	if (obj != nullptr && mono_method != nullptr)
-	{
-		MonoObject* exception = nullptr;
-		return_object = mono_runtime_invoke(mono_method, obj, args, &exception);
-
-		if (exception != nullptr)
-		{
-			mono_print_unhandled_exception(exception);
-		}
-		else
-		{
-			ret = true;
-		}
-	}
-
-	return ret;
-}
-
-bool ModuleScripting::InvokeMonoMethodUnmanaged(MonoObject * obj, MonoMethod * mono_method, void ** args, void *& return_object)
-{
-	bool ret = false;
-
-	if (obj != nullptr && mono_method != nullptr)
-	{
-		MonoObject* exception = nullptr;
-		return_object = mono_runtime_invoke(mono_method, obj, args, &exception);
-
-		if (exception != nullptr)
-		{
-			mono_print_unhandled_exception(exception);
-		}
-		else
-		{
-			ret = true;
-		}
-	}
-
-	return ret;
-}
-
-CreatedMonoObject ModuleScripting::CreateMonoObject(MonoClass* mono_class)
-{
-	bool correct = false;
-
-	MonoObject* obj = nullptr;
-	uint id = 0;
-
-	if (mono_class != nullptr)
-	{
-		obj = mono_object_new(base_domain, mono_class);
-
-		if (obj != nullptr)
-		{
-			id = mono_gchandle_new(obj, true);
-
-			correct = true;
-		}
-	}
-
-	CreatedMonoObject ret(obj, id);
-	ret.loaded = correct;
-
-	return ret;
-}
-
-void ModuleScripting::DestroyMonoObject(CreatedMonoObject& created_mono_object)
-{
-	if (created_mono_object.loaded)
-	{
-		mono_gchandle_free(created_mono_object.GetId());
-
-		created_mono_object.loaded = false;
-	}
-}
-
-MonoString* ModuleScripting::MonoStringFromString(const char * str) const
+MonoString* ModuleScripting::BoxString(const char * val)
 {
 	MonoString* ret = nullptr;
 
-	ret = mono_string_new(base_domain, str);
+	ret = mono_string_new(base_domain, val);
 
 	return ret;
 }
 
-MonoArray* ModuleScripting::MonoArrayFromVector(MonoClass* objects_mono_class, const std::vector<MonoObject*>& vec)
+MonoObject* ModuleScripting::BoxBool(bool val)
+{
+	MonoObject* ret = nullptr;
+
+	ret = mono_value_box(base_domain, mono_get_boolean_class(), &val);
+
+	return ret;
+}
+
+MonoObject* ModuleScripting::BoxInt(int val)
+{
+	MonoObject* ret = nullptr;
+
+	ret = mono_value_box(base_domain, mono_get_int32_class(), &val);
+
+	return ret;
+}
+
+MonoObject* ModuleScripting::BoxUint(uint val)
+{
+	MonoObject* ret = nullptr;
+
+	ret = mono_value_box(base_domain, mono_get_uint32_class(), &val);
+
+	return ret;
+}
+
+MonoObject* ModuleScripting::BoxFloat(float val)
+{
+	MonoObject* ret = nullptr;
+
+	ret = mono_value_box(base_domain, mono_get_single_class(), &val);
+
+	return ret;
+}
+
+MonoObject* ModuleScripting::BoxFloat2(const float2& val)
+{
+	return nullptr;
+}
+
+MonoArray * ModuleScripting::BoxArray(MonoClass * objects_mono_class, const std::vector<MonoObject*>& vec)
 {
 	MonoArray* ret = nullptr;
 
@@ -437,58 +346,110 @@ MonoArray* ModuleScripting::MonoArrayFromVector(MonoClass* objects_mono_class, c
 	return ret;
 }
 
-std::vector<MonoObject*> ModuleScripting::VectorFromMonoArray(MonoClass* objects_mono_class, MonoArray * mono_array)
+std::string ModuleScripting::UnboxString(MonoString* val)
+{
+	std::string ret = "";
+
+	if (val != nullptr)
+	{
+		ret = mono_string_to_utf8(val);
+	}
+
+	return ret;
+}
+
+bool ModuleScripting::UnboxBool(MonoObject * val)
+{
+	bool ret = false;
+
+	if (val != nullptr)
+	{
+		ret = *(bool*)mono_object_unbox(val);
+	}
+
+	return ret;
+}
+
+int ModuleScripting::UnboxInt(MonoObject * val)
+{
+	int ret = 0;
+
+	if (val != nullptr)
+	{
+		ret = *(int*)mono_object_unbox(val);
+	}
+
+	return ret;
+}
+
+uint ModuleScripting::UnboxUint(MonoObject * val)
+{
+	uint ret = 0;
+
+	if (val != nullptr)
+	{
+		ret = *(uint*)mono_object_unbox(val);
+	}
+
+	return ret;
+}
+
+float ModuleScripting::UnboxFloat(MonoObject * val)
+{
+	float ret = 0.0f;
+
+	if (val != nullptr)
+	{
+		ret = *(float*)mono_object_unbox(val);
+	}
+
+	return ret;
+}
+
+float2 ModuleScripting::UnboxFloat2(MonoObject * val)
+{
+	float2 ret = float2::zero;
+
+	if (val != nullptr)
+	{
+
+	}
+
+	return ret;
+}
+
+std::vector<MonoObject*> ModuleScripting::UnboxArray(MonoClass * mono_class, MonoArray * val)
 {
 	std::vector<MonoObject*> ret;
 
-	if (objects_mono_class != nullptr && mono_array != nullptr)
+	if (val != nullptr)
 	{
-		uint count = MonoArrayCount(mono_array);
-
-		for (int i = 0; i < count; ++i)
+		if (mono_class != nullptr && val != nullptr)
 		{
-			MonoObject* obj = mono_array_get(mono_array, MonoObject*, i);
+			uint count = UnboxArrayCount(val);
 
-			ret.push_back(obj);
+			for (int i = 0; i < count; ++i)
+			{
+				MonoObject* obj = mono_array_get(val, MonoObject*, i);
+
+				ret.push_back(obj);
+			}
 		}
 	}
 
 	return ret;
 }
 
-uint ModuleScripting::MonoArrayCount(MonoArray * mono_array) const
+uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 {
 	uint ret = 0;
 
-	if (mono_array != nullptr)
+	if (val != nullptr)
 	{
-		ret = mono_array_length(mono_array);
+		ret = mono_array_length(val);
 	}
 
 	return ret;
-}
-
-bool ModuleScripting::BoolFromMonoBool(MonoBoolean * mono_bool)
-{
-	bool ret = false;
-
-	if (mono_bool != nullptr)
-	{
-		ret = mono_bool;
-	}
-
-	return ret;
-}
-
-void ModuleScripting::DestroyAllScriptingObjects()
-{
-	for (std::vector<ScriptingObject*>::iterator it = scripting_objects.begin(); it != scripting_objects.end(); ++it)
-	{		
-		(*it)->CleanUp();
-		RELEASE(*it);		
-	}
-
-	scripting_objects.clear();
 }
 
 void ModuleScripting::DestroyAllAssemblys()
@@ -501,44 +462,16 @@ void ModuleScripting::DestroyAllAssemblys()
 	assemblys.clear();
 }
 
-//bool ModuleScripting::InitCompiler()
-//{
-//	bool ret = false;
-//
-//	/*if (compiler_assembly != nullptr && compiler_assembly->GetAssemblyLoaded())
-//	{
-//		MonoClass* compiler_class = GetMonoClass(compiler_assembly, "BeEngineScriptCompiler", "CSharpCompiler");
-//
-//		compiler_object = CreateMonoObject(compiler_class);
-//
-//		MonoMethod* init_method = GetMonoMethod(compiler_class, "InitCompiler", 1);
-//
-//		std::vector<MonoObject*> assemblys_objects;
-//		for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
-//		{
-//			const char* path = (*it)->GetPath();
-//
-//			MonoObject* obj = (MonoObject*)MonoStringFromString(path);
-//
-//			assemblys_objects.push_back(obj);
-//		}
-//
-//		MonoArray* assemblys_array = MonoArrayFromVector(mono_get_string_class(), assemblys_objects);
-//
-//		void *args[1];
-//		args[0] = assemblys_array;
-//
-//		if (compiler_object.GetLoaded())
-//		{
-//			MonoObject* ret_obj = nullptr;
-//			InvokeMonoMethod(compiler_object.GetMonoObject(), init_method, args, ret_obj);
-//
-//			ret = BoolFromMonoBool((MonoBoolean*)ret_obj);
-//		}
-//	}*/
-//
-//	return ret;
-//}
+void ModuleScripting::DestroyAllScriptingObjects()
+{
+	for (std::vector<ScriptingObject*>::iterator it = scripting_objects.begin(); it != scripting_objects.end(); ++it)
+	{
+		(*it)->CleanUp();
+		RELEASE(*it);
+	}
+
+	scripting_objects.clear();
+}
 
 //bool ModuleScripting::GetIsSolutionCreated(const char* project_path, const char* solution_path)
 //{
@@ -647,37 +580,160 @@ const char * ScriptingAssembly::GetPath()
 	return path.c_str();
 }
 
-MonoClass* ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_name)
+ScriptingClass ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_name)
 {
-	MonoClass* ret = nullptr;
+	ScriptingClass ret;
 
 	if (loaded)
-		ret = mono_class_from_name(image, class_namepsace, class_name);
+	{
+		MonoClass* cl = nullptr;
+
+		cl = mono_class_from_name(image, class_namepsace, class_name);
+
+		if (cl != nullptr)
+		{
+			ret = ScriptingClass(cl);
+		}
+	}
 
 	return ret;
 }
 
-CreatedMonoObject::CreatedMonoObject()
+ScriptingClass::ScriptingClass()
 {
 }
 
-CreatedMonoObject::CreatedMonoObject(MonoObject * mono_objec, uint _id)
+ScriptingClass::ScriptingClass(MonoClass * _mono_class)
 {
-	mono_object = mono_objec;
+	mono_class = _mono_class;
+}
+
+const char * ScriptingClass::GetNamespace() const
+{
+	std::string ret = "";
+
+	if (mono_class != nullptr)
+		ret = mono_class_get_namespace(mono_class);
+
+	return ret.c_str();
+}
+
+bool ScriptingClass::InvokeStaticMonoMethod(const char * method_name, void ** args, uint args_count, MonoObject *& return_object)
+{
+	bool ret = false;
+
+	if (mono_class != nullptr)
+	{
+		MonoMethod* method = mono_class_get_method_from_name(mono_class, method_name, args_count);
+
+		if (method != nullptr)
+		{
+			MonoObject* exception = nullptr;
+			return_object = mono_runtime_invoke(method, NULL, args, &exception);
+
+			if (exception != nullptr)
+			{
+				mono_print_unhandled_exception(exception);
+			}
+			else
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
+}
+
+ScriptingClassInstance* ScriptingClass::CreateInstance()
+{
+	ScriptingClassInstance* ret = nullptr;
+
+	if (mono_class != nullptr)
+	{
+		MonoObject* obj = nullptr;
+		uint id = 0;
+
+		obj = mono_object_new(App->scripting->base_domain, mono_class);
+
+		if (obj != nullptr)
+		{
+			id = mono_gchandle_new(obj, true);
+
+			ret = new ScriptingClassInstance(*this, obj, id);
+		}
+	}
+
+	return ret;
+}
+
+ScriptingClassInstance::ScriptingClassInstance(ScriptingClass _scripting_class, MonoObject * _mono_object, uint _id)
+{
+	scripting_class = _scripting_class;
+	mono_object = _mono_object;
 	id = _id;
 }
 
-MonoObject * CreatedMonoObject::GetMonoObject() const
+void ScriptingClassInstance::CleanUp()
 {
-	return mono_object;
+	mono_gchandle_free(id);
 }
 
-uint CreatedMonoObject::GetId() const
+ScriptingClass ScriptingClassInstance::GetClass()
 {
-	return id;
+	return scripting_class;
 }
 
-bool CreatedMonoObject::GetLoaded() const
+bool ScriptingClassInstance::InvokeMonoMethod(const char * method_name, void ** args, uint args_count, MonoObject *& return_object)
 {
-	return loaded;
+	bool ret = false;
+
+	if (scripting_class.mono_class != nullptr && mono_object != nullptr)
+	{
+		MonoMethod* method = mono_class_get_method_from_name(scripting_class.mono_class, method_name, args_count);
+
+		if (method != nullptr)
+		{
+			MonoObject* exception = nullptr;
+			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+
+			if (exception != nullptr)
+			{
+				mono_print_unhandled_exception(exception);
+			}
+			else
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingClassInstance::InvokeMonoMethodUnmanaged(const char * method_name, void ** args, uint args_count, void *& return_object)
+{
+	bool ret = false;
+
+	if (scripting_class.mono_class != nullptr && mono_object != nullptr)
+	{
+		MonoMethod* method = mono_class_get_method_from_name(scripting_class.mono_class, method_name, args_count);
+
+		if (method != nullptr)
+		{
+			MonoObject* exception = nullptr;
+			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+
+			if (exception != nullptr)
+			{
+				mono_print_unhandled_exception(exception);
+			}
+			else
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
 }

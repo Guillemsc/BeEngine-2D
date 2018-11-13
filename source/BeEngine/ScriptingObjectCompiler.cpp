@@ -14,14 +14,12 @@ void ScriptingObjectCompiler::Start()
 {
 	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
 	{
-		MonoClass* compiler_class = App->scripting->GetMonoClass(App->scripting->scripting_internal_assembly, "BeEngine.Internal", "ScriptCompiler");
+		ScriptingClass compiler_class = App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "ScriptCompiler");
 	
-		script_compiler_object = App->scripting->CreateMonoObject(compiler_class);
+		script_compiler_instance = compiler_class.CreateInstance();
 	
-		if (script_compiler_object.GetLoaded())
+		if (script_compiler_instance != nullptr)
 		{
-			MonoMethod* init_method = App->scripting->GetMonoMethod(compiler_class, "Init", 1);
-
 			std::vector<ScriptingAssembly*> assemblys = App->scripting->GetScriptingAssemblys();
 
 			std::vector<MonoObject*> assembly_objects;
@@ -29,20 +27,20 @@ void ScriptingObjectCompiler::Start()
 			{
 				const char* path = (*it)->GetPath();
 
-				MonoObject* obj = (MonoObject*)App->scripting->MonoStringFromString(path);
+				MonoObject* obj = (MonoObject*)App->scripting->BoxString(path);
 
 				assembly_objects.push_back(obj);
 			}
 
-			MonoArray* assemblys_array = App->scripting->MonoArrayFromVector(mono_get_string_class(), assembly_objects);
+			MonoArray* assemblys_array = App->scripting->BoxArray(mono_get_string_class(), assembly_objects);
 
 			void *args[1];
 			args[0] = assemblys_array;
 			
 			MonoObject* ret_obj = nullptr;
-			App->scripting->InvokeMonoMethod(script_compiler_object.GetMonoObject(), init_method, args, ret_obj);
+			script_compiler_instance->InvokeMonoMethod("Init", args, 1, ret_obj);
 
-			bool succes = App->scripting->BoolFromMonoBool((MonoBoolean*)ret_obj);
+			bool succes = App->scripting->UnboxBool(ret_obj);
 
 			ready_to_use = succes;
 		}
@@ -51,4 +49,41 @@ void ScriptingObjectCompiler::Start()
 
 void ScriptingObjectCompiler::CleanUp()
 {
+	if (script_compiler_instance != nullptr)
+	{
+		script_compiler_instance->CleanUp();
+		RELEASE(script_compiler_instance);
+	}
+}
+
+bool ScriptingObjectCompiler::CompileScript(const char * script_path, std::vector<std::string>& compile_errors)
+{	
+	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
+	{
+		if (script_compiler_instance != nullptr)
+		{
+			void* args[2];
+			const char* script_path = "";
+			const char* script_name = "";
+			args[0] = &script_path;
+			args[1] = &script_path;
+
+			MonoObject* ret_obj = nullptr;
+			script_compiler_instance->InvokeMonoMethod("CompileScript", args, 2, ret_obj);
+
+			if (ret_obj != nullptr)
+			{
+				std::vector<MonoObject*> rest_vector = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_obj);
+
+				for (std::vector<MonoObject*>::iterator it = rest_vector.begin(); it != rest_vector.end(); ++it)
+				{
+					std::string error = App->scripting->UnboxString((MonoString*)(*it));
+
+					compile_errors.push_back(error);
+				}
+			}
+		}
+	}
+
+	return false;
 }

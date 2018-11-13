@@ -24,8 +24,10 @@ namespace BeEngine
                 return ret;
             }
 
-            public bool CompileScript(string script_path, string script_name, ref List<string> compile_errors)
+            public List<string> CompileScript(string script_path, string script_name)
             {
+                List<string> ret = new List<string>();
+
                 CompilerParameters compile_parameters = new CompilerParameters();
 
                 compile_parameters.GenerateExecutable = false;
@@ -41,10 +43,10 @@ namespace BeEngine
                 {
                     CompilerError curr_error = results.Errors[i];
 
-                    compile_errors.Add(curr_error.ErrorText);
+                    ret.Add(curr_error.ErrorText);
                 }
 
-                return false;
+                return ret;
             }
 
             private CSharpCodeProvider code_provider = new CSharpCodeProvider();

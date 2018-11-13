@@ -504,6 +504,9 @@
     <ClInclude Include="ScriptingObjectCompiler.h">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingObjectSolutionManager.h">
+      <Filter>Sources\6. Scripting ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -813,6 +816,9 @@
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
     <ClCompile Include="ScriptingObjectCompiler.cpp">
+      <Filter>Sources\6. Scripting ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingObjectSolutionManager.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
   </ItemGroup>

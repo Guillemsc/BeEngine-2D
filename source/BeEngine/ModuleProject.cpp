@@ -189,42 +189,45 @@ std::vector<Project*> ModuleProject::GetProjects() const
 
 void ModuleProject::LoadProjects()
 {
-	JSON_Doc* doc = App->json->LoadJSON(projects_json_filepath.c_str());
-
-	if (doc == nullptr)
-		doc = App->json->CreateJSON(projects_json_filepath.c_str());
-
-	if (doc != nullptr)
+	if(App->file_system->FileExists(projects_json_filepath.c_str()))
 	{
-		int projects_count = doc->GetNumber("projects_count");
+		JSON_Doc* doc = App->json->LoadJSON(projects_json_filepath.c_str());
+		
+		if (doc == nullptr)
+			doc = App->json->CreateJSON(projects_json_filepath.c_str());
 
-		for (int i = 0; i < projects_count; ++i)
+		if (doc != nullptr)
 		{
-			JSON_Doc section_node = doc->GetNode();
+			int projects_count = doc->GetNumber("projects_count");
 
-			std::string proj_section = "project_" + std::to_string(i);
-
-			if (section_node.MoveToSection(proj_section))
+			for (int i = 0; i < projects_count; ++i)
 			{
-				std::string name = section_node.GetString("name");
-				std::string path = section_node.GetString("path");
+				JSON_Doc section_node = doc->GetNode();
 
-				if (App->file_system->FolderExists(path.c_str()))
+				std::string proj_section = "project_" + std::to_string(i);
+
+				if (section_node.MoveToSection(proj_section))
 				{
-					std::string project_doc_path = path + "project.beproject";
-					if (App->file_system->FileExists(project_doc_path.c_str()))
-					{
-						Project* proj = new Project();
-						proj->SetName(name.c_str());
-						proj->SetPath(path.c_str());
+					std::string name = section_node.GetString("name");
+					std::string path = section_node.GetString("path");
 
-						projects.push_back(proj);
+					if (App->file_system->FolderExists(path.c_str()))
+					{
+						std::string project_doc_path = path + "project.beproject";
+						if (App->file_system->FileExists(project_doc_path.c_str()))
+						{
+							Project* proj = new Project();
+							proj->SetName(name.c_str());
+							proj->SetPath(path.c_str());
+
+							projects.push_back(proj);
+						}
 					}
 				}
 			}
-		}
 
-		App->json->UnloadJSON(doc);
+			App->json->UnloadJSON(doc);
+		}
 
 		SerializeProjects();
 	}
