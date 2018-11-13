@@ -1,9 +1,9 @@
 #include "ScriptingObjectCompiler.h"
 #include "App.h"
-#include "ModuleScripting.h"
 
-ScriptingObjectCompiler::ScriptingObjectCompiler()
+ScriptingObjectCompiler::ScriptingObjectCompiler() : ScriptingObject()
 {
+
 }
 
 ScriptingObjectCompiler::~ScriptingObjectCompiler()
@@ -18,7 +18,7 @@ void ScriptingObjectCompiler::Start()
 	
 		script_compiler_object = App->scripting->CreateMonoObject(compiler_class);
 	
-		if (script_compiler_object.GetLoaded)
+		if (script_compiler_object.GetLoaded())
 		{
 			MonoMethod* init_method = App->scripting->GetMonoMethod(compiler_class, "Init", 1);
 

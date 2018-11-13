@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "ScriptingObject.h"
+#include "ModuleScripting.h"
 
 class ScriptingObjectCompiler : public ScriptingObject
 {

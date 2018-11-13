@@ -41,15 +41,13 @@ class CreatedMonoObject
 	friend class ModuleScripting;
 
 public:
+	CreatedMonoObject();
 	CreatedMonoObject(MonoObject* mono_objec, uint id);
 
 	MonoObject* GetMonoObject() const;
 	uint GetId() const;
 
 	bool GetLoaded() const;
-
-private:
-	CreatedMonoObject();
 
 private:
 	MonoObject* mono_object = nullptr;

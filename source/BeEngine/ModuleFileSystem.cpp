@@ -890,7 +890,7 @@ Folder FileSystem::GetFoldersRecursive(const char * path)
 
 	if (FolderExists(path))
 	{
-	/*	std::vector<std::string> new_directories = App->file_system->GetFoldersInPath(path);
+		std::vector<std::string> new_directories = App->file_system->GetFoldersInPath(path);
 
 		std::vector<std::string> files = App->file_system->GetFilesInPath(path);
 
@@ -910,7 +910,7 @@ Folder FileSystem::GetFoldersRecursive(const char * path)
 			Folder to_add = GetFoldersRecursive((*it).c_str());
 
 			ret.folders.push_back(to_add);
-		}*/
+		}
 	}
 
 	return ret;
