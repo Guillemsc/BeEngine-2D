@@ -86,6 +86,8 @@ public:
 	void StopWatchingDirectory(const char* dir);
 	void StopWatchingAllDirectories();
 
+	std::string GetWorkingDirectory();
+
 	// DEPRECATED ---------------------------------------------------
 
 	// Example file.ex -> .ex

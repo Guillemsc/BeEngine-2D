@@ -107,6 +107,8 @@ private:
 	int				   argc;
 	char**			   args;
 
+	std::string        base_path = "";
+
 	std::string		   title = "";
 	std::string		   organization = "";
 	std::string		   version = "";

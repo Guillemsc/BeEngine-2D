@@ -7,6 +7,7 @@ enum ResourceType
 {
 	UNKWNOWN,
 	TEXTURE,
+	SCRIPT,
 	SHADER,
 };
 

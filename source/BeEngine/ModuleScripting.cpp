@@ -7,6 +7,9 @@
 #include "ScriptingObjectCompiler.h"
 #include "ScriptingObjectSolutionManager.h"
 
+// Remove this 
+#include "ModuleResource.h"
+
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 
 ModuleScripting::ModuleScripting()
@@ -25,8 +28,8 @@ bool ModuleScripting::Awake()
 
 	App->event->Suscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
 
-	mono_base_path = "mono\\";
-	assembly_base_path = "mono_assembly\\";
+	mono_base_path = App->file_system->GetWorkingDirectory() + "mono\\";
+	assembly_base_path = App->file_system->GetWorkingDirectory() + "mono_assembly\\";
 
 	std::string lib_dir = mono_base_path + "lib\\";
 	std::string etc_dir = mono_base_path + "etc\\";
@@ -137,6 +140,8 @@ void ModuleScripting::OnEvent(Event * ev)
 		EventProjectSelected* pje = (EventProjectSelected*)ev;
 
 		solution_manager->CreateSolutionManagerInstance();
+
+		App->resource->LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Testing\\ConsoleApp1\\ConsoleApp1\\Test.cs");
 
 		break;
 	}
@@ -695,11 +700,13 @@ bool ScriptingClassInstance::InvokeMonoMethod(const char * method_name, void ** 
 		if (method != nullptr)
 		{
 			MonoObject* exception = nullptr;
+
 			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
 
 			if (exception != nullptr)
 			{
 				mono_print_unhandled_exception(exception);
+
 			}
 			else
 			{

@@ -130,6 +130,8 @@
     <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="ResourceScript.h" />
+    <ClInclude Include="ResourceScriptLoader.h" />
     <ClInclude Include="ResourcesWindow.h" />
     <ClInclude Include="ResourceTexture.h" />
     <ClInclude Include="ResourceTextureLoader.h" />
@@ -266,6 +268,8 @@
     <ClCompile Include="QuadRenderer.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="ResourceScript.cpp" />
+    <ClCompile Include="ResourceScriptLoader.cpp" />
     <ClCompile Include="ResourcesWindow.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
     <ClCompile Include="ResourceTextureLoader.cpp" />

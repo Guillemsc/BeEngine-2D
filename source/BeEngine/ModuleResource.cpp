@@ -3,6 +3,7 @@
 #include "App.h"
 #include "ModuleFileSystem.h"
 #include "ResourceTextureLoader.h"
+#include "ResourceScriptLoader.h"
 #include "ModuleEvent.h"
 #include "ModuleProject.h"
 #include "ModuleEditor.h"
@@ -24,9 +25,11 @@ bool ModuleResource::Awake()
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
 
 	texture_loader = (ResourceTextureLoader*)AddLoader(new ResourceTextureLoader());
-
 	texture_loader->AddAssetExtensionToLoad("png");
 	texture_loader->AddAssetExtensionToLoad("jpg");
+
+	script_loader = (ResourceScriptLoader*)AddLoader(new ResourceScriptLoader());
+	script_loader->AddAssetExtensionToLoad("cs");
 
 	return ret;
 }

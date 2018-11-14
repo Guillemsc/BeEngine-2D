@@ -26,6 +26,10 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 {
 	INTERNAL_LOG("Creating Modules");
 
+	char *data_path =  SDL_GetBasePath();
+	base_path = data_path;
+	SDL_free(data_path);
+
 	// Profiler
 	profiler = new Profiler();
 
@@ -364,6 +368,7 @@ SDL_version Application::GetSDLVersion()
 
 const char * Application::GetBasePath()
 {
+	return base_path.c_str();
 	return SDL_GetBasePath();
 }
 

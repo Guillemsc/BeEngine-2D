@@ -240,6 +240,20 @@ void FileSystem::StopWatchingAllDirectories()
 	watching_directories.clear();
 }
 
+std::string FileSystem::GetWorkingDirectory()
+{
+	std::string ret;
+
+	char path[MAX_PATH] = "";
+	GetCurrentDirectoryA(MAX_PATH, path);
+
+	ret = path;
+
+	ret += "\\";
+
+	return ret;
+}
+
 std::string FileSystem::NewNameForFileNameCollision(const char * filename)
 {
 	std::string ret;

@@ -507,6 +507,12 @@
     <ClInclude Include="ScriptingObjectSolutionManager.h">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceScriptLoader.h">
+      <Filter>Sources\5. Resources =============\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceScript.h">
+      <Filter>Sources\5. Resources =============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -820,6 +826,12 @@
     </ClCompile>
     <ClCompile Include="ScriptingObjectSolutionManager.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceScriptLoader.cpp">
+      <Filter>Sources\5. Resources =============\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceScript.cpp">
+      <Filter>Sources\5. Resources =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

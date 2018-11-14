@@ -19,7 +19,7 @@ public:
 	void Start();
 	void CleanUp();
 
-	bool CompileScript(const char* script_path, std::vector<std::string>& compile_errors = std::vector<std::string>());
+	bool CompileScript(const char* script_path, const char* dll_output_path, std::vector<std::string>& compile_errors = std::vector<std::string>());
 
 private:
 	ScriptingClassInstance* script_compiler_instance = nullptr;

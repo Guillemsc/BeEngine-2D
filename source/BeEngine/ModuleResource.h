@@ -9,6 +9,7 @@
 #include "ModuleTimeSlicedTask.h"
 
 class ResourceTextureLoader;
+class ResourceScriptLoader;
 class Event;
 
 class ModuleResource : public Module
@@ -77,6 +78,7 @@ private:
 
 public:
 	ResourceTextureLoader* texture_loader = nullptr;
+	ResourceScriptLoader* script_loader = nullptr;
 
 private:
 	std::map<ResourceType, ResourceLoader*> loaders;
