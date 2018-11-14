@@ -141,7 +141,7 @@ void ModuleScripting::OnEvent(Event * ev)
 
 		solution_manager->CreateSolutionManagerInstance();
 
-		App->resource->LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Testing\\ConsoleApp1\\ConsoleApp1\\Test.cs");
+		//wApp->resource->LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Testing\\ConsoleApp1\\ConsoleApp1\\Test.cs");
 
 		break;
 	}

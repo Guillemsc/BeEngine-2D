@@ -22,7 +22,7 @@ namespace BeEngine
                     compile_parameters = new CompilerParameters();
 
                     compile_parameters.GenerateExecutable = false;
-                    compile_parameters.IncludeDebugInformation = true;
+                    compile_parameters.IncludeDebugInformation = false;
                     compile_parameters.GenerateInMemory = true;
 
                     string a = referenced_assemblies[0];
@@ -58,6 +58,46 @@ namespace BeEngine
                 code_provider.Dispose();
 
                 return ret.ToArray();
+            }
+
+            bool CreateCSScriptFile(string save_filepath, string code)
+            {
+                bool ret = false;
+
+                if (!File.Exists(save_filepath))
+                {
+                    using (File.Create(save_filepath)) {}
+
+                    using (TextWriter tw = new StreamWriter(save_filepath))
+                    {
+                        if (tw != null)
+                        {
+                            tw.Write(code);
+
+                            ret = true;
+                        }
+                    }
+                }
+
+                return ret;
+            }
+
+            string ReadCSScriptFile(string filepath)
+            {
+                string ret = "";
+
+                if (File.Exists(filepath))
+                {
+                    using (StreamReader tw = new StreamReader(filepath))
+                    {
+                        if (tw != null)
+                        {
+                            ret = tw.ReadToEnd();
+                        }
+                    }
+                }
+
+                return ret;
             }
 
             private List<string> ref_assemblies = new List<string>();

@@ -19,7 +19,9 @@ public:
 	void Start();
 	void CleanUp();
 
-	bool CompileScript(const char* script_path, const char* dll_output_path, std::vector<std::string>& compile_errors = std::vector<std::string>());
+	bool CompileScript(const char* script_filepath, const char* dll_output_path, std::vector<std::string>& compile_errors = std::vector<std::string>());
+	bool CreateScript(const char* script_filepath, const char* code);
+	std::string GetScriptCode(const char* script_filepath);
 
 private:
 	ScriptingClassInstance* script_compiler_instance = nullptr;
