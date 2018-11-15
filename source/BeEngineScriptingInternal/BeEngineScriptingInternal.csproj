@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileWatcher.cs" />
     <Compile Include="ScriptCompiler.cs" />
     <Compile Include="SolutionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

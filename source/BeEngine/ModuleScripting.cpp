@@ -6,6 +6,8 @@
 #include "ModuleEvent.h"
 #include "ScriptingObjectCompiler.h"
 #include "ScriptingObjectSolutionManager.h"
+#include "ScriptingObjectFileWatcher.h"
+#include <mono/utils/mono-logger.h>
 
 // Remove this 
 #include "ModuleResource.h"
@@ -20,6 +22,36 @@ ModuleScripting::~ModuleScripting()
 {
 }
 
+void MonoLogToLog(const char * log_domain, const char * log_level, const char * message, mono_bool fatal, void * user_data)
+{
+	if (fatal || log_level == "error")
+	{
+		CONSOLE_ERROR("%s%s", log_domain != nullptr ? ((std::string)log_domain + ": ").c_str() : "", message);
+	}
+	else if (log_level == "warning")
+	{
+		CONSOLE_WARNING("%s%s", log_domain != nullptr ? ((std::string)log_domain + ": ").c_str() : "", message);
+	}
+	else if (log_level == "critical")
+	{
+		CONSOLE_ERROR("%s%s", log_domain != nullptr ? ((std::string)log_domain + ": ").c_str() : "", message);
+	}
+	else
+	{
+
+	}
+}
+
+void MonoInternalWarning(const char * string, mono_bool is_stdout)
+{
+	CONSOLE_WARNING("%s", string);
+}
+
+void MonoInternalError(const char * string, mono_bool is_stdout)
+{
+	CONSOLE_ERROR("%s", string);
+}
+
 bool ModuleScripting::Awake()
 {
 	bool ret = true;
@@ -27,6 +59,10 @@ bool ModuleScripting::Awake()
 	INTERNAL_LOG("Init Mono Envirnoment");
 
 	App->event->Suscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+
+	mono_trace_set_log_handler(MonoLogToLog, this);
+	mono_trace_set_print_handler(MonoInternalWarning);
+	mono_trace_set_printerr_handler(MonoInternalError);
 
 	mono_base_path = App->file_system->GetWorkingDirectory() + "mono\\";
 	assembly_base_path = App->file_system->GetWorkingDirectory() + "mono_assembly\\";
@@ -45,7 +81,9 @@ bool ModuleScripting::Awake()
 
 	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
+	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
 
+	file_watcher->WatchFileFolder("C:\\Users\\Guillem\\Desktop\\Test\\assets\\");
 
 	//MonoClass* test_class = GetMonoClass(base_project_assembly, "BeEngine", "BeEngineReference");
 
@@ -158,6 +196,7 @@ ScriptingObject* ModuleScripting::AddScriptingObject(ScriptingObject * obj)
 	{
 		if (!obj->loaded)
 		{
+			obj->RegisterInternalCalls();
 			obj->Start();
 
 			scripting_objects.push_back(obj);
@@ -328,7 +367,7 @@ MonoObject* ModuleScripting::BoxFloat2(const float2& val)
 	return nullptr;
 }
 
-MonoArray * ModuleScripting::BoxArray(MonoClass * objects_mono_class, const std::vector<MonoObject*>& vec)
+MonoArray* ModuleScripting::BoxArray(MonoClass * objects_mono_class, const std::vector<MonoObject*>& vec)
 {
 	MonoArray* ret = nullptr;
 
@@ -665,6 +704,8 @@ ScriptingClassInstance* ScriptingClass::CreateInstance()
 		{
 			id = mono_gchandle_new(obj, true);
 
+			mono_runtime_object_init(obj);
+
 			ret = new ScriptingClassInstance(*this, obj, id);
 		}
 	}
@@ -706,7 +747,6 @@ bool ScriptingClassInstance::InvokeMonoMethod(const char * method_name, void ** 
 			if (exception != nullptr)
 			{
 				mono_print_unhandled_exception(exception);
-
 			}
 			else
 			{

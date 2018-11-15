@@ -32,7 +32,7 @@ enum EventType
 
 	PROJECT_SELECTED,
 
-	WATCH_DIRECTORY
+	WATCH_FILE_FOLDER,
 };
 
 class EventTimeSlicedTaskFinished : public Event
@@ -119,21 +119,21 @@ public:
 	}
 };
 
-class EventWatchDirectory : public Event
+class EventWatchFileFolderChanged : public Event
 {
 public:
-	EventWatchDirectory(std::string directory) : Event(EventType::WATCH_DIRECTORY)
+	EventWatchFileFolderChanged(std::string path) : Event(EventType::WATCH_FILE_FOLDER)
 	{
-		dir = directory;
+		p = path;
 	}
 
-	std::string GetDirectory()
+	std::string GetPath()
 	{
-		return dir;
+		return p;
 	}
 
 private:
-	std::string dir;
+	std::string p;
 };
 
 #endif // !__EVENT_H__

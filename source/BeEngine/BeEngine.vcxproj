@@ -231,6 +231,7 @@
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="ScriptingObject.h" />
     <ClInclude Include="ScriptingObjectCompiler.h" />
+    <ClInclude Include="ScriptingObjectFileWatcher.h" />
     <ClInclude Include="ScriptingObjectSolutionManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Time\Clock.h" />
@@ -339,6 +340,7 @@
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="ScriptingObject.cpp" />
     <ClCompile Include="ScriptingObjectCompiler.cpp" />
+    <ClCompile Include="ScriptingObjectFileWatcher.cpp" />
     <ClCompile Include="ScriptingObjectSolutionManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Time\Clock.cpp" />

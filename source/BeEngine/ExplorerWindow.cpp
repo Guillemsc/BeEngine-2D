@@ -17,13 +17,13 @@ void ExplorerWindow::OnEvent(Event * ev)
 {
 	switch (ev->GetType())
 	{
-	case EventType::WATCH_DIRECTORY:
+	//case EventType::WATCH_DIRECTORY:
 
-		folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
+	//	folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
 
-		SetSelectedFolderTree(App->resource->GetCurrentAssetsPath().c_str());
+	//	SetSelectedFolderTree(App->resource->GetCurrentAssetsPath().c_str());
 
-		break;
+	//	break;
 	case EventType::PROJECT_SELECTED:
 
 		folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
@@ -38,7 +38,7 @@ void ExplorerWindow::OnEvent(Event * ev)
 
 void ExplorerWindow::Start()
 {
-	App->event->Suscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::WATCH_DIRECTORY);
+	//App->event->Suscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::WATCH_DIRECTORY);
 	App->event->Suscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
 }
 

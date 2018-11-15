@@ -516,6 +516,9 @@
     <ClInclude Include="ExplorerWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingObjectFileWatcher.h">
+      <Filter>Sources\6. Scripting ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -838,6 +841,9 @@
     </ClCompile>
     <ClCompile Include="ExplorerWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingObjectFileWatcher.cpp">
+      <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

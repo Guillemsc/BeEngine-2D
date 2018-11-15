@@ -13,6 +13,7 @@
 class Event;
 class ScriptingObjectCompiler;
 class ScriptingObjectSolutionManager;
+class ScriptingObjectFileWatcher;
 class ScriptingClass;
 
 class ScriptingAssembly
@@ -81,6 +82,10 @@ private:
 	uint id = 0;
 };
 
+void MonoLogToLog(const char * log_domain, const char * log_level, const char * message, mono_bool fatal, void * user_data);
+void MonoInternalWarning(const char * string, mono_bool is_stdout);
+void MonoInternalError(const char * string, mono_bool is_stdout);
+
 class ModuleScripting : public Module
 {
 	friend class ScriptingClass;
@@ -140,6 +145,7 @@ public:
 
 	ScriptingObjectCompiler* compiler = nullptr;
 	ScriptingObjectSolutionManager* solution_manager = nullptr;
+	ScriptingObjectFileWatcher* file_watcher = nullptr;
 
 private:
 	std::string mono_base_path;

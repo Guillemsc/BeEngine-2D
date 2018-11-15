@@ -21,8 +21,6 @@ public:
 
 	bool CreateSolutionManagerInstance();
 
-
-
 private:
 	bool GetSolutionCreated();
 	bool CreateSolution();

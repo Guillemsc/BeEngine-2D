@@ -14,6 +14,7 @@ public:
 	ScriptingObject();
 	~ScriptingObject();
 	
+	virtual void RegisterInternalCalls() {};
 	virtual void Start(){}
 	virtual void CleanUp(){}
 
