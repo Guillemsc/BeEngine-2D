@@ -80,6 +80,11 @@ std::string ModuleProject::GetCurrProjectBasePath() const
 	return ret;
 }
 
+bool ModuleProject::GetCurrProjectIsSelected() const
+{
+	return curr_project != nullptr;
+}
+
 bool ModuleProject::CreateNewProject(const char* path, const char * name)
 {
 	bool ret = false;

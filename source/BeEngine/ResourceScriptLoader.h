@@ -24,6 +24,8 @@ public:
 	bool ImportAssetFromLibrary(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources = std::vector<Resource*>());
 	bool ExportResourceToLibrary(Resource* resource);
 
+	bool CreateScriptAsset(const char* script_name, const char* path);
+
 private:
 	void OnDestroyResource(Resource* res);
 };

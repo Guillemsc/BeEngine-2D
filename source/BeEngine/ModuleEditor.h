@@ -13,6 +13,7 @@ class DockingSpace;
 class ProjectManager;
 class ProgressWindow;
 class SceneWindow;
+class ExplorerWindow;
 class InspectorWindow;
 
 class EditorWindow
@@ -141,6 +142,7 @@ public:
 
 	SceneWindow*     scene_window = nullptr;
 	InspectorWindow* inspector_window = nullptr;
+	ExplorerWindow*  explorer_window = nullptr;
 
 private:
 	EditorState editor_state;

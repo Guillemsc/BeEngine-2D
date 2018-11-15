@@ -77,6 +77,11 @@ std::string ModuleResource::GetNewUID()
 	return GetUIDRandomHexadecimal();
 }
 
+void ModuleResource::SetCurrentAssetsPath(const char * path)
+{
+	current_assets_folder = path;
+}
+
 std::string ModuleResource::GetCurrentAssetsPath()
 {
 	return current_assets_folder;

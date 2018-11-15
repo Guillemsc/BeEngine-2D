@@ -219,6 +219,23 @@ bool ResourceScriptLoader::ExportResourceToLibrary(Resource * resource)
 	return ret;
 }
 
+bool ResourceScriptLoader::CreateScriptAsset(const char * script_name, const char * path)
+{
+	bool ret = false;
+
+	if (App->file_system->FolderExists(path))
+	{
+		std::string filepath = path + std::string(script_name) + ".cs";
+
+		if (App->scripting->compiler->CreateScript(filepath.c_str(), ""))
+		{
+			ret = App->resource->ReimportAssetToEngine(filepath.c_str());
+		}
+	}
+
+	return ret;
+}
+
 void ResourceScriptLoader::OnDestroyResource(Resource * res)
 {
 }

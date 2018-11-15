@@ -22,8 +22,6 @@ bool FileSystem::Awake()
 {
 	bool ret = true;
 
-	App->event->Suscribe(std::bind(&FileSystem::OnEvent, this, std::placeholders::_1), EventType::THREAD_TASK_FINISHED);
-
 	return ret;
 }
 
@@ -31,31 +29,12 @@ bool FileSystem::Start()
 {
 	bool ret = true;
 
-	std::string folder = "C:\\Users\\Guillem\\Desktop\\Test\\assets\\";
-
-	WatchDirectory(folder.c_str());
-
 	return ret;
 }
 
 bool FileSystem::Update()
 {
 	bool ret = true;
-
-	//for (std::vector<WatchingFloder>::iterator it = watching_folders.begin(); it != watching_folders.end(); ++it)
-	//{
-	//	std::experimental::filesystem::file_time_type time_type = std::experimental::filesystem::last_write_time((*it).folder);
-	//	std::time_t curr_time = decltype(time_type)::clock::to_time_t(time_type);
-
-	//	std::time_t last_time = decltype((*it).last_time)::clock::to_time_t((*it).last_time);
-
-	//	if (curr_time > last_time)
-	//	{
-	//		int i = 0;
-	//		++i;
-	//	}
-
-	//}
 
 	return ret;
 }
@@ -69,31 +48,21 @@ bool FileSystem::CleanUp()
 
 void FileSystem::OnEvent(Event * ev)
 {
-	switch (ev->GetType())
-	{
-	case EventType::THREAD_TASK_FINISHED:
-	{
-		EventThreadTaskFinished* ev_thread = (EventThreadTaskFinished*)ev;
 
-		for (std::vector<WatchingDirectory>::iterator it = watching_directories.begin(); it != watching_directories.end(); ++it)
-		{
-			if ((*it).task == ev_thread->GetTask())
-			{
-				(*it).task = new WatchFolderThreadTask((*it).folder.c_str());
+}
 
-				App->event->SendEvent(new EventWatchDirectory((*it).folder));
+std::string FileSystem::GetWorkingDirectory()
+{
+	std::string ret;
 
-				App->thread->StartThread((*it).task);
-			}
-		}
+	char path[MAX_PATH] = "";
+	GetCurrentDirectoryA(MAX_PATH, path);
 
-		int i = 0;
+	ret = path;
 
-		break;
-	}
-	default:
-		break;
-	}
+	ret += "\\";
+
+	return ret;
 }
 
 DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
@@ -201,55 +170,6 @@ std::string FileSystem::SelectFileDilog(bool & canceled, const char* filter[])
 		canceled = false;
 		ret = path;
 	}
-
-	return ret;
-}
-
-void FileSystem::WatchDirectory(const char * dir)
-{
-	bool exists = false;
-	for (std::vector<WatchingDirectory>::iterator it = watching_directories.begin(); it != watching_directories.end(); ++it)
-	{
-		if ((*it).folder.compare(dir) == 0)
-			exists = true;
-	}
-
-	WatchingDirectory wd;
-	wd.folder = dir;
-	wd.task = new WatchFolderThreadTask(dir);
-
-	App->thread->StartThread(wd.task);
-
-	watching_directories.push_back(wd);
-}
-
-void FileSystem::StopWatchingDirectory(const char * dir)
-{
-	for (std::vector<WatchingDirectory>::iterator it = watching_directories.begin(); it != watching_directories.end(); ++it)
-	{
-		if ((*it).folder.compare(dir) == 0)
-		{
-			watching_directories.erase(it);
-			break;
-		}
-	}
-}
-
-void FileSystem::StopWatchingAllDirectories()
-{
-	watching_directories.clear();
-}
-
-std::string FileSystem::GetWorkingDirectory()
-{
-	std::string ret;
-
-	char path[MAX_PATH] = "";
-	GetCurrentDirectoryA(MAX_PATH, path);
-
-	ret = path;
-
-	ret += "\\";
 
 	return ret;
 }
@@ -1049,31 +969,4 @@ std::string FileSystem::FileRenameOnNameCollision(const char * path, const char*
 		ret = s_name;
 
 	return ret;
-}
-
-WatchFolderThreadTask::WatchFolderThreadTask(const char * folder_to_watch)
-{
-	folder = folder_to_watch;
-}
-
-void WatchFolderThreadTask::DoTask()
-{
-	DWORD dwWaitStatus;
-	HANDLE dwChangeHandles[2];
-	TCHAR lpDrive[4];
-	TCHAR lpFile[_MAX_FNAME];
-	TCHAR lpExt[_MAX_EXT];
-
-	dwChangeHandles[0] = FindFirstChangeNotification(
-		folder.c_str(),                         // directory to watch 
-		TRUE,                         // do not watch subtree 
-		FILE_NOTIFY_CHANGE_FILE_NAME); // watch file name changes 
-
-	dwChangeHandles[1] = FindFirstChangeNotification(
-		folder.c_str(),                       // directory to watch 
-		TRUE,                          // watch the subtree 
-		FILE_NOTIFY_CHANGE_DIR_NAME);  // watch dir name changes 
-
-	dwWaitStatus = WaitForMultipleObjects(2, dwChangeHandles,
-		FALSE, INFINITE);
 }

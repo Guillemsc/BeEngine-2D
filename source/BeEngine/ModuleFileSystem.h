@@ -55,6 +55,8 @@ public:
 	bool CleanUp();
 	void OnEvent(Event* ev);
 
+	std::string GetWorkingDirectory();
+
 	std::string CreateFolder(const char* path, const char* name);
 	void FileMove(const char* filepath, const char* new_path, bool replace_existing = false);
 	bool FileCopyPaste(const char* filepath, const char* new_path, bool overwrite, std::string &resultant_path);
@@ -82,14 +84,6 @@ public:
 	std::string SelectFolderDialog(bool& canceled);
 	std::string SelectFileDilog(bool& canceled, const char* filter[]);
 
-	void WatchDirectory(const char* dir);
-	void StopWatchingDirectory(const char* dir);
-	void StopWatchingAllDirectories();
-
-	std::string GetWorkingDirectory();
-
-	// DEPRECATED ---------------------------------------------------
-
 	// Example file.ex -> .ex
 	std::string GetFileExtension(const char* file_name);
 
@@ -115,20 +109,6 @@ private:
 	std::string SetFileNameNumber(const char* filename, int number);
 
 	Folder GetFoldersRecursive(const char* path);
-
-private:
-	std::vector<WatchingDirectory> watching_directories;
-};
-
-class WatchFolderThreadTask : public ThreadTask
-{
-public:
-	WatchFolderThreadTask(const char* folder_to_watch);
-
-	void DoTask();
-
-private:
-	std::string folder;
 };
 
 #endif // !__MODULE_FILE_SYSTEM_H__

@@ -104,6 +104,7 @@
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DockingSpace.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="ExplorerWindow.h" />
     <ClInclude Include="FBO.h" />
     <ClInclude Include="FileWatcher\FileWatcher.h" />
     <ClInclude Include="FileWatcher\FileWatcherImpl.h" />
@@ -244,6 +245,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DockingSpace.cpp" />
+    <ClCompile Include="ExplorerWindow.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="FileWatcher\FileWatcher.cpp" />
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />

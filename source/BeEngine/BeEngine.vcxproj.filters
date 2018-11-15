@@ -513,6 +513,9 @@
     <ClInclude Include="ResourceScript.h">
       <Filter>Sources\5. Resources =============</Filter>
     </ClInclude>
+    <ClInclude Include="ExplorerWindow.h">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -832,6 +835,9 @@
     </ClCompile>
     <ClCompile Include="ResourceScript.cpp">
       <Filter>Sources\5. Resources =============</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplorerWindow.cpp">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

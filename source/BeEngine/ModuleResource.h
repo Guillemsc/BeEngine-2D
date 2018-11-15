@@ -30,6 +30,7 @@ public:
 
 	std::string GetNewUID();
 
+	void SetCurrentAssetsPath(const char* path);
 	std::string GetCurrentAssetsPath();
 	std::string GetLibraryPath();
 	std::string GetAssetsPath();
