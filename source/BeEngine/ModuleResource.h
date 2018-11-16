@@ -16,6 +16,7 @@ class ModuleResource : public Module
 {
 	friend class CheckAssetsErrorsTimeSlicedTask;
 	friend class LoadAssetsResourcesTimeSlicedTask;
+	friend class CheckResourcesIntegrity;
 
 public:
 	ModuleResource();
@@ -75,6 +76,8 @@ private:
 	ResourceLoader* AddLoader(ResourceLoader* loader);
 	void DestroyAllLoaders();
 	ResourceLoader* GetLoader(ResourceType type);
+
+	std::map<std::string, Resource*> GetAllResources();
 
 	void CreateLibraryPaths();
 
@@ -142,20 +145,20 @@ private:
 	CheckErrorsState state = CheckErrorsState::CHECK_ASSET_FILES;
 };
 
-class LoadAssetsResourcesTimeSlicedTask : public TimeSlicedTask
+class CheckResourcesIntegrity : public TimeSlicedTask
 {
-public:
-	LoadAssetsResourcesTimeSlicedTask(ModuleResource* module_proj);
+	CheckResourcesIntegrity();
 
 	void Start();
 	void Update();
 	void Finish();
 
 private:
-	ModuleResource * module_proj = nullptr;
+	std::vector<std::string> asset_files_to_check;
+	int all_asset_files_to_check_count = 0;
 
-	std::vector<std::string> asset_files_to_load;
-	int all_asset_files_to_load_count = 0;
+	bool checking_resources = false;
+	std::vector<std::string> resources_used;
 };
 
 #endif // !__MODULE_RESOURCE_H__

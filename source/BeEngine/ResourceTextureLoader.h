@@ -17,11 +17,10 @@ public:
 	void CreateLibraryFolder();
 
 	bool ExportAssetToLibrary(DecomposedFilePath decomposed_file_path, std::string new_uid);
-	bool ClearAssetDataFromEngine(DecomposedFilePath decomposed_file_path);
-	bool DeleteAssetResources(DecomposedFilePath decomposed_file_path);
+	bool ClearAssetDataFromEngine(DecomposedFilePath decomposed_file_path, std::string uid);
 	bool RenameAsset(DecomposedFilePath decomposed_file_path, const char* new_name);
-	bool IsAssetOnLibrary(DecomposedFilePath decomposed_file_path, std::vector<std::string>& library_files_used);
-	bool ImportAssetFromLibrary(DecomposedFilePath decomposed_file_path, std::vector<Resource*>& resources = std::vector<Resource*>());
+	bool IsAssetOnLibrary(DecomposedFilePath decomposed_file_path, std::string uid, std::vector<std::string>& library_files_used);
+	bool ImportAssetFromLibrary(DecomposedFilePath decomposed_file_path, std::string uid, std::vector<Resource*>& resources = std::vector<Resource*>());
 	bool ExportResourceToLibrary(Resource* resource);
 
 private:

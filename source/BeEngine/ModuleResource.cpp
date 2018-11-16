@@ -9,6 +9,8 @@
 #include "ModuleEditor.h"
 #include "ModuleScripting.h" 
 #include "ScriptingObjectFileWatcher.h"
+#include "ModuleJson.h"
+#include "ModuleInput.h"
 
 ModuleResource::ModuleResource()
 {
@@ -137,6 +139,18 @@ ResourceLoader* ModuleResource::GetLoader(ResourceType type)
 	return ret;
 }
 
+std::map<std::string, Resource*> ModuleResource::GetAllResources()
+{
+	std::map<std::string, Resource*> ret;
+
+	for (std::map<ResourceType, ResourceLoader*>::iterator it = loaders.begin(); it != loaders.end(); ++it)
+	{
+		ret.insert((*it).second->GetResources().begin(), (*it).second->GetResources().end());
+	}
+
+	return ret;
+}
+
 void ModuleResource::CreateLibraryPaths()
 {
 	for (std::map<ResourceType, ResourceLoader*>::iterator it = loaders.begin(); it != loaders.end(); ++it)
@@ -169,8 +183,6 @@ void ModuleResource::OnEvent(Event* ev)
 			check_assets_time_sliced = new CheckAssetsErrorsTimeSlicedTask(this);
 			App->time_sliced->StartTimeSlicedTask(check_assets_time_sliced);
 
-			StartWatchingFolders();
-
 			break;
 		}
 	case EventType::TIME_SLICED_TASK_FINISHED:
@@ -179,8 +191,7 @@ void ModuleResource::OnEvent(Event* ev)
 
 			if (check_assets_time_sliced == th_sliced->GetTask())
 			{
-				loading_assets_resources_time_sliced = new LoadAssetsResourcesTimeSlicedTask(this);
-				App->time_sliced->StartTimeSlicedTask(loading_assets_resources_time_sliced);
+				
 			}
 			break;
 		}
@@ -420,9 +431,21 @@ bool ModuleResource::DeleteAssetResources(const char * filepath)
 		ResourceType type = AssetExtensionToType(d_filepath.file_extension.c_str());
 		ResourceLoader* loader = GetLoader(type);
 
-		if (loader != nullptr)
+		bool ret = false;
+
+		std::string assets_meta_path = d_filepath.file_path + ".meta";
+
+		JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
+
+		if (doc != nullptr)
 		{
-			ret = loader->DeleteAssetResources(d_filepath);
+			std::string resource = doc->GetString("resource");
+
+			ret = App->resource->DestroyResource(resource, loader->GetResourcesToLoadType());
+
+			App->json->UnloadJSON(doc);
+
+			ret = true;
 		}
 	}
 
@@ -442,7 +465,22 @@ bool ModuleResource::ClearAssetDataFromEngine(const char * filepath)
 
 		if (loader != nullptr)
 		{
-			ret = loader->ClearAssetDataFromEngine(d_filepath);
+			std::string assets_meta_path = d_filepath.file_path + ".meta";
+
+			JSON_Doc* meta = App->json->LoadJSON(assets_meta_path.c_str());
+
+			if (meta != nullptr)
+			{
+				std::string uid = "";
+
+				uid = meta->GetString("resource");
+
+				ret = loader->ClearAssetDataFromEngine(d_filepath, uid);
+
+				App->json->UnloadJSON(meta);
+
+				App->file_system->FileDelete(assets_meta_path.c_str());
+			}
 		}
 	}
 
@@ -464,6 +502,21 @@ bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 		if (loader != nullptr)
 		{
 			std::string new_uid = GetNewUID();
+
+			std::string asset_meta_path = deco_file.file_path + ".meta";
+
+			if (App->file_system->FileExists(asset_meta_path.c_str()))
+				App->file_system->FileDelete(asset_meta_path.c_str());
+
+			JSON_Doc* doc = App->json->CreateJSON(asset_meta_path.c_str());
+			if (doc != nullptr)
+			{
+				doc->SetString("resource", new_uid.c_str());
+
+				doc->Save();
+				App->json->UnloadJSON(doc);
+			}
+
 			ret = loader->ExportAssetToLibrary(deco_file, new_uid);
 		}
 	}
@@ -544,15 +597,26 @@ bool ModuleResource::IsAssetOnLibrary(const char * filepath, std::vector<std::st
 {
 	bool ret = false;
 
-	DecomposedFilePath deco_file = App->file_system->DecomposeFilePath(filepath);
+	DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(filepath);
 
-	ResourceType type = AssetExtensionToType(deco_file.file_extension.c_str());
+	ResourceType type = AssetExtensionToType(d_filepath.file_extension.c_str());
 
 	ResourceLoader* loader = GetLoader(type);
 
 	if (loader != nullptr)
 	{
-		ret = loader->IsAssetOnLibrary(deco_file, library_files_used);
+		std::string assets_meta_path = d_filepath.file_path + ".meta";
+
+		JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
+
+		if (doc != nullptr)
+		{
+			std::string resource = doc->GetString("resource");
+
+			ret = loader->IsAssetOnLibrary(d_filepath, resource, library_files_used);
+
+			App->json->UnloadJSON(doc);
+		}
 	}
 
 	return ret;
@@ -562,15 +626,26 @@ bool ModuleResource::ImportAssetFromLibrary(const char * filepath, std::vector<R
 {
 	bool ret = false;
 
-	DecomposedFilePath deco_file = App->file_system->DecomposeFilePath(filepath);
+	DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(filepath);
 
-	ResourceType type = AssetExtensionToType(deco_file.file_extension.c_str());
+	ResourceType type = AssetExtensionToType(d_filepath.file_extension.c_str());
 
 	ResourceLoader* loader = GetLoader(type);
 
 	if (loader != nullptr)
 	{
-		ret = loader->ImportAssetFromLibrary(deco_file);
+		std::string assets_meta_path = d_filepath.file_path + ".meta";
+
+		JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
+
+		if (doc != nullptr)
+		{
+			std::string resource = doc->GetString("resource");
+
+			ret = loader->ImportAssetFromLibrary(d_filepath, resource);
+
+			App->json->UnloadJSON(doc);
+		}
 	}
 
 	return ret;
@@ -787,39 +862,57 @@ void CheckAssetsErrorsTimeSlicedTask::ReimportAssets()
 	}
 }
 
-LoadAssetsResourcesTimeSlicedTask::LoadAssetsResourcesTimeSlicedTask(ModuleResource * _module_proj) : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 10)
+CheckResourcesIntegrity::CheckResourcesIntegrity() : TimeSlicedTask(TimeSlicedTaskType::BACKGROUND, 1)
 {
-	module_proj = _module_proj;
 }
 
-void LoadAssetsResourcesTimeSlicedTask::Start()
+void CheckResourcesIntegrity::Start()
 {
-	asset_files_to_load = App->file_system->GetFilesInPathAndChilds(module_proj->GetAssetsPath().c_str());
-	all_asset_files_to_load_count = asset_files_to_load.size();
+	asset_files_to_check = App->file_system->GetFilesInPathAndChilds(App->resource->GetAssetsPath().c_str());
+	all_asset_files_to_check_count = asset_files_to_check.size();
 }
 
-void LoadAssetsResourcesTimeSlicedTask::Update()
+void CheckResourcesIntegrity::Update()
 {
-	if (!asset_files_to_load.empty())
+	if (!checking_resources)
 	{
-		float progress = 100 - (100.0f / (float)all_asset_files_to_load_count) * (float)asset_files_to_load.size();
-		SetPercentageProgress(progress);
-		SetDescription("Loading resources");
+		if (!asset_files_to_check.empty())
+		{
+			float progress = 100 - (100.0f / (float)all_asset_files_to_check_count) * (float)asset_files_to_check.size();
+			SetPercentageProgress(progress);
+			SetDescription("Checking resources integrity");
 
-		std::string curr_file = *asset_files_to_load.begin();
+			std::string curr_file = *asset_files_to_check.begin();
 
-		module_proj->ImportAssetFromLibrary(curr_file.c_str());
+			if (!App->resource->IsMeta(curr_file.c_str()))
+			{
+				std::string assets_meta_path = curr_file + ".meta";
 
-		asset_files_to_load.erase(asset_files_to_load.begin());
+				JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
+
+				if (doc != nullptr)
+				{
+					std::string resource = doc->GetString("resource");
+
+					resources_used.push_back(resource);
+
+					App->json->UnloadJSON(doc);
+				}
+			}
+
+			asset_files_to_check.erase(asset_files_to_check.begin());
+		}
+		else
+		{
+			checking_resources = true;
+		}
 	}
 	else
-	{
-		SetPercentageProgress(100.0f);
+	{		
 		FinishTask();
 	}
 }
 
-void LoadAssetsResourcesTimeSlicedTask::Finish()
+void CheckResourcesIntegrity::Finish()
 {
-
 }

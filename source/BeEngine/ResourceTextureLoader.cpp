@@ -72,31 +72,16 @@ bool ResourceTextureLoader::ExportAssetToLibrary(DecomposedFilePath d_filepath, 
 
 		if (data_size > 0)
 		{
-			// Crate assets meta
-			std::string assets_meta_path = d_filepath.file_path + ".meta";
+			uint size = ilSaveL(IL_DDS, NULL, 0);
+			byte* data = new byte[size];
 
-			if (App->file_system->FileExists(assets_meta_path.c_str()))
-				App->file_system->FileDelete(assets_meta_path.c_str());
-
-			JSON_Doc* doc = App->json->CreateJSON(assets_meta_path.c_str());
-			if (doc != nullptr)
+			if (ilSaveL(IL_DDS, data, size) > 0)
 			{
-				doc->SetString("resource", new_uid.c_str());
-
-				doc->Save();
-				App->json->UnloadJSON(doc);
-
-				uint size = ilSaveL(IL_DDS, NULL, 0);
-				byte* data = new byte[size];
-
-				if (ilSaveL(IL_DDS, data, size) > 0)
-				{
-					ret = App->file_system->FileSave(library_path.c_str(), (char*)data, new_uid.c_str(), "dds", size);
-				}
-
-				RELEASE_ARRAY(data);
+				ret = App->file_system->FileSave(library_path.c_str(), (char*)data, new_uid.c_str(), "dds", size);
 			}
 
+			RELEASE_ARRAY(data);
+			
 			ret = true;
 		}
 		else
@@ -109,52 +94,17 @@ bool ResourceTextureLoader::ExportAssetToLibrary(DecomposedFilePath d_filepath, 
 	return ret;
 }
 
-bool ResourceTextureLoader::ClearAssetDataFromEngine(DecomposedFilePath d_filepath)
+bool ResourceTextureLoader::ClearAssetDataFromEngine(DecomposedFilePath d_filepath, std::string uid)
 {
 	bool ret = false;
 
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
+	std::string resource_filepath = library_path + uid + ".dds";
 
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
+	if (App->file_system->FileExists(resource_filepath.c_str()))
+		App->file_system->FileDelete(resource_filepath.c_str());
 
-	if (doc != nullptr)
-	{
-		std::string resource = doc->GetString("resource");
-		resource += ".dds";
-
-		std::string resource_filepath = library_path + resource;
-
-		if (App->file_system->FileExists(resource_filepath.c_str()))
-			App->file_system->FileDelete(resource_filepath.c_str());
-
-		App->json->UnloadJSON(doc);
-		App->file_system->FileDelete(assets_meta_path.c_str());
-
-		ret = true;
-	}
-
-	return ret;
-}
-
-bool ResourceTextureLoader::DeleteAssetResources(DecomposedFilePath d_filepath)
-{
-	bool ret = false;
-
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
-
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
-
-	if (doc != nullptr)
-	{
-		std::string resource = doc->GetString("resource");
-
-		ret = App->resource->DestroyResource(resource, ResourceType::TEXTURE);
-
-		App->json->UnloadJSON(doc);
-
-		ret = true;
-	}
-
+	ret = true;
+	
 	return ret;
 }
 
@@ -176,92 +126,68 @@ bool ResourceTextureLoader::RenameAsset(DecomposedFilePath d_filepath, const cha
 	return ret;
 }
 
-bool ResourceTextureLoader::IsAssetOnLibrary(DecomposedFilePath d_filepath, std::vector<std::string>& library_files_used)
+bool ResourceTextureLoader::IsAssetOnLibrary(DecomposedFilePath d_filepath, std::string uid, std::vector<std::string>& library_files_used)
 {
 	bool ret = false;
 
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
+	std::string resource_filepath = library_path + uid + ".dds";
 
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
-
-	if (doc != nullptr)
+	if (App->file_system->FileExists(resource_filepath.c_str()))
 	{
-		std::string resource = doc->GetString("resource");
-		resource += ".dds";
+		library_files_used.push_back(resource_filepath);
 
-		std::string resource_filepath = library_path + resource;
-
-		if (App->file_system->FileExists(resource_filepath.c_str()))
-		{
-			library_files_used.push_back(resource_filepath);
-
-			ret = true;
-		}
-
-		App->json->UnloadJSON(doc);
-	}
+		ret = true;
+	}	
 
 	return ret;
 }
 
-bool ResourceTextureLoader::ImportAssetFromLibrary(DecomposedFilePath d_filepath, std::vector<Resource*>& resources)
+bool ResourceTextureLoader::ImportAssetFromLibrary(DecomposedFilePath d_filepath, std::string uid, std::vector<Resource*>& resources)
 {
 	bool ret = false;
 
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
+	std::string resource_filepath = library_path + uid + ".dds";
 
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
-
-	if (doc != nullptr)
+	if (App->file_system->FileExists(resource_filepath.c_str()))
 	{
-		std::string resource = doc->GetString("resource");
-		resource += ".dds";
+		ILuint image;
+		ilGenImages(1, &image);
+		ilBindImage(image);
 
-		std::string resource_filepath = library_path + resource;
-
-		if (App->file_system->FileExists(resource_filepath.c_str()))
+		if (ilLoad(IL_TYPE_UNKNOWN, resource_filepath.c_str()))
 		{
-			ILuint image;
-			ilGenImages(1, &image);
-			ilBindImage(image);
+			// Get texture info
+			ILinfo ImageInfo;
+			iluGetImageInfo(&ImageInfo);
 
-			if (ilLoad(IL_TYPE_UNKNOWN, resource_filepath.c_str()))
+			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 			{
-				// Get texture info
-				ILinfo ImageInfo;
-				iluGetImageInfo(&ImageInfo);
-
-				if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-				{
-					iluFlipImage();
-				}
-
-				// Convert image to rgb and a byte chain
-				ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-
-				ILubyte* data = ilGetData();
-				uint data_id = ImageInfo.Id;
-				uint data_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-				uint image_width = ilGetInteger(IL_IMAGE_WIDTH);
-				uint image_height = ilGetInteger(IL_IMAGE_HEIGHT);
-				uint format = ilGetInteger(IL_IMAGE_FORMAT);
-				uint type = ilGetInteger(IL_IMAGE_TYPE);
-
-				if (data_size > 0)
-				{
-					ResourceTexture* r_tex = (ResourceTexture*)App->resource->CreateResource(ResourceType::TEXTURE);
-					r_tex->SetData(data_id, data, data_size);
-
-					ret = true;
-				}
-				else
-					ret = false;
-
-				ilBindImage(0);
+				iluFlipImage();
 			}
-		}
 
-		App->json->UnloadJSON(doc);
+			// Convert image to rgb and a byte chain
+			ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+			ILubyte* data = ilGetData();
+			uint data_id = ImageInfo.Id;
+			uint data_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
+			uint image_width = ilGetInteger(IL_IMAGE_WIDTH);
+			uint image_height = ilGetInteger(IL_IMAGE_HEIGHT);
+			uint format = ilGetInteger(IL_IMAGE_FORMAT);
+			uint type = ilGetInteger(IL_IMAGE_TYPE);
+
+			if (data_size > 0)
+			{
+				ResourceTexture* r_tex = (ResourceTexture*)App->resource->CreateResource(ResourceType::TEXTURE);
+				r_tex->SetData(data_id, data, data_size);
+
+				ret = true;
+			}
+			else
+				ret = false;
+
+			ilBindImage(0);
+		}
 	}
 
 	return ret;

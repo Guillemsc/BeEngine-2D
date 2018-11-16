@@ -57,57 +57,25 @@ bool ResourceScriptLoader::ExportAssetToLibrary(DecomposedFilePath d_filepath, s
 	return ret;
 }
 
-bool ResourceScriptLoader::ClearAssetDataFromEngine(DecomposedFilePath d_filepath)
+bool ResourceScriptLoader::ClearAssetDataFromEngine(DecomposedFilePath d_filepath, std::string uid)
 {
 	bool ret = false;
 
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
+	std::string resource_1 = uid += ".dll";
+	std::string resource_2 = uid += ".cs";
 
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
+	std::string resource_1_filepath = library_path + resource_1;
+	std::string resource_2_filepath = library_path + resource_2;
 
-	if (doc != nullptr)
-	{
-		std::string uid = doc->GetString("resource");
+	if (App->file_system->FileExists(resource_1_filepath.c_str()))
+		App->file_system->FileDelete(resource_1_filepath.c_str());
 
-		std::string resource_1 = uid += ".dll";
-		std::string resource_2 = uid += ".cs";
+	if (App->file_system->FileExists(resource_2_filepath.c_str()))
+		App->file_system->FileDelete(resource_2_filepath.c_str());
 
-		std::string resource_1_filepath = library_path + resource_1;
-		std::string resource_2_filepath = library_path + resource_2;
 
-		if (App->file_system->FileExists(resource_1_filepath.c_str()))
-			App->file_system->FileDelete(resource_1_filepath.c_str());
-
-		if (App->file_system->FileExists(resource_2_filepath.c_str()))
-			App->file_system->FileDelete(resource_2_filepath.c_str());
-
-		App->json->UnloadJSON(doc);
-		App->file_system->FileDelete(assets_meta_path.c_str());
-
-		ret = true;
-	}
-
-	return ret;
-}
-
-bool ResourceScriptLoader::DeleteAssetResources(DecomposedFilePath d_filepath)
-{
-	bool ret = false;
-
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
-
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
-
-	if (doc != nullptr)
-	{
-		std::string resource = doc->GetString("resource");
-
-		ret = App->resource->DestroyResource(resource, ResourceType::SCRIPT);
-
-		App->json->UnloadJSON(doc);
-
-		ret = true;
-	}
+	ret = true;
+	
 
 	return ret;
 }
@@ -132,69 +100,43 @@ bool ResourceScriptLoader::RenameAsset(DecomposedFilePath d_filepath, const char
 	return ret;
 }
 
-bool ResourceScriptLoader::IsAssetOnLibrary(DecomposedFilePath d_filepath, std::vector<std::string>& library_files_used)
+bool ResourceScriptLoader::IsAssetOnLibrary(DecomposedFilePath d_filepath, std::string uid, std::vector<std::string>& library_files_used)
 {
 	bool ret = false;
 
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
+	std::string resource_1_filepath = library_path + uid + ".dll";
+	std::string resource_2_filepath = library_path + uid + ".cs";
 
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
-
-	if (doc != nullptr)
+	if (App->file_system->FileExists(resource_2_filepath.c_str()))
 	{
-		std::string uid = doc->GetString("resource");
+		library_files_used.push_back(resource_2_filepath);
 
-		std::string resource_1 = uid += ".dll";
-		std::string resource_2 = uid += ".cs";
+		ret = true;
 
-		std::string resource_1_filepath = library_path + resource_1;
-		std::string resource_2_filepath = library_path + resource_2;
-
-		if (App->file_system->FileExists(resource_2_filepath.c_str()))
+		// It is possible that there is no dll because of script not compiling
+		if (App->file_system->FileExists(resource_1_filepath.c_str()))
 		{
-			library_files_used.push_back(resource_2_filepath);
-
-			ret = true;
-
-			// It is possible that there is no dll because of script not compiling
-			if (App->file_system->FileExists(resource_1_filepath.c_str()))
-			{
-				library_files_used.push_back(resource_1_filepath);
-			}
+			library_files_used.push_back(resource_1_filepath);
 		}
-
-		App->json->UnloadJSON(doc);
 	}
 
 	return ret;
 }
 
-bool ResourceScriptLoader::ImportAssetFromLibrary(DecomposedFilePath d_filepath, std::vector<Resource*>& resources)
+bool ResourceScriptLoader::ImportAssetFromLibrary(DecomposedFilePath d_filepath, std::string uid, std::vector<Resource*>& resources)
 {
 	bool ret = false;
 
-	std::string assets_meta_path = d_filepath.file_path + ".meta";
+	std::string resource_filepath = library_path + uid + ".cs";
+	std::string dll_filepath = library_path + uid + ".dll";
 
-	JSON_Doc* doc = App->json->LoadJSON(assets_meta_path.c_str());
-
-	if (doc != nullptr)
+	if (App->file_system->FileExists(resource_filepath.c_str()))
 	{
-		std::string uid = doc->GetString("resource");
-		std::string resource = uid + ".cs";
+		ResourceScript* rs = (ResourceScript*)App->resource->CreateResource(ResourceType::SCRIPT);
 
-		std::string resource_filepath = library_path + resource;
-		std::string dll_filepath = library_path + ".dll";
+		rs->SetData(resource_filepath.c_str(), dll_filepath.c_str());
 
-		if (App->file_system->FileExists(resource_filepath.c_str()))
-		{
-			ResourceScript* rs = (ResourceScript*)App->resource->CreateResource(ResourceType::SCRIPT);
-
-			rs->SetData(resource_filepath.c_str(), dll_filepath.c_str());
-
-			ret = true;
-		}
-
-		App->json->UnloadJSON(doc);
+		ret = true;
 	}
 
 	return ret;
