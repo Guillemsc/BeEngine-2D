@@ -190,31 +190,6 @@ void ModuleResource::OnEvent(Event* ev)
 			
 			DecomposedFilePath df = efc->GetPath();
 
-			if (df.its_folder)
-			{
-				if (App->file_system->FolderExists(df.path.c_str()))
-				{
-					
-				}
-				else
-				{
-					check_assets_time_sliced = new CheckAssetsErrorsTimeSlicedTask(this);
-					App->time_sliced->StartTimeSlicedTask(check_assets_time_sliced);
-				}
-			}
-			else
-			{
-				if (App->file_system->FileExists(df.file_path.c_str()))
-				{
-					ReimportAssetToEngine(df.file_path.c_str());
-				}
-				else
-				{
-					check_assets_time_sliced = new CheckAssetsErrorsTimeSlicedTask(this);
-					App->time_sliced->StartTimeSlicedTask(check_assets_time_sliced);
-				}
-			}
-
 			break;
 		}
 	default:
@@ -399,8 +374,6 @@ bool ModuleResource::LoadFileToEngine(const char * filepath, std::vector<Resourc
 {
 	bool ret = false;
 
-	StopWatchingFolders();
-
 	if (App->file_system->FileExists(filepath))
 	{
 		std::string new_path;
@@ -415,16 +388,12 @@ bool ModuleResource::LoadFileToEngine(const char * filepath, std::vector<Resourc
 		}
 	}
 
-	StopWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::UnloadAssetFromEngine(const char * filepath)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FileExists(filepath))
 	{
@@ -437,16 +406,12 @@ bool ModuleResource::UnloadAssetFromEngine(const char * filepath)
 		ret = true;
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::DeleteAssetResources(const char * filepath)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FileExists(filepath))
 	{
@@ -461,16 +426,12 @@ bool ModuleResource::DeleteAssetResources(const char * filepath)
 		}
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::ClearAssetDataFromEngine(const char * filepath)
 {
 	bool ret = false;
-
-	StartWatchingFolders();
 
 	if (App->file_system->FileExists(filepath))
 	{
@@ -485,16 +446,12 @@ bool ModuleResource::ClearAssetDataFromEngine(const char * filepath)
 		}
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FileExists(filepath))
 	{
@@ -511,16 +468,12 @@ bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 		}
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::ReimportAssetToEngine(const char * filepath)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FileExists(filepath))
 	{
@@ -531,16 +484,12 @@ bool ModuleResource::ReimportAssetToEngine(const char * filepath)
 		ImportAssetFromLibrary(filepath);
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(filepath);
 
@@ -553,16 +502,12 @@ bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
 		ret = loader->RenameAsset(d_filepath, new_name);
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::IsMetaOfFile(const char * filepath, const char * metapath)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FileExists(filepath))
 	{
@@ -576,8 +521,6 @@ bool ModuleResource::IsMetaOfFile(const char * filepath, const char * metapath)
 			}
 		}
 	}
-
-	StartWatchingFolders();
 
 	return ret;
 }
@@ -601,8 +544,6 @@ bool ModuleResource::IsAssetOnLibrary(const char * filepath, std::vector<std::st
 {
 	bool ret = false;
 
-	StopWatchingFolders();
-
 	DecomposedFilePath deco_file = App->file_system->DecomposeFilePath(filepath);
 
 	ResourceType type = AssetExtensionToType(deco_file.file_extension.c_str());
@@ -614,16 +555,12 @@ bool ModuleResource::IsAssetOnLibrary(const char * filepath, std::vector<std::st
 		ret = loader->IsAssetOnLibrary(deco_file, library_files_used);
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::ImportAssetFromLibrary(const char * filepath, std::vector<Resource*>& resources)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	DecomposedFilePath deco_file = App->file_system->DecomposeFilePath(filepath);
 
@@ -636,16 +573,12 @@ bool ModuleResource::ImportAssetFromLibrary(const char * filepath, std::vector<R
 		ret = loader->ImportAssetFromLibrary(deco_file);
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::ExportResourceToLibrary(Resource * resource)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (resource != nullptr)
 	{		
@@ -656,8 +589,6 @@ bool ModuleResource::ExportResourceToLibrary(Resource * resource)
 			ret = loader->ExportResourceToLibrary(resource);
 		}
 	}
-
-	StartWatchingFolders();
 
 	return ret;
 }
@@ -782,11 +713,7 @@ void CheckAssetsErrorsTimeSlicedTask::CheckAssetMetaFiles()
 
 		if (!used)
 		{
-			App->resource->StopWatchingFolders();
-
 			App->file_system->FileDelete(curr_file.c_str());
-
-			App->resource->StartWatchingFolders();
 		}
 
 		asset_metas_to_check.erase(asset_metas_to_check.begin());
@@ -825,11 +752,7 @@ void CheckAssetsErrorsTimeSlicedTask::DeleteUnnecessaryFiles()
 
 		if (to_delete)
 		{
-			App->resource->StopWatchingFolders();
-
 			App->file_system->FileDelete(curr_file.c_str());
-
-			App->resource->StartWatchingFolders();
 		}
 
 		library_files_to_check.erase(library_files_to_check.begin());
