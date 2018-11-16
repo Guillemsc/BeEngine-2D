@@ -73,6 +73,8 @@ DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
 	bool adding_file_name = false;
 	int last_bar_pos = 0;
 
+	ret.its_folder = true;
+
 	for (int i = 0; i < file_path.length(); ++i)
 	{
 		char curr_word = file_path[i];
@@ -100,6 +102,8 @@ DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
 
 			adding_file_extension = true;
 			ret.file_extension.clear();
+
+			ret.its_folder = false;
 		}
 		// -------------------------------
 

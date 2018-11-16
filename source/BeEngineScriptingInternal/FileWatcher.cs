@@ -74,8 +74,15 @@ namespace BeEngine.Internal
         {
             for (int i = 0; i < watching_file_folders.Count; ++i)
             {
-                if (watching_file_folders[i].Path == path)
+                FileSystemWatcher curr_watcher = watching_file_folders[i];
+
+                if (curr_watcher.Path == path)
                 {
+                    curr_watcher.Changed -= OnChanged;
+                    curr_watcher.Created -= OnChanged;
+                    curr_watcher.Deleted -= OnChanged;
+                    curr_watcher.Renamed -= OnChangedName;
+                    curr_watcher.Dispose();
                     watching_file_folders.RemoveAt(i);
                     break;
                 }

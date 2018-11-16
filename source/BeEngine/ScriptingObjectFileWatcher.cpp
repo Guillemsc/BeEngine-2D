@@ -57,8 +57,29 @@ bool ScriptingObjectFileWatcher::WatchFileFolder(const char * path)
 			script_file_watcher_instance->InvokeMonoMethod("FileFolderWatch", args, 1, ret_obj);
 
 			ret = App->scripting->UnboxBool(ret_obj);
+		}
+	}
 
-			int i = 0;
+	return ret;
+}
+
+bool ScriptingObjectFileWatcher::StopWatchingFileFolder(const char * path)
+{
+	bool ret = false;
+
+	if (script_file_watcher_instance != nullptr)
+	{
+		if (App->file_system->FolderExists(path) || App->file_system->FileExists(path))
+		{
+			MonoObject* boxed_path = (MonoObject*)App->scripting->BoxString(path);
+
+			void *args[1];
+			args[0] = boxed_path;
+
+			MonoObject* ret_obj = nullptr;
+			script_file_watcher_instance->InvokeMonoMethod("StopWatchingFileFolder", args, 1, ret_obj);
+
+			ret = true;
 		}
 	}
 

@@ -27,11 +27,6 @@ bool ModuleProject::Awake()
 	time_sliced_load_projects_task = new LoadProjectsTimeSlicedTask();
 	App->time_sliced->StartTimeSlicedTask(time_sliced_load_projects_task);
 
-	//task = new LoadProjectsThreadTask(this);
-	//App->thread->StartThread(task);
-
-	//LoadProjects();
-
 	return ret;
 }
 

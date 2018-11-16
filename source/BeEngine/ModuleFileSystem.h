@@ -5,9 +5,8 @@
 #include <filesystem>
 #include <functional>
 #include "ModuleThreadTask.h"
-#include "Event.h"
 
-class WatchFolderThreadTask;
+class Event;
 
 struct DecomposedFilePath
 {
@@ -16,6 +15,7 @@ struct DecomposedFilePath
 	std::string file_extension_lower_case;
 	std::string path;
 	std::string file_path;
+	bool its_folder = false;
 };
 
 class Folder
@@ -27,20 +27,6 @@ public:
 	std::vector<Folder> folders;
 
 	bool valid = false;
-};
-
-class WatchingDirectory
-{
-public:
-	std::string folder;
-	WatchFolderThreadTask* task = nullptr;
-};
-
-class WatchingFloder
-{
-public:
-	std::string folder;
-	std::experimental::filesystem::file_time_type last_time;
 };
 
 class FileSystem : public Module

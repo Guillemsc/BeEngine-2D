@@ -28,6 +28,8 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
+	void OnEvent(Event* ev);
+
 	std::string GetNewUID();
 
 	void SetCurrentAssetsPath(const char* path);
@@ -49,6 +51,9 @@ public:
 	bool DestroyResource(Resource* res);
 
 	std::map<ResourceType, ResourceLoader*> GetLoaders() const;
+
+	void StartWatchingFolders();
+	void StopWatchingFolders();
 
 public:
 	bool LoadFileToEngine(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
@@ -75,8 +80,6 @@ private:
 
 	void DestroyAllResources();
 
-	void OnEvent(Event* ev);
-
 public:
 	ResourceTextureLoader* texture_loader = nullptr;
 	ResourceScriptLoader* script_loader = nullptr;
@@ -90,6 +93,8 @@ private:
 
 	CheckAssetsErrorsTimeSlicedTask* check_assets_time_sliced = nullptr;
 	LoadAssetsResourcesTimeSlicedTask* loading_assets_resources_time_sliced = nullptr;
+
+	int watching_folder_index = 0;
 };
 
 class CheckAssetsErrorsTimeSlicedTask : public TimeSlicedTask

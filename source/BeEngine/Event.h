@@ -4,6 +4,8 @@
 #include "ModuleTimeSlicedTask.h"
 #include "GeometryMath.h"
 #include "ModuleThreadTask.h"
+#include "ModuleFileSystem.h"
+#include "App.h"
 
 enum EventType;
 
@@ -124,16 +126,16 @@ class EventWatchFileFolderChanged : public Event
 public:
 	EventWatchFileFolderChanged(std::string path) : Event(EventType::WATCH_FILE_FOLDER)
 	{
-		p = path;
+		fp = App->file_system->DecomposeFilePath(path.c_str());
 	}
 
-	std::string GetPath()
+	DecomposedFilePath GetPath()
 	{
-		return p;
+		return fp;
 	}
 
 private:
-	std::string p;
+	DecomposedFilePath fp;
 };
 
 #endif // !__EVENT_H__

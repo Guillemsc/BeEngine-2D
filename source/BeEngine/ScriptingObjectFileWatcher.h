@@ -21,6 +21,7 @@ public:
 	void CleanUp();
 
 	bool WatchFileFolder(const char* path);
+	bool StopWatchingFileFolder(const char* path);
 
 private:
 

@@ -83,8 +83,6 @@ bool ModuleScripting::Awake()
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
 
-	file_watcher->WatchFileFolder("C:\\Users\\Guillem\\Desktop\\Test\\assets\\");
-
 	//MonoClass* test_class = GetMonoClass(base_project_assembly, "BeEngine", "BeEngineReference");
 
 	//CreatedMonoObject obj = CreateMonoObject(test_class);

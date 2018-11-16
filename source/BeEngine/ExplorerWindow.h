@@ -35,9 +35,11 @@ private:
 
 private:
 	ImFont* font = nullptr;
-
+	
 	Folder folder_tree;
 	std::vector<std::string> selected_folder_files_paths;
+
+	bool update_folders = false;
 
 	bool disable_button_up = true;
 	bool dragging = false;

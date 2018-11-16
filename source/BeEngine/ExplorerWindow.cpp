@@ -17,18 +17,14 @@ void ExplorerWindow::OnEvent(Event * ev)
 {
 	switch (ev->GetType())
 	{
-	//case EventType::WATCH_DIRECTORY:
+	case EventType::WATCH_FILE_FOLDER:
 
-	//	folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
+		update_folders = true;
 
-	//	SetSelectedFolderTree(App->resource->GetCurrentAssetsPath().c_str());
-
-	//	break;
+		break;
 	case EventType::PROJECT_SELECTED:
 
-		folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
-
-		SetSelectedFolderTree(App->resource->GetAssetsPath().c_str());
+		update_folders = true;
 
 		break;
 	default:
@@ -38,7 +34,7 @@ void ExplorerWindow::OnEvent(Event * ev)
 
 void ExplorerWindow::Start()
 {
-	//App->event->Suscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::WATCH_DIRECTORY);
+	App->event->Suscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 	App->event->Suscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
 }
 
@@ -48,6 +44,12 @@ void ExplorerWindow::CleanUp()
 
 void ExplorerWindow::DrawEditor()
 {
+	if (update_folders)
+	{
+		folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
+		update_folders = false;
+	}
+
 	if (App->project->GetCurrProjectIsSelected())
 	{
 		ImGui::Columns(2);
