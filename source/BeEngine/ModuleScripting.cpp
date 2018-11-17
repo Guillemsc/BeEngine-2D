@@ -500,6 +500,7 @@ void ModuleScripting::InitScriptingSolution()
 {
 	solution_manager->CreateSolutionManagerInstance();
 
+	solution_manager->RemoveAllAssemblys();
 	solution_manager->RemoveAllScripts();
 
 	std::string base_libs_folder = assembly_base_path + "base_libs\\";

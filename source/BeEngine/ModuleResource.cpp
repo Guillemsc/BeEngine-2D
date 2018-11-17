@@ -15,6 +15,8 @@
 #include "ResourceScript.h"
 #include "ScriptingObjectCompiler.h"
 #include "ModuleInput.h"
+#include "ModuleScripting.h"
+#include "ScriptingObjectSolutionManager.h"
 
 #pragma comment (lib, "Devil/libx86/DevIL.lib")
 #pragma comment (lib, "Devil/libx86/ILU.lib")
@@ -74,7 +76,7 @@ bool ModuleResource::Update()
 
 	if(App->input->GetKeyDown("p"))
 	{
-		RenameAsset(std::string(App->resource->GetAssetsPath() + "test_name.cs").c_str(), "new_namaaaee");
+		RenameAsset(std::string(App->resource->GetAssetsPath() + "this_is_as_script.cs").c_str(), "new_namaaaee");
 	}
 
 	return ret;
@@ -388,6 +390,23 @@ bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
 	return ret;
 }
 
+bool ModuleResource::CreateScript(const char * filepath, const char * name)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	std::string asset_path;
+	if (App->scripting->compiler->CreateScriptFromTemplate(filepath, name))
+	{
+		LoadFileToEngine(asset_path.c_str());
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
 bool ModuleResource::CanLoadFile(const char * filepath)
 {
 	bool ret = false;
@@ -445,7 +464,7 @@ void ModuleResource::OnEvent(Event* ev)
 
 			StartWatchingFolders();
 
-			App->scripting->compiler->CreateScriptFromTemplate(App->resource->GetAssetsPath().c_str(), "test_name");		
+			CreateScript(App->resource->GetAssetsPath().c_str(), "this_is_as_script");
 
 			break;
 		}

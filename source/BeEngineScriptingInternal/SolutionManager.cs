@@ -177,14 +177,9 @@ namespace BeEngine
 
                         foreach (XElement childElement in elements)
                         {
-                            IEnumerable<XElement> compiles = childElement.Elements("Compile");
+                            childElement.Descendants("Compile").Remove();
 
-                            foreach (XElement childCompiles in compiles)
-                            {
-                                childCompiles.Remove();
-
-                                save = true;
-                            }
+                            save = true;
                         }
                     }
 

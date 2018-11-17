@@ -21,6 +21,7 @@ public:
 
 	bool CreateSolutionManagerInstance();
 	bool AddAssembly(const char* dll_filepath);
+	void RemoveAllAssemblys();
 	bool AddScript(const char* script_filepath);
 	void RemoveScript(const char* script_filepath);
 	void RemoveAllScripts();

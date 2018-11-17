@@ -125,6 +125,18 @@ bool ScriptingObjectSolutionManager::AddAssembly(const char * dll_filepath)
 	return ret;
 }
 
+void ScriptingObjectSolutionManager::RemoveAllAssemblys()
+{
+	if (solution_manager_instance != nullptr && ready_to_use)
+	{
+		MonoObject* ret_obj = nullptr;
+		if (solution_manager_instance->InvokeMonoMethod("RemoveAllAssemblys", nullptr, 0, ret_obj))
+		{
+			App->scripting->UnboxBool(ret_obj);
+		}
+	}
+}
+
 bool ScriptingObjectSolutionManager::AddScript(const char * script_filepath)
 {
 	bool ret = false;
@@ -168,7 +180,7 @@ void ScriptingObjectSolutionManager::RemoveAllScripts()
 	if (solution_manager_instance != nullptr && ready_to_use)
 	{
 		MonoObject* ret_obj = nullptr;
-		if (solution_manager_instance->InvokeMonoMethod("RemoveAllScripts", nullptr, 1, ret_obj))
+		if (solution_manager_instance->InvokeMonoMethod("RemoveAllScripts", nullptr, 0, ret_obj))
 		{
 			App->scripting->UnboxBool(ret_obj);
 		}

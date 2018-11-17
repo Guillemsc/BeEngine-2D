@@ -187,7 +187,7 @@ bool ScriptingObjectCompiler::SetScriptCode(const char * script_filepath, std::s
 	return ret;
 }
 
-bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_path, const char* name)
+bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_path, const char* name, std::string& created_asset_filepath)
 {
 	bool ret = false;
 
@@ -204,6 +204,10 @@ bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_path, c
 				code = TextReplace(code, "#SCRIPTNAME#", name);
 
 				SetScriptCode(new_filepath.c_str(), code.c_str());
+
+				created_asset_filepath = new_filepath;
+
+				ret = true;
 			}
 		}
 	}
