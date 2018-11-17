@@ -136,6 +136,7 @@ public:
 	uint UnboxArrayCount(MonoArray* val);
 
 private:
+	void UpdateScriptingObjects();
 	void DestroyAllAssemblys();
 	void DestroyAllScriptingObjects();
 

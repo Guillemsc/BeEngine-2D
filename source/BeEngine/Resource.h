@@ -35,7 +35,9 @@ public:
 	void GM_InitResource(const char* library_filepath);
 	void GM_ImportFromLibrary();
 
+	std::string GetMetaFilepath() const;
 	std::string GetAssetFilepath() const;
+	std::string GetLibraryFilepath() const;
 	const ResourceType GetType() const;
 	std::string GetUID() const;
 
@@ -56,6 +58,7 @@ private:
 	ResourceType type = ResourceType::UNKWNOWN;
 
 	std::string uid;
+	std::string meta_filepath;
 	std::string asset_filepath;
 	std::string library_filepath;
 };

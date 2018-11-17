@@ -9,9 +9,6 @@ namespace BeEngine.Internal
 {
     class FileWatcher
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void FileFolderChangedCallback(string path);
-
         public bool FileFolderWatch(string path)
         {
             bool ret = true;
@@ -89,16 +86,26 @@ namespace BeEngine.Internal
             }
         }
 
+        public string[] GetChangesStack()
+        {
+            string[] ret = files_changed_stack.ToArray();
+
+            files_changed_stack.Clear();
+
+            return ret;
+        }
+
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            FileFolderChangedCallback(e.FullPath);
+            files_changed_stack.Add(e.FullPath);
         }
 
         private void OnChangedName(object sender, RenamedEventArgs e)
         {
-            FileFolderChangedCallback(e.FullPath);
+            files_changed_stack.Add(e.FullPath);
         }
 
         private List<FileSystemWatcher> watching_file_folders = new List<FileSystemWatcher>();
+        List<string> files_changed_stack = new List<string>();
     }
 }

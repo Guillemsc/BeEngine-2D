@@ -43,13 +43,6 @@ bool ModuleResource::Awake()
 	AddAssetExtension(ResourceType::TEXTURE, "png");
 	AddAssetExtension(ResourceType::TEXTURE, "jpg");
 
-	//texture_loader = (ResourceTextureLoader*)AddLoader(new ResourceTextureLoader());
-	//texture_loader->AddAssetExtensionToLoad("png");
-	//texture_loader->AddAssetExtensionToLoad("jpg");
-
-	//script_loader = (ResourceScriptLoader*)AddLoader(new ResourceScriptLoader());
-	//script_loader->AddAssetExtensionToLoad("cs");
-
 	return ret;
 }
 
@@ -63,6 +56,8 @@ bool ModuleResource::Start()
 bool ModuleResource::PreUpdate()
 {
 	bool ret = true;
+
+	ManageFilesToCheck();
 
 	return ret;
 }
@@ -149,6 +144,20 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 	return ret;
 }
 
+void ModuleResource::DestroyResource(Resource * res)
+{
+	for (std::vector<Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		if ((*it) == res)
+		{
+			res->CleanUp();
+			RELEASE(*it);
+			resources.erase(it);
+			break;
+		}
+	}
+}
+
 Resource* ModuleResource::GetResourceFromAssetFile(const char* filepath)
 {
 	Resource* ret = nullptr;
@@ -165,27 +174,66 @@ Resource* ModuleResource::GetResourceFromAssetFile(const char* filepath)
 	return ret;
 }
 
+std::vector<Resource*> ModuleResource::GetAllResources() const
+{
+	return resources;
+}
+
 bool ModuleResource::LoadFileToEngine(const char * filepath)
 {
 	bool ret = false;
 
+	StopWatchingFolders();
+
 	if (App->file_system->FileExists(filepath))
-	{
-		std::string new_path;
-		bool can_load = App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), false, new_path);
+	{		
+		bool can_load = CanLoadFile(filepath);
 
 		if (can_load)
 		{
-			ret = ExportAssetToLibrary(new_path.c_str());
+			std::string new_path;
+			bool can_load = App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), false, new_path);
+
+			if (can_load)
+			{
+				ret = ExportAssetToLibrary(new_path.c_str());
+			}
 		}
 	}
 
+	StartWatchingFolders();
+
 	return ret;
+}
+
+void ModuleResource::UnloadAssetFromEngine(const char * filepath)
+{
+	StopWatchingFolders();
+
+	Resource* res = GetResourceFromAssetFile(filepath);
+
+	if (res != nullptr)
+	{
+		if(App->file_system->FileExists(res->asset_filepath.c_str()))
+			App->file_system->FileDelete(res->asset_filepath.c_str());
+
+		if (App->file_system->FileExists(res->meta_filepath.c_str()))
+			App->file_system->FileDelete(res->meta_filepath.c_str());
+
+		if (App->file_system->FileExists(res->library_filepath.c_str()))
+			App->file_system->FileDelete(res->library_filepath.c_str());
+
+		DestroyResource(res);
+	}
+
+	StartWatchingFolders();
 }
 
 bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 {
 	bool ret = false;
+
+	StopWatchingFolders();
 
 	Resource* res = GetResourceFromAssetFile(filepath);
 
@@ -195,17 +243,155 @@ bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 
 		ResourceType type = GetResourceTypeFromAssetExtension(dfp.file_extension_lower_case.c_str());
 
-		res = CreateResource(type);
+		if (type != ResourceType::UNKWNOWN)
+		{
+			res = CreateResource(type);
 
-		if(res != nullptr)
-			res->EM_InitResource(filepath);
+			if (res != nullptr)
+			{
+				res->EM_InitResource(filepath);
+
+				ret = true;
+			}
+		}
 	}
 	else
 	{
 		res->EM_ExportToLibrary();
+
+		ret = true;
 	}
 
+	StartWatchingFolders();
+
 	return ret;
+}
+
+bool ModuleResource::ImportAsset(const char * filepath, Resource*& res)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	res = GetResourceFromAssetFile(filepath);
+
+	if (res == nullptr)
+	{
+		DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
+
+		ResourceType type = GetResourceTypeFromAssetExtension(dfp.file_extension_lower_case.c_str());
+
+		if (type != ResourceType::UNKWNOWN)
+		{
+			res = CreateResource(type);
+
+			if (res != nullptr)
+			{
+				res->EM_InitResource(filepath);
+
+				ret = true;
+			}
+		}
+	}
+	else
+	{
+		res->EM_ImportFromLibrary();
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
+bool ModuleResource::ManageModifiedAsset(const char * filepath)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	bool can_load = App->resource->CanLoadFile(filepath);
+	bool is_meta = App->resource->IsMeta(filepath);
+	bool exists = App->file_system->FileExists(filepath);
+
+	if (!is_meta)
+	{
+		if (can_load)
+		{
+			if (exists)
+			{
+				Resource* loaded_res = nullptr;
+				App->resource->ImportAsset(filepath, loaded_res);
+
+			}
+			else
+			{
+				UnloadAssetFromEngine(filepath);
+			}
+		}
+		else
+		{
+			if(exists)
+				App->file_system->FileDelete(filepath);
+		}
+	}
+	else
+	{
+		if (exists)
+		{
+			std::string asset_filepath = GetAssetFileFromMeta(filepath);
+
+			App->resource->ExportAssetToLibrary(filepath);
+		}
+		else
+		{
+			std::string asset_filepath = GetAssetFileFromMeta(filepath);
+
+			App->resource->ExportAssetToLibrary(filepath);
+		}
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
+bool ModuleResource::CanLoadFile(const char * filepath)
+{
+	bool ret = false;
+
+	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
+
+	ResourceType type = GetResourceTypeFromAssetExtension(dfp.file_extension_lower_case.c_str());
+
+	if (type != ResourceType::UNKWNOWN)
+		ret = true;
+
+	return ret;
+}
+
+bool ModuleResource::IsMeta(const char * filepath)
+{
+	bool ret = false;
+
+	DecomposedFilePath df = App->file_system->DecomposeFilePath(filepath);
+
+	if (df.file_extension_lower_case.compare("meta") == 0)
+		ret = true;
+
+	return ret;
+}
+
+const char* ModuleResource::GetAssetFileFromMeta(const char * metapath)
+{
+	DecomposedFilePath df = App->file_system->DecomposeFilePath(metapath);
+
+	return std::string(df.file_path + df.file_name).c_str();
+}
+
+const char* ModuleResource::GetMetaFileFromAsset(const char * filepath)
+{
+	std::string ret = filepath + std::string(".meta");
+	return ret.c_str();
 }
 
 void ModuleResource::OnEvent(Event* ev)
@@ -221,7 +407,10 @@ void ModuleResource::OnEvent(Event* ev)
 
 			CreateLibraryFolders();
 
-			LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Files\\sans.png");
+			LoadResourcesTimeSlicedTask* t = new LoadResourcesTimeSlicedTask();
+			App->time_sliced->StartTimeSlicedTask(t);
+
+			//LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Files\\sans.png");
 
 			break;
 		}
@@ -235,6 +424,9 @@ void ModuleResource::OnEvent(Event* ev)
 			EventWatchFileFolderChanged* efc = (EventWatchFileFolderChanged*)ev;
 			
 			DecomposedFilePath df = efc->GetPath();
+
+			if(!df.its_folder)
+				files_changed_to_check.push_back(df.file_path.c_str());
 
 			break;
 		}
@@ -368,8 +560,178 @@ void ModuleResource::CreateLibraryFolders()
 	}
 }
 
+void ModuleResource::ManageFilesToCheck()
+{
+	std::vector<std::string> to_check = files_changed_to_check;
+
+	for (std::vector<std::string>::iterator it = to_check.begin(); it != to_check.end(); ++it)
+	{
+		ManageModifiedAsset((*it).c_str());
+	}
+
+	files_changed_to_check.clear();
+}
+
 void ModuleResource::DestroyAllResources()
 {
 }
 
+LoadResourcesTimeSlicedTask::LoadResourcesTimeSlicedTask() : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 2)
+{
+}
 
+void LoadResourcesTimeSlicedTask::Start()
+{
+	state = LoadResourcesState::CHECK_ASSET_FILES_IMPORT;
+
+	all_asset_files = App->file_system->GetFilesInPathAndChilds(App->resource->GetAssetsPath().c_str());
+	all_library_files = App->file_system->GetFilesInPathAndChilds(App->resource->GetLibraryPath().c_str());
+
+	asset_files_to_check = all_asset_files;
+	all_asset_files_to_check_count = asset_files_to_check.size();
+}
+
+void LoadResourcesTimeSlicedTask::Update()
+{
+	switch (state)
+	{
+	case LoadResourcesState::CHECK_ASSET_FILES_IMPORT:
+		CheckAssetFilesImport();
+		break;
+	case LoadResourcesState::CLEAN_ASSET_FOLDER:
+		CleanAssetFolder();
+		break;
+	case LoadResourcesState::CLEAN_LIBRARY_FOLDER:
+		CleanLibraryFolder();
+		break;
+	case LoadResourcesState::DELETE_UNNECESSARY_FILES:
+		DeleteUnnecessaryFiles();
+		break;
+	default:
+		break;
+	}
+}
+
+void LoadResourcesTimeSlicedTask::Finish()
+{
+}
+
+void LoadResourcesTimeSlicedTask::CheckAssetFilesImport()
+{
+	if (!asset_files_to_check.empty())
+	{
+		std::string curr_file = *asset_files_to_check.begin();
+
+		bool is_meta = App->resource->IsMeta(curr_file.c_str());
+
+		if(!is_meta)
+		{ 
+			bool can_load = App->resource->CanLoadFile(curr_file.c_str());
+
+			if (can_load)
+			{
+				Resource* loaded_res = nullptr;
+				App->resource->ImportAsset(curr_file.c_str(), loaded_res);
+
+				if (loaded_res != nullptr)
+				{
+					asset_files_used.push_back(loaded_res->GetAssetFilepath());
+					asset_files_used.push_back(loaded_res->GetMetaFilepath());
+					library_files_used.push_back(loaded_res->GetLibraryFilepath());
+				}
+			}
+		}
+
+		asset_files_to_check.erase(asset_files_to_check.begin());
+	}
+	else
+	{
+		asset_files_to_check = all_asset_files;
+
+		state = LoadResourcesState::CLEAN_ASSET_FOLDER;
+	}
+}
+
+void LoadResourcesTimeSlicedTask::CleanAssetFolder()
+{
+	if (!asset_files_to_check.empty())
+	{
+		std::string curr_file = *asset_files_to_check.begin();
+
+		bool used = false;
+
+		for (std::vector<std::string>::iterator it = asset_files_used.begin(); it != asset_files_used.end(); ++it)
+		{
+			if ((*it).compare(curr_file) == 0)
+			{
+				asset_files_used.erase(it);
+				used = true;
+				break;
+			}
+		}
+
+		if (!used)
+		{
+			files_to_delete.push_back(curr_file);
+		}
+
+		asset_files_to_check.erase(asset_files_to_check.begin());
+	}
+	else
+	{
+		library_files_to_check = all_library_files;
+
+		state = LoadResourcesState::CLEAN_LIBRARY_FOLDER;
+	}
+}
+
+void LoadResourcesTimeSlicedTask::CleanLibraryFolder()
+{
+	if (!library_files_to_check.empty())
+	{
+		std::string curr_file = *library_files_to_check.begin();
+
+		bool used = false;
+
+		for (std::vector<std::string>::iterator it = library_files_used.begin(); it != library_files_used.end(); ++it)
+		{
+			if ((*it).compare(curr_file) == 0)
+			{
+				library_files_used.erase(it);
+				used = true;
+				break;
+			}
+		}
+
+		if (!used)
+		{
+			files_to_delete.push_back(curr_file);
+		}
+
+		library_files_to_check.erase(library_files_to_check.begin());
+	}
+	else
+	{
+		state = LoadResourcesState::DELETE_UNNECESSARY_FILES;
+	}
+}
+
+void LoadResourcesTimeSlicedTask::DeleteUnnecessaryFiles()
+{
+	if (!files_to_delete.empty())
+	{
+		std::string curr_file = *files_to_delete.begin();
+
+		App->resource->StopWatchingFolders();
+
+		App->file_system->FileDelete(curr_file.c_str());
+
+		App->resource->StartWatchingFolders();
+
+		files_to_delete.erase(files_to_delete.begin());
+	}
+	else
+	{
+		FinishTask();
+	}
+}

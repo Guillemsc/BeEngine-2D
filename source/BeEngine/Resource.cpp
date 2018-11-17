@@ -29,19 +29,21 @@ void Resource::EM_InitResource(const char * _asset_filepath)
 		else
 		{
 			EM_ExportToLibrary();
+
+			EM_ImportFromLibrary();
 		}
 	}
 }
 
 void Resource::EM_CreateAssetMeta()
 {
-	std::string meta_path = asset_filepath + ".meta";
+	meta_filepath = asset_filepath + ".meta";
 
-	JSON_Doc* meta_doc = App->json->LoadJSON(meta_path.c_str());
+	JSON_Doc* meta_doc = App->json->LoadJSON(meta_filepath.c_str());
 
 	if (meta_doc == nullptr)
 	{
-		meta_doc = App->json->CreateJSON(meta_path.c_str());
+		meta_doc = App->json->CreateJSON(meta_filepath.c_str());
 	}
 	else
 	{
@@ -129,9 +131,19 @@ void Resource::GM_ImportFromLibrary()
 	}
 }
 
+std::string Resource::GetMetaFilepath() const
+{
+	return meta_filepath;
+}
+
 std::string Resource::GetAssetFilepath() const
 {
 	return asset_filepath;
+}
+
+std::string Resource::GetLibraryFilepath() const
+{
+	return library_filepath;
 }
 
 const ResourceType Resource::GetType() const

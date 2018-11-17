@@ -13,7 +13,7 @@ ScriptingObjectFileWatcher::~ScriptingObjectFileWatcher()
 
 void ScriptingObjectFileWatcher::RegisterInternalCalls()
 {
-	mono_add_internal_call("BeEngine.Internal.FileWatcher::FileFolderChangedCallback", (const void*)FileFolderChangedCallback);
+	//mono_add_internal_call("BeEngine.Internal.FileWatcher::FileFolderChangedCallback", (const void*)FileFolderChangedCallback);
 }
 
 void ScriptingObjectFileWatcher::Start()
@@ -29,6 +29,11 @@ void ScriptingObjectFileWatcher::Start()
 			ready_to_use = true;
 		}
 	}
+}
+
+void ScriptingObjectFileWatcher::Update()
+{
+	GetChangesStack();
 }
 
 void ScriptingObjectFileWatcher::CleanUp()
@@ -86,13 +91,23 @@ bool ScriptingObjectFileWatcher::StopWatchingFileFolder(const char * path)
 	return ret;
 }
 
-static void FileFolderChangedCallback(MonoObject* instance, MonoString* str)
+void ScriptingObjectFileWatcher::GetChangesStack()
 {
-	if (instance != nullptr && str != nullptr)
+	if (script_file_watcher_instance != nullptr)
 	{
-		std::string path = App->scripting->UnboxString(str);
+		MonoObject* ret_obj = nullptr;
+		script_file_watcher_instance->InvokeMonoMethod("GetChangesStack", nullptr, 0, ret_obj);
 
-		EventWatchFileFolderChanged* new_ev = new EventWatchFileFolderChanged(path);
-		App->event->SendEvent(new_ev);
+		MonoArray* arr = (MonoArray*)ret_obj;
+
+		std::vector<MonoObject*> unboxed = App->scripting->UnboxArray(mono_get_string_class(), arr);
+
+		for (std::vector<MonoObject*>::iterator it = unboxed.begin(); it != unboxed.end(); ++it)
+		{
+			std::string file = App->scripting->UnboxString((MonoString*)(*it));
+
+			EventWatchFileFolderChanged* new_ev = new EventWatchFileFolderChanged(file);
+			App->event->SendEvent(new_ev);
+		}
 	}
 }

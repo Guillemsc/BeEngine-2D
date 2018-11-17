@@ -18,18 +18,17 @@ public:
 
 	void RegisterInternalCalls();
 	void Start();
+	void Update();
 	void CleanUp();
 
 	bool WatchFileFolder(const char* path);
 	bool StopWatchingFileFolder(const char* path);
 
 private:
-
+	void GetChangesStack();
 
 private:
 	ScriptingClassInstance* script_file_watcher_instance = nullptr;
 };
-
-static void FileFolderChangedCallback(MonoObject* instance, MonoString* str);
 
 #endif // !__SCRIPTING_OBJECT_FILE_WATCHER_H__

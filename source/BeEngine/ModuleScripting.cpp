@@ -151,6 +151,8 @@ bool ModuleScripting::PostUpdate()
 {
 	bool ret = true;
 
+	UpdateScriptingObjects();
+
 	return ret;
 }
 
@@ -492,6 +494,14 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 	}
 
 	return ret;
+}
+
+void ModuleScripting::UpdateScriptingObjects()
+{
+	for (std::vector<ScriptingObject*>::iterator it = scripting_objects.begin(); it != scripting_objects.end(); ++it)
+	{
+		(*it)->Update();
+	}
 }
 
 void ModuleScripting::DestroyAllAssemblys()

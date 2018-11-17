@@ -38,10 +38,20 @@ public:
 	std::string GetLibraryPathFromResourceType(const ResourceType& type);
 
 	Resource* CreateResource(const ResourceType type);
+	void DestroyResource(Resource* res);
 	Resource* GetResourceFromAssetFile(const char* filepath);
+	std::vector<Resource*> GetAllResources() const;
 
 	bool LoadFileToEngine(const char* filepath);
+	void UnloadAssetFromEngine(const char* filepath);
 	bool ExportAssetToLibrary(const char* filepath);
+	bool ImportAsset(const char* filepath, Resource*& res);
+	bool ManageModifiedAsset(const char* filepath);
+
+	bool CanLoadFile(const char* filepath);
+	bool IsMeta(const char* filepath);
+	const char* GetAssetFileFromMeta(const char* metapath);
+	const char* GetMetaFileFromAsset(const char* filepath);
 
 	void StartWatchingFolders();
 	void StopWatchingFolders();
@@ -57,6 +67,8 @@ private:
 
 	void CreateLibraryFolders();
 
+	void ManageFilesToCheck();
+
 	void DestroyAllResources();
 
 private:
@@ -70,8 +82,50 @@ private:
 
 	std::vector<Resource*> resources;
 
+	std::vector<std::string> files_changed_to_check;
+
 	int watching_folder_index = 0;
 };
 
+class LoadResourcesTimeSlicedTask : public TimeSlicedTask
+{
+public:
+	enum LoadResourcesState
+	{
+		CHECK_ASSET_FILES_IMPORT,
+		CLEAN_ASSET_FOLDER,
+		CLEAN_LIBRARY_FOLDER,
+		DELETE_UNNECESSARY_FILES,
+	};
+
+	LoadResourcesTimeSlicedTask();
+
+	void Start();
+	void Update();
+	void Finish();
+
+private:
+	void CheckAssetFilesImport();
+	void CleanAssetFolder();
+	void CleanLibraryFolder();
+	void DeleteUnnecessaryFiles();
+
+private:
+	LoadResourcesState state;
+
+	std::vector<std::string> all_asset_files;
+	std::vector<std::string> all_library_files;
+
+	std::vector<std::string> asset_files_to_check;
+	uint all_asset_files_to_check_count = 0;
+
+	std::vector<std::string> library_files_to_check;
+	uint all_library_files_to_check_count = 0;
+
+	std::vector<std::string> files_to_delete;
+
+	std::vector<std::string> asset_files_used;
+	std::vector<std::string> library_files_used;
+};
 
 #endif // !__MODULE_RESOURCE_H__

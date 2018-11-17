@@ -16,6 +16,7 @@ public:
 	
 	virtual void RegisterInternalCalls() {};
 	virtual void Start(){}
+	virtual void Update() {};
 	virtual void CleanUp(){}
 
 protected:
