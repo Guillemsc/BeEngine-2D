@@ -81,6 +81,46 @@ void Tokenize(std::string stri, const char separator, std::list<std::string>& to
 	}
 }
 
+std::string TextReplace(std::string main_str, std::string to_replace, std::string replace_with)
+{
+	std::string ret;
+
+	uint to_replace_index = 0;
+
+	std::string tmp_str;
+
+	for (int i = 0; i < main_str.size(); ++i)
+	{
+		char curr_char = main_str[i];
+
+		if (curr_char == to_replace[to_replace_index])
+		{
+			tmp_str += curr_char;
+
+			++to_replace_index;
+		}
+		else
+		{
+			ret += tmp_str;
+
+			ret += curr_char;
+
+			to_replace_index = 0;
+			tmp_str.clear();
+		}
+
+		if (to_replace_index == to_replace.size())
+		{
+			ret += replace_with;
+
+			to_replace_index = 0;
+			tmp_str.clear();
+		}
+	}
+
+	return ret;
+}
+
 std::string ToUpperCase(std::string str)
 {
 	for (uint i = 0; i < str.size(); i++)

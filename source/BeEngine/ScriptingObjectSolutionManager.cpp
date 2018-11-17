@@ -162,3 +162,15 @@ void ScriptingObjectSolutionManager::RemoveScript(const char * script_filepath)
 		}
 	}
 }
+
+void ScriptingObjectSolutionManager::RemoveAllScripts()
+{
+	if (solution_manager_instance != nullptr && ready_to_use)
+	{
+		MonoObject* ret_obj = nullptr;
+		if (solution_manager_instance->InvokeMonoMethod("RemoveAllScripts", nullptr, 1, ret_obj))
+		{
+			App->scripting->UnboxBool(ret_obj);
+		}
+	}
+}

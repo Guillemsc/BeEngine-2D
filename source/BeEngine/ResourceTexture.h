@@ -16,10 +16,12 @@ public:
 
 	void CleanUp();
 
-	bool OnExistsOnLibrary(std::string uid, std::string& library_filepath = std::string());
-	void OnExportToLibrary(std::string uid);
-	void OnImportFromLibrary();
+	bool ExistsOnLibrary(std::string uid, std::string& library_filepath = std::string());
+	void ExportToLibrary(std::string uid);
+	void ImportFromLibrary();
+
 	void OnRemoveAsset();
+	void OnRenameAsset(const char* new_name, const char* last_name);
 
 	uint GetTextureId();
 

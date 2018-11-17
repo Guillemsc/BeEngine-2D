@@ -906,7 +906,7 @@ bool FileSystem::FileExists(const char * filepath)
 	return FileExists(d_filepath.path.c_str(), d_filepath.file_name.c_str(), d_filepath.file_extension.c_str());
 }
 
-bool FileSystem::FileRename(const char * filepath, const char * new_name)
+bool FileSystem::FileRename(const char * filepath, const char * new_name, bool check_name_collision, std::string& new_f)
 {
 	bool ret = false;
 
@@ -914,8 +914,20 @@ bool FileSystem::FileRename(const char * filepath, const char * new_name)
 
 	std::string new_filepath = d_filepath.path + new_name + "." + d_filepath.file_extension;
 
+	if (check_name_collision)
+	{
+		DecomposedFilePath d_new_filepath = DecomposeFilePath(new_filepath);
+
+		std::string renamed_name = FileRenameOnNameCollision(d_new_filepath.path.c_str(), d_new_filepath.file_name.c_str(), d_new_filepath.file_extension.c_str());
+
+		new_filepath = d_new_filepath.path + renamed_name + "." + d_new_filepath.file_extension;
+	}
+
 	if (rename(filepath, new_filepath.c_str()) == 0)
+	{
+		new_f = new_filepath;
 		ret = true;
+	}
 	
 	return ret;
 }

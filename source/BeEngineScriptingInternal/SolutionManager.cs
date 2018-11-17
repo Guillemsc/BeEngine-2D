@@ -116,6 +116,59 @@ namespace BeEngine
 
                 if (path != "")
                 {
+                    if (doc != null)
+                    {
+                        XElement el = doc.Element("Project");
+
+                        if (el != null)
+                        {
+                            IEnumerable<XElement> elements = el.Elements("ItemGroup");
+
+                            foreach (XElement childElement in elements)
+                            {
+                                IEnumerable<XElement> compiles = childElement.Elements("Compile");
+
+                                foreach (XElement childCompiles in compiles)
+                                {
+                                    XAttribute at = childCompiles.Attribute("Include");
+
+                                    if (at != null)
+                                    {
+                                        if (at.Value == path)
+                                        {
+                                            childCompiles.Remove();
+
+                                            save = true;
+                                            ret = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        childCompiles.Remove();
+
+                                        save = true;
+                                        ret = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if(save)
+                        doc.Save(project_path);
+                }
+
+                return ret;
+            }
+
+            public bool RemoveAllScripts()
+            {
+                bool ret = false;
+
+                bool save = false;
+
+                if (doc != null)
+                {
                     XElement el = doc.Element("Project");
 
                     if (el != null)
@@ -128,33 +181,17 @@ namespace BeEngine
 
                             foreach (XElement childCompiles in compiles)
                             {
-                                XAttribute at = childCompiles.Attribute("Include");
+                                childCompiles.Remove();
 
-                                if (at != null)
-                                {
-                                    if (at.Value == path)
-                                    {
-                                        childCompiles.Remove();
-
-                                        save = true;
-                                        ret = true;
-                                    }
-                                }
-                                else
-                                {
-                                    childCompiles.Remove();
-
-                                    save = true;
-                                    ret = true;
-                                }
+                                save = true;
                             }
                         }
                     }
 
-                    if(save)
+                    if (save)
                         doc.Save(project_path);
                 }
-
+               
                 return ret;
             }
 

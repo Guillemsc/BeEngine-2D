@@ -5,6 +5,7 @@
 #include "ModuleScripting.h"
 #include "ScriptingObjectCompiler.h"
 #include "ScriptingObjectSolutionManager.h"
+#include "Functions.h"
 
 ResourceScript::ResourceScript() : Resource(ResourceType::SCRIPT)
 {
@@ -15,7 +16,7 @@ void ResourceScript::CleanUp()
 
 }
 
-bool ResourceScript::OnExistsOnLibrary(std::string uid, std::string & library_filepath)
+bool ResourceScript::ExistsOnLibrary(std::string uid, std::string & library_filepath)
 {
 	bool ret = false;
 
@@ -32,7 +33,7 @@ bool ResourceScript::OnExistsOnLibrary(std::string uid, std::string & library_fi
 	return ret;
 }
 
-void ResourceScript::OnExportToLibrary(std::string uid)
+void ResourceScript::ExportToLibrary(std::string uid)
 {
 	std::string library_path = App->resource->GetLibraryPathFromResourceType(GetType());
 
@@ -43,7 +44,7 @@ void ResourceScript::OnExportToLibrary(std::string uid)
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());
 }
 
-void ResourceScript::OnImportFromLibrary()
+void ResourceScript::ImportFromLibrary()
 {
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());
 }
@@ -51,4 +52,13 @@ void ResourceScript::OnImportFromLibrary()
 void ResourceScript::OnRemoveAsset()
 {
 	App->scripting->solution_manager->RemoveScript(GetAssetFilepath().c_str());
+}
+
+void ResourceScript::OnRenameAsset(const char * new_name, const char * last_name)
+{
+	std::string code = App->scripting->compiler->GetScriptCode(GetAssetFilepath().c_str());
+
+	code = TextReplace(code, last_name, new_name);
+
+	App->scripting->compiler->SetScriptCode(GetAssetFilepath().c_str(), code.c_str());
 }

@@ -1,6 +1,7 @@
 #include "ScriptingObjectCompiler.h"
 #include "App.h"
 #include "ModuleFileSystem.h"
+#include "Functions.h"
 
 ScriptingObjectCompiler::ScriptingObjectCompiler() : ScriptingObject()
 {
@@ -160,13 +161,51 @@ std::string ScriptingObjectCompiler::GetScriptCode(const char * script_filepath)
 	return ret;
 }
 
-bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_filepath)
+bool ScriptingObjectCompiler::SetScriptCode(const char * script_filepath, std::string code)
+{
+	bool ret = false;
+
+	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
+	{
+		if (script_compiler_instance != nullptr)
+		{
+			MonoObject* script_filepath_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
+			MonoObject* script_code_boxed = (MonoObject*)App->scripting->BoxString(code.c_str());
+
+			void* args[2];
+			args[0] = script_filepath_boxed;
+			args[1] = script_code_boxed;
+
+			MonoObject* ret_obj = nullptr;
+			if (script_compiler_instance->InvokeMonoMethod("WriteCSScriptFile", args, 2, ret_obj))
+			{
+				ret = App->scripting->UnboxBool(ret_obj);
+			}
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_path, const char* name)
 {
 	bool ret = false;
 
 	if (App->file_system->FileExists(script_template_filepath.c_str()))
 	{
-		App->file_system->FileCopyPasteWithNewName(script_template_filepath.c_str(), save_filepath, "NewScript");
+		std::string resultant_path;
+		if (App->file_system->FileCopyPaste(script_template_filepath.c_str(), save_path, false, resultant_path))
+		{
+			std::string new_filepath;
+			if (App->file_system->FileRename(resultant_path.c_str(), name, true, new_filepath))
+			{
+				std::string code = GetScriptCode(new_filepath.c_str());
+
+				code = TextReplace(code, "#SCRIPTNAME#", name);
+
+				SetScriptCode(new_filepath.c_str(), code.c_str());
+			}
+		}
 	}
 
 	return ret;

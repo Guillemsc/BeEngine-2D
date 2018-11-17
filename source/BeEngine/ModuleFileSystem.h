@@ -60,7 +60,7 @@ public:
 
 	bool FileExists(const char* path, const char* name, const char* extension = "");
 	bool FileExists(const char* filepath);
-	bool FileRename(const char* filepath, const char* new_name);	
+	bool FileRename(const char* filepath, const char* new_name, bool check_name_collision = false, std::string& new_filepath = std::string());
 	bool FolderRename(const char* filepath, const char* new_name);
 	bool FolderExists(const char* path);
 	std::string FileRenameOnNameCollision(const char* path, const char* name, const char* extension);

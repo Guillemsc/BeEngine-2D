@@ -100,6 +100,27 @@ namespace BeEngine
                 return ret;
             }
 
+            bool WriteCSScriptFile(string filepath, string code)
+            {
+                bool ret = false;
+
+                if (File.Exists(filepath))
+                {
+                    using (TextWriter tw = new StreamWriter(filepath))
+                    {
+                        if (tw != null)
+                        {
+                            tw.Write("");
+                            tw.Write(code);
+
+                            ret = true;
+                        }
+                    }
+                }
+
+                return ret;
+            }
+
             private List<string> ref_assemblies = new List<string>();
             CompilerParameters compile_parameters = new CompilerParameters();
         }

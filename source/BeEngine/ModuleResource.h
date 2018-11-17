@@ -47,6 +47,7 @@ public:
 	bool ExportAssetToLibrary(const char* filepath);
 	bool ImportAsset(const char* filepath, Resource*& res);
 	bool ManageModifiedAsset(const char* filepath);
+	bool RenameAsset(const char* filepath, const char* new_name);
 
 	bool CanLoadFile(const char* filepath);
 	bool IsMeta(const char* filepath);

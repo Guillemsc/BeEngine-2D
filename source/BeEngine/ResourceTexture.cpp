@@ -12,7 +12,7 @@ void ResourceTexture::CleanUp()
 	ilDeleteImages(1, &texture_data_id);
 }
 
-bool ResourceTexture::OnExistsOnLibrary(std::string uid, std::string & library_filepath)
+bool ResourceTexture::ExistsOnLibrary(std::string uid, std::string & library_filepath)
 {
 	bool ret = false;
 
@@ -29,7 +29,7 @@ bool ResourceTexture::OnExistsOnLibrary(std::string uid, std::string & library_f
 	return ret;
 }
 
-void ResourceTexture::OnExportToLibrary(std::string uid)
+void ResourceTexture::ExportToLibrary(std::string uid)
 {
 	std::string library_path = App->resource->GetLibraryPathFromResourceType(GetType());
 
@@ -80,7 +80,7 @@ void ResourceTexture::OnExportToLibrary(std::string uid)
 	}
 }
 
-void ResourceTexture::OnImportFromLibrary()
+void ResourceTexture::ImportFromLibrary()
 {
 	std::string resource_filepath = GetLibraryFilepath();
 
@@ -125,6 +125,10 @@ void ResourceTexture::OnImportFromLibrary()
 }
 
 void ResourceTexture::OnRemoveAsset()
+{
+}
+
+void ResourceTexture::OnRenameAsset(const char * new_name, const char * last_name)
 {
 }
 

@@ -33,6 +33,9 @@ int TextLnght(char * txt);
 // Separate astd::string into tokens using the indicated iterator
 void Tokenize(std::string, const char separator, std::list<std::string>& tokens);
 
+// Replaces part of a string with another part
+std::string TextReplace(std::string main_str, std::string to_replace, std::string replace_with);
+
 // Returns chars to upper case
 std::string ToUpperCase(std::string str);
 

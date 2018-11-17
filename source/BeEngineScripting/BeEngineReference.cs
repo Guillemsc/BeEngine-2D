@@ -6,7 +6,10 @@ using System.Text;
 namespace BeEngine
 {
     public class BeEngineReference
-    {   
+    {
+        public virtual void Start() { }
+        public virtual void Update() { }
+
         public IntPtr SetPtr(IntPtr set)
         {
             ptr = set;

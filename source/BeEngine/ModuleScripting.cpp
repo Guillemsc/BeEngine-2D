@@ -500,6 +500,8 @@ void ModuleScripting::InitScriptingSolution()
 {
 	solution_manager->CreateSolutionManagerInstance();
 
+	solution_manager->RemoveAllScripts();
+
 	std::string base_libs_folder = assembly_base_path + "base_libs\\";
 
 	std::vector<std::string> base_libs = App->file_system->GetFilesInPath(base_libs_folder.c_str());

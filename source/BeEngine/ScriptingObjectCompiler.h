@@ -24,7 +24,8 @@ public:
 	bool CompileScript(const char* script_filepath, const char* dll_output_path, std::vector<std::string>& compile_errors = std::vector<std::string>());
 	bool CreateScript(const char* script_filepath, const char* code);
 	std::string GetScriptCode(const char* script_filepath);
-	bool CreateScriptFromTemplate(const char* save_filepath);
+	bool SetScriptCode(const char* script_filepath, std::string code);
+	bool CreateScriptFromTemplate(const char* save_path, const char* name);
 
 private:
 	ScriptingClassInstance* script_compiler_instance = nullptr;

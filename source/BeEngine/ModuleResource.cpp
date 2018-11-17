@@ -14,6 +14,7 @@
 #include "ResourceTexture.h"
 #include "ResourceScript.h"
 #include "ScriptingObjectCompiler.h"
+#include "ModuleInput.h"
 
 #pragma comment (lib, "Devil/libx86/DevIL.lib")
 #pragma comment (lib, "Devil/libx86/ILU.lib")
@@ -70,6 +71,11 @@ bool ModuleResource::PreUpdate()
 bool ModuleResource::Update()
 {
 	bool ret = true;
+
+	if(App->input->GetKeyDown("p"))
+	{
+		RenameAsset(std::string(App->resource->GetAssetsPath() + "test_name.cs").c_str(), "new_namaaaee");
+	}
 
 	return ret;
 }
@@ -227,15 +233,6 @@ void ModuleResource::UnloadAssetFromEngine(const char * filepath)
 	{
 		res->EM_RemoveAsset();
 
-		if(App->file_system->FileExists(res->asset_filepath.c_str()))
-			App->file_system->FileDelete(res->asset_filepath.c_str());
-
-		if (App->file_system->FileExists(res->meta_filepath.c_str()))
-			App->file_system->FileDelete(res->meta_filepath.c_str());
-
-		if (App->file_system->FileExists(res->library_filepath.c_str()))
-			App->file_system->FileDelete(res->library_filepath.c_str());
-
 		DestroyResource(res);
 	}
 
@@ -373,6 +370,24 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 	return ret;
 }
 
+bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	Resource* res = GetResourceFromAssetFile(filepath);
+
+	if (res != nullptr)
+	{
+		res->EM_RenameAsset(new_name);
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
 bool ModuleResource::CanLoadFile(const char * filepath)
 {
 	bool ret = false;
@@ -430,9 +445,7 @@ void ModuleResource::OnEvent(Event* ev)
 
 			StartWatchingFolders();
 
-			App->scripting->compiler->CreateScriptFromTemplate(App->resource->GetAssetsPath().c_str());
-
-			//LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Files\\sans.png");
+			App->scripting->compiler->CreateScriptFromTemplate(App->resource->GetAssetsPath().c_str(), "test_name");		
 
 			break;
 		}
