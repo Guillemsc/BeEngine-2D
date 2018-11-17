@@ -6,17 +6,19 @@
 
 class ResourceTexture : public Resource
 {
-	friend class ResourceTextureLoader;
+	friend class ModuleResource;
 
 private:
 	void operator delete(void *) {}
 
 public:
-	ResourceTexture(std::string uid);
+	ResourceTexture();
 
 	void CleanUp();
 
-	void SetData(uint data_id, byte* data, uint data_size);
+	bool OnExistsOnLibrary(std::string uid, std::string& library_filepath = std::string());
+	void OnExportToLibrary(std::string uid);
+	void OnImportFromLibrary();
 
 	uint GetTextureId();
 

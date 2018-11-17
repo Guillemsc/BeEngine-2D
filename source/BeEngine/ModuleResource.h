@@ -1,23 +1,20 @@
 #ifndef __MODULE_RESOURCE_H__
 #define __MODULE_RESOURCE_H__
 
+#include "Devil\include\il.h"
+#include "Devil\include\ilu.h"
+#include "Devil\include\ilut.h"
+
 #include <map>
 
 #include "Module.h"
 #include "Resource.h"
-#include "ResourceLoader.h"
 #include "ModuleTimeSlicedTask.h"
 
-class ResourceTextureLoader;
-class ResourceScriptLoader;
 class Event;
 
 class ModuleResource : public Module
 {
-	friend class CheckAssetsErrorsTimeSlicedTask;
-	friend class LoadAssetsResourcesTimeSlicedTask;
-	friend class CheckResourcesIntegrity;
-
 public:
 	ModuleResource();
 	~ModuleResource();
@@ -38,127 +35,43 @@ public:
 	std::string GetLibraryPath();
 	std::string GetAssetsPath();
 
-	ResourceType AssetExtensionToType(const char* extension);
-	ResourceType LibraryExtensionToType(const char* extension);
+	std::string GetLibraryPathFromResourceType(const ResourceType& type);
 
-	Resource* CreateResource(ResourceType type, std::string unique_id);
-	Resource* CreateResource(ResourceType type);
+	Resource* CreateResource(const ResourceType type);
+	Resource* GetResourceFromAssetFile(const char* filepath);
 
-	Resource* GetResource(std::string unique_id, ResourceType type);
-	Resource* GetResource(std::string unique_id);
-
-	bool DestroyResource(std::string unique_id, ResourceType type);
-	bool DestroyResource(std::string unique_id);
-	bool DestroyResource(Resource* res);
-
-	std::map<ResourceType, ResourceLoader*> GetLoaders() const;
+	bool LoadFileToEngine(const char* filepath);
+	bool ExportAssetToLibrary(const char* filepath);
 
 	void StartWatchingFolders();
 	void StopWatchingFolders();
 
-public:
-	bool LoadFileToEngine(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
-	bool UnloadAssetFromEngine(const char* filepath);
-	bool ReimportAssetToEngine(const char* filepath);
-	bool RenameAsset(const char* filepath, const char* new_name);
-	bool ExportResourceToLibrary(Resource* resource);
-
 private:
-	bool DeleteAssetResources(const char* filepath);
-	bool ClearAssetDataFromEngine(const char* filepath);
-	bool ExportAssetToLibrary(const char* filepath);
-	bool IsAssetOnLibrary(const char* filepath, std::vector<std::string>& library_files_used = std::vector<std::string>());
-	bool ImportAssetFromLibrary(const char* filepath, std::vector<Resource*>& resources = std::vector<Resource*>());
-	bool IsMetaOfFile(const char* filepath, const char* metapath);
-	bool IsMeta(const char * filepath);
+	void AddAssetExtension(const ResourceType& type, const char* extension);
+	void AddLibraryExtension(const ResourceType& type, const char* extension);
 
-private:
-	ResourceLoader* AddLoader(ResourceLoader* loader);
-	void DestroyAllLoaders();
-	ResourceLoader* GetLoader(ResourceType type);
+	ResourceType GetResourceTypeFromAssetExtension(const char* extension);
+	ResourceType GetResourceTypeFromLibraryExtension(const char* extension);
 
-	std::map<std::string, Resource*> GetAllResources();
+	void AddLibraryName(const ResourceType& type, const char* name);
 
-	void CreateLibraryPaths();
+	void CreateLibraryFolders();
 
 	void DestroyAllResources();
 
-public:
-	ResourceTextureLoader* texture_loader = nullptr;
-	ResourceScriptLoader* script_loader = nullptr;
-
 private:
-	std::map<ResourceType, ResourceLoader*> loaders;
-
 	std::string current_assets_folder;
 	std::string assets_folder;
 	std::string library_folder;
 
-	CheckAssetsErrorsTimeSlicedTask* check_assets_time_sliced = nullptr;
-	LoadAssetsResourcesTimeSlicedTask* loading_assets_resources_time_sliced = nullptr;
+	std::map<ResourceType, std::vector<std::string>> asset_extensions;
+	std::map<ResourceType, std::vector<std::string>> library_extensions;
+	std::map<ResourceType, std::string> library_names;
+
+	std::vector<Resource*> resources;
 
 	int watching_folder_index = 0;
 };
 
-class CheckAssetsErrorsTimeSlicedTask : public TimeSlicedTask
-{
-	enum CheckErrorsState
-	{
-		CHECK_ASSET_FILES,
-		CHECK_ASSET_META_FILES,
-		DELETE_UNNECESSARY_FILES,
-		REIMPORT_ASSETS,
-	};
-
-public:
-	CheckAssetsErrorsTimeSlicedTask(ModuleResource* module_proj);
-
-	void Start();
-	void Update();
-	void Finish();
-
-private:
-	void CheckAssetFiles();
-	void CheckAssetMetaFiles();
-	void DeleteUnnecessaryFiles();
-	void ReimportAssets();
-
-private:
-	ModuleResource* module_proj = nullptr;
-
-	std::vector<std::string> all_asset_files;
-
-	std::vector<std::string> asset_files_to_check;
-
-	std::vector<std::string> asset_metas_to_check;
-	int all_asset_metas_to_check_count = 0;
-
-	std::vector<std::string> library_files_to_check;
-	int all_library_files_to_check_count = 0;
-
-	std::vector<std::string> library_files_used;
-	int all_library_files_used_count = 0;
-
-	std::vector<std::string> assets_to_reimport;
-	int all_assets_to_reimport_count = 0;
-
-	CheckErrorsState state = CheckErrorsState::CHECK_ASSET_FILES;
-};
-
-class CheckResourcesIntegrity : public TimeSlicedTask
-{
-	CheckResourcesIntegrity();
-
-	void Start();
-	void Update();
-	void Finish();
-
-private:
-	std::vector<std::string> asset_files_to_check;
-	int all_asset_files_to_check_count = 0;
-
-	bool checking_resources = false;
-	std::vector<std::string> resources_used;
-};
 
 #endif // !__MODULE_RESOURCE_H__
