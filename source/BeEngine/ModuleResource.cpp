@@ -340,7 +340,12 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 		{
 			std::string asset_filepath = GetAssetFileFromMeta(filepath);
 
-			App->resource->ExportAssetToLibrary(filepath);
+			if (App->file_system->FileExists(asset_filepath.c_str()))
+			{
+				App->resource->ExportAssetToLibrary(filepath);
+			}
+			else
+				App->file_system->FileDelete(filepath);
 		}
 		else
 		{
@@ -409,6 +414,8 @@ void ModuleResource::OnEvent(Event* ev)
 
 			LoadResourcesTimeSlicedTask* t = new LoadResourcesTimeSlicedTask();
 			App->time_sliced->StartTimeSlicedTask(t);
+
+			StartWatchingFolders();
 
 			//LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Files\\sans.png");
 
