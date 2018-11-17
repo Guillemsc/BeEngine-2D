@@ -49,6 +49,8 @@ namespace BeEngine
                             el.Add(reference);
 
                             doc.Save(project_path);
+
+                            ret = true;
                         }
                     }
                 }
@@ -80,20 +82,25 @@ namespace BeEngine
             {
                 bool ret = false;
 
-                if (path != "")
+                if (!HasScript(path))
                 {
-                    if (doc != null)
+                    if (path != "")
                     {
-                        XElement el = doc.Element("Project").Element("ItemGroup");
-
-                        if (el != null)
+                        if (doc != null)
                         {
-                            XElement reference = new XElement("Compile");
-                            reference.Add(new XAttribute("Include", path));
+                            XElement el = doc.Element("Project").Element("ItemGroup");
 
-                            el.Add(reference);
+                            if (el != null)
+                            {
+                                XElement reference = new XElement("Compile");
+                                reference.Add(new XAttribute("Include", path));
 
-                            doc.Save(project_path);
+                                el.Add(reference);
+
+                                doc.Save(project_path);
+
+                                ret = true;
+                            }
                         }
                     }
                 }
@@ -104,6 +111,8 @@ namespace BeEngine
             public bool RemoveScript(string path)
             {
                 bool ret = false;
+
+                bool save = false;
 
                 if (path != "")
                 {
@@ -126,17 +135,24 @@ namespace BeEngine
                                     if (at.Value == path)
                                     {
                                         childCompiles.Remove();
+
+                                        save = true;
+                                        ret = true;
                                     }
                                 }
                                 else
                                 {
                                     childCompiles.Remove();
+
+                                    save = true;
+                                    ret = true;
                                 }
                             }
                         }
-
-                        doc.Save(project_path);
                     }
+
+                    if(save)
+                        doc.Save(project_path);
                 }
 
                 return ret;

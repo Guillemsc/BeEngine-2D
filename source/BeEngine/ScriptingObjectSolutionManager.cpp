@@ -70,9 +70,9 @@ bool ScriptingObjectSolutionManager::CreateSolutionManagerInstance()
 	proj_path = App->project->GetCurrProjectBasePath() + "Assembly-CSharp.csproj";
 	sol_path = App->project->GetCurrProjectBasePath() + "SolutionTest.sln";
 
-	bool created = false;
+	bool created = GetSolutionCreated();
 
-	if (!GetSolutionCreated())
+	if (!created)
 	{
 		created = CreateSolution();
 	}
@@ -95,4 +95,70 @@ bool ScriptingObjectSolutionManager::CreateSolutionManagerInstance()
 	}
 
 	return ret;
+}
+
+bool ScriptingObjectSolutionManager::AddAssembly(const char * dll_filepath)
+{
+	bool ret = false;
+
+	if (solution_manager_instance != nullptr && ready_to_use)
+	{
+		if (solution_manager_instance != nullptr && ready_to_use)
+		{
+			DecomposedFilePath df = App->file_system->DecomposeFilePath(dll_filepath);
+
+			MonoObject* path_boxed = (MonoObject*)App->scripting->BoxString(dll_filepath);
+			MonoObject* name_boxed = (MonoObject*)App->scripting->BoxString(df.file_name.c_str());
+
+			void *args[2];
+			args[0] = path_boxed;
+			args[1] = name_boxed;
+
+			MonoObject* ret_obj = nullptr;
+			if (solution_manager_instance->InvokeMonoMethod("AddAssembly", args, 2, ret_obj))
+			{
+				ret = App->scripting->UnboxBool(ret_obj);
+			}
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingObjectSolutionManager::AddScript(const char * script_filepath)
+{
+	bool ret = false;
+
+	if (solution_manager_instance != nullptr && ready_to_use)
+	{
+		MonoObject* path_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
+
+		void *args[1];
+		args[0] = path_boxed;
+
+		MonoObject* ret_obj = nullptr;
+		if (solution_manager_instance->InvokeMonoMethod("AddScript", args, 1, ret_obj))
+		{
+			ret = App->scripting->UnboxBool(ret_obj);
+		}
+	}
+
+	return ret;
+}
+
+void ScriptingObjectSolutionManager::RemoveScript(const char * script_filepath)
+{
+	if (solution_manager_instance != nullptr && ready_to_use)
+	{
+		MonoObject* path_boxes = (MonoObject*)App->scripting->BoxString(script_filepath);
+
+		void *args[1];
+		args[0] = path_boxes;
+
+		MonoObject* ret_obj = nullptr;
+		if (solution_manager_instance->InvokeMonoMethod("RemoveScript", args, 1, ret_obj))
+		{
+			App->scripting->UnboxBool(ret_obj);
+		}
+	}
 }

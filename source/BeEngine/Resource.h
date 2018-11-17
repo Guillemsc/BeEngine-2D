@@ -31,6 +31,8 @@ public:
 	void EM_ExportToLibrary();
 	void EM_ImportFromLibrary();
 
+	void EM_RemoveAsset();
+
 	// Library standalone management (Game Mode)
 	void GM_InitResource(const char* library_filepath);
 	void GM_ImportFromLibrary();
@@ -51,6 +53,8 @@ private:
 	virtual bool OnExistsOnLibrary(std::string uid, std::string& library_filepath = std::string()) = 0;
 	virtual void OnExportToLibrary(std::string uid) = 0;
 	virtual void OnImportFromLibrary() = 0;
+
+	virtual void OnRemoveAsset() = 0;
 
 private:
 	bool has_data = false;

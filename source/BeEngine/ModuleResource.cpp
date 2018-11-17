@@ -12,6 +12,8 @@
 #include "ModuleJson.h"
 #include "ModuleInput.h"
 #include "ResourceTexture.h"
+#include "ResourceScript.h"
+#include "ScriptingObjectCompiler.h"
 
 #pragma comment (lib, "Devil/libx86/DevIL.lib")
 #pragma comment (lib, "Devil/libx86/ILU.lib")
@@ -39,9 +41,12 @@ bool ModuleResource::Awake()
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 
 	AddLibraryName(ResourceType::TEXTURE, "textures");
+	AddLibraryName(ResourceType::SCRIPT, "scripts");
 
 	AddAssetExtension(ResourceType::TEXTURE, "png");
 	AddAssetExtension(ResourceType::TEXTURE, "jpg");
+
+	AddAssetExtension(ResourceType::SCRIPT, "cs");
 
 	return ret;
 }
@@ -132,6 +137,12 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 		ret = new ResourceTexture();
 		
 		break;
+
+	case ResourceType::SCRIPT:
+
+		ret = new ResourceScript();
+
+		break;
 	default:
 		break;
 	}
@@ -214,6 +225,8 @@ void ModuleResource::UnloadAssetFromEngine(const char * filepath)
 
 	if (res != nullptr)
 	{
+		res->EM_RemoveAsset();
+
 		if(App->file_system->FileExists(res->asset_filepath.c_str()))
 			App->file_system->FileDelete(res->asset_filepath.c_str());
 
@@ -416,6 +429,8 @@ void ModuleResource::OnEvent(Event* ev)
 			App->time_sliced->StartTimeSlicedTask(t);
 
 			StartWatchingFolders();
+
+			App->scripting->compiler->CreateScriptFromTemplate(App->resource->GetAssetsPath().c_str());
 
 			//LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Files\\sans.png");
 

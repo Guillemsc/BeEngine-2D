@@ -9,7 +9,7 @@ ResourceTexture::ResourceTexture() : Resource(ResourceType::TEXTURE)
 
 void ResourceTexture::CleanUp()
 {
-
+	ilDeleteImages(1, &texture_data_id);
 }
 
 bool ResourceTexture::OnExistsOnLibrary(std::string uid, std::string & library_filepath)
@@ -123,13 +123,10 @@ void ResourceTexture::OnImportFromLibrary()
 		}
 	}
 }
-//
-//void ResourceTexture::SetData(uint data_id, byte * data, uint data_size)
-//{
-//	texture_data_id = data_id;
-//	texture_data = data;
-//	texture_data_size = data_size;
-//}
+
+void ResourceTexture::OnRemoveAsset()
+{
+}
 
 uint ResourceTexture::GetTextureId()
 {

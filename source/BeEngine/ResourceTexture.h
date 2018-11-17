@@ -19,6 +19,7 @@ public:
 	bool OnExistsOnLibrary(std::string uid, std::string& library_filepath = std::string());
 	void OnExportToLibrary(std::string uid);
 	void OnImportFromLibrary();
+	void OnRemoveAsset();
 
 	uint GetTextureId();
 

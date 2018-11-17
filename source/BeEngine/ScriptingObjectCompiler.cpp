@@ -13,6 +13,8 @@ ScriptingObjectCompiler::~ScriptingObjectCompiler()
 
 void ScriptingObjectCompiler::Start()
 {
+	script_template_filepath = "templates\\c_sharp_script_template\\template_script.cs";
+
 	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
 	{
 		ScriptingClass compiler_class = App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "ScriptCompiler");
@@ -153,6 +155,18 @@ std::string ScriptingObjectCompiler::GetScriptCode(const char * script_filepath)
 				}
 			}
 		}
+	}
+
+	return ret;
+}
+
+bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_filepath)
+{
+	bool ret = false;
+
+	if (App->file_system->FileExists(script_template_filepath.c_str()))
+	{
+		App->file_system->FileCopyPasteWithNewName(script_template_filepath.c_str(), save_filepath, "NewScript");
 	}
 
 	return ret;

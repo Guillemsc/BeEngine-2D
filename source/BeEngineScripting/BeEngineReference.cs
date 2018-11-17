@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BeEngine
 {
-    class BeEngineReference
+    public class BeEngineReference
     {   
         public IntPtr SetPtr(IntPtr set)
         {

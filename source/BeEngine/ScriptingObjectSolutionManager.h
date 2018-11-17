@@ -20,6 +20,9 @@ public:
 	void CleanUp();
 
 	bool CreateSolutionManagerInstance();
+	bool AddAssembly(const char* dll_filepath);
+	bool AddScript(const char* script_filepath);
+	void RemoveScript(const char* script_filepath);
 
 private:
 	bool GetSolutionCreated();

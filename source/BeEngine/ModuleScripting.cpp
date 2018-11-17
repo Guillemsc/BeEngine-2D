@@ -177,7 +177,7 @@ void ModuleScripting::OnEvent(Event * ev)
 	{
 		EventProjectSelected* pje = (EventProjectSelected*)ev;
 
-		solution_manager->CreateSolutionManagerInstance();
+		InitScriptingSolution();
 
 		//wApp->resource->LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Testing\\ConsoleApp1\\ConsoleApp1\\Test.cs");
 
@@ -494,6 +494,29 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 	}
 
 	return ret;
+}
+
+void ModuleScripting::InitScriptingSolution()
+{
+	solution_manager->CreateSolutionManagerInstance();
+
+	std::string base_libs_folder = assembly_base_path + "base_libs\\";
+
+	std::vector<std::string> base_libs = App->file_system->GetFilesInPath(base_libs_folder.c_str());
+
+	for (std::vector<std::string>::iterator it = base_libs.begin(); it != base_libs.end(); ++it)
+	{
+		std::string curr_lib = (*it);
+
+		solution_manager->AddAssembly(curr_lib.c_str());
+	}
+
+	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
+	{
+		std::string curr_lib = (*it)->GetPath();
+
+		solution_manager->AddAssembly(curr_lib.c_str());
+	}
 }
 
 void ModuleScripting::UpdateScriptingObjects()

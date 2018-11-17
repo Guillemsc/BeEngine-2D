@@ -107,6 +107,14 @@ void Resource::EM_ImportFromLibrary()
 	}
 }
 
+void Resource::EM_RemoveAsset()
+{
+	if (has_data)
+	{
+		OnRemoveAsset();
+	}
+}
+
 void Resource::GM_InitResource(const char * _library_filepath)
 {
 	if (App->file_system->FileExists(_library_filepath))
