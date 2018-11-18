@@ -38,6 +38,7 @@ public:
 
 private:
 	void UpdateFoldersAndFiles();
+	void ClearFloldersAndFiles();
 
 	void DrawFoldersColumn();
 	void DrawFilesColumn();
@@ -49,18 +50,18 @@ private:
 
 	void DrawFilesPopup(bool left_clicked, bool right_clicked);
 
-	void AddToSelectedFiles(ExplorerFile& add);
-	void RemoveFromSelectedFiles(ExplorerFile& add);
+	void AddToSelectedFiles(ExplorerFile* add);
+	void RemoveFromSelectedFiles(ExplorerFile* add);
 	void RemoveAllFromSelectedFiles();
-	std::vector<ExplorerFile> GetSelectedFiles();
+	std::vector<ExplorerFile*> GetSelectedFiles();
 
 private:
 	ImFont* font = nullptr;
 	
 	Folder folder_tree;
-	std::vector<ExplorerFile> cur_files;
+	std::vector<ExplorerFile*> cur_files;
 
-	std::vector<ExplorerFile> selected_files;
+	std::vector<ExplorerFile*> selected_files;
 
 	bool update_folders = false;
 
