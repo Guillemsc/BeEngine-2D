@@ -39,6 +39,9 @@ void ResourceScript::ExportToLibrary(std::string uid)
 
 	std::string dll_output_path = library_path + uid + ".dll";
 
+	if (App->file_system->FileExists(dll_output_path.c_str()))
+		App->file_system->FileDelete(dll_output_path.c_str());
+
 	compiles = App->scripting->compiler->CompileScript(GetAssetFilepath().c_str(), dll_output_path.c_str(), compile_errors);
 
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());

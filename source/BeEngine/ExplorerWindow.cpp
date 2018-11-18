@@ -126,6 +126,9 @@ void ExplorerWindow::DrawFilesColumn()
 
 		DrawFilesPopup(left_clicked, right_clicked);
 
+		if(left_clicked)
+			system("C:\\Users\\Guillem\\Desktop\\Test\\SolutionTest.sln");
+
 		if (opened)
 		{
 			ImGui::TreePop();

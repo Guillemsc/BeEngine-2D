@@ -360,7 +360,7 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 			if (exists)
 			{
 				Resource* loaded_res = nullptr;
-				App->resource->ImportAsset(filepath, loaded_res);
+				App->resource->ExportAssetToLibrary(filepath);
 
 			}
 			else
@@ -530,7 +530,6 @@ void ModuleResource::StartWatchingFolders()
 		if (watching_folder_index == 0)
 		{
 			App->scripting->file_watcher->WatchFileFolder(GetAssetsPath().c_str());
-			App->scripting->file_watcher->WatchFileFolder(GetLibraryPath().c_str());
 		}
 	}
 }
@@ -540,7 +539,6 @@ void ModuleResource::StopWatchingFolders()
 	if (watching_folder_index == 0)
 	{
 		App->scripting->file_watcher->StopWatchingFileFolder(GetAssetsPath().c_str());
-		App->scripting->file_watcher->StopWatchingFileFolder(GetLibraryPath().c_str());
 	}
 
 	++watching_folder_index;
