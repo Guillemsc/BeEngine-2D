@@ -50,20 +50,23 @@ void Resource::EM_CreateAssetMeta()
 		uid = meta_doc->GetString("resource", "");
 	}
 
-	if (uid == "")
+	if (meta_doc != nullptr)
 	{
-		uid = App->resource->GetNewUID();
+		if (uid == "")
+		{
+			uid = App->resource->GetNewUID();
 
-		meta_doc->SetString("resource", uid.c_str());
+			meta_doc->SetString("resource", uid.c_str());
+		}
+		else
+		{
+			meta_doc->SetString("resource", uid.c_str());
+		}
+
+		meta_doc->Save();
+
+		App->json->UnloadJSON(meta_doc);
 	}
-	else
-	{
-		meta_doc->SetString("resource", uid.c_str());
-	}
-
-	meta_doc->Save();
-
-	App->json->UnloadJSON(meta_doc);
 }
 
 bool Resource::EM_ExistsOnLibrary()
@@ -90,9 +93,9 @@ void Resource::EM_ExportToLibrary()
 {
 	if (has_data)
 	{
-		ExportToLibrary(uid);
+		EM_CreateAssetMeta();
 
-		EM_LoadLibraryFilepaths();
+		ExportToLibrary(uid);
 	}
 }
 
@@ -102,6 +105,8 @@ void Resource::EM_ImportFromLibrary()
 	{
 		if (EM_ExistsOnLibrary())
 		{
+			EM_LoadLibraryFilepaths();
+
 			ImportFromLibrary();
 		}
 	}

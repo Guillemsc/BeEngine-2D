@@ -35,12 +35,13 @@ public:
 	std::string GetLibraryPath();
 	std::string GetAssetsPath();
 
+	std::string GetResourceNameFromResourceType(const ResourceType& type);
 	std::string GetLibraryPathFromResourceType(const ResourceType& type);
 
 	Resource* CreateResource(const ResourceType type);
 	void DestroyResource(Resource* res);
 	Resource* GetResourceFromAssetFile(const char* filepath);
-	std::vector<Resource*> GetAllResources() const;
+	std::map<ResourceType, std::vector<Resource*>> GetAllResources() const;
 
 	// Asset management ---------
 
@@ -57,8 +58,8 @@ public:
 
 	bool CanLoadFile(const char* filepath);
 	bool IsMeta(const char* filepath);
-	const char* GetAssetFileFromMeta(const char* metapath);
-	const char* GetMetaFileFromAsset(const char* filepath);
+	std::string GetAssetFileFromMeta(const char* metapath);
+	std::string GetMetaFileFromAsset(const char* filepath);
 
 	void StartWatchingFolders();
 	void StopWatchingFolders();
@@ -70,7 +71,7 @@ private:
 	ResourceType GetResourceTypeFromAssetExtension(const char* extension);
 	ResourceType GetResourceTypeFromLibraryExtension(const char* extension);
 
-	void AddLibraryName(const ResourceType& type, const char* name);
+	void AddResourceName(const ResourceType& type, const char* name);
 
 	void CreateLibraryFolders();
 
@@ -85,9 +86,9 @@ private:
 
 	std::map<ResourceType, std::vector<std::string>> asset_extensions;
 	std::map<ResourceType, std::vector<std::string>> library_extensions;
-	std::map<ResourceType, std::string> library_names;
+	std::map<ResourceType, std::string> resource_names;
 
-	std::vector<Resource*> resources;
+	std::map<ResourceType, std::vector<Resource*>> resources;
 
 	std::vector<std::string> files_changed_to_check;
 
@@ -130,6 +131,7 @@ private:
 	uint all_library_files_to_check_count = 0;
 
 	std::vector<std::string> files_to_delete;
+	uint all_files_to_delete_count = 0;
 
 	std::vector<std::string> asset_files_used;
 	std::vector<std::string> library_files_used;

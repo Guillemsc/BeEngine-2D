@@ -24,7 +24,7 @@ public:
 
 private:
 	void DrawMenuBar();
-	void DrawGameObjectsPopup(GameObject* go, bool left_clicked, bool right_clicked);
+	void DrawGameObjectsPopup(bool left_clicked, bool right_clicked);
 	void GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked);
 	void DrawGameObjectRecursive(GameObject* go, uint child_index, uint &go_count);
 	void DragAndDropBeforeChilds(GameObject* go, uint child_index, uint &go_count);

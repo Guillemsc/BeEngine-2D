@@ -8,6 +8,16 @@
 class GameObject;
 class Event;
 
+class ExplorerFile
+{
+public:
+	ExplorerFile();
+
+	DecomposedFilePath dfp;
+
+	bool selected = false;
+};
+
 class ExplorerWindow : public EditorWindow
 {
 	friend class ModuleEditor;
@@ -27,17 +37,25 @@ public:
 	ImGuiWindowFlags GetWindowFlags();
 
 private:
+	void UpdateFoldersAndFiles();
+
 	void DrawFoldersColumn();
 	void DrawFilesColumn();
 
 	void DrawFoldersRecursive(const Folder& folder);
 	void SetSelectedFolderTree(const char* path);
 
+	void FoldersInput(const std::string& folder, bool left_clicked, bool right_clicked);
+
+	void DrawFilesPopup(bool left_clicked, bool right_clicked);
+
+	std::vector<ExplorerFile> GetSelectedFiles();
+
 private:
 	ImFont* font = nullptr;
 	
 	Folder folder_tree;
-	std::vector<std::string> selected_folder_files_paths;
+	std::vector<ExplorerFile> cur_files;
 
 	bool update_folders = false;
 

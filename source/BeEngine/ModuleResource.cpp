@@ -43,8 +43,8 @@ bool ModuleResource::Awake()
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 
-	AddLibraryName(ResourceType::TEXTURE, "textures");
-	AddLibraryName(ResourceType::SCRIPT, "scripts");
+	AddResourceName(ResourceType::TEXTURE, "textures");
+	AddResourceName(ResourceType::SCRIPT, "scripts");
 
 	AddAssetExtension(ResourceType::TEXTURE, "png");
 	AddAssetExtension(ResourceType::TEXTURE, "jpg");
@@ -73,11 +73,6 @@ bool ModuleResource::PreUpdate()
 bool ModuleResource::Update()
 {
 	bool ret = true;
-
-	if(App->input->GetKeyDown("p"))
-	{
-		RenameAsset(std::string(App->resource->GetAssetsPath() + "this_is_as_script.cs").c_str(), "new_namaaaee");
-	}
 
 	return ret;
 }
@@ -123,13 +118,18 @@ std::string ModuleResource::GetAssetsPath()
 	return assets_folder;
 }
 
+std::string ModuleResource::GetResourceNameFromResourceType(const ResourceType & type)
+{
+	return resource_names[type];
+}
+
 std::string ModuleResource::GetLibraryPathFromResourceType(const ResourceType & type)
 {
 	std::string ret = "";
 
 	ret += library_folder;
 
-	ret += library_names[type] + "\\";
+	ret += resource_names[type] + "\\";
 
 	return ret;
 }
@@ -157,7 +157,19 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 
 	if (ret != nullptr)
 	{
-		resources.push_back(ret);
+		std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.find(type);
+
+		if (it != resources.end())
+		{
+			it->second.push_back(ret);
+		}
+		else
+		{
+			std::vector<Resource*> new_vec;
+			new_vec.push_back(ret);
+
+			resources[type] = new_vec;
+		}
 	}
 
 	return ret;
@@ -165,15 +177,23 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 
 void ModuleResource::DestroyResource(Resource * res)
 {
-	for (std::vector<Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
 	{
-		if ((*it) == res)
+		bool found = false;
+		for (std::vector<Resource*>::iterator t = (*it).second.begin(); t != (*it).second.end(); ++t)
 		{
-			res->CleanUp();
-			RELEASE(*it);
-			resources.erase(it);
-			break;
+			if ((*t) == res)
+			{
+				res->CleanUp();
+				RELEASE(res);
+				(*it).second.erase(t);
+				found = true;
+				break;
+			}
 		}
+
+		if (found)
+			break;
 	}
 }
 
@@ -181,19 +201,27 @@ Resource* ModuleResource::GetResourceFromAssetFile(const char* filepath)
 {
 	Resource* ret = nullptr;
 
-	for (std::vector<Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
 	{
-		if ((*it)->asset_filepath.compare(filepath) == 0)
+		bool found = false;
+		for (std::vector<Resource*>::iterator t = (*it).second.begin(); t != (*it).second.end(); ++t)
 		{
-			ret = (*it);
-			break;
+			if ((*t)->asset_filepath.compare(filepath) == 0)
+			{
+				ret = (*t);
+				found = true;
+				break;
+			}
 		}
+
+		if (found)
+			break;
 	}
 
 	return ret;
 }
 
-std::vector<Resource*> ModuleResource::GetAllResources() const
+std::map<ResourceType, std::vector<Resource*>> ModuleResource::GetAllResources() const
 {
 	return resources;
 }
@@ -363,7 +391,7 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 		{
 			std::string asset_filepath = GetAssetFileFromMeta(filepath);
 
-			App->resource->ExportAssetToLibrary(filepath);
+			App->resource->ExportAssetToLibrary(asset_filepath.c_str());
 		}
 	}
 
@@ -433,17 +461,19 @@ bool ModuleResource::IsMeta(const char * filepath)
 	return ret;
 }
 
-const char* ModuleResource::GetAssetFileFromMeta(const char * metapath)
+std::string ModuleResource::GetAssetFileFromMeta(const char * metapath)
 {
 	DecomposedFilePath df = App->file_system->DecomposeFilePath(metapath);
 
-	return std::string(df.file_path + df.file_name).c_str();
+	std::string asset_path = df.path + df.file_name;
+
+	return asset_path;
 }
 
-const char* ModuleResource::GetMetaFileFromAsset(const char * filepath)
+std::string ModuleResource::GetMetaFileFromAsset(const char * filepath)
 {
 	std::string ret = filepath + std::string(".meta");
-	return ret.c_str();
+	return ret;
 }
 
 void ModuleResource::OnEvent(Event* ev)
@@ -463,8 +493,6 @@ void ModuleResource::OnEvent(Event* ev)
 			App->time_sliced->StartTimeSlicedTask(t);
 
 			StartWatchingFolders();
-
-			CreateScript(App->resource->GetAssetsPath().c_str(), "this_is_as_script");
 
 			break;
 		}
@@ -598,16 +626,16 @@ ResourceType ModuleResource::GetResourceTypeFromLibraryExtension(const char * ex
 	return ret;
 }
 
-void ModuleResource::AddLibraryName(const ResourceType & type, const char * name)
+void ModuleResource::AddResourceName(const ResourceType & type, const char * name)
 {
-	library_names[type] = name;
+	resource_names[type] = name;
 }
 
 void ModuleResource::CreateLibraryFolders()
 {
 	if (App->file_system->FolderExists(library_folder.c_str()))
 	{
-		for (std::map<ResourceType, std::string>::iterator it = library_names.begin(); it != library_names.end(); ++it)
+		for (std::map<ResourceType, std::string>::iterator it = resource_names.begin(); it != resource_names.end(); ++it)
 		{
 			App->file_system->CreateFolder(library_folder.c_str(), (*it).second.c_str());
 		}
@@ -630,7 +658,7 @@ void ModuleResource::DestroyAllResources()
 {
 }
 
-LoadResourcesTimeSlicedTask::LoadResourcesTimeSlicedTask() : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 2)
+LoadResourcesTimeSlicedTask::LoadResourcesTimeSlicedTask() : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 4)
 {
 }
 
@@ -674,6 +702,12 @@ void LoadResourcesTimeSlicedTask::CheckAssetFilesImport()
 {
 	if (!asset_files_to_check.empty())
 	{
+		float progress = 100 - (100.0f / (float)all_asset_files_to_check_count) * (float)asset_files_to_check.size();
+		progress *= 0.25f;
+		progress += 0;
+		SetPercentageProgress(progress);
+		SetDescription("Loading resources");
+
 		std::string curr_file = *asset_files_to_check.begin();
 
 		bool is_meta = App->resource->IsMeta(curr_file.c_str());
@@ -710,6 +744,12 @@ void LoadResourcesTimeSlicedTask::CleanAssetFolder()
 {
 	if (!asset_files_to_check.empty())
 	{
+		float progress = 100 - (100.0f / (float)all_asset_files_to_check_count) * (float)asset_files_to_check.size();
+		progress *= 0.25f;
+		progress += 25;
+		SetPercentageProgress(progress);
+		SetDescription("Cleaning asset folder");
+
 		std::string curr_file = *asset_files_to_check.begin();
 
 		bool used = false;
@@ -734,6 +774,7 @@ void LoadResourcesTimeSlicedTask::CleanAssetFolder()
 	else
 	{
 		library_files_to_check = all_library_files;
+		all_library_files_to_check_count = library_files_to_check.size();
 
 		state = LoadResourcesState::CLEAN_LIBRARY_FOLDER;
 	}
@@ -743,6 +784,12 @@ void LoadResourcesTimeSlicedTask::CleanLibraryFolder()
 {
 	if (!library_files_to_check.empty())
 	{
+		float progress = 100 - (100.0f / (float)all_library_files_to_check_count) * (float)library_files_to_check.size();
+		progress *= 0.25f;
+		progress += 50;
+		SetPercentageProgress(progress);
+		SetDescription("Cleaning library folder");
+
 		std::string curr_file = *library_files_to_check.begin();
 
 		bool used = false;
@@ -766,6 +813,7 @@ void LoadResourcesTimeSlicedTask::CleanLibraryFolder()
 	}
 	else
 	{
+		all_files_to_delete_count = files_to_delete.size();
 		state = LoadResourcesState::DELETE_UNNECESSARY_FILES;
 	}
 }
@@ -774,6 +822,12 @@ void LoadResourcesTimeSlicedTask::DeleteUnnecessaryFiles()
 {
 	if (!files_to_delete.empty())
 	{
+		float progress = 100 - (100.0f / (float)all_files_to_delete_count) * (float)files_to_delete.size();
+		progress *= 0.25f;
+		progress += 75;
+		SetPercentageProgress(progress);
+		SetDescription("Deleting unnecessary files");
+
 		std::string curr_file = *files_to_delete.begin();
 
 		App->resource->StopWatchingFolders();

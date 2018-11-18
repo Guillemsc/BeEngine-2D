@@ -60,7 +60,7 @@ void HierarchyWindow::DrawMenuBar()
 	}
 }
 
-void HierarchyWindow::DrawGameObjectsPopup(GameObject * go, bool left_clicked, bool right_clicked)
+void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked)
 {
 	if (right_clicked)
 	{
@@ -244,7 +244,7 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 
 		GameObjectInput(go, left_clicked, right_clicked);
 
-		DrawGameObjectsPopup(go, left_clicked, right_clicked);
+		DrawGameObjectsPopup(left_clicked, right_clicked);
 
 		DragAndDropBeforeChilds(go, child_index, go_count);
 
