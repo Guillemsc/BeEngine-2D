@@ -25,6 +25,7 @@ public:
 	bool AddScript(const char* script_filepath);
 	void RemoveScript(const char* script_filepath);
 	void RemoveAllScripts();
+	void OpenSolutionWithExternalProgram();
 
 private:
 	bool GetSolutionCreated();

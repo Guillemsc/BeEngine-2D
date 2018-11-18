@@ -186,3 +186,8 @@ void ScriptingObjectSolutionManager::RemoveAllScripts()
 		}
 	}
 }
+
+void ScriptingObjectSolutionManager::OpenSolutionWithExternalProgram()
+{
+	ShellExecute(NULL, "open", sol_path.c_str(), NULL, NULL, SW_SHOWNORMAL);
+}

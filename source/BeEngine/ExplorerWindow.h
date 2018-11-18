@@ -49,6 +49,9 @@ private:
 
 	void DrawFilesPopup(bool left_clicked, bool right_clicked);
 
+	void AddToSelectedFiles(ExplorerFile& add);
+	void RemoveFromSelectedFiles(ExplorerFile& add);
+	void RemoveAllFromSelectedFiles();
 	std::vector<ExplorerFile> GetSelectedFiles();
 
 private:
@@ -56,6 +59,8 @@ private:
 	
 	Folder folder_tree;
 	std::vector<ExplorerFile> cur_files;
+
+	std::vector<ExplorerFile> selected_files;
 
 	bool update_folders = false;
 

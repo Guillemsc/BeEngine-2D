@@ -5,6 +5,8 @@
 #include "ModuleEvent.h"
 #include "ModuleProject.h"
 #include "ModuleInput.h"
+#include "ModuleScripting.h"
+#include "ScriptingObjectSolutionManager.h"
 
 ExplorerWindow::ExplorerWindow()
 {
@@ -71,6 +73,8 @@ ImGuiWindowFlags ExplorerWindow::GetWindowFlags()
 
 void ExplorerWindow::UpdateFoldersAndFiles()
 {
+	RemoveAllFromSelectedFiles();
+
 	folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
 	
 	cur_files.clear();
@@ -121,13 +125,15 @@ void ExplorerWindow::DrawFilesColumn()
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 			right_clicked = true;
 
-		if (left_clicked)
-			(*it).selected = !(*it).selected;
+		if (left_clicked || right_clicked)
+		{
+			if (!(*it).selected)
+				AddToSelectedFiles((*it));
+			else
+				RemoveFromSelectedFiles((*it));
+		}
 
 		DrawFilesPopup(left_clicked, right_clicked);
-
-		if(left_clicked)
-			system("C:\\Users\\Guillem\\Desktop\\Test\\SolutionTest.sln");
 
 		if (opened)
 		{
@@ -200,6 +206,8 @@ void ExplorerWindow::FoldersInput(const std::string & folder, bool left_clicked,
 
 void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 {
+	std::vector<ExplorerFile> selected = GetSelectedFiles();
+
 	if (right_clicked)
 	{
 		ImGui::OpenPopupOnItemClick("FilesPopup", 1);
@@ -209,30 +217,138 @@ void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 
 	if (ImGui::BeginPopupContextItem("FilesPopup"))
 	{
-		if (1)
+		if (selected.size() == 1)
 		{
+			DecomposedFilePath selected_file = selected[0].dfp;
+
+			if (selected_file.file_extension_lower_case == "cs")
+			{
+				if (ImGui::Button("Edit Script"))
+				{
+					ImGui::CloseCurrentPopup();
+					App->scripting->solution_manager->OpenSolutionWithExternalProgram();
+				}
+			}
+
+			if (ImGui::Button("Show in Explorer"))
+			{
+				App->OpenFolder(selected_file.file_path.c_str());
+				ImGui::CloseCurrentPopup();
+			}
+
 			if (ImGui::Button("Rename"))
 			{
-				ImGui::CloseCurrentPopup();
 				open_rename = true;
+				ImGui::CloseCurrentPopup();
 			}
+		}
+
+
+		ImGui::EndPopup();
+	}
+
+	if (open_rename)
+	{
+		ImGui::OpenPopup("RenamePopup");
+
+		if (selected.size() > 0)
+		{
+			std::string name = (*selected.begin()).dfp.file_name;
+
+			int size = name.size();
+
+			if (size > 50)
+				size = 50;
+
+			memset(change_name_tmp, 0, sizeof(char) * 50);
+
+			strcpy_s(change_name_tmp, sizeof(char) * size + 1, name.c_str());
+		}
+	}
+
+	if (ImGui::BeginPopup("RenamePopup"))
+	{
+		ImGui::Text("Name: ");
+
+		ImGui::SameLine();
+
+		ImGui::InputText("", change_name_tmp, sizeof(char) * 50, ImGuiInputTextFlags_AutoSelectAll);
+
+		if (ImGui::Button("Accept"))
+		{
+			if (selected.size() > 0)
+			{
+				App->resource->RenameAsset(selected[0].dfp.file_path.c_str(), change_name_tmp);
+				update_folders = true;
+			}
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
 		}
 
 		ImGui::EndPopup();
 	}
 }
 
-std::vector<ExplorerFile> ExplorerWindow::GetSelectedFiles()
+void ExplorerWindow::AddToSelectedFiles(ExplorerFile & add)
 {
-	std::vector<ExplorerFile> ret;
+	std::vector<ExplorerFile> files = cur_files;
 
-	for (std::vector<ExplorerFile>::iterator it = cur_files.begin(); it != cur_files.end(); ++it)
+	bool file_exists = false;
+	for (std::vector<ExplorerFile>::iterator it = files.begin(); it != files.end(); ++it)
 	{
-		if ((*it).selected)
-			ret.push_back((*it));
+		if (add.dfp.file_path.compare((*it).dfp.file_path) == 0)
+		{
+			file_exists = true;
+			break;
+		}
 	}
 
-	return ret;
+	bool already_selected = false;
+	files = selected_files;
+	for (std::vector<ExplorerFile>::iterator it = files.begin(); it != files.end(); ++it)
+	{
+		if (add.dfp.file_path.compare((*it).dfp.file_path) == 0)
+		{
+			already_selected = true;
+			break;
+		}
+	}
+
+	if (!already_selected)
+	{
+		add.selected = true;
+		selected_files.push_back(add);
+	}
+}
+
+void ExplorerWindow::RemoveFromSelectedFiles(ExplorerFile & add)
+{
+	for (std::vector<ExplorerFile>::iterator it = selected_files.begin(); it != selected_files.end(); ++it)
+	{
+		if (add.dfp.file_path.compare((*it).dfp.file_path) == 0)
+		{
+			add.selected = false;
+			selected_files.erase(it);
+			break;
+		}
+	}
+}
+
+void ExplorerWindow::RemoveAllFromSelectedFiles()
+{
+	selected_files.clear();
+}
+
+std::vector<ExplorerFile> ExplorerWindow::GetSelectedFiles()
+{
+	return selected_files;
 }
 
 ExplorerFile::ExplorerFile()
