@@ -22,9 +22,6 @@
     <Filter Include="Sources\5. Resources =============">
       <UniqueIdentifier>{75424721-2dd7-49d4-966b-8416936704ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\5. Resources =============\Loaders">
-      <UniqueIdentifier>{85e9095d-cde4-4525-8480-02117404a4df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\4. Rendering =============">
       <UniqueIdentifier>{4fab38b3-ff53-4995-b7de-9e6d8857ecc3}</UniqueIdentifier>
     </Filter>
@@ -426,14 +423,8 @@
     <ClInclude Include="ModuleResource.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceLoader.h">
-      <Filter>Sources\5. Resources =============\Loaders</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Sources\5. Resources =============</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceTextureLoader.h">
-      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="ResourceTexture.h">
       <Filter>Sources\5. Resources =============</Filter>
@@ -506,9 +497,6 @@
     </ClInclude>
     <ClInclude Include="ScriptingObjectSolutionManager.h">
       <Filter>Sources\6. Scripting ==============</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceScriptLoader.h">
-      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="ResourceScript.h">
       <Filter>Sources\5. Resources =============</Filter>
@@ -761,14 +749,8 @@
     <ClCompile Include="ModuleResource.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceLoader.cpp">
-      <Filter>Sources\5. Resources =============\Loaders</Filter>
-    </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Sources\5. Resources =============</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceTextureLoader.cpp">
-      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="ResourceTexture.cpp">
       <Filter>Sources\5. Resources =============</Filter>
@@ -835,9 +817,6 @@
     </ClCompile>
     <ClCompile Include="ScriptingObjectSolutionManager.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceScriptLoader.cpp">
-      <Filter>Sources\5. Resources =============\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="ResourceScript.cpp">
       <Filter>Sources\5. Resources =============</Filter>

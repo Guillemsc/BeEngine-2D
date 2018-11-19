@@ -131,12 +131,9 @@
     <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="ResourceScript.h" />
-    <ClInclude Include="ResourceScriptLoader.h" />
     <ClInclude Include="ResourcesWindow.h" />
     <ClInclude Include="ResourceTexture.h" />
-    <ClInclude Include="ResourceTextureLoader.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="Geometry\AABB.h" />
     <ClInclude Include="Geometry\AABB2D.h" />
@@ -272,12 +269,9 @@
     <ClCompile Include="ModuleResource.cpp" />
     <ClCompile Include="QuadRenderer.cpp" />
     <ClCompile Include="Resource.cpp" />
-    <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="ResourceScript.cpp" />
-    <ClCompile Include="ResourceScriptLoader.cpp" />
     <ClCompile Include="ResourcesWindow.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
-    <ClCompile Include="ResourceTextureLoader.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Geometry\AABB.cpp" />
     <ClCompile Include="Geometry\Capsule.cpp" />
