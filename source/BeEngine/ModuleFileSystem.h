@@ -67,6 +67,8 @@ public:
 
 	DecomposedFilePath DecomposeFilePath(std::string file_path);
 
+	bool FilePathInsideFolder(std::string file_path);
+
 	std::string SelectFolderDialog(bool& canceled);
 	std::string SelectFileDilog(bool& canceled, const char* filter[]);
 

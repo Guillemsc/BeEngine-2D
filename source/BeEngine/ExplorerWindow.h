@@ -43,11 +43,14 @@ private:
 	void DrawFoldersColumn();
 	void DrawFilesColumn();
 
+	// Folders Column
 	void DrawFoldersRecursive(const Folder& folder);
 	void SetSelectedFolderTree(const char* path);
 
 	void FoldersInput(const std::string& folder, bool left_clicked, bool right_clicked);
 
+	// Files column
+	void FilesInput(ExplorerFile* file, bool left_clicked, bool right_clicked);
 	void DrawFilesPopup(bool left_clicked, bool right_clicked);
 
 	void AddToSelectedFiles(ExplorerFile* add);

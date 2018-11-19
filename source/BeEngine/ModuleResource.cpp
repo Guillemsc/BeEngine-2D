@@ -425,9 +425,9 @@ bool ModuleResource::CreateScript(const char * filepath, const char * name)
 	StopWatchingFolders();
 
 	std::string asset_path;
-	if (App->scripting->compiler->CreateScriptFromTemplate(filepath, name))
+	if (App->scripting->compiler->CreateScriptFromTemplate(filepath, name, asset_path))
 	{
-		LoadFileToEngine(asset_path.c_str());
+		ExportAssetToLibrary(asset_path.c_str());
 	}
 
 	StartWatchingFolders();

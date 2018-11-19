@@ -7,6 +7,7 @@
 #include "ModuleInput.h"
 #include "ModuleScripting.h"
 #include "ScriptingObjectSolutionManager.h"
+#include "ScriptingObjectCompiler.h"
 
 ExplorerWindow::ExplorerWindow()
 {
@@ -122,8 +123,6 @@ void ExplorerWindow::DrawFilesColumn()
 
 	for (std::vector<ExplorerFile*>::iterator it = cur_files.begin(); it != cur_files.end(); ++it)
 	{
-		//ImGui::PushID(curr_ef.dfp.file_path.c_str());
-
 		ExplorerFile* curr_file = (*it);
 
 		std::string name = curr_file->dfp.file_name + "." + curr_file->dfp.file_extension_lower_case;
@@ -144,66 +143,13 @@ void ExplorerWindow::DrawFilesColumn()
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 			right_clicked = true;
 
-		// Input
-		if ((App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL)) && ImGui::IsItemClicked(0))
+		FilesInput(curr_file, left_clicked, right_clicked);
+
+		DrawFilesPopup(left_clicked, right_clicked);
+
+		if (opened)
 		{
-			if (!curr_file->selected)
-				AddToSelectedFiles(curr_file);
-			else
-				RemoveFromSelectedFiles(curr_file);
-
-			disable_button_up = true;
-		}
-
-		// If shift is pressed do fill gap selection
-		else if ((App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT) || App->input->GetKeyRepeat(SDL_SCANCODE_RSHIFT)) && ImGui::IsItemClicked(0))
-		{
-
-		}
-		// Monoselection
-		else
-		{
-			if ((left_clicked || right_clicked) && !curr_file->selected)
-			{
-				RemoveAllFromSelectedFiles();
-				AddToSelectedFiles(*it);
-
-				disable_button_up = true;
-			}
-			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && curr_file->selected && selected_files_count == 1)
-			{
-				if (!disable_button_up)
-				{
-					RemoveFromSelectedFiles(*it);
-				}
-				else
-					disable_button_up = false;
-			}
-			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered())
-			{
-				if (!disable_button_up)
-				{
-					if (selected_files_count > 1)
-					{
-						RemoveAllFromSelectedFiles();
-						AddToSelectedFiles(*it);
-					}
-				}
-				else
-					disable_button_up = false;
-			}
-
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow())
-			{
-				RemoveAllFromSelectedFiles();
-			}
-
-			DrawFilesPopup(left_clicked, right_clicked);
-
-			if (opened)
-			{
-				ImGui::TreePop();
-			}
+			ImGui::TreePop();
 		}
 	}
 }
@@ -269,6 +215,66 @@ void ExplorerWindow::FoldersInput(const std::string & folder, bool left_clicked,
 	}
 }
 
+void ExplorerWindow::FilesInput(ExplorerFile * file, bool left_clicked, bool right_clicked)
+{
+	uint selected_files_count = selected_files.size();
+
+	// Input
+	if ((App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL)) && ImGui::IsItemClicked(0))
+	{
+		if (!file->selected)
+			AddToSelectedFiles(file);
+		else
+			RemoveFromSelectedFiles(file);
+
+		disable_button_up = true;
+	}
+
+	// If shift is pressed do fill gap selection
+	else if ((App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT) || App->input->GetKeyRepeat(SDL_SCANCODE_RSHIFT)) && ImGui::IsItemClicked(0))
+	{
+
+	}
+	// Monoselection
+	else
+	{
+		if ((left_clicked || right_clicked) && !file->selected)
+		{
+			RemoveAllFromSelectedFiles();
+			AddToSelectedFiles(file);
+
+			disable_button_up = true;
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && file->selected && selected_files_count == 1)
+		{
+			if (!disable_button_up)
+			{
+				RemoveFromSelectedFiles(file);
+			}
+			else
+				disable_button_up = false;
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered())
+		{
+			if (!disable_button_up)
+			{
+				if (selected_files_count > 1)
+				{
+					RemoveAllFromSelectedFiles();
+					AddToSelectedFiles(file);
+				}
+			}
+			else
+				disable_button_up = false;
+		}
+
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow())
+		{
+			RemoveAllFromSelectedFiles();
+		}
+	}
+}
+
 void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 {
 	std::vector<ExplorerFile*> selected = GetSelectedFiles();
@@ -308,6 +314,14 @@ void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 			}
 		}
 
+		if (ImGui::Button("Delete"))
+		{
+			for (std::vector<ExplorerFile*>::iterator it = selected.begin(); it != selected.end(); ++it)
+			{
+				App->resource->UnloadAssetFromEngine((*it)->dfp.file_path.c_str());
+				update_folders = true;
+			}
+		}
 
 		ImGui::EndPopup();
 	}
@@ -359,6 +373,25 @@ void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 
 		ImGui::EndPopup();
 	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN && !ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow())
+	{
+		ImGui::OpenPopup("CreatePopup");
+	}
+
+	if (ImGui::BeginPopup("CreatePopup"))
+	{
+		if (ImGui::Button("Create Script"))
+		{
+			App->resource->CreateScript(App->resource->GetCurrentAssetsPath().c_str(), "NewScript");
+			ImGui::CloseCurrentPopup();
+
+			update_folders = true;
+		}
+
+		ImGui::EndPopup();
+	}
+
 }
 
 void ExplorerWindow::AddToSelectedFiles(ExplorerFile* add)

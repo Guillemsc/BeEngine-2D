@@ -187,7 +187,7 @@ bool ScriptingObjectCompiler::SetScriptCode(const char * script_filepath, std::s
 	return ret;
 }
 
-bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_path, const char* name, std::string& created_asset_filepath)
+bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char* save_path, const char* name, std::string& created_asset_filepath)
 {
 	bool ret = false;
 
@@ -199,9 +199,11 @@ bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char * save_path, c
 			std::string new_filepath;
 			if (App->file_system->FileRename(resultant_path.c_str(), name, true, new_filepath))
 			{
+				DecomposedFilePath dp = App->file_system->DecomposeFilePath(new_filepath.c_str());
+
 				std::string code = GetScriptCode(new_filepath.c_str());
 
-				code = TextReplace(code, "#SCRIPTNAME#", name);
+				code = TextReplace(code, "#SCRIPTNAME#", dp.file_name.c_str());
 
 				SetScriptCode(new_filepath.c_str(), code.c_str());
 
