@@ -79,6 +79,9 @@ bool ModuleScripting::Awake()
 	scripting_assembly = CreateAssembly(scripting_assembly_path.c_str());
 	scripting_internal_assembly = CreateAssembly(scripting_internal_assembly_path.c_str());
 
+	std::string base_libs_folder = assembly_base_path + "base_libs\\";
+	base_libs = App->file_system->GetFilesInPath(base_libs_folder.c_str());
+
 	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
@@ -261,6 +264,10 @@ void ModuleScripting::DestroyAssembly(ScriptingAssembly* assembly)
 std::vector<ScriptingAssembly*> ModuleScripting::GetScriptingAssemblys() const
 {
 	return assemblys;
+}
+std::vector<std::string> ModuleScripting::GetBaseLibs() const
+{
+	return base_libs;
 }
 //
 //bool ModuleScripting::CompileScript(const char * filepath, std::string & compile_errors)
@@ -502,10 +509,6 @@ void ModuleScripting::InitScriptingSolution()
 
 	solution_manager->RemoveAllAssemblys();
 	solution_manager->RemoveAllScripts();
-
-	std::string base_libs_folder = assembly_base_path + "base_libs\\";
-
-	std::vector<std::string> base_libs = App->file_system->GetFilesInPath(base_libs_folder.c_str());
 
 	for (std::vector<std::string>::iterator it = base_libs.begin(); it != base_libs.end(); ++it)
 	{

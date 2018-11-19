@@ -30,10 +30,28 @@ void ConsoleLog(ConsoleLogType type, const char file[], int line, const char * f
 	va_end(ap);
 	sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", file, line, tmp_string);
 
-	ConsoleLogLine log;
-	log.type = type;
-	log.text = tmp_string;
+	ConsoleLogLine log(tmp_string, type);
 
 	if (App != nullptr)
 		App->AddConsoleLog(log);
+}
+
+ConsoleLogLine::ConsoleLogLine()
+{
+}
+
+ConsoleLogLine::ConsoleLogLine(const char * _message, const ConsoleLogType & _type)
+{
+	message = _message;
+	type = _type;
+}
+
+std::string ConsoleLogLine::GetLogMessage() const
+{
+	return message;
+}
+
+ConsoleLogType ConsoleLogLine::GetType() const
+{
+	return type;
 }

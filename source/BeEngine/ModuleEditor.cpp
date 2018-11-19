@@ -17,6 +17,7 @@
 #include "HierarchyWindow.h"
 #include "InspectorWindow.h"
 #include "ExplorerWindow.h"
+#include "ConsoleWindow.h"
 #include "imgui_docking.h"
 
 ModuleEditor::ModuleEditor()
@@ -52,6 +53,7 @@ bool ModuleEditor::Awake()
 	AddEditorWindow("Hierarchy", new HierarchyWindow());
 	inspector_window = (InspectorWindow*)AddEditorWindow("Inspector", new InspectorWindow());
 	explorer_window = (ExplorerWindow*)AddEditorWindow("Explorer", new ExplorerWindow());
+	console_window = (ConsoleWindow*)AddEditorWindow("Console", new ConsoleWindow());
 
 	LoadDockingProfiles();
 

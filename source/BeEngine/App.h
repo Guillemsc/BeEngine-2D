@@ -74,7 +74,7 @@ public:
 	std::vector<const char*> GetInternalLogs() const;
 	void ClearInternalLogs();
 	void AddConsoleLog(ConsoleLogLine text);
-	std::list<ConsoleLogLine> GetConsoleLogs() const;
+	std::vector<ConsoleLogLine> GetConsoleLogs() const;
 	void ClearConsoleLogs();
 
 private:
@@ -116,7 +116,7 @@ private:
 	std::list<Module*> modules;
 
 	std::vector<const char*>  internal_logs;
-	std::list<ConsoleLogLine> console_logs;
+	std::vector<ConsoleLogLine> console_logs;
 
 	bool		       to_quit = false;
 

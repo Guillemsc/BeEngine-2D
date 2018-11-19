@@ -238,7 +238,8 @@ bool ModuleResource::LoadFileToEngine(const char * filepath)
 
 		if (can_load)
 		{
-			std::string new_path;
+			std::string new_path = filepath;
+
 			bool can_load = App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), false, new_path);
 
 			if (can_load)

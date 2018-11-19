@@ -101,6 +101,7 @@
     <ClInclude Include="Algorithm\SAT.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="ComponentTransfrom.h" />
+    <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DockingSpace.h" />
     <ClInclude Include="Event.h" />
@@ -244,6 +245,7 @@
     <ClCompile Include="Algorithm\GJK.cpp" />
     <ClCompile Include="Algorithm\Random\LCG.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DockingSpace.cpp" />
     <ClCompile Include="ExplorerWindow.cpp" />

@@ -6,6 +6,7 @@
 #include "ScriptingObjectCompiler.h"
 #include "ScriptingObjectSolutionManager.h"
 #include "Functions.h"
+#include "ModuleJson.h"
 
 ResourceScript::ResourceScript() : Resource(ResourceType::SCRIPT)
 {
@@ -35,14 +36,7 @@ bool ResourceScript::ExistsOnLibrary(std::string uid, std::string & library_file
 
 void ResourceScript::ExportToLibrary(std::string uid)
 {
-	std::string library_path = App->resource->GetLibraryPathFromResourceType(GetType());
-
-	std::string dll_output_path = library_path + uid + ".dll";
-
-	if (App->file_system->FileExists(dll_output_path.c_str()))
-		App->file_system->FileDelete(dll_output_path.c_str());
-
-	compiles = App->scripting->compiler->CompileScript(GetAssetFilepath().c_str(), dll_output_path.c_str(), compile_errors);
+	Compile();
 
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());
 }
@@ -50,6 +44,9 @@ void ResourceScript::ExportToLibrary(std::string uid)
 void ResourceScript::ImportFromLibrary()
 {
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());
+
+	if(GetCodeDifferentFromMeta())
+		Compile();
 }
 
 void ResourceScript::OnRemoveAsset()
@@ -79,5 +76,55 @@ void ResourceScript::Compile()
 
 	std::string dll_output_path = library_path + GetUID() + ".dll";
 
+	if (App->file_system->FileExists(dll_output_path.c_str()))
+		App->file_system->FileDelete(dll_output_path.c_str());
+
 	compiles = App->scripting->compiler->CompileScript(GetAssetFilepath().c_str(), dll_output_path.c_str(), compile_errors);
+
+	SaveCodeOnMeta();
+
+	if (!compiles)
+	{
+		for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
+		{
+			CONSOLE_ERROR((*it).c_str());
+		}
+	}
+}
+
+void ResourceScript::SaveCodeOnMeta()
+{
+	JSON_Doc* doc = App->json->LoadJSON(GetMetaFilepath().c_str());
+
+	if (doc != nullptr)
+	{
+		std::string code = App->scripting->compiler->GetScriptCode(GetAssetFilepath().c_str());
+
+		doc->SetString("code", code.c_str());
+
+		doc->Save();
+
+		App->json->UnloadJSON(doc);
+	}
+}
+
+bool ResourceScript::GetCodeDifferentFromMeta()
+{
+	bool ret = false;
+
+	JSON_Doc* doc = App->json->LoadJSON(GetMetaFilepath().c_str());
+
+	if (doc != nullptr)
+	{
+		std::string code = App->scripting->compiler->GetScriptCode(GetAssetFilepath().c_str());
+
+		std::string meta_code = doc->GetString("code");
+
+		if (meta_code.compare(code) != 0)
+			ret = true;
+
+		App->json->UnloadJSON(doc);
+	}
+
+	return ret;
 }

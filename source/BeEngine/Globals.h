@@ -7,6 +7,7 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <string>
 
 typedef unsigned int uint;
 typedef unsigned char uchar;
@@ -18,10 +19,18 @@ enum ConsoleLogType
 	INTERNAL_LOG_ERROR,
 };
 
-struct ConsoleLogLine
+class ConsoleLogLine
 {
-	const char* text;
-	ConsoleLogType type;
+public:
+	ConsoleLogLine();
+	ConsoleLogLine(const char* message, const ConsoleLogType& type);
+
+	std::string GetLogMessage() const;
+	ConsoleLogType GetType() const;
+
+private:
+	std::string message;
+	ConsoleLogType type = ConsoleLogType::INTERNAL_LOG_INFO;
 };
 
 // Deletes a buffer

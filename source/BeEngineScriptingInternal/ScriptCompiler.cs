@@ -52,7 +52,11 @@ namespace BeEngine
                 {
                     CompilerError curr_error = results.Errors[i];
 
-                    ret.Add(curr_error.ErrorText);
+                    string error = curr_error.FileName + " at (" + curr_error.Line + "," + 
+                        curr_error.Column + ")," + (curr_error.IsWarning ? "Warning: " : " Error: ") + 
+                        curr_error.ErrorNumber + ": " + curr_error.ErrorText + ".";
+
+                    ret.Add(error);
                 }
 
                 code_provider.Dispose();

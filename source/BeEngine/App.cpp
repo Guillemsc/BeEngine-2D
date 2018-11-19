@@ -413,7 +413,7 @@ void Application::AddConsoleLog(ConsoleLogLine text)
 	console_logs.push_back(text);
 }
 
-std::list<ConsoleLogLine> Application::GetConsoleLogs() const
+std::vector<ConsoleLogLine> Application::GetConsoleLogs() const
 {
 	return console_logs;
 }

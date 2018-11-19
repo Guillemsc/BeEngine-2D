@@ -141,11 +141,31 @@ DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
 	return ret;
 }
 
+bool FileSystem::FilePathInsideFolder(std::string file_path, std::string folder_path)
+{
+	bool ret = true;
+
+	if (file_path.size() > folder_path.size())
+	{
+		for (int i = 0; i < folder_path.size(); ++i)
+		{
+			if (folder_path[i] != file_path[i])
+			{
+				ret = false;
+			}
+		}
+	}
+	else
+		ret = false;
+
+	return ret;
+}
+
 std::string FileSystem::SelectFolderDialog(bool& canceled)
 {
 	std::string ret = "";
 
-	const char* folder = tinyfd_selectFolderDialog("asd", NULL);
+	const char* folder = tinyfd_selectFolderDialog("Selecting Folder...", NULL);
 
 	if (folder != nullptr)
 	{
@@ -165,7 +185,7 @@ std::string FileSystem::SelectFileDilog(bool & canceled, const char* filter[])
 	std::string ret;
 
 	//const char* lFilterPatterns[2] = { "*.scene; *.jscene" };
-	const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, filter, NULL, 0);
+	const char* path = tinyfd_openFileDialog("Load File...", NULL, 1, filter, NULL, 0);
 
 	if (path == nullptr)
 		canceled = true;
@@ -203,33 +223,17 @@ int FileSystem::GetFileNameNumber(const char * filename)
 	std::string name = filename;
 
 	std::string number_str;
-	bool adding = false;
 
-	for (int i = 0; i < name.size(); ++i)
+	for (int i = name.size() - 1; i >= 0; --i)
 	{
-		if (name[i] == '(')
-		{
-			adding = true;
-			number_str.clear();
-			continue;
-		}
+		char curr_char = name[i];
 
-		if (name[i] == ')')
+		if (isdigit(curr_char))
 		{
-			adding = false;
+			number_str.insert(0, 1, curr_char);
 		}
-
-		if (adding)
-		{
-			if (!isdigit(name[i]))
-			{
-				number_str.clear();
-				adding = false;
-				continue;
-			}
-
-			number_str += name[i];
-		}
+		else
+			break;
 	}
 
 	if (number_str.size() > 0)
@@ -244,34 +248,15 @@ std::string FileSystem::SetFileNameNumber(const char * filename, int number)
 {
 	std::string ret = filename;
 
-	if (GetFileNameNumber(filename) != -1)
-	{
-		int start = 0;
-		bool has_start = false;
-		bool has_end = false;
-		int end = 0;
+	int curr_number = GetFileNameNumber(filename);
+	int curr_number_size = std::to_string(curr_number).size();
 
-		for (int i = ret.size() - 1; i >= 0; --i)
-		{
-			if (ret[i] == ')')
-			{
-				start = i;
-				has_start = true;
-			}
+	if(curr_number != -1)
+		ret = ret.substr(0, ret.size() - curr_number_size);
+	
+	std::string new_number_str = std::to_string(number);
 
-			if (ret[i] == '(' && has_start)
-			{
-				end = i;
-				has_end = true;
-				break;
-			}
-		}
-
-		if (has_start && has_end)
-			ret = ret.substr(0, end);
-	}
-
-	ret += ('(' + std::to_string(number) + ')');
+	ret += new_number_str;
 
 	return ret;
 }

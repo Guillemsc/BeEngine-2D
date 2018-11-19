@@ -111,6 +111,8 @@ public:
 	void DestroyAssembly(ScriptingAssembly* assembly);
 	std::vector<ScriptingAssembly*> GetScriptingAssemblys() const;
 
+	std::vector<std::string> GetBaseLibs() const;
+
 	// Script management
 	MonoClass* GetMonoClass(MonoObject* obj);
 	MonoType* GetMonoType(MonoClass* mono_class);
@@ -156,7 +158,9 @@ private:
 	MonoDomain* base_domain = nullptr;
 	
 	std::vector<ScriptingObject*> scripting_objects;
+
 	std::vector<ScriptingAssembly*> assemblys;
+	std::vector<std::string> base_libs;
 };
 
 #endif // !__MODULE_SCRIPTING_H__

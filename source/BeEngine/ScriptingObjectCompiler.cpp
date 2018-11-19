@@ -27,6 +27,7 @@ void ScriptingObjectCompiler::Start()
 			std::vector<ScriptingAssembly*> assemblys = App->scripting->GetScriptingAssemblys();
 
 			std::vector<MonoObject*> assembly_objects;
+
 			for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
 			{
 				const char* path = (*it)->GetPath();

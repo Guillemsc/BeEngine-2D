@@ -15,6 +15,7 @@ class ProgressWindow;
 class SceneWindow;
 class ExplorerWindow;
 class InspectorWindow;
+class ConsoleWindow;
 
 class EditorWindow
 {
@@ -143,6 +144,7 @@ public:
 	SceneWindow*     scene_window = nullptr;
 	InspectorWindow* inspector_window = nullptr;
 	ExplorerWindow*  explorer_window = nullptr;
+	ConsoleWindow*	 console_window = nullptr;
 
 private:
 	EditorState editor_state;

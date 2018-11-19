@@ -141,6 +141,9 @@ void Resource::EM_RenameAsset(const char * new_name)
 
 		std::string new_meta_name = new_df.file_name + "." + new_df.file_extension;
 
+		if (App->file_system->FileExists(new_meta_name.c_str()))
+			App->file_system->FileDelete(new_meta_name.c_str());
+
 		if (App->file_system->FileRename(meta_filepath.c_str(), new_meta_name.c_str(), false, meta_filepath))
 		{
 			OnRenameAsset(new_df.file_name.c_str(), last_name.c_str());
