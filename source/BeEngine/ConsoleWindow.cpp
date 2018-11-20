@@ -72,6 +72,57 @@ ImGuiWindowFlags ConsoleWindow::GetWindowFlags()
 	return ImGuiWindowFlags_MenuBar;
 }
 
+void ConsoleWindow::AddConsolePersonalLogs(const std::string & identifier)
+{
+	bool exists = false;
+	for (std::vector<ConsolePersonalLogs>::iterator it = personal_logs.begin(); it != personal_logs.end(); ++it)
+	{
+		if ((*it).personal_identifier.compare(identifier) == 0)
+		{
+			exists = true;
+			break;
+		}
+	}
+
+	if (!exists)
+	{
+		ConsolePersonalLogs pl;
+		pl.personal_identifier = identifier;
+
+		personal_logs.push_back(pl);
+	}
+
+}
+
+void ConsoleWindow::AddPersonalLog(const std::string & identifier, const char * message, const ConsoleLogType & type)
+{
+	for (std::vector<ConsolePersonalLogs>::iterator it = personal_logs.begin(); it != personal_logs.end(); ++it)
+	{
+		if ((*it).personal_identifier.compare(identifier) == 0)
+		{
+			ConsoleLogLine cl(message, type);
+			(*it).logs.push_back(cl);
+
+			if (CanLogType(type))
+			{
+				(*it).logs_shown.push_back(cl);
+			}
+		}
+	}
+}
+
+void ConsoleWindow::ClearPesonalLogs(const std::string & identifier)
+{
+	for (std::vector<ConsolePersonalLogs>::iterator it = personal_logs.begin(); it != personal_logs.end(); ++it)
+	{
+		if ((*it).personal_identifier.compare(identifier) == 0)
+		{
+			(*it).logs.clear();
+			(*it).logs_shown.clear();
+		}
+	}
+}
+
 void ConsoleWindow::AddLog(const ConsoleLogLine & log)
 {
 	console_logs.push_back(log);
@@ -102,6 +153,17 @@ void ConsoleWindow::UpdateShownMessages()
 		if (CanLogType((*it).GetType()))
 			console_logs_shown.push_back((*it));
 	}
+
+	for (std::vector<ConsolePersonalLogs>::iterator it = personal_logs.begin(); it != personal_logs.end(); ++it)
+	{
+		(*it).logs_shown.clear();
+
+		for (std::vector<ConsoleLogLine>::iterator l = (*it).logs.begin(); l != (*it).logs.end(); ++l)
+		{
+			if (CanLogType((*l).GetType()))
+				(*it).logs_shown.push_back(*l);
+		}
+	}
 }
 
 bool ConsoleWindow::CanLogType(const ConsoleLogType & type)
@@ -120,23 +182,58 @@ bool ConsoleWindow::CanLogType(const ConsoleLogType & type)
 	return ret;
 }
 
-void ConsoleWindow::DrawLogs()
+bool ConsoleWindow::PersonalLogExists(const std::string & identifier)
 {
-	for (std::vector<ConsoleLogLine>::iterator it = console_logs_shown.begin(); it != console_logs_shown.end(); ++it)
+	bool ret = false;
+
+	for (std::vector<ConsolePersonalLogs>::iterator it = personal_logs.begin(); it != personal_logs.end(); ++it)
 	{
-		switch ((*it).GetType())
+		if ((*it).personal_identifier.compare(identifier) == 0)
 		{
-		case ConsoleLogType::INTERNAL_LOG_INFO:
-			ImGui::TextColored(ImVec4(1, 1, 1, 1), (*it).GetLogMessage().c_str());
-			break;
-		case ConsoleLogType::INTERNAL_LOG_WARNING:
-			ImGui::TextColored(ImVec4(255.0f / 255.0f, 153.0f / 255.0f, 55.0f / 255.0f, 1), (*it).GetLogMessage().c_str());
-			break;
-		case ConsoleLogType::INTERNAL_LOG_ERROR:
-			ImGui::TextColored(ImVec4(255.0f /255.0f, 55.0f/255.0f, 55.0f /255.0f, 1), (*it).GetLogMessage().c_str());
-			break;
-		default:
+			ret = true;
 			break;
 		}
 	}
+
+	return ret;
+}
+
+void ConsoleWindow::DrawLogs()
+{
+	// Normal logs
+	for (std::vector<ConsoleLogLine>::iterator it = console_logs_shown.begin(); it != console_logs_shown.end(); ++it)
+	{
+		DrawLog(*it);
+	}
+
+	// Personal logs
+	for (std::vector<ConsolePersonalLogs>::iterator it = personal_logs.begin(); it != personal_logs.end(); ++it)
+	{
+		for (std::vector<ConsoleLogLine>::iterator l = (*it).logs.begin(); l != (*it).logs.end(); ++l)
+		{
+			DrawLog(*l);
+		}
+	}
+}
+
+void ConsoleWindow::DrawLog(const ConsoleLogLine & log)
+{
+	switch (log.GetType())
+	{
+	case ConsoleLogType::INTERNAL_LOG_INFO:
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), log.GetLogMessage().c_str());
+		break;
+	case ConsoleLogType::INTERNAL_LOG_WARNING:
+		ImGui::TextColored(ImVec4(255.0f / 255.0f, 153.0f / 255.0f, 55.0f / 255.0f, 1), log.GetLogMessage().c_str());
+		break;
+	case ConsoleLogType::INTERNAL_LOG_ERROR:
+		ImGui::TextColored(ImVec4(255.0f / 255.0f, 55.0f / 255.0f, 55.0f / 255.0f, 1), log.GetLogMessage().c_str());
+		break;
+	default:
+		break;
+	}
+}
+
+ConsolePersonalLogs::ConsolePersonalLogs()
+{
 }

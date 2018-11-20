@@ -137,6 +137,9 @@ public:
 	std::vector<MonoObject*> UnboxArray(MonoClass* mono_class, MonoArray* val);
 	uint UnboxArrayCount(MonoArray* val);
 
+	// Compiling
+	void CompileScripts();
+
 private:
 	void InitScriptingSolution();
 	void UpdateScriptingObjects();

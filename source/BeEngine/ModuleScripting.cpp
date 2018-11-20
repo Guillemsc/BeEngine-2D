@@ -7,6 +7,8 @@
 #include "ScriptingObjectCompiler.h"
 #include "ScriptingObjectSolutionManager.h"
 #include "ScriptingObjectFileWatcher.h"
+#include "ModuleEditor.h"
+#include "ConsoleWindow.h"
 #include <mono/utils/mono-logger.h>
 
 // Remove this 
@@ -132,6 +134,8 @@ bool ModuleScripting::Awake()
 bool ModuleScripting::Start()
 {
 	bool ret = true;
+
+	App->editor->console_window->AddConsolePersonalLogs("scripting");
 
 	return ret;
 }
@@ -501,6 +505,18 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 	}
 
 	return ret;
+}
+
+void ModuleScripting::CompileScripts()
+{
+	std::vector<std::string> compile_errors;
+	App->scripting->compiler->CompileScripts(compile_errors);
+
+	App->editor->console_window->ClearPesonalLogs("scripting");
+	for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
+	{
+		App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_ERROR);
+	}
 }
 
 void ModuleScripting::InitScriptingSolution()

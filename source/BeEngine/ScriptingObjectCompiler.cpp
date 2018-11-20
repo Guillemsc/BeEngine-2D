@@ -2,6 +2,8 @@
 #include "App.h"
 #include "ModuleFileSystem.h"
 #include "Functions.h"
+#include "ModuleInput.h"
+#include "ModuleResource.h"
 
 ScriptingObjectCompiler::ScriptingObjectCompiler() : ScriptingObject()
 {
@@ -52,6 +54,11 @@ void ScriptingObjectCompiler::Start()
 	}
 }
 
+void ScriptingObjectCompiler::Update()
+{
+
+}
+
 void ScriptingObjectCompiler::CleanUp()
 {
 	if (script_compiler_instance != nullptr)
@@ -61,7 +68,63 @@ void ScriptingObjectCompiler::CleanUp()
 	}
 }
 
-bool ScriptingObjectCompiler::CompileScript(const char * script_filepath, const char* dll_output_path, std::vector<std::string>& compile_errors)
+void ScriptingObjectCompiler::SetScriptsAssemblyOutputFilepath(const char * set)
+{
+	scripts_assembly_output_filepath = set;
+}
+
+bool ScriptingObjectCompiler::AddScript(const char* script_filepath)
+{
+	bool ret = false;
+
+	if (App->file_system->FileExists(script_filepath))
+	{
+		if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
+		{
+			if (script_compiler_instance != nullptr)
+			{
+				MonoObject* path_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
+
+				void* args[1];
+				args[0] = path_boxed;
+
+				MonoObject* ret_obj = nullptr;
+				if (script_compiler_instance->InvokeMonoMethod("AddScript", args, 1, ret_obj))
+				{
+					ret = App->scripting->UnboxInt(ret_obj);
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingObjectCompiler::RemoveScript(const char* script_filepath)
+{
+	bool ret = false;
+	
+	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
+	{
+		if (script_compiler_instance != nullptr)
+		{
+			MonoObject* path_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
+
+			void* args[1];
+			args[0] = path_boxed;
+
+			MonoObject* ret_obj = nullptr;
+			if (script_compiler_instance->InvokeMonoMethod("RemoveScript", args, 1, ret_obj))
+			{
+				ret = App->scripting->UnboxBool(ret_obj);
+			}
+		}
+	}
+	
+	return ret;
+}
+
+bool ScriptingObjectCompiler::CompileScripts(std::vector<std::string>& compile_errors)
 {	
 	bool ret = false;
 
@@ -69,15 +132,13 @@ bool ScriptingObjectCompiler::CompileScript(const char * script_filepath, const 
 	{
 		if (script_compiler_instance != nullptr)
 		{
-			MonoObject* script_path_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
-			MonoObject* dll_output_boxed = (MonoObject*)App->scripting->BoxString(dll_output_path);
+			MonoObject* dll_output_boxed = (MonoObject*)App->scripting->BoxString(scripts_assembly_output_filepath.c_str());
 
-			void* args[2];
-			args[0] = script_path_boxed;
-			args[1] = dll_output_boxed;
+			void* args[1];
+			args[0] = dll_output_boxed;
 
 			MonoObject* ret_obj = nullptr;
-			if (script_compiler_instance->InvokeMonoMethod("CompileScript", args, 2, ret_obj))
+			if (script_compiler_instance->InvokeMonoMethod("CompileScripts", args, 1, ret_obj))
 			{
 				if (ret_obj != nullptr)
 				{

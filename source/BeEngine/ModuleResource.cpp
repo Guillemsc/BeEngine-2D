@@ -2,8 +2,6 @@
 #include "Functions.h"
 #include "App.h"
 #include "ModuleFileSystem.h"
-#include "ResourceTextureLoader.h"
-#include "ResourceScriptLoader.h"
 #include "ModuleEvent.h"
 #include "ModuleProject.h"
 #include "ModuleEditor.h"
@@ -348,6 +346,8 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 {
 	bool ret = false;
 
+	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
+
 	StopWatchingFolders();
 
 	bool can_load = App->resource->CanLoadFile(filepath);
@@ -361,13 +361,14 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 			if (exists)
 			{
 				Resource* loaded_res = nullptr;
-				App->resource->ExportAssetToLibrary(filepath);
-
-			}
+				App->resource->ExportAssetToLibrary(filepath);			}
 			else
 			{
 				UnloadAssetFromEngine(filepath);
 			}
+
+			if (dfp.file_extension_lower_case == "cs")
+				App->scripting->CompileScripts();
 		}
 		else
 		{
@@ -490,8 +491,8 @@ void ModuleResource::OnEvent(Event* ev)
 
 			CreateLibraryFolders();
 
-			LoadResourcesTimeSlicedTask* t = new LoadResourcesTimeSlicedTask();
-			App->time_sliced->StartTimeSlicedTask(t);
+			time_sliced_task_loading_resources = new LoadResourcesTimeSlicedTask();
+			App->time_sliced->StartTimeSlicedTask(time_sliced_task_loading_resources);
 
 			StartWatchingFolders();
 
@@ -499,6 +500,12 @@ void ModuleResource::OnEvent(Event* ev)
 		}
 	case EventType::TIME_SLICED_TASK_FINISHED:
 		{
+			EventTimeSlicedTaskFinished* ett = (EventTimeSlicedTaskFinished*)ev;
+
+			if (ett->GetTask() == time_sliced_task_loading_resources)
+			{
+				App->scripting->CompileScripts();
+			}
 
 			break;
 		}

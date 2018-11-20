@@ -38,28 +38,52 @@ namespace BeEngine
                 return ret;
             }
 
-            public string[] CompileScript(string script_path, string dll_output_path)
+            public bool AddScript(string add)
+            {
+                bool ret = false;
+
+                if (File.Exists(add) && !scripts.Contains(add))
+                    scripts.Add(add);
+
+                ret = true;
+                
+                return ret;
+            }
+
+            public bool RemoveScript(string remove)
+            {
+                bool ret = false;
+
+                scripts.Remove(remove);
+
+                return ret;
+            }
+
+            public string[] CompileScripts(string dll_output_path)
             {
                 List<string> ret = new List<string>();
 
-                compile_parameters.OutputAssembly = dll_output_path;
-
-                CSharpCodeProvider code_provider = new CSharpCodeProvider();
-
-                CompilerResults results = code_provider.CompileAssemblyFromFile(compile_parameters, script_path);
-
-                for (int i = 0; i < results.Errors.Count; ++i)
+                if (compile_parameters != null)
                 {
-                    CompilerError curr_error = results.Errors[i];
+                    compile_parameters.OutputAssembly = dll_output_path;
 
-                    string error = curr_error.FileName + " at (" + curr_error.Line + "," + 
-                        curr_error.Column + ")," + (curr_error.IsWarning ? "Warning: " : " Error: ") + 
-                        curr_error.ErrorNumber + ": " + curr_error.ErrorText + ".";
+                    CSharpCodeProvider code_provider = new CSharpCodeProvider();
+ 
+                    CompilerResults results = code_provider.CompileAssemblyFromFile(compile_parameters, scripts.ToArray());
 
-                    ret.Add(error);
+                    for (int i = 0; i < results.Errors.Count; ++i)
+                    {
+                        CompilerError curr_error = results.Errors[i];
+
+                        string error = curr_error.FileName + " at (" + curr_error.Line + "," +
+                            curr_error.Column + ")," + (curr_error.IsWarning ? "Warning: " : " Error: ") +
+                            curr_error.ErrorNumber + ": " + curr_error.ErrorText + ".";
+
+                        ret.Add(error);
+                    }
+
+                    code_provider.Dispose();
                 }
-
-                code_provider.Dispose();
 
                 return ret.ToArray();
             }
@@ -126,6 +150,8 @@ namespace BeEngine
             }
 
             private List<string> ref_assemblies = new List<string>();
+            List<string> scripts = new List<string>();
+
             CompilerParameters compile_parameters = new CompilerParameters();
         }
     }

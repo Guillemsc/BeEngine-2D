@@ -25,12 +25,6 @@ public:
 	void OnRemoveAsset();
 	void OnRenameAsset(const char* new_name, const char* last_name);
 
-	void Compile();
-
-private:
-	void SaveCodeOnMeta();
-	bool GetCodeDifferentFromMeta();
-
 private:
 	bool compiles = false;
 

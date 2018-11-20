@@ -12,6 +12,7 @@
 #include "ModuleTimeSlicedTask.h"
 
 class Event;
+class LoadResourcesTimeSlicedTask;
 
 class ModuleResource : public Module
 {
@@ -93,6 +94,8 @@ private:
 	std::vector<std::string> files_changed_to_check;
 
 	int watching_folder_index = 0;
+
+	LoadResourcesTimeSlicedTask* time_sliced_task_loading_resources = nullptr;
 };
 
 class LoadResourcesTimeSlicedTask : public TimeSlicedTask
