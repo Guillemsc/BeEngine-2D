@@ -420,6 +420,72 @@ bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
 	return ret;
 }
 
+bool ModuleResource::MoveAsset(const char * filepath, const char * new_path)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	if (App->file_system->FolderExists(new_path))
+	{
+		Resource* res = GetResourceFromAssetFile(filepath);
+
+		if (res != nullptr)
+		{
+			res->EM_MoveAsset(new_path);
+
+			ret = true;
+		}
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
+bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	if (App->file_system->FolderExists(new_path))
+	{
+		DecomposedFilePath curr_folder_dfp = App->file_system->DecomposeFilePath(folder);
+
+		std::string new_path_created;
+		App->file_system->CreateFolder(new_path, curr_folder_dfp.folder_name.c_str(), true, new_path_created);
+
+		std::vector<std::string> files_folders_on_folder = App->file_system->GetFilesAndFoldersInPath(folder);
+
+		for (std::vector<std::string>::iterator it = files_folders_on_folder.begin(); it != files_folders_on_folder.end(); ++it)
+		{
+			DecomposedFilePath dfp = App->file_system->DecomposeFilePath((*it));
+
+			if (dfp.its_folder)
+			{
+				MoveAssetsFolder(dfp.path.c_str(), new_path_created.c_str());
+			}
+			else
+			{
+				bool moved = MoveAsset(dfp.file_path.c_str(), new_path_created.c_str());
+
+				if (!moved)
+				{
+					if (App->file_system->FileExists(dfp.file_path.c_str()))
+						App->file_system->FileDelete(dfp.file_path.c_str());
+				}
+			}
+		}
+
+		App->file_system->FolderDelete(folder);
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
 bool ModuleResource::CreateScript(const char * filepath, const char * name)
 {
 	bool ret = false;
@@ -484,8 +550,8 @@ void ModuleResource::OnEvent(Event* ev)
 	{
 	case EventType::PROJECT_SELECTED:
 		{
-			assets_folder = App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "assets");
-			library_folder = App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "library");
+			App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "assets", false, assets_folder);
+			App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "library", false, library_folder);
 
 			current_assets_folder = assets_folder;
 
@@ -505,6 +571,8 @@ void ModuleResource::OnEvent(Event* ev)
 			if (ett->GetTask() == time_sliced_task_loading_resources)
 			{
 				App->scripting->CompileScripts();
+
+				MoveAssetsFolder("C:\\Users\\Guillem\\Desktop\\Test\\assets\\ToCopy\\", "C:\\Users\\Guillem\\Desktop\\Test\\assets\\FolderToPut\\");
 			}
 
 			break;

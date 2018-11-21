@@ -32,6 +32,7 @@ public:
 	void EM_ImportFromLibrary();
 	void EM_RemoveAsset();
 	void EM_RenameAsset(const char* new_name);
+	void EM_MoveAsset(const char* new_path);
 
 	// Library standalone management (Game Mode)
 	void GM_InitResource(const char* library_filepath);
@@ -56,6 +57,7 @@ private:
 
 	virtual void OnRemoveAsset() = 0;
 	virtual void OnRenameAsset(const char* new_name, const char* last_name) = 0;
+	virtual void OnMoveAsset(const char* new_path, const char* last_path) = 0;
 
 private:
 	bool has_data = false;

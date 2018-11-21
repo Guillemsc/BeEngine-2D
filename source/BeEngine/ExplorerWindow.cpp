@@ -24,11 +24,13 @@ void ExplorerWindow::OnEvent(Event * ev)
 	case EventType::WATCH_FILE_FOLDER:
 
 		update_folders = true;
+		update_files = true;
 
 		break;
 	case EventType::PROJECT_SELECTED:
 
 		update_folders = true;
+		update_files = true;
 
 		break;
 	default:
@@ -44,27 +46,47 @@ void ExplorerWindow::Start()
 
 void ExplorerWindow::CleanUp()
 {
-	ClearFloldersAndFiles();
+	ClearFolders();
+	ClearFiles();
 }
 
 void ExplorerWindow::DrawEditor()
 {
+	float2 win_size = GetWindowSize();
+
 	if (update_folders)
 	{
-		UpdateFoldersAndFiles();
+		UpdateFolders();
 
 		update_folders = false;
 	}
 
+	if (update_files)
+	{
+		UpdateFiles();
+
+		update_files = false;
+	}
+
 	if (App->project->GetCurrProjectIsSelected())
 	{
-		ImGui::Columns(2);
+		ImGui::BeginChild("FoldersChild", ImVec2(win_size.x * 0.3f, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
 
 		DrawFoldersColumn();
 
-		ImGui::NextColumn();
+		DrawFoldersPopupExtern();
+
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("FilesChild", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
 
 		DrawFilesColumn();
+
+		DrawFilesPopupExtern();
+
+		ImGui::EndChild();
 	}
 }
 
@@ -73,59 +95,76 @@ ImGuiWindowFlags ExplorerWindow::GetWindowFlags()
 	return ImGuiWindowFlags_MenuBar;
 }
 
-void ExplorerWindow::UpdateFoldersAndFiles()
+void ExplorerWindow::UpdateFolders()
 {
-	ClearFloldersAndFiles();
+	ClearFolders();
 
-	folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
-	
-	cur_files.clear();
-	
+	Folder folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
+
+	CreateExplorerFolderRecursive(folder_tree, nullptr);
+}
+
+void ExplorerWindow::ClearFolders()
+{
+	RemoveAllFromSelectedFolders();
+	DestroyAllExplorerFolders();
+}
+
+void ExplorerWindow::UpdateFiles()
+{
+	ClearFiles();
+
 	std::vector<std::string> selected_folder_files_paths = App->file_system->GetFilesAndFoldersInPath(App->resource->GetCurrentAssetsPath().c_str());
-	
+
 	for (std::vector<std::string>::iterator it = selected_folder_files_paths.begin(); it != selected_folder_files_paths.end(); ++it)
 	{
 		ExplorerFile* ef = new ExplorerFile();
-	
+
 		if (!App->resource->IsMeta((*it).c_str()))
 		{
 			ef->dfp = App->file_system->DecomposeFilePath((*it).c_str());
 
 			ef->selected = false;
-	
-			cur_files.push_back(ef);
+
+			cur_files_folders.push_back(ef);
 		}
 	}
 }
 
-void ExplorerWindow::ClearFloldersAndFiles()
+void ExplorerWindow::ClearFiles()
 {
 	RemoveAllFromSelectedFiles();
 
-	folder_tree.valid = false;
-
-	for (std::vector<ExplorerFile*>::iterator it = cur_files.begin(); it != cur_files.end(); ++it)
+	for (std::vector<ExplorerFile*>::iterator it = cur_files_folders.begin(); it != cur_files_folders.end(); ++it)
 	{
 		RELEASE(*it);
 	}
 
-	cur_files.clear();
+	cur_files_folders.clear();
 }
 
 void ExplorerWindow::DrawFoldersColumn()
 {
-	DrawFoldersRecursive(folder_tree);
+	for (std::vector<ExplorerFolder*>::iterator it = curr_folders.begin(); it != curr_folders.end(); ++it)
+	{
+		DrawFoldersRecursive((*it));
+	}
 }
 
 void ExplorerWindow::DrawFilesColumn()
 {
 	uint selected_files_count = selected_files.size();
 
-	for (std::vector<ExplorerFile*>::iterator it = cur_files.begin(); it != cur_files.end(); ++it)
+	for (std::vector<ExplorerFile*>::iterator it = cur_files_folders.begin(); it != cur_files_folders.end(); ++it)
 	{
 		ExplorerFile* curr_file = (*it);
 
-		std::string name = curr_file->dfp.file_name + "." + curr_file->dfp.file_extension_lower_case;
+		std::string name = "";
+		
+		if (!curr_file->dfp.its_folder)
+			name = curr_file->dfp.file_name + "." + curr_file->dfp.file_extension_lower_case;
+		else
+			name = curr_file->dfp.folder_name;
 
 		uint flags = ImGuiTreeNodeFlags_Leaf;
 
@@ -145,7 +184,7 @@ void ExplorerWindow::DrawFilesColumn()
 
 		FilesInput(curr_file, left_clicked, right_clicked);
 
-		DrawFilesPopup(left_clicked, right_clicked);
+		DrawFilesPopupIntern(left_clicked, right_clicked);
 
 		if (opened)
 		{
@@ -154,22 +193,73 @@ void ExplorerWindow::DrawFilesColumn()
 	}
 }
 
-void ExplorerWindow::DrawFoldersRecursive(const Folder & folder)
+void ExplorerWindow::CreateExplorerFolderRecursive(const Folder & to_create, ExplorerFolder * parent)
+{
+	ExplorerFolder* ef = new ExplorerFolder();
+	ef->dfp = App->file_system->DecomposeFilePath(to_create.folder_path);
+	ef->selected = false;
+	ef->folder_name = to_create.folder_name;
+
+	if (parent != nullptr)
+	{
+		parent->childs.push_back(ef);
+	}
+	else
+	{
+		curr_folders.push_back(ef);
+	}
+
+	for (std::vector<Folder>::const_iterator it = to_create.folders.begin(); it != to_create.folders.end(); ++it)
+	{
+		CreateExplorerFolderRecursive((*it), ef);
+	}
+}
+
+void ExplorerWindow::DestroyAllExplorerFolders()
+{
+	std::vector<ExplorerFolder*> to_destroy;
+
+	for (std::vector<ExplorerFolder*>::iterator it = curr_folders.begin(); it != curr_folders.end(); ++it)
+	{
+		to_destroy.push_back((*it));
+	}
+
+	curr_folders.clear();
+
+	while (!to_destroy.empty())
+	{
+		ExplorerFolder* curr_folder = *to_destroy.begin();
+
+		to_destroy.erase(to_destroy.begin());
+
+		for (std::vector<ExplorerFolder*>::iterator it = curr_folder->childs.begin(); it != curr_folder->childs.end(); ++it)
+		{
+			to_destroy.push_back((*it));
+		}
+
+		RELEASE(curr_folder);
+	}
+}
+
+void ExplorerWindow::DrawFoldersRecursive(ExplorerFolder* folder)
 {
 	uint flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-	if (folder.folders.size() == 0)
+	if (folder->childs.size() == 0)
 		flags |= ImGuiTreeNodeFlags_Leaf;
+
+	if (folder->selected)
+		flags |= ImGuiTreeNodeFlags_Selected;
 
 	bool draw = true;
 
-	if (App->resource->GetAssetsPath().compare(folder.folder_path) == 0)
+	if (App->resource->GetAssetsPath().compare(folder->dfp.path) == 0)
 	{
 		ImGui::SetNextTreeNodeOpen(true);
 	}
 
-	ImGui::PushID(folder.folder_path.c_str());
-	bool opened = ImGui::TreeNodeEx(folder.folder_name.c_str(), flags);
+	ImGui::PushID(folder->dfp.path.c_str());
+	bool opened = ImGui::TreeNodeEx(folder->folder_name.c_str(), flags);
 
 	bool left_clicked = false;
 	bool right_clicked = false;
@@ -180,15 +270,15 @@ void ExplorerWindow::DrawFoldersRecursive(const Folder & folder)
 	if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 		right_clicked = true;
 
-	FoldersInput(folder.folder_path, left_clicked, right_clicked);
+	FoldersInput(folder, left_clicked, right_clicked);
 
-	DrawFilesPopup(left_clicked, right_clicked);
+	DrawFoldersPopupIntern(left_clicked, right_clicked);
 
 	ImGui::PopID();
 
 	if (opened)
 	{
-		for (std::vector<Folder>::const_iterator it = folder.folders.begin(); it != folder.folders.end(); ++it)
+		for (std::vector<ExplorerFolder*>::const_iterator it = folder->childs.begin(); it != folder->childs.end(); ++it)
 		{
 			DrawFoldersRecursive(*it);
 		}
@@ -202,17 +292,138 @@ void ExplorerWindow::SetSelectedFolderTree(const char * path)
 	if (App->file_system->FolderExists(path))
 	{
 		App->resource->SetCurrentAssetsPath(path);
+
+		update_files = true;
 	}
 }
 
-void ExplorerWindow::FoldersInput(const std::string & folder, bool left_clicked, bool right_clicked)
+void ExplorerWindow::FoldersInput(ExplorerFolder* folder, bool left_clicked, bool right_clicked)
 {
-	if (left_clicked)
-	{
-		SetSelectedFolderTree(folder.c_str());
+	uint selected_files_count = selected_files.size();
 
-		update_folders = true;
+	// Input
+	if ((App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL)) && ImGui::IsItemClicked(0))
+	{
+		if (!folder->selected)
+			AddToSelectedFolders(folder);
+		else
+			RemoveFromSelectedFolders(folder);
+
+		disable_button_up = true;
 	}
+
+	// If shift is pressed do fill gap selection
+	else if ((App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT) || App->input->GetKeyRepeat(SDL_SCANCODE_RSHIFT)) && ImGui::IsItemClicked(0))
+	{
+
+	}
+	// Monoselection
+	else
+	{
+		if ((left_clicked || right_clicked) && !folder->selected)
+		{
+			RemoveAllFromSelectedFolders();
+			AddToSelectedFolders(folder);
+
+			SetSelectedFolderTree(folder->dfp.path.c_str());
+
+			disable_button_up = true;
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && folder->selected && selected_files_count == 1)
+		{
+			if (!disable_button_up)
+			{
+				RemoveFromSelectedFolders(folder);
+			}
+			else
+				disable_button_up = false;
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered())
+		{
+			if (!disable_button_up)
+			{
+				if (selected_files_count > 1)
+				{
+					RemoveAllFromSelectedFolders();
+					AddToSelectedFolders(folder);
+				}
+			}
+			else
+				disable_button_up = false;
+		}
+
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow())
+		{
+			RemoveAllFromSelectedFolders();
+		}
+	}
+}
+
+void ExplorerWindow::DrawFoldersPopupIntern(bool left_clicked, bool right_clicked)
+{
+	if (right_clicked)
+	{
+		ImGui::OpenPopupOnItemClick("FoldersPopup", 1);
+	}
+
+	bool open_rename = false;
+
+	if (ImGui::BeginPopupContextItem("FoldersPopup"))
+	{
+		if (ImGui::Button("Delete"))
+		{
+
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void ExplorerWindow::DrawFoldersPopupExtern()
+{
+}
+
+void ExplorerWindow::AddToSelectedFolders(ExplorerFolder * folder)
+{
+	bool already_selected = false;
+	std::vector<ExplorerFolder*> folders = selected_folders;
+	for (std::vector<ExplorerFolder*>::iterator it = folders.begin(); it != folders.end(); ++it)
+	{
+		if (folder->dfp.path.compare((*it)->dfp.path) == 0)
+		{
+			already_selected = true;
+			break;
+		}
+	}
+
+	if (!already_selected)
+	{
+		folder->selected = true;
+		selected_folders.push_back(folder);
+	}
+}
+
+void ExplorerWindow::RemoveFromSelectedFolders(ExplorerFolder * folder)
+{
+	for (std::vector<ExplorerFolder*>::iterator it = selected_folders.begin(); it != selected_folders.end(); ++it)
+	{
+		if (folder->dfp.path.compare((*it)->dfp.path) == 0)
+		{
+			folder->selected = false;
+			selected_folders.erase(it);
+			break;
+		}
+	}
+}
+
+void ExplorerWindow::RemoveAllFromSelectedFolders()
+{
+	for (std::vector<ExplorerFolder*>::iterator it = selected_folders.begin(); it != selected_folders.end(); ++it)
+	{
+		(*it)->selected = false;
+	}
+
+	selected_folders.clear();
 }
 
 void ExplorerWindow::FilesInput(ExplorerFile * file, bool left_clicked, bool right_clicked)
@@ -275,7 +486,7 @@ void ExplorerWindow::FilesInput(ExplorerFile * file, bool left_clicked, bool rig
 	}
 }
 
-void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
+void ExplorerWindow::DrawFilesPopupIntern(bool left_clicked, bool right_clicked)
 {
 	std::vector<ExplorerFile*> selected = GetSelectedFiles();
 
@@ -319,6 +530,8 @@ void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 			for (std::vector<ExplorerFile*>::iterator it = selected.begin(); it != selected.end(); ++it)
 			{
 				App->resource->UnloadAssetFromEngine((*it)->dfp.file_path.c_str());
+
+				update_files = true;
 				update_folders = true;
 			}
 		}
@@ -358,6 +571,8 @@ void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 			if (selected.size() > 0)
 			{
 				App->resource->RenameAsset(selected[0]->dfp.file_path.c_str(), change_name_tmp);
+				
+				update_files = true;
 				update_folders = true;
 			}
 
@@ -373,8 +588,12 @@ void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 
 		ImGui::EndPopup();
 	}
+}
 
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN && !ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow())
+void ExplorerWindow::DrawFilesPopupExtern()
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN && !ImGui::IsAnyItemHovered() 
+		&& ImGui::IsMouseHoveringWindow() && selected_files.size() == 0)
 	{
 		ImGui::OpenPopup("CreatePopup");
 	}
@@ -386,12 +605,29 @@ void ExplorerWindow::DrawFilesPopup(bool left_clicked, bool right_clicked)
 			App->resource->CreateScript(App->resource->GetCurrentAssetsPath().c_str(), "NewScript");
 			ImGui::CloseCurrentPopup();
 
+			update_files = true;
+		}
+
+		if (ImGui::Button("Import Asset"))
+		{
+			bool canceled = false;
+
+			const char* filter[1] = { "" };
+			std::string file = App->file_system->SelectFileDilog(canceled, filter);
+
+			if (!canceled)
+			{
+				App->resource->LoadFileToEngine(file.c_str());
+			}
+
+			ImGui::CloseCurrentPopup();
+
+			update_files = true;
 			update_folders = true;
 		}
 
 		ImGui::EndPopup();
 	}
-
 }
 
 void ExplorerWindow::AddToSelectedFiles(ExplorerFile* add)
@@ -412,7 +648,6 @@ void ExplorerWindow::AddToSelectedFiles(ExplorerFile* add)
 		add->selected = true;
 		selected_files.push_back(add);
 	}
-	
 }
 
 void ExplorerWindow::RemoveFromSelectedFiles(ExplorerFile* add)
@@ -444,5 +679,9 @@ std::vector<ExplorerFile*> ExplorerWindow::GetSelectedFiles()
 }
 
 ExplorerFile::ExplorerFile()
+{
+}
+
+ExplorerFolder::ExplorerFolder()
 {
 }

@@ -63,26 +63,29 @@ namespace BeEngine
             {
                 List<string> ret = new List<string>();
 
-                if (compile_parameters != null)
+                if (scripts.Count > 0)
                 {
-                    compile_parameters.OutputAssembly = dll_output_path;
-
-                    CSharpCodeProvider code_provider = new CSharpCodeProvider();
- 
-                    CompilerResults results = code_provider.CompileAssemblyFromFile(compile_parameters, scripts.ToArray());
-
-                    for (int i = 0; i < results.Errors.Count; ++i)
+                    if (compile_parameters != null)
                     {
-                        CompilerError curr_error = results.Errors[i];
+                        compile_parameters.OutputAssembly = dll_output_path;
 
-                        string error = curr_error.FileName + " at (" + curr_error.Line + "," +
-                            curr_error.Column + ")," + (curr_error.IsWarning ? "Warning: " : " Error: ") +
-                            curr_error.ErrorNumber + ": " + curr_error.ErrorText + ".";
+                        CSharpCodeProvider code_provider = new CSharpCodeProvider();
 
-                        ret.Add(error);
+                        CompilerResults results = code_provider.CompileAssemblyFromFile(compile_parameters, scripts.ToArray());
+
+                        for (int i = 0; i < results.Errors.Count; ++i)
+                        {
+                            CompilerError curr_error = results.Errors[i];
+
+                            string error = curr_error.FileName + " at (" + curr_error.Line + "," +
+                                curr_error.Column + ")," + (curr_error.IsWarning ? "Warning: " : " Error: ") +
+                                curr_error.ErrorNumber + ": " + curr_error.ErrorText + ".";
+
+                            ret.Add(error);
+                        }
+
+                        code_provider.Dispose();
                     }
-
-                    code_provider.Dispose();
                 }
 
                 return ret.ToArray();

@@ -57,8 +57,6 @@ private:
 	std::vector<ConsoleLogLine> console_logs_shown;
 
 	std::vector<ConsolePersonalLogs> personal_logs;
-	std::map<std::string, ConsoleLogLine> personal_logs_to_add;
-	std::vector<std::string> personal_logs_to_clear;
 
 	bool clear_on_play = false;
 

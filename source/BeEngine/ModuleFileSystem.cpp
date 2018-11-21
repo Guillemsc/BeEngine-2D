@@ -128,6 +128,7 @@ DecomposedFilePath FileSystem::DecomposeFilePath(std::string file_path)
 	}
 
 	ret.file_extension_lower_case = ToLowerCase(ret.file_extension);
+	ret.folder_name = GetFolderNameFromPath(ret.file_path.c_str());
 
 	// Path ---------------------
 
@@ -198,25 +199,25 @@ std::string FileSystem::SelectFileDilog(bool & canceled, const char* filter[])
 	return ret;
 }
 
-std::string FileSystem::NewNameForFileNameCollision(const char * filename)
+std::string FileSystem::NewNameForNameCollision(const char * filename)
 {
 	std::string ret;
 
-	int number = GetFileNameNumber(filename);
+	int number = GetNameCollisionNumber(filename);
 
 	if (number != -1)
 	{
-		ret = SetFileNameNumber(filename, number + 1);
+		ret = SetNameCollisionNumber(filename, number + 1);
 	}
 	else
 	{
-		ret = SetFileNameNumber(filename, 1);
+		ret = SetNameCollisionNumber(filename, 1);
 	}
 
 	return ret;
 }
 
-int FileSystem::GetFileNameNumber(const char * filename)
+int FileSystem::GetNameCollisionNumber(const char * filename)
 {
 	int ret = -1;
 
@@ -244,11 +245,11 @@ int FileSystem::GetFileNameNumber(const char * filename)
 	return ret;
 }
 
-std::string FileSystem::SetFileNameNumber(const char * filename, int number)
+std::string FileSystem::SetNameCollisionNumber(const char * filename, int number)
 {
 	std::string ret = filename;
 
-	int curr_number = GetFileNameNumber(filename);
+	int curr_number = GetNameCollisionNumber(filename);
 	int curr_number_size = std::to_string(curr_number).size();
 
 	if(curr_number != -1)
@@ -390,33 +391,52 @@ std::string FileSystem::GetParentFolder(const char * folder_path)
 	return ret;
 }
 
-std::string FileSystem::CreateFolder(const char * path, const char * name)
+bool FileSystem::CreateFolder(const char * path, const char * name, bool check_name_collision, std::string& new_filepath)
 {
-	std::string ret;
+	bool ret = true;
 
 	std::string filepath = path;
-	
-	if (filepath[filepath.length()-1] != '\\')
+
+	if (filepath.size() > 0)
 	{
-		filepath += '\\';
+		if (filepath[filepath.length() - 1] != '\\')
+		{
+			filepath += '\\';
+		}
+
+		filepath += name;
+
+		new_filepath = filepath + "\\";
+
+		if (check_name_collision)
+		{
+			filepath += "\\";
+
+			if (FolderExists(filepath.c_str()))
+			{
+				filepath = FolderRenameOnCollision(filepath.c_str());
+
+				new_filepath = filepath;
+
+				filepath = filepath.substr(0, filepath.size() - 1);
+			}
+		}
+
+		DWORD error = GetLastError();
+
+		if (CreateDirectory(filepath.c_str(), NULL) == 0)
+		{
+			error = GetLastError();
+		}
+
+		if (error == ERROR_PATH_NOT_FOUND)
+		{
+			INTERNAL_LOG("Error creating folder (path not found): %s", path);
+			ret = false;
+		}
 	}
-
-	filepath += name;
-
-	DWORD error = GetLastError();
-
-	if (CreateDirectory(filepath.c_str(), NULL) == 0)
-	{
-		error = GetLastError();
-	}
-
-	if (error == ERROR_PATH_NOT_FOUND)
-	{
-		INTERNAL_LOG("Error creating folder (path not found): %s", path);
-		return ret;
-	}
-
-	ret = filepath + '\\';
+	else
+		ret = false;
 
 	return ret;
 }
@@ -628,60 +648,63 @@ bool FileSystem::FileSave(const char * path, const char* file_content, const cha
 
 std::vector<std::string> FileSystem::GetFilesAndFoldersInPath(const char * path, const char* extension)
 {
-	std::string s_path = path;
-
-	if (s_path[s_path.length() - 1] != '\\')
-	{
-		s_path += '\\';
-	}
-
 	std::vector<std::string> files;
 
-	WIN32_FIND_DATA search_data;
+	std::string s_path = path;
 
-	std::string path_ex = s_path;
-
-	if (!TextCmp(extension, ""))
+	if (s_path.size() > 0)
 	{
-		path_ex += "*.";
-		path_ex += extension;
-	}
-	else
-	{
-		path_ex += "*.*";
-	}
-
-	HANDLE handle = FindFirstFile(path_ex.c_str(), &search_data);
-
-	int counter = 0;
-	while (handle != INVALID_HANDLE_VALUE)
-	{
-		bool can_add = true;
-		if ((search_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+		if (s_path[s_path.length() - 1] != '\\')
 		{
-			if (TextCmp("..", search_data.cFileName) || TextCmp(".", search_data.cFileName))
-			{
-				can_add = false;
-			}
+			s_path += '\\';
 		}
 
-		if (can_add)
-		{
-			std::string path_new = s_path;
-			path_new += search_data.cFileName;
+		WIN32_FIND_DATA search_data;
 
+		std::string path_ex = s_path;
+
+		if (!TextCmp(extension, ""))
+		{
+			path_ex += "*.";
+			path_ex += extension;
+		}
+		else
+		{
+			path_ex += "*.*";
+		}
+
+		HANDLE handle = FindFirstFile(path_ex.c_str(), &search_data);
+
+		int counter = 0;
+		while (handle != INVALID_HANDLE_VALUE)
+		{
+			bool can_add = true;
 			if ((search_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-				path_new += "\\";
+			{
+				if (TextCmp("..", search_data.cFileName) || TextCmp(".", search_data.cFileName))
+				{
+					can_add = false;
+				}
+			}
 
-			files.push_back(path_new);
+			if (can_add)
+			{
+				std::string path_new = s_path;
+				path_new += search_data.cFileName;
+
+				if ((search_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+					path_new += "\\";
+
+				files.push_back(path_new);
+			}
+
+			if (FindNextFile(handle, &search_data) == FALSE)
+				break;
 		}
 
-		if (FindNextFile(handle, &search_data) == FALSE)
-			break;
+		if (handle)
+			FindClose(handle);
 	}
-
-	if(handle)
-		FindClose(handle);
 
 	return files;
 }
@@ -943,6 +966,28 @@ bool FileSystem::FolderExists(const char * path)
 	return ret;
 }
 
+std::string FileSystem::FolderParent(const char * path)
+{
+	std::string ret;
+
+	std::string s_path = path;
+
+	std::string adding_path;
+	for (int i = 0; i < s_path.size(); ++i)
+	{
+		char curr_char = s_path[i];
+
+		adding_path += curr_char;
+
+		if (curr_char == '\\' && i < s_path.size() - 1)
+		{
+			ret = adding_path;
+		}
+	}
+
+	return ret;
+}
+
 std::string FileSystem::FileRenameOnNameCollision(const char * path, const char* name, const char* extension)
 {
 	std::string ret;
@@ -958,7 +1003,7 @@ std::string FileSystem::FileRenameOnNameCollision(const char * path, const char*
 	bool need_rename = false;
 	while (App->file_system->FileExists(new_filepath.c_str()))
 	{
-		std::string check_new_name = NewNameForFileNameCollision(s_name.c_str());
+		std::string check_new_name = NewNameForNameCollision(s_name.c_str());
 		s_name = check_new_name;
 
 		new_filepath = s_path + s_name + "." + s_extension;
@@ -968,6 +1013,34 @@ std::string FileSystem::FileRenameOnNameCollision(const char * path, const char*
 
 	if (need_rename)
 		ret = s_name;
+
+	return ret;
+}
+
+std::string FileSystem::FolderRenameOnCollision(const char * path)
+{
+	std::string ret;
+
+	std::string s_path = path;
+	std::string parent_path = FolderParent(path);
+
+	ret = s_path;
+
+	bool need_rename = false;
+
+	while (App->file_system->FolderExists(s_path.c_str()))
+	{
+		std::string name_to_change = GetFolderNameFromPath(s_path.c_str());
+
+		std::string check_new_name = NewNameForNameCollision(name_to_change.c_str());
+
+		s_path = parent_path + check_new_name + "\\";
+
+		need_rename = true;
+	}
+
+	if (need_rename)
+		ret = s_path;
 
 	return ret;
 }

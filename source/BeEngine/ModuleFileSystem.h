@@ -14,6 +14,7 @@ struct DecomposedFilePath
 	std::string file_extension;
 	std::string file_extension_lower_case;
 	std::string path;
+	std::string folder_name;
 	std::string file_path;
 	bool its_folder = false;
 };
@@ -43,7 +44,7 @@ public:
 
 	std::string GetWorkingDirectory();
 
-	std::string CreateFolder(const char* path, const char* name);
+	bool CreateFolder(const char* path, const char* name, bool check_name_collision = false, std::string& new_filepath = std::string());
 	void FileMove(const char* filepath, const char* new_path, bool replace_existing = false);
 	bool FileCopyPaste(const char* filepath, const char* new_path, bool overwrite, std::string &resultant_path);
 	bool FileCopyPaste(const char* filepath, const char* new_path, bool overwrite);
@@ -63,7 +64,10 @@ public:
 	bool FileRename(const char* filepath, const char* new_name, bool check_name_collision = false, std::string& new_filepath = std::string());
 	bool FolderRename(const char* filepath, const char* new_name);
 	bool FolderExists(const char* path);
+	std::string FolderParent(const char* path);
+
 	std::string FileRenameOnNameCollision(const char* path, const char* name, const char* extension);
+	std::string FolderRenameOnCollision(const char* path);
 
 	DecomposedFilePath DecomposeFilePath(std::string file_path);
 
@@ -92,9 +96,9 @@ public:
 
 private:
 	// Same name file renaming
-	std::string NewNameForFileNameCollision(const char* filename);
-	int GetFileNameNumber(const char* filename);
-	std::string SetFileNameNumber(const char* filename, int number);
+	std::string NewNameForNameCollision(const char* filename);
+	int GetNameCollisionNumber(const char* filename);
+	std::string SetNameCollisionNumber(const char* filename, int number);
 
 	Folder GetFoldersRecursive(const char* path);
 };

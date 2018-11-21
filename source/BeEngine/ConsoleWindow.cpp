@@ -209,7 +209,7 @@ void ConsoleWindow::DrawLogs()
 	// Personal logs
 	for (std::vector<ConsolePersonalLogs>::iterator it = personal_logs.begin(); it != personal_logs.end(); ++it)
 	{
-		for (std::vector<ConsoleLogLine>::iterator l = (*it).logs.begin(); l != (*it).logs.end(); ++l)
+		for (std::vector<ConsoleLogLine>::iterator l = (*it).logs_shown.begin(); l != (*it).logs_shown.end(); ++l)
 		{
 			DrawLog(*l);
 		}

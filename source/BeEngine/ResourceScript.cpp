@@ -60,4 +60,17 @@ void ResourceScript::OnRenameAsset(const char * new_name, const char * last_name
 
 	App->scripting->solution_manager->RemoveScript(last_path.c_str());
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());
+
+	App->scripting->CompileScripts();
+}
+
+void ResourceScript::OnMoveAsset(const char * new_asset_path, const char* last_asset_path)
+{
+	App->scripting->solution_manager->RemoveScript(last_asset_path);
+	App->scripting->compiler->RemoveScript(last_asset_path);
+
+	App->scripting->compiler->AddScript(new_asset_path);
+	App->scripting->solution_manager->AddScript(new_asset_path);
+
+	App->scripting->CompileScripts();
 }

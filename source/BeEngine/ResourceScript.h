@@ -24,6 +24,7 @@ public:
 
 	void OnRemoveAsset();
 	void OnRenameAsset(const char* new_name, const char* last_name);
+	void OnMoveAsset(const char* new_asset_path, const char* last_asset_path);
 
 private:
 	bool compiles = false;

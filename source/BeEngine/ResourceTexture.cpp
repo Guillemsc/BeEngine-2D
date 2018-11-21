@@ -1,7 +1,7 @@
 #include "ResourceTexture.h"
-#include "ResourceLoader.h"
 #include "App.h"
 #include "ModuleResource.h"
+#include "ModuleFileSystem.h"
 
 ResourceTexture::ResourceTexture() : Resource(ResourceType::TEXTURE)
 {
@@ -129,6 +129,10 @@ void ResourceTexture::OnRemoveAsset()
 }
 
 void ResourceTexture::OnRenameAsset(const char * new_name, const char * last_name)
+{
+}
+
+void ResourceTexture::OnMoveAsset(const char * new_asset_path, const char* last_asset_path)
 {
 }
 

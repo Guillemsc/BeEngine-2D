@@ -14,7 +14,17 @@ public:
 	ExplorerFile();
 
 	DecomposedFilePath dfp;
+	bool selected = false;
+};
 
+class ExplorerFolder
+{
+public:
+	ExplorerFolder();
+
+	DecomposedFilePath dfp;
+	std::string folder_name;
+	std::vector<ExplorerFolder*> childs;
 	bool selected = false;
 };
 
@@ -37,21 +47,31 @@ public:
 	ImGuiWindowFlags GetWindowFlags();
 
 private:
-	void UpdateFoldersAndFiles();
-	void ClearFloldersAndFiles();
+	void UpdateFolders();
+	void ClearFolders();
+	void UpdateFiles();
+	void ClearFiles();;
 
 	void DrawFoldersColumn();
 	void DrawFilesColumn();
 
 	// Folders Column
-	void DrawFoldersRecursive(const Folder& folder);
+	void CreateExplorerFolderRecursive(const Folder& to_create, ExplorerFolder* parent);
+	void DestroyAllExplorerFolders();
+	void DrawFoldersRecursive(ExplorerFolder* folder);
 	void SetSelectedFolderTree(const char* path);
+	void FoldersInput(ExplorerFolder* folder, bool left_clicked, bool right_clicked);
+	void DrawFoldersPopupIntern(bool left_clicked, bool right_clicked);
+	void DrawFoldersPopupExtern();
 
-	void FoldersInput(const std::string& folder, bool left_clicked, bool right_clicked);
+	void AddToSelectedFolders(ExplorerFolder* folder);
+	void RemoveFromSelectedFolders(ExplorerFolder* folder);
+	void RemoveAllFromSelectedFolders();
 
 	// Files column
 	void FilesInput(ExplorerFile* file, bool left_clicked, bool right_clicked);
-	void DrawFilesPopup(bool left_clicked, bool right_clicked);
+	void DrawFilesPopupIntern(bool left_clicked, bool right_clicked);
+	void DrawFilesPopupExtern();
 
 	void AddToSelectedFiles(ExplorerFile* add);
 	void RemoveFromSelectedFiles(ExplorerFile* add);
@@ -61,12 +81,14 @@ private:
 private:
 	ImFont* font = nullptr;
 	
-	Folder folder_tree;
-	std::vector<ExplorerFile*> cur_files;
+	std::vector<ExplorerFolder*> curr_folders;
+	std::vector<ExplorerFolder*> selected_folders;
 
+	std::vector<ExplorerFile*> cur_files_folders;
 	std::vector<ExplorerFile*> selected_files;
 
 	bool update_folders = false;
+	bool update_files = false;
 
 	bool disable_button_up = true;
 	bool dragging = false;
