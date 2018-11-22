@@ -41,7 +41,9 @@ void ResourceScript::ImportFromLibrary()
 void ResourceScript::OnRemoveAsset()
 {
 	App->scripting->solution_manager->RemoveScript(GetAssetFilepath().c_str());
-	App->scripting->compiler->RemoveScript(GetLibraryFilepath().c_str());
+	App->scripting->compiler->RemoveScript(GetAssetFilepath().c_str());
+
+	App->scripting->CompileScripts();
 }
 
 void ResourceScript::OnRenameAsset(const char * new_name, const char * last_name)

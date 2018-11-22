@@ -458,6 +458,8 @@ bool ModuleResource::CreateScript(const char * filepath, const char * name)
 		ExportAssetToLibrary(asset_path.c_str());
 	}
 
+	App->scripting->CompileScripts();
+
 	StartWatchingFolders();
 
 	return ret;
