@@ -119,6 +119,9 @@ void ExplorerWindow::UpdateFiles()
 {
 	ClearFiles();
 
+	if (!App->file_system->FolderExists(App->resource->GetCurrentAssetsPath().c_str()))
+		SetSelectedFolderTree(App->resource->GetAssetsPath().c_str());
+	
 	std::vector<std::string> selected_folder_files_paths = App->file_system->GetFilesInPath(App->resource->GetCurrentAssetsPath().c_str());
 
 	for (std::vector<std::string>::iterator it = selected_folder_files_paths.begin(); it != selected_folder_files_paths.end(); ++it)
@@ -383,6 +386,12 @@ void ExplorerWindow::FoldersInput(ExplorerFolder* folder, bool left_clicked, boo
 
 void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_clicked, bool right_clicked)
 {
+	bool folder_is_root = false;
+
+	if (folder->dfp.path.compare(App->resource->GetAssetsPath()) == 0)
+		folder_is_root = true;
+	
+
 	if (right_clicked)
 	{
 		ImGui::OpenPopupOnItemClick("FoldersPopup", 1);
@@ -393,7 +402,7 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 
 	if (ImGui::BeginPopupContextItem("FoldersPopup", 1))
 	{
-		if (selected_folders.size() > 0)
+		if (selected_folders.size() > 0 && !folder_is_root)
 		{
 			if (ImGui::Button("Delete"))
 			{
@@ -403,6 +412,7 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 				}
 
 				update_folders = true;
+				update_files = true;
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -410,11 +420,14 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 
 		if (selected_folders.size() == 1)
 		{
-			if (ImGui::Button("Rename Folder"))
+			if (!folder_is_root)
 			{
-				open_rename_folder = true;
+				if (ImGui::Button("Rename Folder"))
+				{
+					open_rename_folder = true;
 
-				ImGui::CloseCurrentPopup();
+					ImGui::CloseCurrentPopup();
+				}
 			}
 
 			if (ImGui::Button("Create Folder"))

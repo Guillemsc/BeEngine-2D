@@ -256,13 +256,16 @@ void ModuleResource::UnloadAssetFromEngine(const char * filepath)
 {
 	StopWatchingFolders();
 
-	Resource* res = GetResourceFromAssetFile(filepath);
-
-	if (res != nullptr)
+	if (App->file_system->FileExists(filepath))
 	{
-		res->EM_RemoveAsset();
+		Resource* res = GetResourceFromAssetFile(filepath);
 
-		DestroyResource(res);
+		if (res != nullptr)
+		{
+			res->EM_RemoveAsset();
+
+			DestroyResource(res);
+		}
 	}
 
 	StartWatchingFolders();
@@ -550,13 +553,16 @@ bool ModuleResource::DeleteAssetsFolder(const char * folder)
 		{
 			DecomposedFilePath dfp = App->file_system->DecomposeFilePath((*it));
 
-			if (dfp.its_folder)
+			if (!IsMeta(dfp.file_path.c_str()));
 			{
-				DeleteAssetsFolder(dfp.path.c_str());
-			}
-			else
-			{
-				UnloadAssetFromEngine(dfp.file_path.c_str());
+				if (dfp.its_folder)
+				{
+					DeleteAssetsFolder(dfp.path.c_str());
+				}
+				else
+				{
+					UnloadAssetFromEngine(dfp.file_path.c_str());
+				}
 			}
 		}
 

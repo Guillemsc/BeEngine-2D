@@ -927,11 +927,19 @@ bool FileSystem::FileExists(const char * path, const char * name, const char * e
 			found_file = GetFilenameWithoutExtension(search_data.cFileName);
 		
 		if (TextCmp(found_file.c_str(), filename.c_str()))
+		{
+			FindClose(handle);
 			return true;
-		
+		}
+
 		if (FindNextFile(handle, &search_data) == FALSE)
+		{
 			break;
+		}
 	}
+
+	if(handle)
+		FindClose(handle);
 
 	return false;
 }
