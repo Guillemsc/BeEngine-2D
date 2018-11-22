@@ -387,23 +387,40 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 	}
 
 	bool open_folder_create = false;
+	bool open_rename_folder = false;
 
 	if (ImGui::BeginPopupContextItem("FoldersPopup", 1))
 	{
-		if (ImGui::Button("Delete"))
+		if (selected_folders.size() > 0)
 		{
-			App->resource->DeleteAssetsFolder(folder->dfp.path.c_str());
+			if (ImGui::Button("Delete"))
+			{
+				for (std::vector<ExplorerFolder*>::iterator it = selected_folders.begin(); it != selected_folders.end(); ++it)
+				{
+					App->resource->DeleteAssetsFolder((*it)->dfp.path.c_str());
+				}
 
-			update_folders = true;
+				update_folders = true;
 
-			ImGui::CloseCurrentPopup();
+				ImGui::CloseCurrentPopup();
+			}
 		}
 
-		if (ImGui::Button("Create Folder"))
+		if (selected_folders.size() == 1)
 		{
-			open_folder_create = true;
+			if (ImGui::Button("Rename Folder"))
+			{
+				open_rename_folder = true;
 
-			ImGui::CloseCurrentPopup();
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::Button("Create Folder"))
+			{
+				open_folder_create = true;
+
+				ImGui::CloseCurrentPopup();
+			}
 		}
 
 		ImGui::EndPopup();
@@ -436,6 +453,60 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 				if (name.size() > 0)
 				{
 					App->resource->CreateAssetsFolder(selected_folders[0]->dfp.path.c_str(), name_tmp);
+
+					update_folders = true;
+
+					ImGui::CloseCurrentPopup();
+				}
+			}
+			else
+				ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (open_rename_folder)
+	{
+		ImGui::OpenPopup("FoldersRenamePopup");
+
+		if (selected_folders.size() > 0)
+		{
+			int size = selected_folders[0]->folder_name.size();
+
+			if (size > 50)
+				size = 50;
+
+			memset(name_tmp, 0, sizeof(char) * 50);
+
+			strcpy_s(name_tmp, sizeof(char) * size + 1, selected_folders[0]->folder_name.c_str());
+		}
+	}
+
+	if (ImGui::BeginPopup("FoldersRenamePopup"))
+	{
+		ImGui::Text("Folder Name: ");
+
+		ImGui::SameLine();
+
+		ImGui::InputText("", name_tmp, sizeof(char) * 50, ImGuiInputTextFlags_AutoSelectAll);
+
+		if (ImGui::Button("Accept"))
+		{
+			if (selected_folders.size() > 0)
+			{
+				std::string name = name_tmp;
+
+				if (name.size() > 0)
+				{
+					App->resource->RenameAssetsFolder(selected_folders[0]->dfp.path.c_str(), name_tmp);
 
 					update_folders = true;
 

@@ -466,7 +466,7 @@ bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path
 
 	StopWatchingFolders();
 
-	if (App->file_system->FolderExists(new_path))
+	if (App->file_system->FolderExists(new_path) && App->file_system->FolderExists(folder))
 	{
 		std::string parent_path = App->file_system->GetParentFolder(folder);
 
@@ -501,7 +501,7 @@ bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path
 
 			App->file_system->FolderDelete(folder);
 
-			bool ret = true;
+			ret = true;
 		}
 	}
 

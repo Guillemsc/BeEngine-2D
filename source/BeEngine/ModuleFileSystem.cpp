@@ -951,19 +951,22 @@ bool FileSystem::FileRename(const char * filepath, const char * new_name, bool c
 
 	std::string new_filepath = d_filepath.path + new_name + "." + d_filepath.file_extension;
 
-	if (check_name_collision)
+	if (new_filepath.compare(filepath) != 0)
 	{
-		DecomposedFilePath d_new_filepath = DecomposeFilePath(new_filepath);
+		if (check_name_collision)
+		{
+			DecomposedFilePath d_new_filepath = DecomposeFilePath(new_filepath);
 
-		std::string renamed_name = FileRenameOnNameCollision(d_new_filepath.path.c_str(), d_new_filepath.file_name.c_str(), d_new_filepath.file_extension.c_str());
+			std::string renamed_name = FileRenameOnNameCollision(d_new_filepath.path.c_str(), d_new_filepath.file_name.c_str(), d_new_filepath.file_extension.c_str());
 
-		new_filepath = d_new_filepath.path + renamed_name + "." + d_new_filepath.file_extension;
-	}
+			new_filepath = d_new_filepath.path + renamed_name + "." + d_new_filepath.file_extension;
+		}
 
-	if (rename(filepath, new_filepath.c_str()) == 0)
-	{
-		new_f = new_filepath;
-		ret = true;
+		if (rename(filepath, new_filepath.c_str()) == 0)
+		{
+			new_f = new_filepath;
+			ret = true;
+		}
 	}
 	
 	return ret;
@@ -977,25 +980,28 @@ bool FileSystem::FolderRename(const char * folderpath, const char * new_name, bo
 
 	std::string new_path = parent_folder + new_name + '\\';
 
-	if (check_name_collision)
+	if (new_path.compare(folderpath) != 0)
 	{
-		if (FolderExists(new_path.c_str()))
+		if (check_name_collision)
 		{
-			new_path = FolderRenameOnCollision(new_path.c_str());
+			if (FolderExists(new_path.c_str()))
+			{
+				new_path = FolderRenameOnCollision(new_path.c_str());
+			}
 		}
-	}
 
-	new_folderpath = new_path;
+		new_folderpath = new_path;
 
-	if (MoveFileEx(folderpath, new_path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED) == 0)
-	{
-		DWORD error = GetLastError();
-		if (error != 0)
+		if (MoveFileEx(folderpath, new_path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED) == 0)
 		{
-			INTERNAL_LOG("Error renaming folder:[%s] to [%s]", folderpath, new_path.c_str())
+			DWORD error = GetLastError();
+			if (error != 0)
+			{
+				INTERNAL_LOG("Error renaming folder:[%s] to [%s]", folderpath, new_path.c_str())
+			}
+			else
+				ret = true;
 		}
-		else
-			ret = true;
 	}
 
 	return ret;
