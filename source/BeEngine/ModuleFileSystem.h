@@ -62,7 +62,7 @@ public:
 	bool FileExists(const char* path, const char* name, const char* extension = "");
 	bool FileExists(const char* filepath);
 	bool FileRename(const char* filepath, const char* new_name, bool check_name_collision = false, std::string& new_filepath = std::string());
-	bool FolderRename(const char* filepath, const char* new_name);
+	bool FolderRename(const char* folderpath, const char* new_name, bool check_name_collision = false, std::string& new_folderpath = std::string());
 	bool FolderExists(const char* path);
 	std::string FolderParent(const char* path);
 
@@ -72,6 +72,7 @@ public:
 	DecomposedFilePath DecomposeFilePath(std::string file_path);
 
 	bool FilePathInsideFolder(std::string file_path, std::string folder_path);
+	std::string SubstractFolder(std::string folder, std::string folder_to_substract);
 
 	std::string SelectFolderDialog(bool& canceled);
 	std::string SelectFileDilog(bool& canceled, const char* filter[]);

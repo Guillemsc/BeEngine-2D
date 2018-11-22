@@ -162,6 +162,35 @@ bool FileSystem::FilePathInsideFolder(std::string file_path, std::string folder_
 	return ret;
 }
 
+std::string FileSystem::SubstractFolder(std::string folder, std::string folder_to_substract)
+{
+	std::string ret;
+
+	bool correct = true;
+	for (int i = 0; i < folder.size(); ++i)
+	{
+		char curr_char = folder[i];
+
+		if (i < folder_to_substract.size())
+		{
+			if (curr_char != folder_to_substract[i])
+			{
+				correct = false;
+				break;
+			}
+		}
+		else
+		{
+			ret += curr_char;
+		}
+	}
+
+	if (!correct)
+		ret = folder;
+
+	return ret;
+}
+
 std::string FileSystem::SelectFolderDialog(bool& canceled)
 {
 	std::string ret = "";
@@ -940,19 +969,36 @@ bool FileSystem::FileRename(const char * filepath, const char * new_name, bool c
 	return ret;
 }
 
-bool FileSystem::FolderRename(const char * folderpath, const char * new_name)
+bool FileSystem::FolderRename(const char * folderpath, const char * new_name, bool check_name_collision, std::string & new_folderpath)
 {
+	bool ret = false;
+
 	std::string parent_folder = GetParentFolder(folderpath);
 
 	std::string new_path = parent_folder + new_name + '\\';
+
+	if (check_name_collision)
+	{
+		if (FolderExists(new_path.c_str()))
+		{
+			new_path = FolderRenameOnCollision(new_path.c_str());
+		}
+	}
+
+	new_folderpath = new_path;
+
 	if (MoveFileEx(folderpath, new_path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED) == 0)
 	{
 		DWORD error = GetLastError();
 		if (error != 0)
+		{
 			INTERNAL_LOG("Error renaming folder:[%s] to [%s]", folderpath, new_path.c_str())
+		}
+		else
+			ret = true;
 	}
 
-	return false;
+	return ret;
 }
 
 bool FileSystem::FolderExists(const char * path)

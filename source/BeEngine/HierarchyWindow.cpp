@@ -82,13 +82,13 @@ void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked
 			}
 		}
 
-		if (ImGui::Button("Duplicate"))
-		{
-			for (std::vector<GameObject*>::iterator it = selected.begin(); it != selected.end(); ++it)
-			{
-				//App->gameobject->DestroyGameObject(*it);
-			}
-		}
+		//if (ImGui::Button("Duplicate"))
+		//{
+		//	for (std::vector<GameObject*>::iterator it = selected.begin(); it != selected.end(); ++it)
+		//	{
+		//		//App->gameobject->DestroyGameObject(*it);
+		//	}
+		//}
 
 		if (ImGui::Button("Delete"))
 		{

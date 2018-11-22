@@ -53,9 +53,13 @@ public:
 	bool ManageModifiedAsset(const char* filepath);
 	bool RenameAsset(const char* filepath, const char* new_name);
 	bool MoveAsset(const char* filepath, const char* new_path);
-	bool MoveAssetsFolder(const char* folder, const char* new_path);
 
 	bool CreateScript(const char* filepath, const char* name);
+
+	bool MoveAssetsFolder(const char* folder, const char* new_path);
+	bool CreateAssetsFolder(const char* path, const char* name);
+	bool RenameAssetsFolder(const char* folder_path, const char* new_name);
+	bool DeleteAssetsFolder(const char* folder);
 
 	// --------------------------
 

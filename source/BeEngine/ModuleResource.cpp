@@ -443,49 +443,6 @@ bool ModuleResource::MoveAsset(const char * filepath, const char * new_path)
 	return ret;
 }
 
-bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path)
-{
-	bool ret = false;
-
-	StopWatchingFolders();
-
-	if (App->file_system->FolderExists(new_path))
-	{
-		DecomposedFilePath curr_folder_dfp = App->file_system->DecomposeFilePath(folder);
-
-		std::string new_path_created;
-		App->file_system->CreateFolder(new_path, curr_folder_dfp.folder_name.c_str(), true, new_path_created);
-
-		std::vector<std::string> files_folders_on_folder = App->file_system->GetFilesAndFoldersInPath(folder);
-
-		for (std::vector<std::string>::iterator it = files_folders_on_folder.begin(); it != files_folders_on_folder.end(); ++it)
-		{
-			DecomposedFilePath dfp = App->file_system->DecomposeFilePath((*it));
-
-			if (dfp.its_folder)
-			{
-				MoveAssetsFolder(dfp.path.c_str(), new_path_created.c_str());
-			}
-			else
-			{
-				bool moved = MoveAsset(dfp.file_path.c_str(), new_path_created.c_str());
-
-				if (!moved)
-				{
-					if (App->file_system->FileExists(dfp.file_path.c_str()))
-						App->file_system->FileDelete(dfp.file_path.c_str());
-				}
-			}
-		}
-
-		App->file_system->FolderDelete(folder);
-	}
-
-	StartWatchingFolders();
-
-	return ret;
-}
-
 bool ModuleResource::CreateScript(const char * filepath, const char * name)
 {
 	bool ret = false;
@@ -496,6 +453,116 @@ bool ModuleResource::CreateScript(const char * filepath, const char * name)
 	if (App->scripting->compiler->CreateScriptFromTemplate(filepath, name, asset_path))
 	{
 		ExportAssetToLibrary(asset_path.c_str());
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
+bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	if (App->file_system->FolderExists(new_path))
+	{
+		std::string parent_path = App->file_system->GetParentFolder(folder);
+
+		if (parent_path.compare(new_path) != 0)
+		{
+			DecomposedFilePath curr_folder_dfp = App->file_system->DecomposeFilePath(folder);
+
+			std::string new_path_created;
+			App->file_system->CreateFolder(new_path, curr_folder_dfp.folder_name.c_str(), true, new_path_created);
+
+			std::vector<std::string> files_folders_on_folder = App->file_system->GetFilesAndFoldersInPath(folder);
+
+			for (std::vector<std::string>::iterator it = files_folders_on_folder.begin(); it != files_folders_on_folder.end(); ++it)
+			{
+				DecomposedFilePath dfp = App->file_system->DecomposeFilePath((*it));
+
+				if (dfp.its_folder)
+				{
+					MoveAssetsFolder(dfp.path.c_str(), new_path_created.c_str());
+				}
+				else
+				{
+					bool moved = MoveAsset(dfp.file_path.c_str(), new_path_created.c_str());
+
+					if (!moved)
+					{
+						if (App->file_system->FileExists(dfp.file_path.c_str()))
+							App->file_system->FileDelete(dfp.file_path.c_str());
+					}
+				}
+			}
+
+			App->file_system->FolderDelete(folder);
+
+			bool ret = true;
+		}
+	}
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
+bool ModuleResource::CreateAssetsFolder(const char * path, const char * name)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	ret = App->file_system->CreateFolder(path, name, true);
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
+bool ModuleResource::RenameAssetsFolder(const char* folder_path, const char * new_name)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	ret = App->file_system->FolderRename(folder_path, new_name, true);
+
+	StartWatchingFolders();
+
+	return ret;
+}
+
+bool ModuleResource::DeleteAssetsFolder(const char * folder)
+{
+	bool ret = false;
+
+	StopWatchingFolders();
+
+	if (App->file_system->FolderExists(folder))
+	{
+		std::vector<std::string> files_folders = App->file_system->GetFilesAndFoldersInPath(folder);
+
+		for (std::vector<std::string>::iterator it = files_folders.begin(); it != files_folders.end(); ++it)
+		{
+			DecomposedFilePath dfp = App->file_system->DecomposeFilePath((*it));
+
+			if (dfp.its_folder)
+			{
+				DeleteAssetsFolder(dfp.path.c_str());
+			}
+			else
+			{
+				UnloadAssetFromEngine(dfp.file_path.c_str());
+			}
+		}
+
+		App->file_system->FolderDelete(folder);
+
+		ret = true;
 	}
 
 	StartWatchingFolders();

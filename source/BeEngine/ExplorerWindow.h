@@ -52,6 +52,8 @@ private:
 	void UpdateFiles();
 	void ClearFiles();;
 
+	void DrawFilesMenuBar();
+
 	void DrawFoldersColumn();
 	void DrawFilesColumn();
 
@@ -61,8 +63,10 @@ private:
 	void DrawFoldersRecursive(ExplorerFolder* folder);
 	void SetSelectedFolderTree(const char* path);
 	void FoldersInput(ExplorerFolder* folder, bool left_clicked, bool right_clicked);
-	void DrawFoldersPopupIntern(bool left_clicked, bool right_clicked);
+	void DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_clicked, bool right_clicked);
 	void DrawFoldersPopupExtern();
+
+	void FoldersDragAndDrop(ExplorerFolder* folder);
 
 	void AddToSelectedFolders(ExplorerFolder* folder);
 	void RemoveFromSelectedFolders(ExplorerFolder* folder);
@@ -84,7 +88,7 @@ private:
 	std::vector<ExplorerFolder*> curr_folders;
 	std::vector<ExplorerFolder*> selected_folders;
 
-	std::vector<ExplorerFile*> cur_files_folders;
+	std::vector<ExplorerFile*> curr_files;
 	std::vector<ExplorerFile*> selected_files;
 
 	bool update_folders = false;
@@ -93,7 +97,9 @@ private:
 	bool disable_button_up = true;
 	bool dragging = false;
 
-	char change_name_tmp[50];
+	std::string files_curr_path = "";
+
+	char name_tmp[50];
 };
 
 #endif // !__HIERARCHY_WINDOW_H__
