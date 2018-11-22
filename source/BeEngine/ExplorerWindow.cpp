@@ -201,6 +201,8 @@ void ExplorerWindow::DrawFilesColumn()
 
 		DrawFilesPopupIntern(left_clicked, right_clicked);
 
+		FilesDragAndDrop(curr_file);
+
 		if (opened)
 		{
 			ImGui::TreePop();
@@ -578,6 +580,28 @@ void ExplorerWindow::FoldersDragAndDrop(ExplorerFolder* folder)
 
 			dragging = false;
 		}
+
+		ImGui::EndDragDropTarget();
+	}
+
+	// Files slot become drop target
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Files"))
+		{
+			std::vector<ExplorerFile*> files = selected_files;
+
+			for (std::vector<ExplorerFile*>::iterator it = files.begin(); it != files.end(); ++it)
+			{
+				bool succes = App->resource->MoveAsset((*it)->dfp.file_path.c_str(), folder->dfp.path.c_str());
+
+				if(succes)
+					update_files = true;
+			}
+
+			dragging = false;
+		}
+
 		ImGui::EndDragDropTarget();
 	}
 }
@@ -865,6 +889,31 @@ void ExplorerWindow::DrawFilesPopupExtern()
 
 		ImGui::EndPopup();
 	}
+}
+
+void ExplorerWindow::FilesDragAndDrop(ExplorerFile * file)
+{
+	// Folder slot become drag target
+	uint drag_drop_flags = ImGuiDragDropFlags_SourceNoDisableHover;
+	
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	{
+		int size = sizeof(int);
+		int a = 1;
+		ImGui::SetDragDropPayload("Files", &a, size);
+
+		std::vector<ExplorerFile*> files = selected_files;
+
+		for (std::vector<ExplorerFile*>::iterator it = files.begin(); it != files.end(); ++it)
+		{
+			ImGui::Text((*it)->dfp.file_name.c_str());
+		}
+
+		dragging = true;
+
+		ImGui::EndDragDropSource();
+	}
+	
 }
 
 void ExplorerWindow::AddToSelectedFiles(ExplorerFile* add)

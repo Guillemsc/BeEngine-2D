@@ -157,31 +157,36 @@ void Resource::EM_MoveAsset(const char * new_path)
 
 	if (App->file_system->FileExists(asset_filepath.c_str()))
 	{
-		std::string resulting_asset_path;
-		App->file_system->FileCopyPaste(asset_filepath.c_str(), new_path, false, resulting_asset_path);
-		App->file_system->FileDelete(asset_filepath.c_str());
-		asset_filepath = resulting_asset_path;
+		DecomposedFilePath asset_decomposed = App->file_system->DecomposeFilePath(asset_filepath.c_str());
 
-		DecomposedFilePath asset_decomposed = App->file_system->DecomposeFilePath(resulting_asset_path.c_str());
-
-		if (App->file_system->FileExists(meta_filepath.c_str()))
+		if (asset_decomposed.path.compare(new_path) != 0)
 		{
-			std::string resulting_meta_path;
-			App->file_system->FileCopyPaste(meta_filepath.c_str(), new_path, false, resulting_meta_path);
+			std::string resulting_asset_path;
+			App->file_system->FileCopyPaste(asset_filepath.c_str(), new_path, false, resulting_asset_path);
+			App->file_system->FileDelete(asset_filepath.c_str());
+			asset_filepath = resulting_asset_path;
 
-			std::string asset_path_to_check = resulting_asset_path + ".meta";
+			asset_decomposed = App->file_system->DecomposeFilePath(resulting_asset_path.c_str());
 
-			if (asset_path_to_check.compare(resulting_meta_path) != 0)
+			if (App->file_system->FileExists(meta_filepath.c_str()))
 			{
-				if (App->file_system->FileExists(asset_path_to_check.c_str()))
-					App->file_system->FileDelete(asset_path_to_check.c_str());
+				std::string resulting_meta_path;
+				App->file_system->FileCopyPaste(meta_filepath.c_str(), new_path, false, resulting_meta_path);
 
-				App->file_system->FileRename(resulting_meta_path.c_str(), asset_decomposed.file_name.c_str(), false, resulting_meta_path);
+				std::string asset_path_to_check = resulting_asset_path + ".meta";
 
-				meta_filepath = resulting_meta_path;
+				if (asset_path_to_check.compare(resulting_meta_path) != 0)
+				{
+					if (App->file_system->FileExists(asset_path_to_check.c_str()))
+						App->file_system->FileDelete(asset_path_to_check.c_str());
+
+					App->file_system->FileRename(resulting_meta_path.c_str(), asset_decomposed.file_name.c_str(), false, resulting_meta_path);
+
+					meta_filepath = resulting_meta_path;
+				}
+
+				OnMoveAsset(asset_filepath.c_str(), last_asset_filepath.c_str());
 			}
-
-			OnMoveAsset(asset_filepath.c_str(), last_asset_filepath.c_str());
 		}
 	}
 }

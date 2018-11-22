@@ -426,7 +426,7 @@ bool ModuleResource::MoveAsset(const char * filepath, const char * new_path)
 
 	StopWatchingFolders();
 
-	if (App->file_system->FolderExists(new_path))
+	if (App->file_system->FolderExists(new_path) && App->file_system->FileExists(filepath))
 	{
 		Resource* res = GetResourceFromAssetFile(filepath);
 

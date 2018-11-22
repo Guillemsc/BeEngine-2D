@@ -77,6 +77,8 @@ private:
 	void DrawFilesPopupIntern(bool left_clicked, bool right_clicked);
 	void DrawFilesPopupExtern();
 
+	void FilesDragAndDrop(ExplorerFile* file);
+
 	void AddToSelectedFiles(ExplorerFile* add);
 	void RemoveFromSelectedFiles(ExplorerFile* add);
 	void RemoveAllFromSelectedFiles();
