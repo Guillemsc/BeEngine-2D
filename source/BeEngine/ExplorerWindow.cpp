@@ -315,7 +315,7 @@ void ExplorerWindow::SetSelectedFolderTree(const char * path)
 	{
 		App->resource->SetCurrentAssetsPath(path);
 
-		std::string assets_path_parent = App->file_system->GetParentFolder(App->resource->GetAssetsPath().c_str());
+		std::string assets_path_parent = App->file_system->FolderParent(App->resource->GetAssetsPath().c_str());
 		files_curr_path = App->file_system->SubstractFolder(App->resource->GetCurrentAssetsPath(), assets_path_parent);
 
 		update_files = true;

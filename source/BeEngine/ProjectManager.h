@@ -2,6 +2,7 @@
 #define __PROJECT_MANAGER_H__
 
 #include "ModuleEditor.h"
+#include <string>
 
 enum ProjectManagerState
 {

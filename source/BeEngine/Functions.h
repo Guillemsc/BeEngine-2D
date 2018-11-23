@@ -42,6 +42,9 @@ std::string ToUpperCase(std::string str);
 // Returns chars to lower case
 std::string ToLowerCase(std::string str);
 
+// Returns char to lower case
+char ToLowerCase(char str);
+
 // Returns a random int given a range;
 int GetRandomValue(int range_1, int range_2);
 

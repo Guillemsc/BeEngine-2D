@@ -157,33 +157,29 @@ void Resource::EM_MoveAsset(const char * new_path)
 
 	if (App->file_system->FileExists(asset_filepath.c_str()))
 	{
-		DecomposedFilePath asset_decomposed = App->file_system->DecomposeFilePath(asset_filepath.c_str());
+		DecomposedFilePath asset_decomposed = App->file_system->DecomposeFilePath(asset_filepath);
 
 		if (asset_decomposed.path.compare(new_path) != 0)
 		{
 			std::string resulting_asset_path;
-			App->file_system->FileCopyPaste(asset_filepath.c_str(), new_path, false, resulting_asset_path);
-			App->file_system->FileDelete(asset_filepath.c_str());
+			App->file_system->FileCopyPaste(asset_filepath, new_path, false, resulting_asset_path);
+			App->file_system->FileDelete(asset_filepath);
 			asset_filepath = resulting_asset_path;
 
-			asset_decomposed = App->file_system->DecomposeFilePath(resulting_asset_path.c_str());
+			asset_decomposed = App->file_system->DecomposeFilePath(resulting_asset_path);
 
-			if (App->file_system->FileExists(meta_filepath.c_str()))
+			if (App->file_system->FileExists(meta_filepath))
 			{
+				std::string meta_path_to_check = resulting_asset_path + ".meta";
+			
+				if (App->file_system->FileExists(meta_path_to_check))
+					App->file_system->FileDelete(meta_path_to_check);
+				
 				std::string resulting_meta_path;
-				App->file_system->FileCopyPaste(meta_filepath.c_str(), new_path, false, resulting_meta_path);
+				App->file_system->FileCopyPaste(meta_filepath, new_path, false, resulting_meta_path);
+				App->file_system->FileDelete(meta_filepath);
 
-				std::string asset_path_to_check = resulting_asset_path + ".meta";
-
-				if (asset_path_to_check.compare(resulting_meta_path) != 0)
-				{
-					if (App->file_system->FileExists(asset_path_to_check.c_str()))
-						App->file_system->FileDelete(asset_path_to_check.c_str());
-
-					App->file_system->FileRename(resulting_meta_path.c_str(), asset_decomposed.file_name.c_str(), false, resulting_meta_path);
-
-					meta_filepath = resulting_meta_path;
-				}
+				meta_filepath = resulting_meta_path;
 
 				OnMoveAsset(asset_filepath.c_str(), last_asset_filepath.c_str());
 			}

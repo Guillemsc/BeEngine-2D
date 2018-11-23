@@ -90,7 +90,7 @@ bool ModuleProject::CreateNewProject(const char* path, const char * name)
 
 		if (!App->file_system->FolderExists(full_path.c_str()))
 		{
-			full_path = App->file_system->CreateFolder(path, name);
+			full_path = App->file_system->FolderCreate(path, name);
 
 			Project* proj = new Project();
 

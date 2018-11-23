@@ -141,6 +141,11 @@ std::string ToLowerCase(std::string str)
 	return str;
 }
 
+char ToLowerCase(char str)
+{
+	return tolower(str);
+}
+
 int GetRandomValue(int range_1, int range_2)
 {
 	std::random_device rd;

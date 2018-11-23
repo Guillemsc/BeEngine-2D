@@ -68,7 +68,7 @@ void ResourceTexture::ExportToLibrary(std::string uid)
 
 			if (ilSaveL(IL_DDS, data, size) > 0)
 			{
-				App->file_system->FileSave(library_path.c_str(), (char*)data, uid.c_str(), "dds", size);
+				App->file_system->FileSave(library_path.c_str(), uid.c_str(), "dds", (char*)data, size);
 			}
 
 			RELEASE_ARRAY(data);

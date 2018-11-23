@@ -473,14 +473,14 @@ bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path
 
 	if (App->file_system->FolderExists(new_path) && App->file_system->FolderExists(folder))
 	{
-		std::string parent_path = App->file_system->GetParentFolder(folder);
+		std::string parent_path = App->file_system->FolderParent(folder);
 
 		if (parent_path.compare(new_path) != 0)
 		{
 			DecomposedFilePath curr_folder_dfp = App->file_system->DecomposeFilePath(folder);
 
 			std::string new_path_created;
-			App->file_system->CreateFolder(new_path, curr_folder_dfp.folder_name.c_str(), true, new_path_created);
+			App->file_system->FolderCreate(new_path, curr_folder_dfp.folder_name.c_str(), true, new_path_created);
 
 			std::vector<std::string> files_folders_on_folder = App->file_system->GetFilesAndFoldersInPath(folder);
 
@@ -521,7 +521,7 @@ bool ModuleResource::CreateAssetsFolder(const char * path, const char * name)
 
 	StopWatchingFolders();
 
-	ret = App->file_system->CreateFolder(path, name, true);
+	ret = App->file_system->FolderCreate(path, name, true);
 
 	StartWatchingFolders();
 
@@ -625,8 +625,8 @@ void ModuleResource::OnEvent(Event* ev)
 	{
 	case EventType::PROJECT_SELECTED:
 		{
-			App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "assets", false, assets_folder);
-			App->file_system->CreateFolder(App->project->GetCurrProjectBasePath().c_str(), "library", false, library_folder);
+			App->file_system->FolderCreate(App->project->GetCurrProjectBasePath().c_str(), "assets", false, assets_folder);
+			App->file_system->FolderCreate(App->project->GetCurrProjectBasePath().c_str(), "library", false, library_folder);
 
 			current_assets_folder = assets_folder;
 
@@ -786,7 +786,7 @@ void ModuleResource::CreateLibraryFolders()
 	{
 		for (std::map<ResourceType, std::string>::iterator it = resource_names.begin(); it != resource_names.end(); ++it)
 		{
-			App->file_system->CreateFolder(library_folder.c_str(), (*it).second.c_str());
+			App->file_system->FolderCreate(library_folder.c_str(), (*it).second.c_str());
 		}
 	}
 }
