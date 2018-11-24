@@ -18,6 +18,7 @@
 #include "InspectorWindow.h"
 #include "ExplorerWindow.h"
 #include "ConsoleWindow.h"
+#include "BottomBar.h"
 #include "imgui_docking.h"
 
 ModuleEditor::ModuleEditor()
@@ -41,11 +42,12 @@ bool ModuleEditor::Awake()
 
 	ImGuiInit();
 
-	docking_space = (DockingSpace*)AddEditorElement(new DockingSpace(float2(0, 58), float2(0, 0)));
+	docking_space = (DockingSpace*)AddEditorElement(new DockingSpace(float2(0, 58), float2(0, 33)));
 	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
 	tools_bar = (ToolsBar*)AddEditorElement(new ToolsBar(float2(0, 19)), true);
 	project_manager = (ProjectManager*)AddEditorElement(new ProjectManager(), true);
 	progress_window = (ProgressWindow*)AddEditorElement(new ProgressWindow(), true);
+	bottom_bar = (BottomBar*)AddEditorElement(new BottomBar(30), true);
 
 	scene_window = (SceneWindow*)AddEditorWindow("Scene", new SceneWindow());
 	AddEditorWindow("Profiler", new ProfilerWindow());
@@ -266,6 +268,7 @@ void ModuleEditor::SetEditorState(const EditorState & state)
 		docking_space->SetVisible(false);
 		menu_bar->SetVisible(false);
 		tools_bar->SetVisible(false);
+		bottom_bar->SetVisible(false);
 
 		for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 			(*it)->SetVisible(false);
@@ -276,6 +279,7 @@ void ModuleEditor::SetEditorState(const EditorState & state)
 		docking_space->SetVisible(true);
 		menu_bar->SetVisible(true);
 		tools_bar->SetVisible(true);
+		bottom_bar->SetVisible(true);
 
 		for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 			(*it)->SetVisible(true);

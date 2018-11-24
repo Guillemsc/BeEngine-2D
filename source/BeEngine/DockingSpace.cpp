@@ -29,7 +29,7 @@ void DockingSpace::DrawEditor()
 	float2 window_size = App->window->GetWindowSize();
 
 	float2 docking_pos = float2(margins_left_up.x - 2, margins_left_up.y - 5);
-	float2 docking_size = float2(window_size.x - margins_right_down.x + 0 - margins_left_up.x,
+	float2 docking_size = float2(window_size.x - margins_right_down.x + 3 - margins_left_up.x,
 		window_size.y - margins_right_down.y + 5 - margins_left_up.y);
 
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove

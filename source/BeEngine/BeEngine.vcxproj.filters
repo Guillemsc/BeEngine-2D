@@ -510,6 +510,9 @@
     <ClInclude Include="ConsoleWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="BottomBar.h">
+      <Filter>Sources\3. Editor ================\Elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -829,6 +832,9 @@
     </ClCompile>
     <ClCompile Include="ConsoleWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="BottomBar.cpp">
+      <Filter>Sources\3. Editor ================\Elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

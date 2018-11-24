@@ -19,7 +19,7 @@ public:
 
 	void Start();
 	void Render(float relative_size);
-	void UpdateTransform(float4x4& transform);
+	bool UpdateTransform(float4x4& transform);
 
 private:
 	float2 GetPosition();
@@ -27,6 +27,8 @@ private:
 
 private:
 	float4x4 internal_transform = float4x4::identity;
+
+	bool edited = false;
 };
 
 #endif // !__POSITION_GUIZMO_H__

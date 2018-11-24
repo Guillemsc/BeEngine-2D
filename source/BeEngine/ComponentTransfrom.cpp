@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "imgui.h"
 
-ComponentTransform::ComponentTransform() : GameObjectComponent("Transform", ComponentType::TRANSFORM, ComponentGroup::TRANSFORMATIONS, false, false)
+ComponentTransform::ComponentTransform() : GameObjectComponent("Transform", ComponentType::TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
 {
 }
 
@@ -92,6 +92,20 @@ float ComponentTransform::GetRotation() const
 float2 ComponentTransform::GetScale() const
 {
 	return local_scale;
+}
+
+void ComponentTransform::SetLocalTransform(const float4x4 & local)
+{
+	float3 pos;
+	Quat rot;
+	float3 scal;
+	local.Decompose(pos, rot, scal);
+
+	local_pos = float2(pos.x, pos.y);
+	local_rotation = rot.ToEulerXYZ().z;
+	local_scale = float2(scal.x, scal.y);
+
+	UpdateLocalTransform();
 }
 
 float4x4 ComponentTransform::GetLocalTransform() const

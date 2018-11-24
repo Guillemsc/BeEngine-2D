@@ -216,6 +216,26 @@ void ConsoleWindow::DrawLogs()
 	}
 }
 
+ConsoleLogLine ConsoleWindow::GetLastLog() const
+{
+	ConsoleLogLine ret;
+
+	if (console_logs.size() > 0)
+		ret = *console_logs.rbegin();
+
+	for (std::vector<ConsolePersonalLogs>::const_reverse_iterator it = personal_logs.rbegin(); it != personal_logs.rend(); ++it)
+	{
+		if ((*it).logs.size() > 0)
+		{
+			ret = *(*it).logs.rbegin();
+
+			break;
+		}
+	}
+
+	return ret;
+}
+
 void ConsoleWindow::DrawLog(const ConsoleLogLine & log)
 {
 	switch (log.GetType())

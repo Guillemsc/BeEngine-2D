@@ -35,6 +35,8 @@ public:
 	float GetRotation() const;
 	float2 GetScale() const;
 
+	void SetLocalTransform(const float4x4& local);
+
 	float4x4 GetLocalTransform() const;
 	float4x4 GetGlobalTransform() const;
 
@@ -48,7 +50,7 @@ private:
 
 	float2 local_pos = float2::zero;
 	float local_rotation = 0;
-	float2 local_scale = float2::zero;
+	float2 local_scale = float2::one;
 
 	float4x4 global_transform;
 };

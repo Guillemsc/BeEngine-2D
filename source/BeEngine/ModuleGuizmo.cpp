@@ -7,6 +7,8 @@
 #include "ModuleInput.h"
 #include "ModuleEditor.h"
 #include "SceneWindow.h"
+#include "ModuleGameObject.h"
+#include "ComponentTransfrom.h"
 
 ModuleGuizmo::ModuleGuizmo()
 {
@@ -20,7 +22,7 @@ bool ModuleGuizmo::Awake()
 {
 	bool ret = true;
 
-	AddGuizmo(new PositionGuizmo());
+	position_guizmo = (PositionGuizmo*)AddGuizmo(new PositionGuizmo());
 
 	return ret;
 }
@@ -43,6 +45,23 @@ bool ModuleGuizmo::Update()
 {
 	bool ret = true;
 
+	// Temporal
+	if (App->gameobject->GetSelectedGameObjectsCount() == 1)
+	{
+		position_guizmo->visible = true;
+
+		GameObject* selected = App->gameobject->GetSelectedGameObjects()[0];
+
+		float4x4 local_trans = selected->transform->GetLocalTransform();
+
+		if (position_guizmo->UpdateTransform(local_trans))
+		{
+			selected->transform->SetLocalTransform(local_trans);
+		}
+	}
+	else
+		position_guizmo->visible = false;
+
 	return ret;
 }
 
@@ -62,13 +81,19 @@ bool ModuleGuizmo::CleanUp()
 	return ret;
 }
 
-void ModuleGuizmo::AddGuizmo(Guizmo * add)
+Guizmo* ModuleGuizmo::AddGuizmo(Guizmo * add)
 {
+	Guizmo* ret = nullptr;
+
 	if (add != nullptr)
 	{
 		guizmos.push_back(add);
 		add->Start();
+
+		ret = add;
 	}
+
+	return ret;
 }
 
 void ModuleGuizmo::DestroyAllGuizmos()

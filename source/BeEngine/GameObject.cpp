@@ -11,8 +11,6 @@ GameObject::GameObject(std::string _uid)
 void GameObject::Start()
 {
 	transform = (ComponentTransform*)CreateComponent(ComponentType::TRANSFORM);
-	CreateComponent(ComponentType::TRANSFORM);
-	DestroyComponent(transform);
 }
 
 void GameObject::Update()

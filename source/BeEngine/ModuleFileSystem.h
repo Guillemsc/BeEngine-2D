@@ -44,20 +44,20 @@ public:
 	std::string GetWorkingDirectory();
 
 	// Files
-	bool FileExists(const std::string& filepath); // W
-	bool FileDelete(const std::string& filepath); // W
-	bool FileRename(const std::string& filepath, const std::string& new_name, bool check_name_collision = false, std::string& new_filepath = std::string()); // W
-	bool FileCopyPaste(const std::string& filepath, const std::string& new_path, bool check_name_collision = false, std::string &resultant_path = std::string()); // W
-	bool FileSave(const std::string& path, const std::string& name, const std::string& extension, const char * file_content, uint size); // W
+	bool FileExists(const std::string& filepath); 
+	bool FileDelete(const std::string& filepath); 
+	bool FileRename(const std::string& filepath, const std::string& new_name, bool check_name_collision = false, std::string& new_filepath = std::string()); 
+	bool FileCopyPaste(const std::string& filepath, const std::string& new_path, bool check_name_collision = false, std::string &resultant_path = std::string()); 
+	bool FileSave(const std::string& path, const std::string& name, const std::string& extension, const char * file_content, uint size); 
 
 	// Folders
-	bool FolderExists(const std::string& path); // W
-	bool FolderCreate(const std::string& path, const std::string& name, bool check_name_collision = false, std::string& new_filepath = std::string()); //
-	bool FolderDelete(const std::string& folderpath); //
-	std::string FolderParent(const std::string& folder); //
-	bool FolderRename(const std::string& folderpath, const std::string& new_name, bool check_name_collision = false, std::string& new_folderpath = std::string()); //
+	bool FolderExists(const std::string& path); 
+	bool FolderCreate(const std::string& path, const std::string& name, bool check_name_collision = false, std::string& new_filepath = std::string()); 
+	bool FolderDelete(const std::string& folderpath); 
+	std::string FolderParent(const std::string& folder); 
+	bool FolderRename(const std::string& folderpath, const std::string& new_name, bool check_name_collision = false, std::string& new_folderpath = std::string()); 
 
-	DecomposedFilePath DecomposeFilePath(const std::string& file_path); // W
+	DecomposedFilePath DecomposeFilePath(const std::string& file_path); 
 
 	std::vector<std::string> GetFilesAndFoldersInPath(const std::string& path, const std::string& extension = "");
 	std::vector<std::string> GetFoldersInPath(const std::string& path);
@@ -73,8 +73,8 @@ public:
 	std::string SelectFileDilog(bool& canceled, const char* filter[]);
 
 private:
-	std::string FileRenameOnNameCollision(const std::string& filepath); //W
-	std::string FolderRenameOnCollision(const std::string& path); //
+	std::string FileRenameOnNameCollision(const std::string& filepath); 
+	std::string FolderRenameOnCollision(const std::string& path); 
 
 private:
 	// Same name file renaming

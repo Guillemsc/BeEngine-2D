@@ -16,7 +16,7 @@ public:
 
 	virtual void Start() {};
 	virtual void Render(float relative_size) {};
-	virtual void UpdateTransform(float4x4& transform) {};
+	virtual bool UpdateTransform(float4x4& transform) { return false; };
 
 
 	void CleanUp();

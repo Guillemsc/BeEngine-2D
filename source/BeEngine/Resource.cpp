@@ -164,9 +164,8 @@ void Resource::EM_MoveAsset(const char * new_path)
 			std::string resulting_asset_path;
 			App->file_system->FileCopyPaste(asset_filepath, new_path, false, resulting_asset_path);
 			App->file_system->FileDelete(asset_filepath);
-			asset_filepath = resulting_asset_path;
 
-			asset_decomposed = App->file_system->DecomposeFilePath(resulting_asset_path);
+			asset_filepath = resulting_asset_path;
 
 			if (App->file_system->FileExists(meta_filepath))
 			{

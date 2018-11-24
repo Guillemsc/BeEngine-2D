@@ -16,6 +16,7 @@ class SceneWindow;
 class ExplorerWindow;
 class InspectorWindow;
 class ConsoleWindow;
+class BottomBar;
 
 class EditorWindow
 {
@@ -140,6 +141,7 @@ public:
 	ToolsBar*        tools_bar = nullptr;
 	ProjectManager*  project_manager = nullptr;
 	ProgressWindow*  progress_window = nullptr;
+	BottomBar*		 bottom_bar = nullptr;
 
 	SceneWindow*     scene_window = nullptr;
 	InspectorWindow* inspector_window = nullptr;

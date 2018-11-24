@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Guizmo.h"
 
+class PositionGuizmo;
+
 class ModuleGuizmo : public Module
 {
 public:
@@ -23,11 +25,13 @@ public:
 	bool GetRenderHandlers() const;
 
 private:
-	void AddGuizmo(Guizmo* add);
+	Guizmo* AddGuizmo(Guizmo* add);
 	void DestroyAllGuizmos();
 
 private:
 	std::vector<Guizmo*> guizmos;
+
+	PositionGuizmo* position_guizmo = nullptr;
 
 	bool render_handlers = false;
 };

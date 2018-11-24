@@ -97,21 +97,44 @@ void PositionGuizmo::Render(float relative_size)
 	if (han_up_arrow->GetPressed())
 	{
 		AddPosition(float2(0, -App->input->GetMouseYMotion() * relative_size));
+
+		edited = true;
 	}
 
 	if (han_right_arrow->GetPressed())
 	{
 		AddPosition(float2(App->input->GetMouseXMotion() * relative_size, 0));
+
+		edited = true;
 	}
 
 	if (han_center->GetPressed())
 	{
 		AddPosition(float2(App->input->GetMouseXMotion() * relative_size, -App->input->GetMouseYMotion() * relative_size));
+
+		edited = true;
 	}
+
 }
 
-void PositionGuizmo::UpdateTransform(float4x4 & transform)
+bool PositionGuizmo::UpdateTransform(float4x4& transform)
 {
+	bool ret = false;
+
+	if (edited)
+	{
+		transform = internal_transform;
+	}
+	else
+	{
+		internal_transform = transform;
+	}
+
+	ret = edited;
+
+	edited = false;
+
+	return ret;
 }
 
 float2 PositionGuizmo::GetPosition()

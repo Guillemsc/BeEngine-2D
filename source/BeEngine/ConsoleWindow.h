@@ -40,6 +40,9 @@ public:
 	void AddLog(const char* message, const ConsoleLogType& type);
 	void Clear();
 
+	ConsoleLogLine GetLastLog() const;
+	void DrawLog(const ConsoleLogLine& log);
+
 private:
 	void UpdateShownMessages();
 
@@ -48,7 +51,7 @@ private:
 	bool PersonalLogExists(const std::string& identifier);
 
 	void DrawLogs();
-	void DrawLog(const ConsoleLogLine& log);
+
 private:
 	ImFont* font = nullptr;
 
