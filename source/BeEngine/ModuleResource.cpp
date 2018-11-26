@@ -255,19 +255,16 @@ bool ModuleResource::LoadFileToEngine(const char * filepath)
 void ModuleResource::UnloadAssetFromEngine(const char * filepath)
 {
 	StopWatchingFolders();
+	
+	Resource* res = GetResourceFromAssetFile(filepath);
 
-	if (App->file_system->FileExists(filepath))
+	if (res != nullptr)
 	{
-		Resource* res = GetResourceFromAssetFile(filepath);
+		res->EM_RemoveAsset();
 
-		if (res != nullptr)
-		{
-			res->EM_RemoveAsset();
-
-			DestroyResource(res);
-		}
+		DestroyResource(res);
 	}
-
+	
 	StartWatchingFolders();
 }
 
