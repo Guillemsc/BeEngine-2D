@@ -45,11 +45,12 @@ void ScriptingObjectCompiler::Start()
 			args[0] = assemblys_array;
 			
 			MonoObject* ret_obj = nullptr;
-			script_compiler_instance->InvokeMonoMethod("Init", args, 1, ret_obj);
+			if (script_compiler_instance->InvokeMonoMethod("Init", args, 1, ret_obj))
+			{
+				bool succes = App->scripting->UnboxBool(ret_obj);
 
-			bool succes = App->scripting->UnboxBool(ret_obj);
-
-			ready_to_use = succes;
+				ready_to_use = succes;
+			}
 		}
 	}
 }
@@ -91,7 +92,7 @@ bool ScriptingObjectCompiler::AddScript(const char* script_filepath)
 				MonoObject* ret_obj = nullptr;
 				if (script_compiler_instance->InvokeMonoMethod("AddScript", args, 1, ret_obj))
 				{
-					ret = App->scripting->UnboxInt(ret_obj);
+					ret = App->scripting->UnboxBool(ret_obj);
 				}
 			}
 		}

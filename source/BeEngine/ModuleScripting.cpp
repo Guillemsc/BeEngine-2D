@@ -88,46 +88,6 @@ bool ModuleScripting::Awake()
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
 
-	//MonoClass* test_class = GetMonoClass(base_project_assembly, "BeEngine", "BeEngineReference");
-
-	//CreatedMonoObject obj = CreateMonoObject(test_class);
-
-	//MonoMethod* init_method = GetMonoMethod(test_class, "SetPtr", 1);
-
-	//class PeneClasse
-	//{
-	//public:
-	//	int pene = 5;
-	//};
-
-	//PeneClasse* pc = new PeneClasse();
-	//pc->pene = 10;
-
-	//float* test = new float[1];
-	//test[0] = 4;
-
-	//void *args[1];
-	//*args = pc;
-
-	//float* tp = (float*)*args;
-
-	//void* ret_obj = *args;
-	//
-	//tp = (float*)ret_obj;
-
-	//// --
-
-	//MonoObject* exception = nullptr;
-
-	//MonoObject* ret_oj = nullptr;
-	//ret_oj = mono_runtime_invoke(init_method, obj.GetMonoObject(), args, &exception);
-
-	//ret_obj = mono_object_unbox(ret_oj);
-
-	//// --
-
-	//PeneClasse* pc2 = (PeneClasse*)ret_obj;
-
 	return ret;
 }
 
@@ -273,28 +233,6 @@ std::vector<std::string> ModuleScripting::GetBaseLibs() const
 {
 	return base_libs;
 }
-//
-//bool ModuleScripting::CompileScript(const char * filepath, std::string & compile_errors)
-//{
-//	//if (compiler_assembly->GetAssemblyLoaded())
-//	//{
-//	//	MonoClass* compiler_class = compiler_assembly->GetClass("BeEngineScriptCompiler", "CSharpCompiler");
-//
-//	//	MonoMethod* compile_method = GetMonoMethod(compiler_class, "CompileScript", 3);
-//
-//	//	void* args[3];
-//	//	const char* script_path = "";
-//	//	const char* script_name = "";
-//	//	
-//	//	//args[0] = &value;
-//
-//
-//
-//	//	//string script_path, string script_name, ref List<string> compile_errors
-//	//}
-//
-//	return false;
-//}
 
 MonoClass * ModuleScripting::GetMonoClass(MonoObject * obj)
 {
@@ -510,7 +448,7 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 void ModuleScripting::CompileScripts()
 {
 	std::vector<std::string> compile_errors;
-	App->scripting->compiler->CompileScripts(compile_errors);
+	compiler->CompileScripts(compile_errors);
 
 	App->editor->console_window->ClearPesonalLogs("scripting");
 	for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
@@ -539,6 +477,11 @@ void ModuleScripting::InitScriptingSolution()
 
 		solution_manager->AddAssembly(curr_lib.c_str());
 	}
+
+	std::string output_dll = App->resource->GetLibraryPathFromResourceType(ResourceType::SCRIPT);
+	output_dll += "scripting.dll";
+
+	compiler->SetScriptsAssemblyOutputFilepath(output_dll.c_str());
 }
 
 void ModuleScripting::UpdateScriptingObjects()
@@ -569,68 +512,6 @@ void ModuleScripting::DestroyAllScriptingObjects()
 
 	scripting_objects.clear();
 }
-
-//bool ModuleScripting::GetIsSolutionCreated(const char* project_path, const char* solution_path)
-//{
-//	bool ret = false;
-//
-//	if (App->file_system->FileExists(project_path) && App->file_system->FileExists(solution_path))
-//		ret = true;
-//
-//	return ret;
-//}
-//
-//bool ModuleScripting::CreateSolution()
-//{
-//	bool ret = false;
-//
-//	/*std::string proj_path = App->project->GetCurrProjectBasePath() + "Assembly-CSharp.csproj";
-//	std::string solution_path = App->project->GetCurrProjectBasePath() + "SolutionTest.sln";
-//
-//	if (!GetIsSolutionCreated(proj_path.c_str(), solution_path.c_str()))
-//	{
-//		std::string proj_template_path = project_template_base_path + "Assembly-CSharp.csproj";
-//		std::string solution_template_path = project_template_base_path + "SolutionTest.sln";
-//
-//		App->file_system->FileCopyPaste(proj_template_path.c_str(), App->project->GetCurrProjectBasePath().c_str(), true);
-//		App->file_system->FileCopyPaste(solution_template_path.c_str(), App->project->GetCurrProjectBasePath().c_str(), true);
-//
-//		ret = true;
-//	}
-//*/
-//	return ret;
-//}
-
-//bool ModuleScripting::InitSolution()
-//{
-//	bool ret = false;
-//
-//	/*if (compiler_assembly != nullptr && compiler_assembly->GetAssemblyLoaded())
-//	{
-//		MonoClass* solution_manager_class = GetMonoClass(compiler_assembly, "BeEngineScriptCompiler", "CSharpSolutionManager");
-//
-//		solution_manager_object = CreateMonoObject(solution_manager_class);
-//
-//		MonoMethod* init_method = GetMonoMethod(solution_manager_class, "Init", 1);
-//
-//		std::string proj_path = App->project->GetCurrProjectBasePath() + "Assembly-CSharp.csproj";
-//
-//		MonoString* path_mono_string = MonoStringFromString(proj_path.c_str());
-//
-//		void *args[1];
-//		args[0] = path_mono_string;
-//
-//		if (solution_manager_object.GetLoaded())
-//		{
-//			MonoObject* ret_obj = nullptr;
-//			InvokeMonoMethod(solution_manager_object.GetMonoObject(), init_method, args, ret_obj);
-//
-//			ret = BoolFromMonoBool((MonoBoolean*)ret_obj);
-//		}
-//	}*/
-//
-//	return ret;
-//}
 
 ScriptingAssembly::ScriptingAssembly(MonoDomain* dom, const char * assembly_path)
 {

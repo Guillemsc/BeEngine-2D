@@ -25,11 +25,10 @@ namespace BeEngine
                     compile_parameters.IncludeDebugInformation = false;
                     compile_parameters.GenerateInMemory = true;
 
-                    string a = referenced_assemblies[0];
-
                     for (int i = 0; i < ref_assemblies.Count; ++i)
                     {
-                        compile_parameters.ReferencedAssemblies.Add(ref_assemblies[i]);
+                        if(File.Exists(ref_assemblies[i]))
+                            compile_parameters.ReferencedAssemblies.Add(ref_assemblies[i]);
                     }
 
                     ret = true;
@@ -42,10 +41,13 @@ namespace BeEngine
             {
                 bool ret = false;
 
-                if (File.Exists(add) && !scripts.Contains(add))
-                    scripts.Add(add);
+                if (File.Exists(add))
+                {
+                    if(!scripts.Contains(add))
+                        scripts.Add(add);
 
-                ret = true;
+                    ret = true;
+                }
                 
                 return ret;
             }
@@ -54,7 +56,7 @@ namespace BeEngine
             {
                 bool ret = false;
 
-                scripts.Remove(remove);
+                ret = scripts.Remove(remove);
 
                 return ret;
             }
