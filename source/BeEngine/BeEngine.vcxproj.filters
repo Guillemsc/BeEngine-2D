@@ -519,7 +519,7 @@
     <ClInclude Include="DinamicTriangleRenderer.h">
       <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
     </ClInclude>
-    <ClInclude Include="StaticTextureRenderer.h">
+    <ClInclude Include="StaticSpriteRenderer.h">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -848,7 +848,7 @@
     <ClCompile Include="HierarchyWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="StaticTextureRenderer.cpp">
+    <ClCompile Include="StaticSpriteRenderer.cpp">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClCompile>
   </ItemGroup>

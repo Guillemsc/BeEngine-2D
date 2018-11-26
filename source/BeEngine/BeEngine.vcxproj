@@ -233,7 +233,7 @@
     <ClInclude Include="ScriptingObjectCompiler.h" />
     <ClInclude Include="ScriptingObjectFileWatcher.h" />
     <ClInclude Include="ScriptingObjectSolutionManager.h" />
-    <ClInclude Include="StaticTextureRenderer.h" />
+    <ClInclude Include="StaticSpriteRenderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Time\Clock.h" />
     <ClInclude Include="tinyfiledialogs.h" />
@@ -343,7 +343,7 @@
     <ClCompile Include="ScriptingObjectCompiler.cpp" />
     <ClCompile Include="ScriptingObjectFileWatcher.cpp" />
     <ClCompile Include="ScriptingObjectSolutionManager.cpp" />
-    <ClCompile Include="StaticTextureRenderer.cpp" />
+    <ClCompile Include="StaticSpriteRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Time\Clock.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />

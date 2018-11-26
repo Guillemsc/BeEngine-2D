@@ -10,6 +10,11 @@ GameObjectComponent::GameObjectComponent(std::string _name, const ComponentType&
 	can_destroy = _can_destroy;
 }
 
+GameObject * GameObjectComponent::GetOwner()
+{
+	return owner;
+}
+
 ComponentType GameObjectComponent::GetType() const
 {
 	return type;

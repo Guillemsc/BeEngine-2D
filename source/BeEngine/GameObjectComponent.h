@@ -39,6 +39,8 @@ public:
 	virtual void OnChildRemoved(GameObject* child) {};
 	virtual void OnParentChanged(GameObject* new_parent) {};
 
+	GameObject* GetOwner();
+
 	ComponentType GetType() const;
 	std::string GetName() const;
 

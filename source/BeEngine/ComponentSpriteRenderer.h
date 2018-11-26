@@ -30,6 +30,8 @@ public:
 
 	void SetResourceTexture(ResourceTexture* set);
 
+	uint GetTextureId() const;
+
 private:
 	ResourceTexture* resource_texture = nullptr;
 

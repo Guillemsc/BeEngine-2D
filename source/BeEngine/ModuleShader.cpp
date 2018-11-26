@@ -358,8 +358,6 @@ void ShaderProgram::SetProgramParameters(ShaderProgramParameters para)
 			{
 				std::map<std::string, float3> vector3_vals = para.GetVector3Values();
 
-				float3 val = vector3_vals[uniform_name];
-
 				for (std::map<std::string, float3>::iterator it = vector3_vals.begin(); it != vector3_vals.end(); ++it)
 				{
 					if (it->first.compare(uniform_name) == 0)
@@ -369,8 +367,39 @@ void ShaderProgram::SetProgramParameters(ShaderProgramParameters para)
 						App->renderer->SetUniformVec3(id, uniform_name.c_str(), val);
 					}
 				}
+
+				break;
 			}
-			break;
+			case GL_BOOL:
+			{
+				std::map<std::string, bool> bool_vals = para.GetBoolValues();
+
+				for (std::map<std::string, bool>::iterator it = bool_vals.begin(); it != bool_vals.end(); ++it)
+				{
+					if (it->first.compare(uniform_name) == 0)
+					{
+						bool val = bool_vals[uniform_name];
+
+						App->renderer->SetUniformBool(id, uniform_name.c_str(), val);
+					}
+				}
+				break;
+			}
+			case GL_SAMPLER_2D:
+			{
+				std::map<std::string, uint> text_vals = para.GetTextureValues();
+
+				for (std::map<std::string, uint>::iterator it = text_vals.begin(); it != text_vals.end(); ++it)
+				{
+					if (it->first.compare(uniform_name) == 0)
+					{
+						uint index = text_vals[uniform_name];
+
+						App->renderer->SetUniformInt(id, uniform_name.c_str(), index);
+					}
+				}
+				break;
+			}
 
 			default:
 				break;
@@ -432,11 +461,6 @@ void ShaderProgramParameters::SetInt(const char * uniform_name, int value)
 	int_values[uniform_name] = value;
 }
 
-void ShaderProgramParameters::SetTexture(const char * uniform_name, int value)
-{
-	texture_values[uniform_name] = value;
-}
-
 void ShaderProgramParameters::SetVector2(const char * uniform_name, float2 value)
 {
 	vector2_values[uniform_name] = value;
@@ -452,6 +476,16 @@ void ShaderProgramParameters::SetVector4(const char * uniform_name, float4 value
 	vector4_values[uniform_name] = value;
 }
 
+void ShaderProgramParameters::SetBool(const char * uniform_name, bool value)
+{
+	bool_values[uniform_name] = value;
+}
+
+void ShaderProgramParameters::SetTextures(const char * uniform_name, uint texture_index)
+{
+	textures_values[uniform_name] = texture_index;
+}
+
 std::map<std::string, float> ShaderProgramParameters::GetFloatValues()
 {
 	return float_values;
@@ -460,11 +494,6 @@ std::map<std::string, float> ShaderProgramParameters::GetFloatValues()
 std::map<std::string, int> ShaderProgramParameters::GetIntValues()
 {
 	return int_values;
-}
-
-std::map<std::string, int> ShaderProgramParameters::GetTextureValues()
-{
-	return texture_values;
 }
 
 std::map<std::string, float2> ShaderProgramParameters::GetVector2Values()
@@ -480,5 +509,15 @@ std::map<std::string, float3> ShaderProgramParameters::GetVector3Values()
 std::map<std::string, float4> ShaderProgramParameters::GetVector4Values()
 {
 	return vector4_values;
+}
+
+std::map<std::string, bool> ShaderProgramParameters::GetBoolValues()
+{
+	return bool_values;
+}
+
+std::map<std::string, uint> ShaderProgramParameters::GetTextureValues()
+{
+	return textures_values;
 }
 

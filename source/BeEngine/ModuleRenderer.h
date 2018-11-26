@@ -16,6 +16,7 @@ class Renderer;
 class LineRenderer;
 class QuadRenderer;
 class DinamicTriangleRenderer;
+class StaticSpriteRenderer;
 
 class ModuleRenderer : public Module
 {
@@ -127,6 +128,7 @@ public:
 
 	void SetUniformMatrix(uint program, const char* name, const float* data);
 	void SetUniformFloat(uint program, const char* name, float data);
+	void SetUniformInt(uint program, const char* name, int data);
 	void SetUniformBool(uint program, const char* name, bool data);
 	void SetUniformVec3(uint program, const char* name, float3 data);
 
@@ -151,6 +153,8 @@ public:
 	LineRenderer*	  line_renderer = nullptr;
 	QuadRenderer*	  quad_renderer = nullptr;
 	DinamicTriangleRenderer* triangle_renderer = nullptr;
+
+	StaticSpriteRenderer* static_sprite_renderer = nullptr;
 
 private:
 	SDL_GLContext context;

@@ -17,6 +17,7 @@
 #include "DinamicTriangleRenderer.h"
 #include "VertexBuffer.h"
 #include "ModuleGuizmo.h"
+#include "StaticSpriteRenderer.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -136,6 +137,8 @@ bool ModuleRenderer::Awake()
 		line_renderer = (LineRenderer*)AddRenderer(new LineRenderer());
 		quad_renderer = (QuadRenderer*)AddRenderer(new QuadRenderer());
 		triangle_renderer = (DinamicTriangleRenderer*)AddRenderer(new DinamicTriangleRenderer());
+
+		static_sprite_renderer = (StaticSpriteRenderer*)AddRenderer(new StaticSpriteRenderer());
 		//AddRenderer(new GridRenderer());
 	}
 
@@ -1093,6 +1096,20 @@ void ModuleRenderer::SetUniformFloat(uint program, const char * name, float data
 
 	if (modelLoc != -1)
 		glUniform1f(modelLoc, data);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer::SetUniformInt(uint program, const char* name, int data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+
+	if (modelLoc != -1)
+		glUniform1i(modelLoc, data);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
