@@ -90,27 +90,28 @@ bool ModuleProject::CreateNewProject(const char* path, const char * name)
 
 		if (!App->file_system->FolderExists(full_path.c_str()))
 		{
-			full_path = App->file_system->FolderCreate(path, name);
-
-			Project* proj = new Project();
-
-			proj->SetPath(full_path.c_str());
-			proj->SetName(name);
-
-			projects.push_back(proj);
-
-			JSON_Doc* doc = App->json->CreateJSON(full_path.c_str(), "project", "beproject");
-
-			if (doc != nullptr)
+			if (App->file_system->FolderCreate(path, name, false, full_path))
 			{
-				doc->SetString("name", name);
+				Project* proj = new Project();
 
-				doc->Save();
+				proj->SetPath(full_path.c_str());
+				proj->SetName(name);
 
-				ret = true;
+				projects.push_back(proj);
+
+				JSON_Doc* doc = App->json->CreateJSON(full_path.c_str(), "project", "beproject");
+
+				if (doc != nullptr)
+				{
+					doc->SetString("name", name);
+
+					doc->Save();
+
+					ret = true;
+				}
+
+				SerializeProjects();
 			}
-
-			SerializeProjects();
 		}
 	}
 

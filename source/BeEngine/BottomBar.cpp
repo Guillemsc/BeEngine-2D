@@ -29,7 +29,7 @@ void BottomBar::DrawEditor()
 
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
 		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus
-		| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoScrollbar;
+		| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_HorizontalScrollbar;
 
 	ImGui::SetNextWindowPos(ImVec2(tools_bar_pos.x, tools_bar_pos.y));
 	ImGui::SetNextWindowSize(ImVec2(tools_bar_size.x, tools_bar_size.y));

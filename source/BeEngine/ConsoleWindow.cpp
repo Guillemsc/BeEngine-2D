@@ -69,7 +69,7 @@ void ConsoleWindow::DrawEditor()
 
 ImGuiWindowFlags ConsoleWindow::GetWindowFlags()
 {
-	return ImGuiWindowFlags_MenuBar;
+	return ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_HorizontalScrollbar;
 }
 
 void ConsoleWindow::AddConsolePersonalLogs(const std::string & identifier)
