@@ -1,7 +1,7 @@
 #include "PositionGuizmo.h"
 #include "App.h"
 #include "ModuleRenderer.h"
-#include "TriangleRenderer.h"
+#include "DinamicTriangleRenderer.h"
 #include "LineRenderer.h"
 #include "QuadRenderer.h"
 #include "ModuleInput.h"

@@ -25,7 +25,6 @@ private:
 
 	VertexBuffer lines_vb;
 
-	uint vao = 0;
 	uint vbo = 0;
 
 	uint lines_count = 0;

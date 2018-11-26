@@ -1,16 +1,16 @@
-﻿#include "TriangleRenderer.h"
+﻿#include "DinamicTriangleRenderer.h"
 #include "App.h"
 #include "ModuleShader.h"
 
-TriangleRenderer::TriangleRenderer()
+DinamicTriangleRenderer::DinamicTriangleRenderer()
 {
 }
 
-TriangleRenderer::~TriangleRenderer()
+DinamicTriangleRenderer::~DinamicTriangleRenderer()
 {
 }
 
-void TriangleRenderer::Start()
+void DinamicTriangleRenderer::Start()
 {
 	const char* vertex_code =
 		"#version 330 core\n \
@@ -47,22 +47,21 @@ void TriangleRenderer::Start()
 
 	program->LinkProgram();
 
-	vao = App->renderer->GenVertexArrayBuffer();
-	App->renderer->BindVertexArrayBuffer(vao);
-
 	vbo = App->renderer->GenBuffer();
 	App->renderer->BindArrayBuffer(vbo);
 
 	App->renderer->LoadArrayToVRAM(triangles_vb.GetSize(), triangles_vb.GetBuffer(), GL_DYNAMIC_DRAW);
+
+	App->renderer->UnbindArraybuffer();
 }
 
-void TriangleRenderer::CleanUp()
+void DinamicTriangleRenderer::CleanUp()
 {
 	triangles_vb.Clear();
 	triangles_count = 0;
 }
 
-void TriangleRenderer::Render(const float4x4 & view, const float4x4 & projection)
+void DinamicTriangleRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
 	glEnable(GL_BLEND);
 	glBlendEquation(GL_FUNC_ADD);
@@ -101,13 +100,15 @@ void TriangleRenderer::Render(const float4x4 & view, const float4x4 & projection
 	App->renderer->DisableVertexAttributeArray(posAttrib);
 	App->renderer->DisableVertexAttributeArray(posAttribCol);
 
+	App->renderer->UnbindArraybuffer();
+
 	triangles_vb.Clear();
 	triangles_count = 0;
 
 	glDisable(GL_BLEND);
 }
 
-void TriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, float rotation_degrees, const float3 & colour, float alpha)
+void DinamicTriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, float rotation_degrees, const float3 & colour, float alpha)
 {
 	float2 half_size = float2(size.x * 0.5f, size.y * 0.5f);
 

@@ -48,13 +48,12 @@ void LineRenderer::Start()
 
 	program->LinkProgram();
 
-	vao = App->renderer->GenVertexArrayBuffer();
-	App->renderer->BindVertexArrayBuffer(vao);
-
 	vbo = App->renderer->GenBuffer();
 	App->renderer->BindArrayBuffer(vbo);
 
 	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
+
+	App->renderer->UnbindArraybuffer();
 }
 
 void LineRenderer::CleanUp()
@@ -105,6 +104,8 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 
 	App->renderer->DisableVertexAttributeArray(posAttrib);
 	App->renderer->DisableVertexAttributeArray(posAttribCol);
+
+	App->renderer->UnbindArraybuffer();
 
 	lines_vb.Clear();
 	lines_count = 0;

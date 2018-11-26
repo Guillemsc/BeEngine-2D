@@ -24,7 +24,6 @@ private:
 
 	VertexBuffer quads_vb;
 
-	uint vao = 0;
 	uint vbo = 0;
 
 	uint quads_count = 0;

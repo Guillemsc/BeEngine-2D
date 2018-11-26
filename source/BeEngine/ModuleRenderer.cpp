@@ -14,7 +14,7 @@
 #include "LineRenderer.h"
 #include "GridRenderer.h"
 #include "QuadRenderer.h"
-#include "TriangleRenderer.h"
+#include "DinamicTriangleRenderer.h"
 #include "VertexBuffer.h"
 #include "ModuleGuizmo.h"
 
@@ -135,7 +135,7 @@ bool ModuleRenderer::Awake()
 
 		line_renderer = (LineRenderer*)AddRenderer(new LineRenderer());
 		quad_renderer = (QuadRenderer*)AddRenderer(new QuadRenderer());
-		triangle_renderer = (TriangleRenderer*)AddRenderer(new TriangleRenderer());
+		triangle_renderer = (DinamicTriangleRenderer*)AddRenderer(new DinamicTriangleRenderer());
 		//AddRenderer(new GridRenderer());
 	}
 

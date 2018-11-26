@@ -47,13 +47,12 @@ void QuadRenderer::Start()
 
 	program->LinkProgram();
 
-	vao = App->renderer->GenVertexArrayBuffer();
-	App->renderer->BindVertexArrayBuffer(vao);
-
 	vbo = App->renderer->GenBuffer();
 	App->renderer->BindArrayBuffer(vbo);
 
 	App->renderer->LoadArrayToVRAM(quads_vb.GetSize(), quads_vb.GetBuffer(), GL_DYNAMIC_DRAW);
+
+	App->renderer->UnbindArraybuffer();
 }
 
 void QuadRenderer::CleanUp()
@@ -100,6 +99,8 @@ void QuadRenderer::Render(const float4x4 & view, const float4x4 & projection)
 
 	App->renderer->DisableVertexAttributeArray(posAttrib);
 	App->renderer->DisableVertexAttributeArray(posAttribCol);
+
+	App->renderer->UnbindArraybuffer();
 
 	quads_vb.Clear();
 	quads_count = 0;

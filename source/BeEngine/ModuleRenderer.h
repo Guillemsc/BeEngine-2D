@@ -15,7 +15,7 @@ class ShaderProgram;
 class Renderer;
 class LineRenderer;
 class QuadRenderer;
-class TriangleRenderer;
+class DinamicTriangleRenderer;
 
 class ModuleRenderer : public Module
 {
@@ -150,7 +150,7 @@ private:
 public:
 	LineRenderer*	  line_renderer = nullptr;
 	QuadRenderer*	  quad_renderer = nullptr;
-	TriangleRenderer* triangle_renderer = nullptr;
+	DinamicTriangleRenderer* triangle_renderer = nullptr;
 
 private:
 	SDL_GLContext context;

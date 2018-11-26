@@ -1,5 +1,5 @@
-#ifndef __GRID_RENDERER_H__
-#define __GRID_RENDERER_H__
+#ifndef __TEXTURE_RENDERER_H__
+#define __TEXTURE_RENDERER_H__
 
 #include "Renderer.h"
 
@@ -7,11 +7,11 @@
 #include "ModuleShader.h"
 #include "VertexBuffer.h"
 
-class GridRenderer : public Renderer
+class StaticTextureRenderer : public Renderer
 {
 public:
-	GridRenderer();
-	~GridRenderer();
+	StaticTextureRenderer();
+	~StaticTextureRenderer();
 
 	void Start();
 	void CleanUp();
@@ -20,7 +20,8 @@ public:
 private:
 	ShaderProgram* program = nullptr;
 
+	uint vao = 0;
 	uint vbo = 0;
 };
 
-#endif // !__GRID_RENDERER_H__
+#endif // !__TEXTURE_RENDERER_H__

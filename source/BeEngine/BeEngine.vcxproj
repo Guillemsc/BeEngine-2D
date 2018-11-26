@@ -101,6 +101,7 @@
     <ClInclude Include="Algorithm\SAT.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="BottomBar.h" />
+    <ClInclude Include="ComponentSpriteRenderer.h" />
     <ClInclude Include="ComponentTransfrom.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Cursor.h" />
@@ -232,11 +233,12 @@
     <ClInclude Include="ScriptingObjectCompiler.h" />
     <ClInclude Include="ScriptingObjectFileWatcher.h" />
     <ClInclude Include="ScriptingObjectSolutionManager.h" />
+    <ClInclude Include="StaticTextureRenderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Time\Clock.h" />
     <ClInclude Include="tinyfiledialogs.h" />
     <ClInclude Include="ToolsBar.h" />
-    <ClInclude Include="TriangleRenderer.h" />
+    <ClInclude Include="DinamicTriangleRenderer.h" />
     <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +246,7 @@
     <ClCompile Include="Algorithm\Random\LCG.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="BottomBar.cpp" />
+    <ClCompile Include="ComponentSpriteRenderer.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DockingSpace.cpp" />
@@ -340,12 +343,13 @@
     <ClCompile Include="ScriptingObjectCompiler.cpp" />
     <ClCompile Include="ScriptingObjectFileWatcher.cpp" />
     <ClCompile Include="ScriptingObjectSolutionManager.cpp" />
+    <ClCompile Include="StaticTextureRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Time\Clock.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />
     <ClCompile Include="ToolsBar.cpp" />
     <ClCompile Include="ComponentTransfrom.cpp" />
-    <ClCompile Include="TriangleRenderer.cpp" />
+    <ClCompile Include="DinamicTriangleRenderer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>

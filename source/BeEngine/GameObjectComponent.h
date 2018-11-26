@@ -10,6 +10,7 @@ class GameObject;
 enum ComponentType
 {
 	TRANSFORM,
+	SPRITE_RENDERER,
 };
 
 enum ComponentGroup

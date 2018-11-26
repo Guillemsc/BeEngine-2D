@@ -7,11 +7,11 @@
 #include "ModuleShader.h"
 #include "VertexBuffer.h"
 
-class TriangleRenderer : public Renderer
+class DinamicTriangleRenderer : public Renderer
 {
 public:
-	TriangleRenderer();
-	~TriangleRenderer();
+	DinamicTriangleRenderer();
+	~DinamicTriangleRenderer();
 
 	void Start();
 	void CleanUp();
@@ -24,7 +24,6 @@ private:
 
 	VertexBuffer triangles_vb;
 
-	uint vao = 0;
 	uint vbo = 0;
 
 	uint triangles_count = 0;
