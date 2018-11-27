@@ -25,12 +25,13 @@ void StaticSpriteRenderer::Start()
 	quad_vertex_buffer.AddFloat3(float3(0.5f, 0.5f, 0));
 	//quad_vertex_buffer.AddFloat2(float2(1.0f, 1.0f));
 
-	//quad_vertex_buffer.AddFloat3(float3(-0.5f, 0.5f, 0));
+	quad_vertex_buffer.AddFloat3(float3(-0.5f, 0.5f, 0));
 	//quad_vertex_buffer.AddFloat2(float2(0.0f, 1.0f));
 
 	uint indices[] =
 	{
 		0, 1, 3,
+		1, 2, 3
 	};
 
 	const char* vertex_code =
@@ -42,22 +43,33 @@ void StaticSpriteRenderer::Start()
 		uniform mat4 Projection; \
 		\
 		uniform vec4 col; \
+		uniform int hasTexture; \
 		out vec4 oCol; \
+		flat out int oHasTexture; \
 		out vec2 oUvs; \
 		\
 		void main()\
 		{\
 			oCol = col;\
+			oHasTexture = hasTexture;\
 			gl_Position = Projection * View * Model * vec4(position, 1);\
 		}";
 
 	const char* fragment_code =
 		"#version 330 core\n \
 		in vec4 oCol; \
+		flat in int oHasTexture; \
 		out vec4 finalColor; \
 		void main()\
 		{\
-			finalColor = oCol;\
+			if(oHasTexture == 1)\
+			{\
+				finalColor = oCol;\
+			}\
+			else\
+			{\
+				finalColor = oCol;\
+			}\
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
@@ -112,12 +124,11 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 {
 	if (sprite_renderers.size() > 0)
 	{
-		glDisable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
 
-		glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glEnable(GL_BLEND);
+		//glBlendEquation(GL_FUNC_ADD);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		program->UseProgram();
 
@@ -130,19 +141,20 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
 
 			ShaderProgramParameters par;
-			par.SetVector4("col", float4(1.0f, 1.0f, 1.0f, 1.0f));
+			par.SetVector4("col", float4(1.0f, 0.0f, 1.0f, 1.0f));
+			par.SetInt("hasTexture", 0);
 			//par.SetTextures("texture", 0);
 			program->SetProgramParameters(par);
 
-			float4x4 model = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1000, 1000, 1));
+			float4x4 model = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(10, 1000, 1));
 
-			App->renderer->SetUniformMatrix(program->GetID(), "Model", model.Transposed().ptr());
+			App->renderer->SetUniformMatrix(program->GetID(), "Model", transform->GetGlobalTransform().Transposed().ptr());
 			App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 			App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
 			//App->renderer->BindTexture(curr_sprite->GetTextureId());
 
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
 
 			GLenum error = glGetError();
 			if (error != GL_NO_ERROR)
@@ -156,7 +168,7 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 
 		App->renderer->UnbindVertexArrayBuffer();
 
-		glDisable(GL_BLEND);
+		//glDisable(GL_BLEND);
 	}
 }
 

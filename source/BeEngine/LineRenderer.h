@@ -20,6 +20,9 @@ public:
 	void DrawLine(const float2& start, const float2& end, const float3& colour, float alpha = 1.0f, float tickness = 10.0f);
 	void DrawDashedLine(const float2& start, const float2& end, const float3& colour, float alpha = 1.0f, float dash_lenght = 40.0f, float tickness = 10.0f);
 
+	void SetZLayer(uint set);
+	void ResetZLayer();
+
 private:
 	ShaderProgram* program = nullptr;
 
@@ -28,6 +31,8 @@ private:
 	uint vbo = 0;
 
 	uint lines_count = 0;
+
+	uint z_layer = 0;
 };
 
 #endif // !__LINE_RENDERER_H__

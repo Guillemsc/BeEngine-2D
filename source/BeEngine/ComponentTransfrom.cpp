@@ -13,7 +13,7 @@ ComponentTransform::~ComponentTransform()
 void ComponentTransform::EditorDraw()
 {
 	float2 position = GetPosition();
-	float rotation = GetRotation();
+	float rotation = GetRotationAngles();
 	float2 scale = GetScale();
 
 	if (ImGui::DragFloat2("Position", (float*)&position, 0.1f))
@@ -61,6 +61,8 @@ void ComponentTransform::SetPosition(const float2 & pos)
 
 void ComponentTransform::SetRotationAngles(float rotation)
 {
+	rotation *= DEGTORAD;
+
 	if (rotation != local_rotation)
 	{
 		local_rotation = rotation;
@@ -75,6 +77,12 @@ void ComponentTransform::SetScale(const float2 & scale)
 	{
 		local_scale = scale;
 
+		if (local_scale.y < 0)
+			local_scale.y = 0;
+
+		if (local_scale.y < 0)
+			local_scale.y = 0;
+
 		UpdateLocalTransform();
 	}
 }
@@ -84,9 +92,9 @@ float2 ComponentTransform::GetPosition() const
 	return local_pos;
 }
 
-float ComponentTransform::GetRotation() const
+float ComponentTransform::GetRotationAngles() const
 {
-	return local_rotation;
+	return local_rotation * RADTODEG;
 }
 
 float2 ComponentTransform::GetScale() const

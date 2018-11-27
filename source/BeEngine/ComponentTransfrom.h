@@ -32,7 +32,7 @@ public:
 	void SetScale(const float2& scale);
 
 	float2 GetPosition() const;
-	float GetRotation() const;
+	float GetRotationAngles() const;
 	float2 GetScale() const;
 
 	void SetLocalTransform(const float4x4& local);

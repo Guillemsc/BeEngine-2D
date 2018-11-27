@@ -139,6 +139,7 @@ bool ModuleRenderer::Awake()
 		triangle_renderer = (DinamicTriangleRenderer*)AddRenderer(new DinamicTriangleRenderer());
 
 		static_sprite_renderer = (StaticSpriteRenderer*)AddRenderer(new StaticSpriteRenderer());
+
 		//AddRenderer(new GridRenderer());
 	}
 

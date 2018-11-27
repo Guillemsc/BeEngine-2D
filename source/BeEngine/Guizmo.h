@@ -18,7 +18,6 @@ public:
 	virtual void Render(float relative_size) {};
 	virtual bool UpdateTransform(float4x4& transform) { return false; };
 
-
 	void CleanUp();
 
 	uint GetHandlersCount() const;
@@ -26,6 +25,15 @@ public:
 
 protected:
 	void AddHandler();
+
+	void SetMatPos(float4x4& transform, float2 pos, bool use_z_layer = false, float z_layer = 0);
+	float2 GetMatPos(const float4x4& transform);
+	float GetMatZLayer(const float4x4& transform);
+
+	float2 GetInternalPos();
+	float GetInternalZLayer();
+	void SetInternalPos(const float2& pos);
+	void AddInternalPos(const float2& to_add);
 
 private:
 	void DestroyAllHandlers();

@@ -354,6 +354,22 @@ void ShaderProgram::SetProgramParameters(ShaderProgramParameters para)
 
 			switch (uniform_type)
 			{
+			case GL_INT:
+			{
+				std::map<std::string, int> int_vals = para.GetIntValues();
+
+				for (std::map<std::string, int>::iterator it = int_vals.begin(); it != int_vals.end(); ++it)
+				{
+					if (it->first.compare(uniform_name) == 0)
+					{
+						int val = int_vals[uniform_name];
+
+						App->renderer->SetUniformInt(id, uniform_name.c_str(), val);
+					}
+				}
+
+				break;
+			}
 			case GL_FLOAT_VEC3:
 			{
 				std::map<std::string, float3> vector3_vals = para.GetVector3Values();

@@ -22,10 +22,6 @@ public:
 	bool UpdateTransform(float4x4& transform);
 
 private:
-	float2 GetPosition();
-	void AddPosition(const float2& add);
-
-private:
 	float4x4 internal_transform = float4x4::identity;
 
 	bool edited = false;
