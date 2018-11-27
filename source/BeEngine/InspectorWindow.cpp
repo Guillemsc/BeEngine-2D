@@ -118,6 +118,10 @@ void InspectorWindow::DrawComponentsPopup(const std::vector<GameObject*>& select
 {
 	if (ImGui::BeginPopup("CreateComponentPopup"))
 	{
+		ImGui::Text("Components:");
+
+		ImGui::Separator();
+
 		std::map<ComponentType, std::string> components_type = App->gameobject->GetComponentsTypes();
 
 		for (std::map<ComponentType, std::string>::iterator it = components_type.begin(); it != components_type.end(); ++it)
