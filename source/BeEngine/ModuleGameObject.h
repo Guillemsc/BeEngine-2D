@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "GameObject.h"
+#include "GameObjectComponent.h"
 
 class ModuleGameObject : public Module
 {
@@ -34,6 +35,8 @@ public:
 	uint GetSelectedGameObjectsCount() const;
 
 private:
+	void AddComponentType(const ComponentType& type);
+
 	void UpdateGameObjects();
 
 	void DestroyAllGameObjectsNow();
@@ -50,6 +53,8 @@ private:
 	std::vector<GameObject*> game_objects_to_destroy;
 	std::vector<GameObject*> game_objects_root;
 	std::vector<GameObject*> game_objects_selected;
+
+	std::vector<ComponentType> components_type;
 };
 
 #endif // !__MODULE_GAME_OBJECT_H__

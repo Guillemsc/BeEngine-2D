@@ -42,7 +42,10 @@ public:
 	Resource* CreateResource(const ResourceType type);
 	void DestroyResource(Resource* res);
 	Resource* GetResourceFromAssetFile(const char* filepath);
+	std::vector<Resource*> GetResourcesFromResourceType(const ResourceType type);
 	std::map<ResourceType, std::vector<Resource*>> GetAllResources() const;
+
+	bool EditorResourceSelector(const ResourceType type, Resource* res);
 
 	// Asset management ---------
 

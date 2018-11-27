@@ -2,6 +2,7 @@
 #include "App.h"
 #include "ModuleGameObject.h"
 #include "ComponentTransfrom.h"
+#include "ComponentSpriteRenderer.h"
 
 GameObject::GameObject(std::string _uid)
 {
@@ -162,6 +163,10 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 	{
 	case ComponentType::TRANSFORM:
 		ret = new ComponentTransform();
+		break;
+
+	case ComponentType::SPRITE_RENDERER:
+		ret = new ComponentSpriteRenderer();
 		break;
 	default:
 		break;

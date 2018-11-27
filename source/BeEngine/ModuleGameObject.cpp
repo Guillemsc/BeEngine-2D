@@ -13,6 +13,7 @@ bool ModuleGameObject::Awake()
 {
 	bool ret = true;
 
+	AddComponentType(ComponentType::SPRITE_RENDERER);
 
 	return ret;
 }
@@ -200,6 +201,11 @@ std::vector<GameObject*> ModuleGameObject::GetSelectedGameObjects() const
 uint ModuleGameObject::GetSelectedGameObjectsCount() const
 {
 	return game_objects_selected.size();
+}
+
+void ModuleGameObject::AddComponentType(const ComponentType & type)
+{
+	components_type.push_back(type);
 }
 
 void ModuleGameObject::UpdateGameObjects()

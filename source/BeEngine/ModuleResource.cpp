@@ -219,9 +219,34 @@ Resource* ModuleResource::GetResourceFromAssetFile(const char* filepath)
 	return ret;
 }
 
+std::vector<Resource*> ModuleResource::GetResourcesFromResourceType(const ResourceType type)
+{
+	std::vector<Resource*> ret;
+
+	for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		if ((*it).first == type)
+		{
+			ret = (*it).second;
+			break;
+		}
+	}
+
+	return ret;
+}
+
 std::map<ResourceType, std::vector<Resource*>> ModuleResource::GetAllResources() const
 {
 	return resources;
+}
+
+bool ModuleResource::EditorResourceSelector(const ResourceType type, Resource * res)
+{
+	bool ret = false;
+
+	std::vector<Resource*> resources = GetResourcesFromResourceType(type);
+
+	return ret;
 }
 
 bool ModuleResource::LoadFileToEngine(const char * filepath)
