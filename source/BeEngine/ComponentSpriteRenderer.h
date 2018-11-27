@@ -35,6 +35,8 @@ public:
 private:
 	ResourceTexture* resource_texture = nullptr;
 
+	std::string resource_filter;
+
 };
 
 #endif // !__COMPONENT_SPRITE_RENDERER_H__

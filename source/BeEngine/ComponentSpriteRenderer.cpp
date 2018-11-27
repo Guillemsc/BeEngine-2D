@@ -3,6 +3,9 @@
 #include "ResourceTexture.h"
 #include "ModuleRenderer.h"
 #include "StaticSpriteRenderer.h"
+#include "App.h"
+#include "ModuleResource.h"
+#include "imgui.h"
 
 ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::SPRITE_RENDERER,
 	ComponentGroup::RENDERING, true)
@@ -15,6 +18,15 @@ ComponentSpriteRenderer::~ComponentSpriteRenderer()
 
 void ComponentSpriteRenderer::EditorDraw()
 {
+	ImGui::Text("Sprite:   ");
+
+	ImGui::SameLine();
+
+	Resource* res = resource_texture;
+	if (App->resource->EditorResourceSelector(ResourceType::SCRIPT, res, resource_filter))
+	{
+		resource_texture = (ResourceTexture*)res;
+	}
 }
 
 void ComponentSpriteRenderer::Start()

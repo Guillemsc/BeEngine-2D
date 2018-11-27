@@ -1,6 +1,8 @@
 #ifndef __MODULE_GAME_OBJECT_H__
 #define __MODULE_GAME_OBJECT_H__
 
+#include <map>
+
 #include "Module.h"
 #include "GameObject.h"
 #include "GameObjectComponent.h"
@@ -34,8 +36,10 @@ public:
 	std::vector<GameObject*> GetSelectedGameObjects() const;
 	uint GetSelectedGameObjectsCount() const;
 
+	std::map<ComponentType, std::string> GetComponentsTypes() const;
+
 private:
-	void AddComponentType(const ComponentType& type);
+	void AddComponentType(const ComponentType& type, const std::string& name);
 
 	void UpdateGameObjects();
 
@@ -54,7 +58,7 @@ private:
 	std::vector<GameObject*> game_objects_root;
 	std::vector<GameObject*> game_objects_selected;
 
-	std::vector<ComponentType> components_type;
+	std::map<ComponentType, std::string> components_type;
 };
 
 #endif // !__MODULE_GAME_OBJECT_H__

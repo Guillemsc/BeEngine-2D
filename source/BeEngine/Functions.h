@@ -42,6 +42,10 @@ std::string ToUpperCase(std::string str);
 // Returns chars to lower case
 std::string ToLowerCase(std::string str);
 
+std::string StringFormatForSearch(const std::string& str);
+
+bool StringContainsFormated(std::string str, std::string contains);
+
 // Returns char to lower case
 char ToLowerCase(char str);
 

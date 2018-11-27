@@ -22,6 +22,8 @@ void InspectorWindow::CleanUp()
 
 void InspectorWindow::DrawEditor()
 {
+	float2 win_size = GetWindowSize();
+
 	std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 
 	if (selected_gos.size() == 1)
@@ -32,9 +34,11 @@ void InspectorWindow::DrawEditor()
 		strcpy_s(name, 51, selected_go->GetName().c_str());
 		if (ImGui::InputText("", name, 50, ImGuiInputTextFlags_AutoSelectAll))
 			selected_go->SetName(name);
-	}
 
-	ImGui::Separator();
+		ImGui::Separator();
+
+		ImGui::Spacing();
+	}
 
 	int count = 0;
 	for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
@@ -51,9 +55,7 @@ void InspectorWindow::DrawEditor()
 			{
 				GameObjectComponent* curr_component = (*com);
 
-				ImGui::Separator();
-
-				if (ImGui::SmallButton("Delete Component"))
+				if (ImGui::SmallButton("Delete"))
 				{
 
 				}
@@ -88,9 +90,50 @@ void InspectorWindow::DrawEditor()
 
 		++count;
 	}
+
+	bool open_components_popup = false;
+
+	if (selected_gos.size() > 0)
+	{
+		if (ImGui::Button("Add Component", ImVec2(win_size.x - 12, 30)))
+		{
+			open_components_popup = true;
+		}
+	}
+
+	if (open_components_popup)
+	{
+		ImGui::OpenPopup("CreateComponentPopup");
+	}
+
+	DrawComponentsPopup(selected_gos);
 }
 
 ImGuiWindowFlags InspectorWindow::GetWindowFlags()
 {
 	return ImGuiWindowFlags();
+}
+
+void InspectorWindow::DrawComponentsPopup(const std::vector<GameObject*>& selected_gos)
+{
+	if (ImGui::BeginPopup("CreateComponentPopup"))
+	{
+		std::map<ComponentType, std::string> components_type = App->gameobject->GetComponentsTypes();
+
+		for (std::map<ComponentType, std::string>::iterator it = components_type.begin(); it != components_type.end(); ++it)
+		{
+			if(ImGui::Button((*it).second.c_str()))
+			{
+				for (std::vector<GameObject*>::const_iterator go = selected_gos.begin(); go != selected_gos.end(); ++go)
+				{
+					(*go)->CreateComponent((*it).first);
+				}
+
+				ImGui::CloseCurrentPopup();
+				break;
+			}
+		}
+
+		ImGui::EndPopup();
+	}
 }

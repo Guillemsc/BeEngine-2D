@@ -45,7 +45,7 @@ public:
 	std::vector<Resource*> GetResourcesFromResourceType(const ResourceType type);
 	std::map<ResourceType, std::vector<Resource*>> GetAllResources() const;
 
-	bool EditorResourceSelector(const ResourceType type, Resource* res);
+	bool EditorResourceSelector(const ResourceType type, Resource *& res, std::string& filter_text);
 
 	// Asset management ---------
 

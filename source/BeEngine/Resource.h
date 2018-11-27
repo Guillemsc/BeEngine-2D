@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "ModuleFileSystem.h"
+
 enum ResourceType
 {
 	UNKWNOWN,
@@ -41,10 +43,14 @@ public:
 	std::string GetMetaFilepath() const;
 	std::string GetAssetFilepath() const;
 	std::string GetLibraryFilepath() const;
+	DecomposedFilePath GetDecomposedAssetFilepath() const;
 	const ResourceType GetType() const;
 	std::string GetUID() const;
 
 	virtual void CleanUp();
+
+protected:
+	void SetAssetFilepath(const std::string& set);
 
 private:
 	bool AssetFileExists() const;
@@ -68,6 +74,8 @@ private:
 	std::string meta_filepath;
 	std::string asset_filepath;
 	std::string library_filepath;
+
+	DecomposedFilePath d_asset_filepath;
 };
 
 #endif // !__RESOURCE_H__

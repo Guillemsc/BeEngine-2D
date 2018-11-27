@@ -13,7 +13,7 @@ bool ModuleGameObject::Awake()
 {
 	bool ret = true;
 
-	AddComponentType(ComponentType::SPRITE_RENDERER);
+	AddComponentType(ComponentType::SPRITE_RENDERER, "Sprite Renderer");
 
 	return ret;
 }
@@ -203,9 +203,14 @@ uint ModuleGameObject::GetSelectedGameObjectsCount() const
 	return game_objects_selected.size();
 }
 
-void ModuleGameObject::AddComponentType(const ComponentType & type)
+std::map<ComponentType, std::string> ModuleGameObject::GetComponentsTypes() const
 {
-	components_type.push_back(type);
+	return components_type;
+}
+
+void ModuleGameObject::AddComponentType(const ComponentType & type, const std::string& name)
+{
+	components_type[type] = name;
 }
 
 void ModuleGameObject::UpdateGameObjects()

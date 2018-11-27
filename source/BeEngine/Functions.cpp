@@ -141,6 +141,26 @@ std::string ToLowerCase(std::string str)
 	return str;
 }
 
+std::string StringFormatForSearch(const std::string& str)
+{
+	std::string ret = ToLowerCase(str);
+
+	ret = TextReplace(ret, " ", "");
+
+	return ret;
+}
+
+bool StringContainsFormated(std::string str, std::string contains)
+{
+	str = StringFormatForSearch(str);
+	contains = StringFormatForSearch(contains);
+
+	if (str.find(contains) != std::string::npos)
+		return true;
+
+	return false;
+}
+
 char ToLowerCase(char str)
 {
 	return tolower(str);

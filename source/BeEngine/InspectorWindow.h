@@ -23,7 +23,7 @@ public:
 	ImGuiWindowFlags GetWindowFlags();
 
 private:
-
+	void DrawComponentsPopup(const std::vector<GameObject*>& selected_gos);
 
 private:
 	ImFont* font = nullptr;
