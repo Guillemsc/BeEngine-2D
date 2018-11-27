@@ -85,7 +85,7 @@ void PositionGuizmo::Render(float relative_size)
 		float2(pos.x - half_quad_size, pos.y - half_quad_size), center_colour, 0.7f, lines_thickness);
 
 	App->renderer->line_renderer->DrawLine(line_up_start, line_up_end, line_up_colour, 1, lines_thickness);
-	App->renderer->line_renderer->DrawLine(line_right_start, line_right_end, line_right_colour, 1, 1);
+	App->renderer->line_renderer->DrawLine(line_right_start, line_right_end, line_right_colour, 1, lines_thickness);
 
 	App->renderer->triangle_renderer->DrawTriangle(float2(pos.x, line_up_end.y + half_triangle_height), float2(triangles_width, triangles_height), 0, line_up_colour);
 	App->renderer->triangle_renderer->DrawTriangle(float2(line_right_end.x, pos.y), float2(triangles_width, triangles_height), -90, line_right_colour);

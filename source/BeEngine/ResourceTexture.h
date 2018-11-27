@@ -24,7 +24,9 @@ public:
 	void OnRenameAsset(const char* new_name, const char* last_name);
 	void OnMoveAsset(const char* new_asset_path, const char* last_asset_path);
 
-	uint GetTextureId();
+	uint GetTextureId() const;
+	float GetWidthHeightRatio();
+	float GetHeightWidthRatio();
 
 	uint GetDataId() const;
 	byte* GetData() const;
@@ -34,6 +36,8 @@ private:
 	byte*  texture_data = nullptr;
 	uint   texture_data_size = 0;
 	uint   texture_data_id = 0;
+	uint   texture_width = 0;
+	uint   texture_height = 0;
 
 	uint   texture_id = 0;
 

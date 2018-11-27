@@ -9,10 +9,8 @@
 #include "ScriptingObjectFileWatcher.h"
 #include "ModuleEditor.h"
 #include "ConsoleWindow.h"
-#include <mono/utils/mono-logger.h>
-
-// Remove this 
 #include "ModuleResource.h"
+#include <mono/utils/mono-logger.h>
 
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 

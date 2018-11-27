@@ -1,5 +1,6 @@
 #include "ResourceTexture.h"
 #include "App.h"
+#include "ModuleRenderer.h"
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
 
@@ -112,11 +113,19 @@ void ResourceTexture::ImportFromLibrary()
 			uint format = ilGetInteger(IL_IMAGE_FORMAT);
 			uint type = ilGetInteger(IL_IMAGE_TYPE);
 
+			if (texture_id != 0)
+				App->renderer->DeleteTexture(texture_id);
+
+			texture_id = App->renderer->LoadTextureToVRAM(image_width, image_height, data, format);
+
 			if (data_size > 0)
 			{
 				texture_data_id = data_id;
 				texture_data = data;
 				texture_data_size = data_size;
+
+				texture_width = image_width;
+				texture_height = image_height;
 			}
 
 			ilBindImage(0);
@@ -126,6 +135,8 @@ void ResourceTexture::ImportFromLibrary()
 
 void ResourceTexture::OnRemoveAsset()
 {
+	if (texture_id != 0)
+		App->renderer->DeleteTexture(texture_id);
 }
 
 void ResourceTexture::OnRenameAsset(const char * new_name, const char * last_name)
@@ -136,9 +147,29 @@ void ResourceTexture::OnMoveAsset(const char * new_asset_path, const char* last_
 {
 }
 
-uint ResourceTexture::GetTextureId()
+uint ResourceTexture::GetTextureId() const
 {
-	return uint();
+	return texture_id;
+}
+
+float ResourceTexture::GetWidthHeightRatio()
+{
+	float ret = 0.0f;
+
+	if(texture_height != 0)
+		ret = (float)texture_width / (float)texture_height;
+
+	return ret;
+}
+
+float ResourceTexture::GetHeightWidthRatio()
+{
+	float ret = 0.0f;
+
+	if (texture_width != 0)
+		ret = (float)texture_height / (float)texture_width;
+
+	return ret;
 }
 
 uint ResourceTexture::GetDataId() const

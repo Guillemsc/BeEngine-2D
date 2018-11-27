@@ -370,6 +370,22 @@ void ShaderProgram::SetProgramParameters(ShaderProgramParameters para)
 
 				break;
 			}
+			case GL_FLOAT_VEC4:
+			{
+				std::map<std::string, float4> vector4_vals = para.GetVector4Values();
+
+				for (std::map<std::string, float4>::iterator it = vector4_vals.begin(); it != vector4_vals.end(); ++it)
+				{
+					if (it->first.compare(uniform_name) == 0)
+					{
+						float4 val = vector4_vals[uniform_name];
+
+						App->renderer->SetUniformVec4(id, uniform_name.c_str(), val);
+					}
+				}
+
+				break;
+			}
 			case GL_BOOL:
 			{
 				std::map<std::string, bool> bool_vals = para.GetBoolValues();

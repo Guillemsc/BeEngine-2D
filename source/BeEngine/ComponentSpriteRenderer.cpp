@@ -23,20 +23,29 @@ void ComponentSpriteRenderer::EditorDraw()
 	ImGui::SameLine();
 
 	Resource* res = resource_texture;
-	if (App->resource->EditorResourceSelector(ResourceType::SCRIPT, res, resource_filter))
+	if (App->resource->EditorResourceSelector(ResourceType::TEXTURE, res, resource_filter))
 	{
 		resource_texture = (ResourceTexture*)res;
+
+		App->renderer->static_sprite_renderer->AddSpriteRenderer(this);
+	}
+
+	if (resource_texture != nullptr)
+	{
+		float ratio = resource_texture->GetHeightWidthRatio();
+		ImGui::Image((ImTextureID)resource_texture->GetTextureId(), ImVec2(100, 100 * ratio));
 	}
 }
 
 void ComponentSpriteRenderer::Start()
 {
-	App->renderer->static_sprite_renderer->AddSpriteRenderer(this);
+
 }
 
 void ComponentSpriteRenderer::CleanUp()
 {
-	App->renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
+	//App->renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
+
 }
 
 void ComponentSpriteRenderer::OnChildAdded(GameObject * child)

@@ -130,7 +130,8 @@ public:
 	void SetUniformFloat(uint program, const char* name, float data);
 	void SetUniformInt(uint program, const char* name, int data);
 	void SetUniformBool(uint program, const char* name, bool data);
-	void SetUniformVec3(uint program, const char* name, float3 data);
+	void SetUniformVec3(uint program, const char* name, const float3& data);
+	void SetUniformVec4(uint program, const char* name, const float4& data);
 
 	uint GetUniformsCount(uint program);
 	void GetUniformInfo(uint program, uint index, std::string& name, GLenum& type);

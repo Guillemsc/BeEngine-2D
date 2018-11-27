@@ -1114,7 +1114,7 @@ void ModuleRenderer::SetUniformInt(uint program, const char* name, int data)
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		INTERNAL_LOG("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+		INTERNAL_LOG("Error Setting uniform int %s: %s\n", name, gluErrorString(error));
 	}
 }
 
@@ -1128,11 +1128,11 @@ void ModuleRenderer::SetUniformBool(uint program, const char * name, bool data)
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+		CONSOLE_ERROR("Error Setting uniform bool %s: %s\n", name, gluErrorString(error));
 	}
 }
 
-void ModuleRenderer::SetUniformVec3(uint program, const char * name, float3 data)
+void ModuleRenderer::SetUniformVec3(uint program, const char * name, const float3& data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
 
@@ -1142,7 +1142,21 @@ void ModuleRenderer::SetUniformVec3(uint program, const char * name, float3 data
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		INTERNAL_LOG("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+		INTERNAL_LOG("Error Setting uniform float3 %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer::SetUniformVec4(uint program, const char * name, const float4 & data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+
+	if (modelLoc != -1)
+		glUniform4f(modelLoc, data.x, data.y, data.w, data.z);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error Setting uniform float4 %s: %s\n", name, gluErrorString(error));
 	}
 }
 
