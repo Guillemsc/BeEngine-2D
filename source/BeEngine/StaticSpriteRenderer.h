@@ -25,7 +25,6 @@ private:
 	ShaderProgram* program = nullptr;
 
 	uint vao = 0;
-	uint vbo = 0;
 
 	uint* quad_indices_buffer = nullptr;
 

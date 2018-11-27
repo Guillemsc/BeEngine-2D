@@ -31,10 +31,7 @@ void StaticSpriteRenderer::Start()
 	uint indices[] =
 	{
 		0, 1, 3,
-		1, 2, 3,
 	};
-
-	quad_indices_buffer = indices;
 
 	const char* vertex_code =
 		"#version 330 core\n \
@@ -44,8 +41,8 @@ void StaticSpriteRenderer::Start()
 		uniform mat4 View; \
 		uniform mat4 Projection; \
 		\
-		uniform vec3 col; \
-		out vec3 oCol; \
+		uniform vec4 col; \
+		out vec4 oCol; \
 		out vec2 oUvs; \
 		\
 		void main()\
@@ -56,8 +53,8 @@ void StaticSpriteRenderer::Start()
 
 	const char* fragment_code =
 		"#version 330 core\n \
-		in vec3 oCol; \
-		out vec3 finalColor; \
+		in vec4 oCol; \
+		out vec4 finalColor; \
 		void main()\
 		{\
 			finalColor = oCol;\
@@ -75,24 +72,36 @@ void StaticSpriteRenderer::Start()
 
 	program->LinkProgram();
 
+	// VAO
 	vao = App->renderer->GenVertexArrayBuffer();
-	vbo = App->renderer->GenBuffer();
-
 	App->renderer->BindVertexArrayBuffer(vao);
+
+	// VBO
+	uint vbo = App->renderer->GenBuffer();
+
 	App->renderer->BindArrayBuffer(vbo);
 
 	App->renderer->LoadArrayToVRAM(quad_vertex_buffer.GetSize(), quad_vertex_buffer.GetBuffer(), GL_STATIC_DRAW);
 
+	// Set info
 	GLint posAttrib = App->renderer->GetVertexAttributeArray(program->GetID(), "position");
 	App->renderer->EnableVertexAttributeArray(posAttrib);
 	App->renderer->SetVertexAttributePointer(posAttrib, 3, 3, 0);
 
-	//GLint posAttribCol = App->renderer->GetVertexAttributeArray(program->GetID(), "uvs");
-	//App->renderer->EnableVertexAttributeArray(posAttribCol);
-	//App->renderer->SetVertexAttributePointer(posAttribCol, 2, 5, 3);
+	// VBIO
+	uint vbio = App->renderer->GenBuffer();
 
-	App->renderer->UnbindArraybuffer();
+	App->renderer->BindElementArrayBuffer(vbio);
+
+	App->renderer->LoadElementArrayToVRAM(sizeof(indices), &indices[0], GL_STATIC_DRAW);
+
+
+	// Clear
+
 	App->renderer->UnbindVertexArrayBuffer();
+	App->renderer->DisableVertexAttributeArray(posAttrib);
+
+	quad_vertex_buffer.Clear();
 }
 
 void StaticSpriteRenderer::CleanUp()
@@ -103,9 +112,12 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 {
 	if (sprite_renderers.size() > 0)
 	{
-		//glEnable(GL_BLEND);
-		//glBlendEquation(GL_FUNC_ADD);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
+
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		program->UseProgram();
 
@@ -118,11 +130,11 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
 
 			ShaderProgramParameters par;
-			par.SetVector3("col", float3(1.0f, 1.0f, 1.0f));
+			par.SetVector4("col", float4(1.0f, 1.0f, 1.0f, 1.0f));
 			//par.SetTextures("texture", 0);
 			program->SetProgramParameters(par);
 
-			float4x4 model = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(100, 100, 1));
+			float4x4 model = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1000, 1000, 1));
 
 			App->renderer->SetUniformMatrix(program->GetID(), "Model", model.Transposed().ptr());
 			App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
@@ -130,7 +142,7 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 
 			//App->renderer->BindTexture(curr_sprite->GetTextureId());
 
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
 
 			GLenum error = glGetError();
 			if (error != GL_NO_ERROR)
@@ -142,9 +154,9 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			//App->renderer->UnbindTexture();
 		}
 
-		App->renderer->UnbindElementArrayBuffer();
+		App->renderer->UnbindVertexArrayBuffer();
 
-		//glDisable(GL_BLEND);
+		glDisable(GL_BLEND);
 	}
 }
 

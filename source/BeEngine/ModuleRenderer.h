@@ -85,7 +85,7 @@ public:
 	void RenderStorageMultisample(uint samples, uint width, uint height);
 
 	void LoadArrayToVRAM(uint size, const float* values, GLenum type = GL_STATIC_DRAW) const;
-	void LoadArrayToVRAM(uint size, uint* values, GLenum type = GL_STATIC_DRAW) const;
+	void LoadElementArrayToVRAM(uint size, uint* values, GLenum type = GL_STATIC_DRAW) const;
 	uint LoadTextureToVRAM(uint w, uint h, GLubyte* tex_data, GLint format) const;
 
 	void UpdateVRAMArray(uint size, const float* values, GLenum type = GL_STATIC_DRAW) const;
@@ -117,6 +117,8 @@ public:
 	uint GetProgramBinary(uint program_id, uint buff_size, char* buff) const;
 	int GetProgramSize(uint program_id) const;
 	void LoadProgramFromBinary(uint program_id, uint buff_size, const char* buff);
+
+	void BindAttributeLocation(uint program_id, uint index, const char* name);
 
 	GLint GetVertexAttributeArray(uint program, const char* name);
 	void EnableVertexAttributeArray(uint id);

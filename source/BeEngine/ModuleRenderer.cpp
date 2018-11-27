@@ -647,9 +647,9 @@ void ModuleRenderer::LoadArrayToVRAM(uint size, const float * values, GLenum typ
 	}
 }
 
-void ModuleRenderer::LoadArrayToVRAM(uint size, uint * values, GLenum type) const
+void ModuleRenderer::LoadElementArrayToVRAM(uint size, uint * values, GLenum type) const
 {
-	glBufferData(GL_ARRAY_BUFFER, size, values, type);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, values, type);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
@@ -989,6 +989,17 @@ void ModuleRenderer::LoadProgramFromBinary(uint program_id, uint buff_size, cons
 	if (error != GL_NO_ERROR)
 	{
 		INTERNAL_LOG("Error loading shader program binary %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer::BindAttributeLocation(uint program_id, uint index, const char * name)
+{
+	glBindAttribLocation(program_id, index, name);
+
+		GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		INTERNAL_LOG("Error binding attribute locaiton on shader %s\n", gluErrorString(error));
 	}
 }
 

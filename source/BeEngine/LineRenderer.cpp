@@ -68,6 +68,8 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	program->UseProgram();
+
 	App->renderer->BindArrayBuffer(vbo);
 	App->renderer->LoadArrayToVRAM(lines_vb.GetSize(), lines_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 
@@ -75,8 +77,6 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 	model[0][3] = 0;
 	model[1][3] = 0;
 	model[2][3] = 0;
-
-	program->UseProgram();
 
 	//ShaderProgramParameters par;
 	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
