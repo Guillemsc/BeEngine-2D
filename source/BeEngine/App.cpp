@@ -70,16 +70,14 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(camera, "Module Camera");
 	AddModule(input, "Module Input");
 	AddModule(audio, "Module Audio");
+	AddModule(renderer, "Module Renderer");
+	AddModule(editor, "Module Editor");
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");
 	AddModule(resource, "Module Resource");
 	AddModule(scripting, "Module Scripting");
 	AddModule(gameobject, "Module GameObject");
 	AddModule(guizmo, "Module Guizmo");
-
-	// Renderers
-	AddModule(renderer, "Module Renderer");
-	AddModule(editor, "Module Editor");
 }
 
 Application::~Application()
@@ -236,6 +234,13 @@ bool Application::CleanUp()
 		if (!ret) 
 			return false;
 	}
+
+	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
+	{
+		RELEASE(*it);
+	}
+
+	modules.clear();
 
 	profiler->CleanUp();
 	RELEASE(profiler);

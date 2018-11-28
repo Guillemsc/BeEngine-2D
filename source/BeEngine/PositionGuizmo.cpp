@@ -72,19 +72,19 @@ void PositionGuizmo::Render(float relative_size)
 	float2 line_right_start = float2(pos.x + half_quad_size, pos.y);
 	float2 line_right_end = float2(pos.x + half_quad_size + lines_lenght, pos.y);
 
-	App->renderer->line_renderer->SetZLayer(5);
+	App->renderer->line_renderer->SetZLayer(0);
 
 	App->renderer->line_renderer->DrawLine(float2(pos.x - half_quad_size, pos.y - half_quad_size), 
-		float2(pos.x + half_quad_size, pos.y - half_quad_size), center_colour, 0.7f, lines_thickness);
+		float2(pos.x + half_quad_size, pos.y - half_quad_size), center_colour, 1.0f, lines_thickness);
 
 	App->renderer->line_renderer->DrawLine(float2(pos.x + half_quad_size, pos.y - half_quad_size), 
-		float2(pos.x + half_quad_size, pos.y + half_quad_size), center_colour, 0.7f, lines_thickness);
+		float2(pos.x + half_quad_size, pos.y + half_quad_size), center_colour, 1.0f, lines_thickness);
 
 	App->renderer->line_renderer->DrawLine(float2(pos.x + half_quad_size, pos.y + half_quad_size), 
-		float2(pos.x - half_quad_size, pos.y + half_quad_size), center_colour, 0.7f, lines_thickness);
+		float2(pos.x - half_quad_size, pos.y + half_quad_size), center_colour, 1.0f, lines_thickness);
 
 	App->renderer->line_renderer->DrawLine(float2(pos.x - half_quad_size, pos.y + half_quad_size), 
-		float2(pos.x - half_quad_size, pos.y - half_quad_size), center_colour, 0.7f, lines_thickness);
+		float2(pos.x - half_quad_size, pos.y - half_quad_size), center_colour, 1.0f, lines_thickness);
 
 	App->renderer->line_renderer->DrawLine(line_up_start, line_up_end, line_up_colour, 1, lines_thickness);
 	App->renderer->line_renderer->DrawLine(line_right_start, line_right_end, line_right_colour, 1, lines_thickness);

@@ -17,16 +17,16 @@ void StaticSpriteRenderer::Start()
 	VertexBuffer quad_vertex_buffer;
 
 	quad_vertex_buffer.AddFloat3(float3(-0.5f, -0.5f, 0));
-	//quad_vertex_buffer.AddFloat2(float2(0.0f, 0.0f));
+	quad_vertex_buffer.AddFloat2(float2(0.0f, 0.0f));
 
 	quad_vertex_buffer.AddFloat3(float3(0.5f, -0.5f, 0));
-	//quad_vertex_buffer.AddFloat2(float2(1.0f, 0.0f));
+	quad_vertex_buffer.AddFloat2(float2(1.0f, 0.0f));
 
 	quad_vertex_buffer.AddFloat3(float3(0.5f, 0.5f, 0));
-	//quad_vertex_buffer.AddFloat2(float2(1.0f, 1.0f));
+	quad_vertex_buffer.AddFloat2(float2(1.0f, 1.0f));
 
 	quad_vertex_buffer.AddFloat3(float3(-0.5f, 0.5f, 0));
-	//quad_vertex_buffer.AddFloat2(float2(0.0f, 1.0f));
+	quad_vertex_buffer.AddFloat2(float2(0.0f, 1.0f));
 
 	uint indices[] =
 	{
@@ -37,6 +37,7 @@ void StaticSpriteRenderer::Start()
 	const char* vertex_code =
 		"#version 330 core\n \
 		layout(location = 0) in vec3 position; \n \
+		layout(location = 1) in vec2 uvs; \n \
 		\
 		uniform mat4 Model; \
 		uniform mat4 View; \
@@ -52,19 +53,22 @@ void StaticSpriteRenderer::Start()
 		{\
 			oCol = col;\
 			oHasTexture = hasTexture;\
+			oUvs = uvs; \
 			gl_Position = Projection * View * Model * vec4(position, 1);\
 		}";
 
 	const char* fragment_code =
 		"#version 330 core\n \
+		uniform sampler2D tex; \
 		in vec4 oCol; \
 		flat in int oHasTexture; \
+		in vec2 oUvs; \
 		out vec4 finalColor; \
 		void main()\
 		{\
 			if(oHasTexture == 1)\
 			{\
-				finalColor = oCol;\
+				finalColor = texture(tex, oUvs);\
 			}\
 			else\
 			{\
@@ -98,7 +102,11 @@ void StaticSpriteRenderer::Start()
 	// Set info
 	GLint posAttrib = App->renderer->GetVertexAttributeArray(program->GetID(), "position");
 	App->renderer->EnableVertexAttributeArray(posAttrib);
-	App->renderer->SetVertexAttributePointer(posAttrib, 3, 3, 0);
+	App->renderer->SetVertexAttributePointer(posAttrib, 3, 5, 0);
+
+	GLint uvsAttrib = App->renderer->GetVertexAttributeArray(program->GetID(), "uvs");
+	App->renderer->EnableVertexAttributeArray(uvsAttrib);
+	App->renderer->SetVertexAttributePointer(uvsAttrib, 2, 5, 3);
 
 	// VBIO
 	uint vbio = App->renderer->GenBuffer();
@@ -109,9 +117,10 @@ void StaticSpriteRenderer::Start()
 
 
 	// Clear
-
 	App->renderer->UnbindVertexArrayBuffer();
+
 	App->renderer->DisableVertexAttributeArray(posAttrib);
+	App->renderer->DisableVertexAttributeArray(uvsAttrib);
 
 	quad_vertex_buffer.Clear();
 }
@@ -134,25 +143,30 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 
 		App->renderer->BindVertexArrayBuffer(vao);
 
-		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprite_renderers.begin(); it != sprite_renderers.end(); ++it)
+		App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
+		App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
+
+		std::vector<ComponentSpriteRenderer*> sprites = sprite_renderers;
+
+		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprites.begin(); it != sprites.end(); ++it)
 		{
 			ComponentSpriteRenderer* curr_sprite = (*it);
 
 			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
 
-			ShaderProgramParameters par;
-			par.SetVector4("col", float4(1.0f, 0.0f, 1.0f, 1.0f));
-			par.SetInt("hasTexture", 0);
-			//par.SetTextures("texture", 0);
-			program->SetProgramParameters(par);
+			App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
+			App->renderer->SetUniformInt(program->GetID(), "hasTexture", curr_sprite->GetHasTexture());
 
-			float4x4 model = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(10, 1000, 1));
+			//ShaderProgramParameters par;
+			//par.SetVector4("col", float4(1.0f, 0.0f, 1.0f, 1.0f));
+			//par.SetInt("hasTexture", curr_sprite->GetHasTexture());
+			////par.SetTextures("texture", 0);
+			//program->SetProgramParameters(par);
 
 			App->renderer->SetUniformMatrix(program->GetID(), "Model", transform->GetGlobalTransform().Transposed().ptr());
-			App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
-			App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-			//App->renderer->BindTexture(curr_sprite->GetTextureId());
+			if(curr_sprite->GetHasTexture())
+				App->renderer->BindTexture(curr_sprite->GetTextureId());
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
 

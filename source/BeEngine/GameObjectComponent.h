@@ -44,6 +44,8 @@ public:
 	ComponentType GetType() const;
 	std::string GetName() const;
 
+	bool GetCanDestroy() const;
+
 protected:
 	GameObject* owner = nullptr;
 

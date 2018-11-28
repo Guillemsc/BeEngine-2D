@@ -80,10 +80,6 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 	model[1][3] = 0;
 	model[2][3] = 0;
 
-	//ShaderProgramParameters par;
-	//par.SetVector3("Colour", float3(1.0f, 1.0f, 1.0f));
-	//program->SetProgramParameters(par);
-
 	GLint posAttrib = App->renderer->GetVertexAttributeArray(program->GetID(), "position");
 	App->renderer->EnableVertexAttributeArray(posAttrib);
 	App->renderer->SetVertexAttributePointer(posAttrib, 3, 7, 0);

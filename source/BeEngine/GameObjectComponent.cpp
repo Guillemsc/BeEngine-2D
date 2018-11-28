@@ -24,3 +24,8 @@ std::string GameObjectComponent::GetName() const
 {
 	return name;
 }
+
+bool GameObjectComponent::GetCanDestroy() const
+{
+	return can_destroy;
+}

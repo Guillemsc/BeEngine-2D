@@ -15,6 +15,7 @@
 #include "ModuleInput.h"
 #include "ModuleScripting.h"
 #include "ScriptingObjectSolutionManager.h"
+#include "Event.h"
 
 #pragma comment (lib, "Devil/libx86/DevIL.lib")
 #pragma comment (lib, "Devil/libx86/ILU.lib")
@@ -182,9 +183,14 @@ void ModuleResource::DestroyResource(Resource * res)
 		{
 			if ((*t) == res)
 			{
+				EventResourceDestroyed* event_res_destroyed = new EventResourceDestroyed(res);
+				App->event->SendEvent(event_res_destroyed);
+
 				res->CleanUp();
+
 				RELEASE(res);
 				(*it).second.erase(t);
+
 				found = true;
 				break;
 			}
@@ -922,6 +928,22 @@ void ModuleResource::ManageFilesToCheck()
 
 void ModuleResource::DestroyAllResources()
 {
+	for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		for (std::vector<Resource*>::iterator t = (*it).second.begin(); t != (*it).second.end(); ++t)
+		{			
+			EventResourceDestroyed* event_res_destroyed = new EventResourceDestroyed(*t);
+			App->event->SendEvent(event_res_destroyed);
+
+			(*t)->CleanUp();
+
+			RELEASE(*t);
+		}
+
+		(*it).second.clear();
+	}
+
+	resources.clear();
 }
 
 LoadResourcesTimeSlicedTask::LoadResourcesTimeSlicedTask() : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 4)

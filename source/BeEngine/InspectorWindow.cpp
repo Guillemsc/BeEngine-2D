@@ -55,9 +55,12 @@ void InspectorWindow::DrawEditor()
 			{
 				GameObjectComponent* curr_component = (*com);
 
-				if (ImGui::SmallButton("Delete"))
+				if (curr_component->GetCanDestroy())
 				{
-
+					if (ImGui::SmallButton("Delete"))
+					{
+						curr_game_object->DestroyComponent(curr_component);
+					}
 				}
 
 				ImGui::SameLine();
@@ -95,6 +98,8 @@ void InspectorWindow::DrawEditor()
 
 	if (selected_gos.size() > 0)
 	{
+		ImGui::Spacing();
+
 		if (ImGui::Button("Add Component", ImVec2(win_size.x - 12, 30)))
 		{
 			open_components_popup = true;

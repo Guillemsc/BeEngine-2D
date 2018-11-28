@@ -7,6 +7,7 @@
 
 class GameObject;
 class ResourceTexture;
+class Event;
 
 class ComponentSpriteRenderer : public GameObjectComponent
 {
@@ -24,6 +25,8 @@ public:
 	void Start();
 	void CleanUp();
 
+	void OnEvent(Event* ev);
+
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
@@ -31,6 +34,7 @@ public:
 	void SetResourceTexture(ResourceTexture* set);
 
 	uint GetTextureId() const;
+	bool GetHasTexture() const;
 
 private:
 	ResourceTexture* resource_texture = nullptr;

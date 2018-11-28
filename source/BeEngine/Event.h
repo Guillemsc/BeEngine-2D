@@ -8,6 +8,7 @@
 #include "App.h"
 
 enum EventType;
+class Resource;
 
 class Event
 {
@@ -35,6 +36,8 @@ enum EventType
 	PROJECT_SELECTED,
 
 	WATCH_FILE_FOLDER,
+
+	RESOURCE_DESTROYED,
 };
 
 class EventTimeSlicedTaskFinished : public Event
@@ -136,6 +139,23 @@ public:
 
 private:
 	DecomposedFilePath fp;
+};
+
+class EventResourceDestroyed : public Event
+{
+public:
+	EventResourceDestroyed(Resource* res) : Event(EventType::RESOURCE_DESTROYED)
+	{
+		resource = res;
+	}
+
+	Resource* GetResource()
+	{
+		return resource;
+	}
+
+private:
+	Resource* resource;
 };
 
 #endif // !__EVENT_H__

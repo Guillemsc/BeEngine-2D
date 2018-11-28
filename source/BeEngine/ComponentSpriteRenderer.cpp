@@ -6,6 +6,7 @@
 #include "App.h"
 #include "ModuleResource.h"
 #include "imgui.h"
+#include "ModuleEvent.h"
 
 ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::SPRITE_RENDERER,
 	ComponentGroup::RENDERING, true)
@@ -26,8 +27,6 @@ void ComponentSpriteRenderer::EditorDraw()
 	if (App->resource->EditorResourceSelector(ResourceType::TEXTURE, res, resource_filter))
 	{
 		resource_texture = (ResourceTexture*)res;
-
-		App->renderer->static_sprite_renderer->AddSpriteRenderer(this);
 	}
 
 	if (resource_texture != nullptr)
@@ -39,13 +38,27 @@ void ComponentSpriteRenderer::EditorDraw()
 
 void ComponentSpriteRenderer::Start()
 {
+	App->event->Suscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
+	App->renderer->static_sprite_renderer->AddSpriteRenderer(this);
 }
 
 void ComponentSpriteRenderer::CleanUp()
 {
-	//App->renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
+	App->renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
 
+	App->event->UnSuscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+}
+
+void ComponentSpriteRenderer::OnEvent(Event * ev)
+{
+	if (ev->GetType() == EventType::RESOURCE_DESTROYED)
+	{
+		EventResourceDestroyed* erd = (EventResourceDestroyed*)ev;
+
+		if (erd->GetResource() == resource_texture)
+			resource_texture = nullptr;
+	}
 }
 
 void ComponentSpriteRenderer::OnChildAdded(GameObject * child)
@@ -73,4 +86,9 @@ uint ComponentSpriteRenderer::GetTextureId() const
 		ret = resource_texture->GetTextureId();
 
 	return ret;
+}
+
+bool ComponentSpriteRenderer::GetHasTexture() const
+{
+	return resource_texture != nullptr;
 }

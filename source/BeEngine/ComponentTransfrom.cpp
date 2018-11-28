@@ -22,7 +22,7 @@ void ComponentTransform::EditorDraw()
 	if (ImGui::DragFloat("Rotation", (float*)&rotation, 0.1f))
 		SetRotationAngles(rotation);
 
-	if (ImGui::DragFloat2("Scale", (float*)&scale, 0.1f, 0.0f))
+	if (ImGui::DragFloat2("Scale", (float*)&scale, 0.1f))
 		SetScale(scale);
 }
 
@@ -77,11 +77,11 @@ void ComponentTransform::SetScale(const float2 & scale)
 	{
 		local_scale = scale;
 
-		if (local_scale.y < 0)
-			local_scale.y = 0;
+		if (local_scale.x <= 0)
+			local_scale.x = 0.01f;
 
-		if (local_scale.y < 0)
-			local_scale.y = 0;
+		if (local_scale.y <= 0)
+			local_scale.y = 0.01f;
 
 		UpdateLocalTransform();
 	}

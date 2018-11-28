@@ -244,7 +244,7 @@ Camera2D::Camera2D()
 	SetYDir(float3(0, 1, 0));
 
 	SetNearPlaneDistance(0.1f);
-	SetFarPlaneDistance(10000.0f);
+	SetFarPlaneDistance(1000000.0f);
 
 	render_tex = new RenderTexture();
 }

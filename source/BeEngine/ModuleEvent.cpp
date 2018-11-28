@@ -26,7 +26,7 @@ void EventDelegate::CallListeners(Event* ev)
 {
 	for (std::vector<std::function<void(Event*)>>::iterator it = listeners.begin(); it != listeners.end(); ++it)
 	{
-		if (*it)
+		if ((*it))
 			(*it)(ev);
 	}
 }

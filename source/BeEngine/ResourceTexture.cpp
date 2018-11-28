@@ -97,7 +97,7 @@ void ResourceTexture::ImportFromLibrary()
 			ILinfo ImageInfo;
 			iluGetImageInfo(&ImageInfo);
 
-			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+			if (ImageInfo.Origin != IL_ORIGIN_UPPER_LEFT)
 			{
 				iluFlipImage();
 			}
