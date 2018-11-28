@@ -30,6 +30,8 @@ private:
 	bool compiles = false;
 
 	std::vector<std::string> compile_errors;
+
+	bool is_reference = false;
 };
 
 #endif // !__RESOURCE_SCRIPT_H__

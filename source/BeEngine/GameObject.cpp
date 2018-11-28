@@ -3,6 +3,7 @@
 #include "ModuleGameObject.h"
 #include "ComponentTransfrom.h"
 #include "ComponentSpriteRenderer.h"
+#include "ComponentScript.h"
 
 GameObject::GameObject(std::string _uid)
 {
@@ -11,7 +12,7 @@ GameObject::GameObject(std::string _uid)
 
 void GameObject::Start()
 {
-	transform = (ComponentTransform*)CreateComponent(ComponentType::TRANSFORM);
+	transform = (ComponentTransform*)CreateComponent(ComponentType::COMPONENT_TYPE_TRANSFORM);
 }
 
 void GameObject::Update()
@@ -161,12 +162,15 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 
 	switch (type)
 	{
-	case ComponentType::TRANSFORM:
+	case ComponentType::COMPONENT_TYPE_TRANSFORM:
 		ret = new ComponentTransform();
 		break;
 
-	case ComponentType::SPRITE_RENDERER:
+	case ComponentType::COMPONENT_TYPE_SPRITE_RENDERER:
 		ret = new ComponentSpriteRenderer();
+		break;
+	case ComponentType::COMPONENT_TYPE_SCRIPT:
+		ret = new ComponentScript();
 		break;
 	default:
 		break;

@@ -522,6 +522,9 @@
     <ClInclude Include="StaticSpriteRenderer.h">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentScript.h">
+      <Filter>Sources\8. GameObjects ===========\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -850,6 +853,9 @@
     </ClCompile>
     <ClCompile Include="StaticSpriteRenderer.cpp">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentScript.cpp">
+      <Filter>Sources\8. GameObjects ===========\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

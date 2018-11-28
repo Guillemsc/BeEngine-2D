@@ -154,6 +154,19 @@ namespace BeEngine
                 return ret;
             }
 
+            bool ClassIsSubclassOf(string class_to_check, string parent_class)
+            {
+                bool ret = false;
+
+                Type t_class_to_check = Type.GetType(class_to_check);
+                Type t_parent_class = Type.GetType(parent_class);
+
+                if(t_class_to_check != null && t_parent_class != null)
+                    ret = t_class_to_check.IsSubclassOf(t_parent_class) || t_class_to_check == t_parent_class;
+
+                return ret;
+            }
+
             private List<string> ref_assemblies = new List<string>();
             List<string> scripts = new List<string>();
 

@@ -9,14 +9,16 @@ class GameObject;
 
 enum ComponentType
 {
-	TRANSFORM,
-	SPRITE_RENDERER,
+	COMPONENT_TYPE_TRANSFORM,
+	COMPONENT_TYPE_SPRITE_RENDERER,
+	COMPONENT_TYPE_SCRIPT,
 };
 
 enum ComponentGroup
 {
 	TRANSFORMATIONS,
 	RENDERING,
+	SCRIPTING,
 };
 
 class GameObjectComponent

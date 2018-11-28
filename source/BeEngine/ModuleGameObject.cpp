@@ -13,7 +13,8 @@ bool ModuleGameObject::Awake()
 {
 	bool ret = true;
 
-	AddComponentType(ComponentType::SPRITE_RENDERER, "Sprite Renderer");
+	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer");
+	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
 
 	return ret;
 }

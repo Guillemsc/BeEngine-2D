@@ -476,7 +476,7 @@ void ModuleScripting::InitScriptingSolution()
 		solution_manager->AddAssembly(curr_lib.c_str());
 	}
 
-	std::string output_dll = App->resource->GetLibraryPathFromResourceType(ResourceType::SCRIPT);
+	std::string output_dll = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
 	output_dll += "scripting.dll";
 
 	compiler->SetScriptsAssemblyOutputFilepath(output_dll.c_str());

@@ -3,12 +3,11 @@
 #include "ResourceTexture.h"
 #include "ModuleRenderer.h"
 #include "StaticSpriteRenderer.h"
-#include "App.h"
 #include "ModuleResource.h"
 #include "imgui.h"
 #include "ModuleEvent.h"
 
-ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::SPRITE_RENDERER,
+ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::COMPONENT_TYPE_SPRITE_RENDERER,
 	ComponentGroup::RENDERING, true)
 {
 }
@@ -24,7 +23,7 @@ void ComponentSpriteRenderer::EditorDraw()
 	ImGui::SameLine();
 
 	Resource* res = resource_texture;
-	if (App->resource->EditorResourceSelector(ResourceType::TEXTURE, res, resource_filter))
+	if (App->resource->EditorResourceSelector(ResourceType::RESOURCE_TYPE_TEXTURE, res, resource_filter))
 	{
 		resource_texture = (ResourceTexture*)res;
 	}

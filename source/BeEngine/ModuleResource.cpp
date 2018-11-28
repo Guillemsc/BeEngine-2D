@@ -42,13 +42,13 @@ bool ModuleResource::Awake()
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 
-	AddResourceName(ResourceType::TEXTURE, "texture");
-	AddResourceName(ResourceType::SCRIPT, "script");
+	AddResourceName(ResourceType::RESOURCE_TYPE_TEXTURE, "texture");
+	AddResourceName(ResourceType::RESOURCE_TYPE_SCRIPT, "script");
 
-	AddAssetExtension(ResourceType::TEXTURE, "png");
-	AddAssetExtension(ResourceType::TEXTURE, "jpg");
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "png");
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "jpg");
 
-	AddAssetExtension(ResourceType::SCRIPT, "cs");
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_SCRIPT, "cs");
 
 	return ret;
 }
@@ -139,13 +139,13 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 
 	switch (type)
 	{
-	case ResourceType::TEXTURE:
+	case ResourceType::RESOURCE_TYPE_TEXTURE:
 
 		ret = new ResourceTexture();
 		
 		break;
 
-	case ResourceType::SCRIPT:
+	case ResourceType::RESOURCE_TYPE_SCRIPT:
 
 		ret = new ResourceScript();
 
@@ -408,7 +408,7 @@ bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 
 		ResourceType type = GetResourceTypeFromAssetExtension(dfp.file_extension_lower_case.c_str());
 
-		if (type != ResourceType::UNKWNOWN)
+		if (type != ResourceType::RESOURCE_TYPE_UNKWNOWN)
 		{
 			res = CreateResource(type);
 
@@ -446,7 +446,7 @@ bool ModuleResource::ImportAsset(const char * filepath, Resource*& res)
 
 		ResourceType type = GetResourceTypeFromAssetExtension(dfp.file_extension_lower_case.c_str());
 
-		if (type != ResourceType::UNKWNOWN)
+		if (type != ResourceType::RESOURCE_TYPE_UNKWNOWN)
 		{
 			res = CreateResource(type);
 
@@ -709,7 +709,7 @@ bool ModuleResource::CanLoadFile(const char * filepath)
 
 	ResourceType type = GetResourceTypeFromAssetExtension(dfp.file_extension_lower_case.c_str());
 
-	if (type != ResourceType::UNKWNOWN)
+	if (type != ResourceType::RESOURCE_TYPE_UNKWNOWN)
 		ret = true;
 
 	return ret;
@@ -854,7 +854,7 @@ void ModuleResource::AddLibraryExtension(const ResourceType & type, const char *
 
 ResourceType ModuleResource::GetResourceTypeFromAssetExtension(const char * extension)
 {
-	ResourceType ret = ResourceType::UNKWNOWN;
+	ResourceType ret = ResourceType::RESOURCE_TYPE_UNKWNOWN;
 
 	for (std::map<ResourceType, std::vector<std::string>>::iterator it = asset_extensions.begin(); it != asset_extensions.end(); ++it)
 	{
@@ -877,7 +877,7 @@ ResourceType ModuleResource::GetResourceTypeFromAssetExtension(const char * exte
 
 ResourceType ModuleResource::GetResourceTypeFromLibraryExtension(const char * extension)
 {
-	ResourceType ret = ResourceType::UNKWNOWN;
+	ResourceType ret = ResourceType::RESOURCE_TYPE_UNKWNOWN;
 
 	for (std::map<ResourceType, std::vector<std::string>>::iterator it = library_extensions.begin(); it != library_extensions.end(); ++it)
 	{

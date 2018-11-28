@@ -30,6 +30,7 @@ public:
 	std::string GetScriptCode(const char* script_filepath);
 	bool SetScriptCode(const char* script_filepath, std::string code);
 	bool CreateScriptFromTemplate(const char* save_path, const char* name, std::string& created_asset_filepath = std::string());
+	bool ClassIsSubclassOf(const char* class_to_check, const char* class_parent);
 
 private:
 	ScriptingClassInstance* script_compiler_instance = nullptr;

@@ -8,7 +8,7 @@
 #include "Functions.h"
 #include "ModuleJson.h"
 
-ResourceScript::ResourceScript() : Resource(ResourceType::SCRIPT)
+ResourceScript::ResourceScript() : Resource(ResourceType::RESOURCE_TYPE_SCRIPT)
 {
 }
 

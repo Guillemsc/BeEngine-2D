@@ -4,7 +4,7 @@
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
 
-ResourceTexture::ResourceTexture() : Resource(ResourceType::TEXTURE)
+ResourceTexture::ResourceTexture() : Resource(ResourceType::RESOURCE_TYPE_TEXTURE)
 {
 }
 

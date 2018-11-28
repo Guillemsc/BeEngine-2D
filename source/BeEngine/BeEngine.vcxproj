@@ -101,6 +101,7 @@
     <ClInclude Include="Algorithm\SAT.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="BottomBar.h" />
+    <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="ComponentSpriteRenderer.h" />
     <ClInclude Include="ComponentTransfrom.h" />
     <ClInclude Include="ConsoleWindow.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="Algorithm\Random\LCG.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="BottomBar.cpp" />
+    <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="ComponentSpriteRenderer.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cursor.cpp" />

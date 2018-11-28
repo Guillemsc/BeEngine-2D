@@ -8,10 +8,10 @@
 
 enum ResourceType
 {
-	UNKWNOWN,
-	TEXTURE,
-	SCRIPT,
-	SHADER,
+	RESOURCE_TYPE_UNKWNOWN,
+	RESOURCE_TYPE_TEXTURE,
+	RESOURCE_TYPE_SCRIPT,
+	RESOURCE_TYPE_SHADER,
 };
 
 class Resource
@@ -68,7 +68,7 @@ private:
 private:
 	bool has_data = false;
 
-	ResourceType type = ResourceType::UNKWNOWN;
+	ResourceType type = ResourceType::RESOURCE_TYPE_UNKWNOWN;
 
 	std::string uid;
 	std::string meta_filepath;

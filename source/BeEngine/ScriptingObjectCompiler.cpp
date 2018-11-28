@@ -159,89 +159,80 @@ bool ScriptingObjectCompiler::CompileScripts(std::vector<std::string>& compile_e
 bool ScriptingObjectCompiler::CreateScript(const char * script_filepath, const char * code)
 {
 	bool ret = false;
-
-	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
+	
+	if (script_compiler_instance != nullptr)
 	{
-		if (script_compiler_instance != nullptr)
+		DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(script_filepath);
+
+		if (App->file_system->FolderExists(d_filepath.path.c_str()))
 		{
-			DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(script_filepath);
+			if (App->file_system->FileExists(script_filepath))
+				App->file_system->FileDelete(script_filepath);
 
-			if (App->file_system->FolderExists(d_filepath.path.c_str()))
+			MonoObject* script_filepath_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
+			MonoObject* code_boxed = (MonoObject*)App->scripting->BoxString(code);
+
+			void* args[2];
+			args[0] = script_filepath_boxed;
+			args[1] = code_boxed;
+
+			MonoObject* ret_obj = nullptr;
+			if (script_compiler_instance->InvokeMonoMethod("CreateCSScriptFile", args, 2, ret_obj))
 			{
-				if (App->file_system->FileExists(script_filepath))
-					App->file_system->FileDelete(script_filepath);
-
-				MonoObject* script_filepath_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
-				MonoObject* code_boxed = (MonoObject*)App->scripting->BoxString(code);
-
-				void* args[2];
-				args[0] = script_filepath_boxed;
-				args[1] = code_boxed;
-
-				MonoObject* ret_obj = nullptr;
-				if (script_compiler_instance->InvokeMonoMethod("CreateCSScriptFile", args, 2, ret_obj))
-				{
-					ret = App->scripting->UnboxBool(ret_obj);
-				}
+				ret = App->scripting->UnboxBool(ret_obj);
 			}
 		}
 	}
-
+	
 	return ret;
 }
 
 std::string ScriptingObjectCompiler::GetScriptCode(const char * script_filepath)
 {
 	std::string ret = "";
-
-	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
+	
+	if (script_compiler_instance != nullptr)
 	{
-		if (script_compiler_instance != nullptr)
+		DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(script_filepath);
+
+		if (App->file_system->FileExists(script_filepath))
 		{
-			DecomposedFilePath d_filepath = App->file_system->DecomposeFilePath(script_filepath);
+			MonoObject* script_filepath_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
 
-			if (App->file_system->FileExists(script_filepath))
+			void* args[1];
+			args[0] = script_filepath_boxed;
+
+			MonoObject* ret_obj = nullptr;
+			if (script_compiler_instance->InvokeMonoMethod("ReadCSScriptFile", args, 1, ret_obj))
 			{
-				MonoObject* script_filepath_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
-
-				void* args[1];
-				args[0] = script_filepath_boxed;
-
-				MonoObject* ret_obj = nullptr;
-				if (script_compiler_instance->InvokeMonoMethod("ReadCSScriptFile", args, 1, ret_obj))
-				{
-					ret = App->scripting->UnboxString((MonoString*)ret_obj);
-				}
+				ret = App->scripting->UnboxString((MonoString*)ret_obj);
 			}
 		}
 	}
-
+	
 	return ret;
 }
 
 bool ScriptingObjectCompiler::SetScriptCode(const char * script_filepath, std::string code)
 {
 	bool ret = false;
-
-	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
+	
+	if (script_compiler_instance != nullptr)
 	{
-		if (script_compiler_instance != nullptr)
+		MonoObject* script_filepath_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
+		MonoObject* script_code_boxed = (MonoObject*)App->scripting->BoxString(code.c_str());
+
+		void* args[2];
+		args[0] = script_filepath_boxed;
+		args[1] = script_code_boxed;
+
+		MonoObject* ret_obj = nullptr;
+		if (script_compiler_instance->InvokeMonoMethod("WriteCSScriptFile", args, 2, ret_obj))
 		{
-			MonoObject* script_filepath_boxed = (MonoObject*)App->scripting->BoxString(script_filepath);
-			MonoObject* script_code_boxed = (MonoObject*)App->scripting->BoxString(code.c_str());
-
-			void* args[2];
-			args[0] = script_filepath_boxed;
-			args[1] = script_code_boxed;
-
-			MonoObject* ret_obj = nullptr;
-			if (script_compiler_instance->InvokeMonoMethod("WriteCSScriptFile", args, 2, ret_obj))
-			{
-				ret = App->scripting->UnboxBool(ret_obj);
-			}
+			ret = App->scripting->UnboxBool(ret_obj);
 		}
 	}
-
+	
 	return ret;
 }
 
@@ -269,6 +260,29 @@ bool ScriptingObjectCompiler::CreateScriptFromTemplate(const char* save_path, co
 
 				ret = true;
 			}
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingObjectCompiler::ClassIsSubclassOf(const char * class_to_check, const char * class_parent)
+{
+	bool ret = false;
+
+	if (script_compiler_instance != nullptr)
+	{
+		MonoObject* class_to_check_boxed = (MonoObject*)App->scripting->BoxString(class_to_check);
+		MonoObject* class_parent_boxed = (MonoObject*)App->scripting->BoxString(class_parent);
+
+		void* args[2];
+		args[0] = class_to_check_boxed;
+		args[1] = class_parent_boxed;
+
+		MonoObject* ret_obj = nullptr;
+		if (script_compiler_instance->InvokeMonoMethod("ClassIsSubclassOf", args, 2, ret_obj))
+		{
+			ret = App->scripting->UnboxBool(ret_obj);
 		}
 	}
 
