@@ -61,6 +61,11 @@ namespace BeEngine
                 return ret;
             }
 
+            public string[] GetScripts()
+            {
+                return scripts.ToArray();
+            }
+
             public string[] CompileScripts(string dll_output_path)
             {
                 List<string> ret = new List<string>();

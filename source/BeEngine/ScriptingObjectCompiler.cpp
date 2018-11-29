@@ -126,6 +126,29 @@ bool ScriptingObjectCompiler::RemoveScript(const char* script_filepath)
 	return ret;
 }
 
+std::vector<std::string> ScriptingObjectCompiler::GetScripts()
+{
+	std::vector<std::string> ret;
+
+	if (script_compiler_instance != nullptr)
+	{
+		MonoObject* ret_obj = nullptr;
+		if (script_compiler_instance->InvokeMonoMethod("GetScripts", nullptr, 0, ret_obj))
+		{
+			std::vector<MonoObject*> objects_ret = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_obj);
+
+			for (std::vector<MonoObject*>::iterator it = objects_ret.begin(); it != objects_ret.end(); ++it)
+			{
+				std::string str = App->scripting->UnboxString((MonoString*)(*it));
+
+				ret.push_back(str);
+			}
+		}
+	}
+
+	return ret;
+}
+
 bool ScriptingObjectCompiler::CompileScripts(std::vector<std::string>& compile_errors)
 {	
 	bool ret = false;

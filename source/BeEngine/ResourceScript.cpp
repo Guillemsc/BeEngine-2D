@@ -77,6 +77,48 @@ void ResourceScript::OnMoveAsset(const char * new_asset_path, const char* last_a
 	App->scripting->CompileScripts();
 }
 
+void ResourceScript::ClearScriptFields()
+{
+	script_fields.clear();
+}
+
+void ResourceScript::AddIntScriptField(const std::string & field_name)
+{
+	ResourceScriptField sf;
+	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_INT;
+	sf.field_name = field_name;
+
+	script_fields.push_back(sf);
+}
+
+void ResourceScript::AddFloatScriptField(const std::string & field_name)
+{
+	ResourceScriptField sf;
+	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_FLOAT;
+	sf.field_name = field_name;
+
+	script_fields.push_back(sf);
+}
+
+void ResourceScript::AddStringScriptField(const std::string & field_name)
+{
+	ResourceScriptField sf;
+	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_STRING;
+	sf.field_name = field_name;
+
+	script_fields.push_back(sf);
+}
+
+void ResourceScript::AddBoolScriptField(const std::string & field_name)
+{
+	ResourceScriptField sf;
+	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_BOOL;
+	sf.field_name = field_name;
+
+	script_fields.push_back(sf);
+}
+
 ResourceScriptField::ResourceScriptField()
 {
+
 }

@@ -62,6 +62,12 @@ public:
 	void OnRenameAsset(const char* new_name, const char* last_name);
 	void OnMoveAsset(const char* new_asset_path, const char* last_asset_path);
 
+	void ClearScriptFields();
+	void AddIntScriptField(const std::string& field_name);
+	void AddFloatScriptField(const std::string& field_name);
+	void AddStringScriptField(const std::string& field_name);
+	void AddBoolScriptField(const std::string& field_name);
+
 private:
 	bool compiles = false;
 

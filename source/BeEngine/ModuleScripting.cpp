@@ -69,24 +69,16 @@ bool ModuleScripting::Awake()
 	mono_base_path = App->file_system->GetWorkingDirectory() + "mono\\";
 	assembly_base_path = App->file_system->GetWorkingDirectory() + "mono_assembly\\";
 
+	std::string base_libs_folder = assembly_base_path + "base_libs\\";
+	base_libs = App->file_system->GetFilesInPath(base_libs_folder.c_str());
+
 	std::string lib_dir = mono_base_path + "lib\\";
 	std::string etc_dir = mono_base_path + "etc\\";
 	mono_set_dirs(lib_dir.c_str(), etc_dir.c_str());
 
-	base_domain = mono_jit_init(App->GetAppName());
+	mono_jit_init(App->GetAppName());
 
-	std::string scripting_assembly_path = assembly_base_path + "BeEngineScripting.dll";
-	std::string scripting_internal_assembly_path = assembly_base_path + "BeEngineScriptingInternal.dll";
-
-	scripting_assembly = CreateAssembly(scripting_assembly_path.c_str());
-	scripting_internal_assembly = CreateAssembly(scripting_internal_assembly_path.c_str());
-
-	std::string base_libs_folder = assembly_base_path + "base_libs\\";
-	base_libs = App->file_system->GetFilesInPath(base_libs_folder.c_str());
-
-	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
-	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
-	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
+	CreateBaseDomainAndAssemblys();
 
 	return ret;
 }
@@ -209,23 +201,13 @@ ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path)
 	}
 	else
 	{
+		ret->CleanUp();
+
 		RELEASE(ret);
 		ret = nullptr;
 	}
 
 	return ret;
-}
-void ModuleScripting::DestroyAssembly(ScriptingAssembly* assembly)
-{
-	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
-	{
-		if ((*it) == assembly)
-		{
-			RELEASE(*it);
-			assemblys.erase(it);
-			break;
-		}
-	}
 }
 
 std::vector<ScriptingAssembly*> ModuleScripting::GetScriptingAssemblys() const
@@ -459,6 +441,40 @@ bool ModuleScripting::GetScriptsCompile() const
 	return user_code_compiles;
 }
 
+void ModuleScripting::CreateBaseDomainAndAssemblys()
+{
+	base_domain = mono_domain_create();
+
+	std::string scripting_assembly_path = assembly_base_path + "BeEngineScripting.dll";
+	std::string scripting_internal_assembly_path = assembly_base_path + "BeEngineScriptingInternal.dll";
+
+	scripting_assembly = CreateAssembly(scripting_assembly_path.c_str());
+	scripting_internal_assembly = CreateAssembly(scripting_internal_assembly_path.c_str());
+
+	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
+	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
+	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
+}
+
+void ModuleScripting::DestroyBaseDomainAndAssemblys()
+{
+	DestroyAllScriptingObjects();
+	DestroyAllAssemblys();
+
+	scripting_assembly = nullptr;
+	scripting_internal_assembly = nullptr;
+	user_code_assembly = nullptr;
+
+	compiler = nullptr;
+	solution_manager = nullptr;
+	file_watcher = nullptr;
+
+	if (base_domain != nullptr)
+	{
+		mono_domain_free(base_domain, false);
+	}
+}
+
 void ModuleScripting::InitScriptingSolution()
 {
 	solution_manager->CreateSolutionManagerInstance();
@@ -486,21 +502,12 @@ void ModuleScripting::InitScriptingSolution()
 	compiler->SetScriptsAssemblyOutputFilepath(scripting_user_assembly_filepath.c_str());
 }
 
-void ModuleScripting::GenerateUserCodeAssembly()
-{
-	if (user_code_assembly != nullptr)
-		DestroyAssembly(user_code_assembly);
-
-	user_code_assembly = nullptr;
-
-	if (App->file_system->FileExists(scripting_user_assembly_filepath))
-		user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
-}
-
 void ModuleScripting::ActuallyCompileScripts()
 {
 	if (needs_to_compile_user_scripts)
 	{
+		App->resource->StopWatchingFolders();
+
 		std::vector<std::string> compile_errors;
 		user_code_compiles = compiler->CompileScripts(compile_errors);
 
@@ -511,7 +518,21 @@ void ModuleScripting::ActuallyCompileScripts()
 		}
 
 		if (user_code_compiles)
-			GenerateUserCodeAssembly();
+		{
+			std::vector<std::string> scripts = compiler->GetScripts();
+
+			DestroyBaseDomainAndAssemblys();
+			CreateBaseDomainAndAssemblys();
+
+			for (std::vector<std::string>::iterator it = scripts.begin(); it != scripts.end(); ++it)
+			{
+				compiler->AddScript((*it).c_str());
+			}
+
+			user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
+
+			App->resource->StartWatchingFolders();
+		}
 
 		EventScriptsCompiled* esc = new EventScriptsCompiled(user_code_compiles);
 		App->event->SendEvent(esc);
@@ -531,7 +552,9 @@ void ModuleScripting::UpdateScriptingObjects()
 void ModuleScripting::DestroyAllAssemblys()
 {
 	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
-	{		
+	{	
+		(*it)->CleanUp();
+
 		RELEASE(*it);		
 	}
 
@@ -553,6 +576,12 @@ ScriptingAssembly::ScriptingAssembly(MonoDomain* dom, const char * assembly_path
 {
 	domain = dom;
 	path = assembly_path;
+}
+
+void ScriptingAssembly::CleanUp()
+{
+	if (assembly != nullptr)
+		mono_assembly_close(assembly);
 }
 
 void ScriptingAssembly::LoadAssembly()

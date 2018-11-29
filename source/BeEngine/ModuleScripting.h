@@ -25,6 +25,8 @@ class ScriptingAssembly
 public:
 	ScriptingAssembly(MonoDomain* domain, const char* assembly_path);
 
+	void CleanUp();
+
 	bool GetAssemblyLoaded() const;
 
 	MonoAssembly* GetAssembly();
@@ -116,7 +118,6 @@ public:
 
 	// Assembly management
 	ScriptingAssembly* CreateAssembly(const char* assembly_path);
-	void DestroyAssembly(ScriptingAssembly* assembly);
 	std::vector<ScriptingAssembly*> GetScriptingAssemblys() const;
 
 	// C# Base libs
@@ -151,8 +152,11 @@ public:
 	bool GetScriptsCompile() const;
 
 private:
+	void CreateBaseDomainAndAssemblys();
+	void DestroyBaseDomainAndAssemblys();
+
 	void InitScriptingSolution();
-	void GenerateUserCodeAssembly();
+
 	void ActuallyCompileScripts();
 
 	void UpdateScriptingObjects();

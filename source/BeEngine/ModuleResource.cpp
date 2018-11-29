@@ -722,6 +722,8 @@ void ModuleResource::LoadUserScriptsInfo()
 				{
 					ResourceScript* curr_script = (ResourceScript*)(*it);
 
+					curr_script->ClearScriptFields();
+
 					std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
 
 					curr_script->inherits_from_beengine_reference = false;
@@ -734,6 +736,28 @@ void ModuleResource::LoadUserScriptsInfo()
 						if (curr_script->inherits_from_beengine_reference)
 						{
 							std::map<std::string, MonoType*> fields = sc.GetFields();
+
+							for (std::map<std::string, MonoType*>::iterator it = fields.begin(); it != fields.end(); ++it)
+							{
+								std::string type_name = mono_type_get_name((*it).second);
+
+								if (type_name.compare("System.String") == 0)
+								{
+									curr_script->AddStringScriptField((*it).first);
+								}
+								else if (type_name.compare("System.Int32") == 0)
+								{
+									curr_script->AddIntScriptField((*it).first);
+								}
+								else if (type_name.compare("System.Single") == 0)
+								{
+									curr_script->AddFloatScriptField((*it).first);
+								}
+								else if (type_name.compare("System.Boolean") == 0)
+								{
+									curr_script->AddBoolScriptField((*it).first);
+								}
+							}
 						}
 					}
 				}
