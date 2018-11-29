@@ -1,5 +1,7 @@
 #include "ModuleGameObject.h"
 #include "Functions.h"
+#include "ModuleEvent.h"
+#include "Event.h"
 
 ModuleGameObject::ModuleGameObject()
 {
@@ -88,6 +90,9 @@ void ModuleGameObject::DestroyGameObject(GameObject * go)
 		while (!to_check.empty())
 		{
 			GameObject* curr = *to_check.begin();
+
+			EventGameObjectDestroyed* egod = new EventGameObjectDestroyed(curr);
+			App->event->SendEvent(egod);
 
 			for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
 			{

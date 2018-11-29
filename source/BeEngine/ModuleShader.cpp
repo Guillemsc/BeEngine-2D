@@ -42,19 +42,8 @@ bool ModuleShader::CleanUp()
 {
 	bool ret = true;
 
-	for (std::vector<Shader*>::iterator it = shaders.begin(); it != shaders.end(); ++it)
-	{		
-		(*it)->CleanUp();
-		RELEASE(*it);
-	}
-	shaders.clear();
-
-	for (std::vector<ShaderProgram*>::iterator it = programs.begin(); it != programs.end(); ++it)
-	{		
-		(*it)->CleanUp();
-		RELEASE(*it);		
-	}
-	programs.clear();
+	DestroyAllShaders();
+	DestroyAllShaderPrograms();
 
 	return ret;
 }
@@ -99,7 +88,7 @@ ShaderProgram * ModuleShader::CreateShaderProgram()
 	return program;
 }
 
-void ModuleShader::DeleteShaderProgram(ShaderProgram * sp)
+void ModuleShader::DestroyShaderProgram(ShaderProgram * sp)
 {
 	if (sp != nullptr)
 	{
@@ -108,12 +97,33 @@ void ModuleShader::DeleteShaderProgram(ShaderProgram * sp)
 			if ((*it) == sp)
 			{
 				(*it)->CleanUp();
+
 				RELEASE(*it);
 				programs.erase(it);
 				break;
 			}
 		}
 	}
+}
+
+void ModuleShader::DestroyAllShaders()
+{
+	for (std::vector<Shader*>::iterator it = shaders.begin(); it != shaders.end(); ++it)
+	{
+		(*it)->CleanUp();
+		RELEASE(*it);
+	}
+	shaders.clear();
+}
+
+void ModuleShader::DestroyAllShaderPrograms()
+{
+	for (std::vector<ShaderProgram*>::iterator it = programs.begin(); it != programs.end(); ++it)
+	{
+		(*it)->CleanUp();
+		RELEASE(*it);
+	}
+	programs.clear();
 }
 
 Shader::Shader(ShaderType _type)

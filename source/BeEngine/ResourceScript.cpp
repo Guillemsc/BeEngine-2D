@@ -76,3 +76,7 @@ void ResourceScript::OnMoveAsset(const char * new_asset_path, const char* last_a
 
 	App->scripting->CompileScripts();
 }
+
+ResourceScriptField::ResourceScriptField()
+{
+}

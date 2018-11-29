@@ -5,6 +5,42 @@
 #include "Globals.h"
 #include <vector>
 
+class ResourceScript;
+class GameObject;
+class GameObjectComponent;
+
+enum ResourceScriptFieldType
+{
+	SCRIPT_FIELD_UNDEFINED,
+	SCRIPT_FIELD_INT,
+	SCRIPT_FIELD_FLOAT,
+	SCRIPT_FIELD_STRING,
+	SCRIPT_FIELD_BOOL,
+	//SCRIPT_FIELD_GAMEOBJECT,
+	//SCRIPT_FIELD_GAMEOBJECT_COMPONENT,
+	//SCRIPT_FIELD_GAMEOBJECT_RESOURCE,
+};
+
+class ResourceScriptField
+{
+	friend class ResourceScript;
+
+public:
+	ResourceScriptField();
+
+	ResourceScriptFieldType type = ResourceScriptFieldType::SCRIPT_FIELD_UNDEFINED;
+	std::string field_name;
+
+private:
+	int int_field = 0;
+	float float_field = 0.0f;
+	std::string string_field = "";
+	bool bool_field = false;
+	//GameObject* game_object_field = nullptr;
+	//GameObjectComponent* game_object_class_field = nullptr;
+	//Resource* resource_field = nullptr;
+};
+
 class ResourceScript : public Resource
 {
 	friend class ResourceScriptLoader;
@@ -31,7 +67,9 @@ private:
 
 	std::vector<std::string> compile_errors;
 
-	bool is_reference = false;
+	bool inherits_from_beengine_reference = false;
+
+	std::vector<ResourceScriptField> script_fields;
 };
 
 #endif // !__RESOURCE_SCRIPT_H__

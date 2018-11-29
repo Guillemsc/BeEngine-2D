@@ -62,6 +62,9 @@ bool ModuleProject::CleanUp()
 {
 	bool ret = true;
 
+	App->event->UnSuscribe(std::bind(&ModuleProject::OnEvent, this, std::placeholders::_1), EventType::THREAD_TASK_FINISHED);
+	App->event->UnSuscribe(std::bind(&ModuleProject::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
+
 	return ret;
 }
 

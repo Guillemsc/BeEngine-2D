@@ -88,6 +88,9 @@
     <Filter Include="Sources\4. Rendering =============\DinamicRenderers">
       <UniqueIdentifier>{0f41f913-277f-41fc-9620-72d6b21f30cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\6. Scripting ==============\Core">
+      <UniqueIdentifier>{878c19be-270a-4012-883f-14042d699cc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -489,23 +492,11 @@
     <ClInclude Include="InspectorWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptingObject.h">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptingObjectCompiler.h">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptingObjectSolutionManager.h">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceScript.h">
       <Filter>Sources\5. Resources =============</Filter>
     </ClInclude>
     <ClInclude Include="ExplorerWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptingObjectFileWatcher.h">
-      <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
@@ -524,6 +515,18 @@
     </ClInclude>
     <ClInclude Include="ComponentScript.h">
       <Filter>Sources\8. GameObjects ===========\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingObjectCompiler.h">
+      <Filter>Sources\6. Scripting ==============\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingObjectFileWatcher.h">
+      <Filter>Sources\6. Scripting ==============\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingObjectSolutionManager.h">
+      <Filter>Sources\6. Scripting ==============\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingObject.h">
+      <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -818,23 +821,11 @@
     <ClCompile Include="InspectorWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptingObject.cpp">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptingObjectCompiler.cpp">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptingObjectSolutionManager.cpp">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceScript.cpp">
       <Filter>Sources\5. Resources =============</Filter>
     </ClCompile>
     <ClCompile Include="ExplorerWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptingObjectFileWatcher.cpp">
-      <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
@@ -856,6 +847,18 @@
     </ClCompile>
     <ClCompile Include="ComponentScript.cpp">
       <Filter>Sources\8. GameObjects ===========\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingObjectCompiler.cpp">
+      <Filter>Sources\6. Scripting ==============\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingObjectFileWatcher.cpp">
+      <Filter>Sources\6. Scripting ==============\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingObjectSolutionManager.cpp">
+      <Filter>Sources\6. Scripting ==============\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingObject.cpp">
+      <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

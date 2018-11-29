@@ -41,6 +41,7 @@ bool ModuleResource::Awake()
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
 	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
+	App->event->Suscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::SCRIPTS_COMPILED);
 
 	AddResourceName(ResourceType::RESOURCE_TYPE_TEXTURE, "texture");
 	AddResourceName(ResourceType::RESOURCE_TYPE_SCRIPT, "script");
@@ -88,6 +89,11 @@ bool ModuleResource::CleanUp()
 	bool ret = true;
 
 	DestroyAllResources();
+
+	App->event->UnSuscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+	App->event->UnSuscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
+	App->event->UnSuscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
+	App->event->UnSuscribe(std::bind(&ModuleResource::OnEvent, this, std::placeholders::_1), EventType::SCRIPTS_COMPILED);
 
 	return ret;
 }
@@ -701,6 +707,41 @@ bool ModuleResource::DeleteAssetsFolder(const char * folder)
 	return ret;
 }
 
+void ModuleResource::LoadUserScriptsInfo()
+{
+	if (App->scripting->user_code_assembly != nullptr && App->scripting->user_code_assembly->GetAssemblyLoaded())
+	{
+		if (App->scripting->scripting_assembly != nullptr && App->scripting->scripting_assembly->GetAssemblyLoaded())
+		{
+			ScriptingClass be_engine_reference_class;
+			if (App->scripting->scripting_assembly->GetClass("BeEngine", "BeEngineReference", be_engine_reference_class))
+			{
+				std::vector<Resource*> script_resources = GetResourcesFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
+
+				for (std::vector<Resource*>::iterator it = script_resources.begin(); it != script_resources.end(); ++it)
+				{
+					ResourceScript* curr_script = (ResourceScript*)(*it);
+
+					std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
+
+					curr_script->inherits_from_beengine_reference = false;
+
+					ScriptingClass sc;
+					if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
+					{
+						curr_script->inherits_from_beengine_reference = sc.GetIsInheritedFrom(be_engine_reference_class);
+
+						if (curr_script->inherits_from_beengine_reference)
+						{
+							std::map<std::string, MonoType*> fields = sc.GetFields();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 bool ModuleResource::CanLoadFile(const char * filepath)
 {
 	bool ret = false;
@@ -769,8 +810,6 @@ void ModuleResource::OnEvent(Event* ev)
 			if (ett->GetTask() == time_sliced_task_loading_resources)
 			{
 				App->scripting->CompileScripts();
-
-				MoveAssetsFolder("C:\\Users\\Guillem\\Desktop\\Test\\assets\\ToCopy\\", "C:\\Users\\Guillem\\Desktop\\Test\\assets\\FolderToPut\\");
 			}
 
 			break;
@@ -783,6 +822,15 @@ void ModuleResource::OnEvent(Event* ev)
 
 			if(!df.its_folder)
 				files_changed_to_check.push_back(df.file_path.c_str());
+
+			break;
+		}
+	case EventType::SCRIPTS_COMPILED:
+		{
+			EventScriptsCompiled* esc = (EventScriptsCompiled*)ev;
+
+			if(esc->GetCompiles())
+				LoadUserScriptsInfo();
 
 			break;
 		}

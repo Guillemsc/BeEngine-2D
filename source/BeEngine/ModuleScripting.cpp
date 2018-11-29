@@ -10,7 +10,9 @@
 #include "ModuleEditor.h"
 #include "ConsoleWindow.h"
 #include "ModuleResource.h"
+#include "Event.h"
 #include <mono/utils/mono-logger.h>
+#include <mono/metadata/attrdefs.h>
 
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 
@@ -102,6 +104,8 @@ bool ModuleScripting::PreUpdate()
 {
 	bool ret = true;
 
+	ActuallyCompileScripts();
+
 	return ret;
 }
 
@@ -131,6 +135,8 @@ bool ModuleScripting::CleanUp()
 
 	mono_jit_cleanup(base_domain);
 
+	App->event->UnSuscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+
 	return ret;
 }
 
@@ -143,8 +149,6 @@ void ModuleScripting::OnEvent(Event * ev)
 		EventProjectSelected* pje = (EventProjectSelected*)ev;
 
 		InitScriptingSolution();
-
-		//wApp->resource->LoadFileToEngine("C:\\Users\\Guillem\\Desktop\\Testing\\ConsoleApp1\\ConsoleApp1\\Test.cs");
 
 		break;
 	}
@@ -223,10 +227,12 @@ void ModuleScripting::DestroyAssembly(ScriptingAssembly* assembly)
 		}
 	}
 }
+
 std::vector<ScriptingAssembly*> ModuleScripting::GetScriptingAssemblys() const
 {
 	return assemblys;
 }
+
 std::vector<std::string> ModuleScripting::GetBaseLibs() const
 {
 	return base_libs;
@@ -445,14 +451,12 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 
 void ModuleScripting::CompileScripts()
 {
-	std::vector<std::string> compile_errors;
-	compiler->CompileScripts(compile_errors);
+	needs_to_compile_user_scripts = true;
+}
 
-	App->editor->console_window->ClearPesonalLogs("scripting");
-	for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
-	{
-		App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_ERROR);
-	}
+bool ModuleScripting::GetScriptsCompile() const
+{
+	return user_code_compiles;
 }
 
 void ModuleScripting::InitScriptingSolution()
@@ -476,10 +480,44 @@ void ModuleScripting::InitScriptingSolution()
 		solution_manager->AddAssembly(curr_lib.c_str());
 	}
 
-	std::string output_dll = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
-	output_dll += "scripting.dll";
+	scripting_user_assembly_filepath = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
+	scripting_user_assembly_filepath += "user_scripting.dll";
 
-	compiler->SetScriptsAssemblyOutputFilepath(output_dll.c_str());
+	compiler->SetScriptsAssemblyOutputFilepath(scripting_user_assembly_filepath.c_str());
+}
+
+void ModuleScripting::GenerateUserCodeAssembly()
+{
+	if (user_code_assembly != nullptr)
+		DestroyAssembly(user_code_assembly);
+
+	user_code_assembly = nullptr;
+
+	if (App->file_system->FileExists(scripting_user_assembly_filepath))
+		user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
+}
+
+void ModuleScripting::ActuallyCompileScripts()
+{
+	if (needs_to_compile_user_scripts)
+	{
+		std::vector<std::string> compile_errors;
+		user_code_compiles = compiler->CompileScripts(compile_errors);
+
+		App->editor->console_window->ClearPesonalLogs("scripting");
+		for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
+		{
+			App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_ERROR);
+		}
+
+		if (user_code_compiles)
+			GenerateUserCodeAssembly();
+
+		EventScriptsCompiled* esc = new EventScriptsCompiled(user_code_compiles);
+		App->event->SendEvent(esc);
+	}
+	
+	needs_to_compile_user_scripts = false;
 }
 
 void ModuleScripting::UpdateScriptingObjects()
@@ -556,9 +594,9 @@ const char * ScriptingAssembly::GetPath()
 	return path.c_str();
 }
 
-ScriptingClass ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_name)
+bool ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_name, ScriptingClass& class_returned)
 {
-	ScriptingClass ret;
+	bool ret = false;
 
 	if (loaded)
 	{
@@ -568,7 +606,9 @@ ScriptingClass ScriptingAssembly::GetClass(const char* class_namepsace, const ch
 
 		if (cl != nullptr)
 		{
-			ret = ScriptingClass(cl);
+			class_returned = ScriptingClass(cl);
+
+			ret = true;
 		}
 	}
 
@@ -584,14 +624,110 @@ ScriptingClass::ScriptingClass(MonoClass * _mono_class)
 	mono_class = _mono_class;
 }
 
-const char * ScriptingClass::GetNamespace() const
+std::string ScriptingClass::GetNamespace() const
 {
 	std::string ret = "";
 
 	if (mono_class != nullptr)
 		ret = mono_class_get_namespace(mono_class);
 
-	return ret.c_str();
+	return ret;
+}
+
+std::string ScriptingClass::GetName() const
+{
+	std::string ret = "";
+
+	if (mono_class != nullptr)
+		ret = mono_class_get_name(mono_class);
+
+	return ret;
+}
+
+bool ScriptingClass::GetParentClass(ScriptingClass & returned_parent_class)
+{
+	bool ret = false;
+
+	if (mono_class != nullptr)
+	{
+		MonoClass* parent = mono_class_get_parent(mono_class);
+
+		if (parent != nullptr)
+		{
+			returned_parent_class = ScriptingClass(parent);
+
+			ret = true;
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingClass::GetIsInheritedFrom(const ScriptingClass & class_parent)
+{
+	bool ret = false;
+
+	if (mono_class != nullptr)
+	{
+		std::string class_parent_name = class_parent.GetName();
+
+		bool check = true;
+
+		while (check)
+		{
+			ScriptingClass parent_class_to_check;
+			check = GetParentClass(parent_class_to_check);
+
+			if (check)
+			{
+				std::string parent_class_to_check_name = parent_class_to_check.GetName();
+
+				if (class_parent_name.compare(parent_class_to_check_name) == 0)
+				{
+					ret = true;
+					break;
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+std::map<std::string, MonoType*> ScriptingClass::GetFields()
+{
+	std::map<std::string, MonoType*> ret;
+
+	if (mono_class != nullptr)
+	{
+		bool iterate = true;
+
+		void* fields_iter = nullptr;
+
+		while (iterate)
+		{
+			MonoClassField* curr_field = mono_class_get_fields(mono_class, &fields_iter);
+
+			if (curr_field != nullptr)
+			{
+				if (!(mono_field_get_flags(curr_field) & MONO_METHOD_ATTR_PUBLIC))
+				{
+					continue;
+				}
+				else
+				{
+					std::string property_name = mono_field_get_name(curr_field);
+					MonoType* property_type = mono_field_get_type(curr_field);
+
+					ret[property_name] = property_type;
+				}
+			}
+			else
+				iterate = false;
+		}
+	}
+
+	return ret;
 }
 
 bool ScriptingClass::InvokeStaticMonoMethod(const char * method_name, void ** args, uint args_count, MonoObject *& return_object)

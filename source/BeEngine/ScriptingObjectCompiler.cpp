@@ -20,39 +20,43 @@ void ScriptingObjectCompiler::Start()
 
 	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
 	{
-		ScriptingClass compiler_class = App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "ScriptCompiler");
-	
-		script_compiler_instance = compiler_class.CreateInstance();
-	
-		if (script_compiler_instance != nullptr)
+		ScriptingClass compiler_class;
+		if (App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "ScriptCompiler", compiler_class))
 		{
-			std::vector<ScriptingAssembly*> assemblys = App->scripting->GetScriptingAssemblys();
+			script_compiler_instance = compiler_class.CreateInstance();
 
-			std::vector<MonoObject*> assembly_objects;
-
-			for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
+			if (script_compiler_instance != nullptr)
 			{
-				const char* path = (*it)->GetPath();
+				std::vector<ScriptingAssembly*> assemblys = App->scripting->GetScriptingAssemblys();
 
-				MonoObject* obj = (MonoObject*)App->scripting->BoxString(path);
+				std::vector<MonoObject*> assembly_objects;
 
-				assembly_objects.push_back(obj);
-			}
+				for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
+				{
+					const char* path = (*it)->GetPath();
 
-			MonoArray* assemblys_array = App->scripting->BoxArray(mono_get_string_class(), assembly_objects);
+					MonoObject* obj = (MonoObject*)App->scripting->BoxString(path);
 
-			void *args[1];
-			args[0] = assemblys_array;
-			
-			MonoObject* ret_obj = nullptr;
-			if (script_compiler_instance->InvokeMonoMethod("Init", args, 1, ret_obj))
-			{
-				bool succes = App->scripting->UnboxBool(ret_obj);
+					assembly_objects.push_back(obj);
+				}
 
-				ready_to_use = succes;
+				MonoArray* assemblys_array = App->scripting->BoxArray(mono_get_string_class(), assembly_objects);
+
+				void *args[1];
+				args[0] = assemblys_array;
+
+				MonoObject* ret_obj = nullptr;
+				if (script_compiler_instance->InvokeMonoMethod("Init", args, 1, ret_obj))
+				{
+					bool succes = App->scripting->UnboxBool(ret_obj);
+
+					ready_to_use = succes;
+				}
 			}
 		}
 	}
+
+
 }
 
 void ScriptingObjectCompiler::Update()
@@ -152,7 +156,6 @@ bool ScriptingObjectCompiler::CompileScripts(std::vector<std::string>& compile_e
 		}
 	}
 	
-
 	return ret;
 }
 

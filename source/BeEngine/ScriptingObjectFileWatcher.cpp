@@ -20,13 +20,15 @@ void ScriptingObjectFileWatcher::Start()
 {
 	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
 	{
-		ScriptingClass compiler_class = App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "FileWatcher");
-
-		script_file_watcher_instance = compiler_class.CreateInstance();
-
-		if (script_file_watcher_instance != nullptr)
+		ScriptingClass compiler_class;
+		if (App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "FileWatcher", compiler_class))
 		{
-			ready_to_use = true;
+			script_file_watcher_instance = compiler_class.CreateInstance();
+
+			if (script_file_watcher_instance != nullptr)
+			{
+				ready_to_use = true;
+			}
 		}
 	}
 }

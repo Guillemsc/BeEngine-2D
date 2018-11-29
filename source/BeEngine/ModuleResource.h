@@ -66,6 +66,8 @@ public:
 
 	// --------------------------
 
+	void LoadUserScriptsInfo();
+
 	bool CanLoadFile(const char* filepath);
 	bool IsMeta(const char* filepath);
 	std::string GetAssetFileFromMeta(const char* metapath);

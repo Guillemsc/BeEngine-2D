@@ -8,6 +8,8 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 
+#include <map>
+
 #include "ScriptingObject.h"
 
 class Event;
@@ -29,7 +31,7 @@ public:
 	MonoImage* GetImage();
 	const char* GetPath();
 
-	ScriptingClass GetClass(const char* class_namepsace, const char* class_name);
+	bool GetClass(const char* class_namepsace, const char* class_name, ScriptingClass& class_returned);
 
 private:
 	void LoadAssembly();
@@ -52,7 +54,13 @@ public:
 	ScriptingClass();
 	ScriptingClass(MonoClass* mono_class);
 
-	const char* GetNamespace() const;
+	std::string GetNamespace() const;
+	std::string GetName() const;
+
+	bool GetParentClass(ScriptingClass& returned_parent_class);
+	bool GetIsInheritedFrom(const ScriptingClass& class_parent);
+
+	std::map<std::string, MonoType*> GetFields();
 
 	bool InvokeStaticMonoMethod(const char* method_name, void **args, uint args_count, MonoObject*& return_object);
 
@@ -111,6 +119,7 @@ public:
 	void DestroyAssembly(ScriptingAssembly* assembly);
 	std::vector<ScriptingAssembly*> GetScriptingAssemblys() const;
 
+	// C# Base libs
 	std::vector<std::string> GetBaseLibs() const;
 
 	// Script management
@@ -139,16 +148,22 @@ public:
 
 	// Compiling
 	void CompileScripts();
+	bool GetScriptsCompile() const;
 
 private:
 	void InitScriptingSolution();
+	void GenerateUserCodeAssembly();
+	void ActuallyCompileScripts();
+
 	void UpdateScriptingObjects();
+
 	void DestroyAllAssemblys();
 	void DestroyAllScriptingObjects();
 
 public:
 	ScriptingAssembly* scripting_assembly = nullptr;
 	ScriptingAssembly* scripting_internal_assembly = nullptr;
+	ScriptingAssembly* user_code_assembly = nullptr;
 
 	ScriptingObjectCompiler* compiler = nullptr;
 	ScriptingObjectSolutionManager* solution_manager = nullptr;
@@ -164,6 +179,10 @@ private:
 
 	std::vector<ScriptingAssembly*> assemblys;
 	std::vector<std::string> base_libs;
+
+	bool needs_to_compile_user_scripts = false;
+	bool user_code_compiles = true;
+	std::string scripting_user_assembly_filepath;
 };
 
 #endif // !__MODULE_SCRIPTING_H__

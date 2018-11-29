@@ -136,7 +136,11 @@ public:
 	void DestroyShader(Shader* sh);
 
 	ShaderProgram* CreateShaderProgram();
-	void DeleteShaderProgram(ShaderProgram* sp);
+	void DestroyShaderProgram(ShaderProgram* sp);
+
+private:
+	void DestroyAllShaders();
+	void DestroyAllShaderPrograms();
 
 private:
 	std::vector<Shader*> shaders;

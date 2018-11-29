@@ -17,9 +17,11 @@ void ScriptingObjectSolutionManager::Start()
 
 	if (App->scripting->scripting_internal_assembly != nullptr && App->scripting->scripting_internal_assembly->GetAssemblyLoaded())
 	{
-		ScriptingClass solution_manager_class = App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "SolutionManager");
-
-		solution_manager_instance = solution_manager_class.CreateInstance();
+		ScriptingClass solution_manager_class;
+		if (App->scripting->scripting_internal_assembly->GetClass("BeEngine.Internal", "SolutionManager", solution_manager_class))
+		{
+			solution_manager_instance = solution_manager_class.CreateInstance();
+		}
 	}
 }
 

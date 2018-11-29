@@ -3,6 +3,8 @@
 #include "App.h"
 #include "ModuleResource.h"
 #include "ResourceScript.h"
+#include "ModuleEvent.h"
+#include "Event.h"
 
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
@@ -27,10 +29,12 @@ void ComponentScript::EditorDraw()
 
 void ComponentScript::Start()
 {
+	
 }
 
 void ComponentScript::CleanUp()
 {
+	
 }
 
 void ComponentScript::OnEvent(Event * ev)

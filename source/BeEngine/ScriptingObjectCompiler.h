@@ -20,7 +20,6 @@ public:
 	void Update();
 	void CleanUp();
 
-	void SetScriptTemplateFilepath(const char* set);
 	void SetScriptsAssemblyOutputFilepath(const char* set);
 
 	bool AddScript(const char* script_filepath);

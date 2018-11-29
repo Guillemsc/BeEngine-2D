@@ -9,6 +9,7 @@
 
 enum EventType;
 class Resource;
+class GameObject;
 
 class Event
 {
@@ -38,6 +39,10 @@ enum EventType
 	WATCH_FILE_FOLDER,
 
 	RESOURCE_DESTROYED,
+
+	SCRIPTS_COMPILED,
+
+	GAME_OBJECT_DESTROYED,
 };
 
 class EventTimeSlicedTaskFinished : public Event
@@ -155,7 +160,41 @@ public:
 	}
 
 private:
-	Resource* resource;
+	Resource* resource = nullptr;
+};
+
+class EventScriptsCompiled : public Event
+{
+public:
+	EventScriptsCompiled(bool scripts_compile) : Event(EventType::SCRIPTS_COMPILED)
+	{
+		compiles = scripts_compile;
+	}
+
+	bool GetCompiles()
+	{
+		return compiles;
+	}
+
+private:
+	bool compiles = false;
+};
+
+class EventGameObjectDestroyed : public Event
+{
+public:
+	EventGameObjectDestroyed(GameObject* go) : Event(EventType::GAME_OBJECT_DESTROYED)
+	{
+		gameobject = go;
+	}
+
+	GameObject* GetGameObject()
+	{
+		return gameobject;
+	}
+
+private:
+	GameObject* gameobject = nullptr;
 };
 
 #endif // !__EVENT_H__
