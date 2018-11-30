@@ -23,9 +23,7 @@ class ScriptingAssembly
 	friend class ModuleScripting;
 
 public:
-	ScriptingAssembly(MonoDomain* domain, const char* assembly_path);
-
-	void CleanUp();
+	ScriptingAssembly(const char* assembly_path);
 
 	bool GetAssemblyLoaded() const;
 
@@ -99,6 +97,7 @@ void MonoInternalError(const char * string, mono_bool is_stdout);
 class ModuleScripting : public Module
 {
 	friend class ScriptingClass;
+	friend class ScriptingAssembly;
 
 public:
 	ModuleScripting();
@@ -152,6 +151,9 @@ public:
 	bool GetScriptsCompile() const;
 
 private:
+	void LoadDomain();
+	void UnloadDomain();
+
 	void CreateBaseDomainAndAssemblys();
 	void DestroyBaseDomainAndAssemblys();
 
@@ -174,10 +176,10 @@ public:
 	ScriptingObjectFileWatcher* file_watcher = nullptr;
 
 private:
+	bool has_active_domain = false;
+
 	std::string mono_base_path;
 	std::string assembly_base_path;
-
-	MonoDomain* base_domain = nullptr;
 	
 	std::vector<ScriptingObject*> scripting_objects;
 

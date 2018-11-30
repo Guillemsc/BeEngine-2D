@@ -13,6 +13,11 @@
 #include "Event.h"
 #include <mono/utils/mono-logger.h>
 #include <mono/metadata/attrdefs.h>
+#include <mono/metadata/mono-config.h>
+#include <mono/metadata/threads.h>
+#include <mono/metadata/assembly.h>
+#include <mono/metadata/mono-gc.h>
+#include <mono/metadata/environment.h>
 
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 
@@ -78,6 +83,8 @@ bool ModuleScripting::Awake()
 
 	mono_jit_init(App->GetAppName());
 
+	//mono_domain_assembly_open(mono_get_root_domain(), "assembly_base_path\\Dummy.dll");
+
 	CreateBaseDomainAndAssemblys();
 
 	return ret;
@@ -125,7 +132,7 @@ bool ModuleScripting::CleanUp()
 
 	DestroyAllAssemblys();
 
-	mono_jit_cleanup(base_domain);
+	mono_jit_cleanup(mono_get_root_domain());
 
 	App->event->UnSuscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
 
@@ -180,6 +187,7 @@ void ModuleScripting::DestroyScriptingObject(ScriptingObject* obj)
 			if ((*it) == obj)
 			{
 				(*it)->CleanUp();
+
 				RELEASE(*it);
 				scripting_objects.erase(it);
 				break;
@@ -192,7 +200,7 @@ ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path)
 {
 	ScriptingAssembly* ret = nullptr;
 
-	ret = new ScriptingAssembly(base_domain, assembly_path);
+	ret = new ScriptingAssembly(assembly_path);
 	ret->LoadAssembly();
 
 	if (ret->GetAssemblyLoaded())
@@ -201,8 +209,6 @@ ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path)
 	}
 	else
 	{
-		ret->CleanUp();
-
 		RELEASE(ret);
 		ret = nullptr;
 	}
@@ -256,7 +262,7 @@ MonoString* ModuleScripting::BoxString(const char * val)
 {
 	MonoString* ret = nullptr;
 
-	ret = mono_string_new(base_domain, val);
+	ret = mono_string_new(mono_domain_get(), val);
 
 	return ret;
 }
@@ -265,7 +271,7 @@ MonoObject* ModuleScripting::BoxBool(bool val)
 {
 	MonoObject* ret = nullptr;
 
-	ret = mono_value_box(base_domain, mono_get_boolean_class(), &val);
+	ret = mono_value_box(mono_domain_get(), mono_get_boolean_class(), &val);
 
 	return ret;
 }
@@ -274,7 +280,7 @@ MonoObject* ModuleScripting::BoxInt(int val)
 {
 	MonoObject* ret = nullptr;
 
-	ret = mono_value_box(base_domain, mono_get_int32_class(), &val);
+	ret = mono_value_box(mono_domain_get(), mono_get_int32_class(), &val);
 
 	return ret;
 }
@@ -283,7 +289,7 @@ MonoObject* ModuleScripting::BoxUint(uint val)
 {
 	MonoObject* ret = nullptr;
 
-	ret = mono_value_box(base_domain, mono_get_uint32_class(), &val);
+	ret = mono_value_box(mono_domain_get(), mono_get_uint32_class(), &val);
 
 	return ret;
 }
@@ -292,7 +298,7 @@ MonoObject* ModuleScripting::BoxFloat(float val)
 {
 	MonoObject* ret = nullptr;
 
-	ret = mono_value_box(base_domain, mono_get_single_class(), &val);
+	ret = mono_value_box(mono_domain_get(), mono_get_single_class(), &val);
 
 	return ret;
 }
@@ -308,7 +314,7 @@ MonoArray* ModuleScripting::BoxArray(MonoClass * objects_mono_class, const std::
 
 	if (objects_mono_class != nullptr)
 	{
-		ret = mono_array_new(base_domain, objects_mono_class, vec.size());
+		ret = mono_array_new(mono_domain_get(), objects_mono_class, vec.size());
 
 		if (ret != nullptr)
 		{
@@ -441,9 +447,40 @@ bool ModuleScripting::GetScriptsCompile() const
 	return user_code_compiles;
 }
 
+void ModuleScripting::LoadDomain()
+{
+	if (!has_active_domain)
+	{
+		mono_domain_set(mono_get_root_domain(), false);
+
+		MonoDomain* new_domain = mono_domain_create_appdomain("Asdf", NULL);
+
+		mono_domain_set(new_domain, false);
+
+		has_active_domain = true;
+	}
+}
+
+void ModuleScripting::UnloadDomain()
+{
+	if (has_active_domain)
+	{
+		MonoDomain* domain_to_unload = mono_domain_get();
+
+		mono_domain_set(mono_get_root_domain(), false);
+
+		mono_domain_finalize(domain_to_unload, -1);
+		mono_domain_unload(domain_to_unload);
+
+		mono_gc_collect(mono_gc_max_generation());
+
+		has_active_domain = false;
+	}
+}
+
 void ModuleScripting::CreateBaseDomainAndAssemblys()
 {
-	base_domain = mono_domain_create();
+	LoadDomain();
 
 	std::string scripting_assembly_path = assembly_base_path + "BeEngineScripting.dll";
 	std::string scripting_internal_assembly_path = assembly_base_path + "BeEngineScriptingInternal.dll";
@@ -469,10 +506,7 @@ void ModuleScripting::DestroyBaseDomainAndAssemblys()
 	solution_manager = nullptr;
 	file_watcher = nullptr;
 
-	if (base_domain != nullptr)
-	{
-		mono_domain_free(base_domain, false);
-	}
+	UnloadDomain();
 }
 
 void ModuleScripting::InitScriptingSolution()
@@ -530,9 +564,9 @@ void ModuleScripting::ActuallyCompileScripts()
 			}
 
 			user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
-
-			App->resource->StartWatchingFolders();
 		}
+
+		App->resource->StartWatchingFolders();
 
 		EventScriptsCompiled* esc = new EventScriptsCompiled(user_code_compiles);
 		App->event->SendEvent(esc);
@@ -553,8 +587,6 @@ void ModuleScripting::DestroyAllAssemblys()
 {
 	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
 	{	
-		(*it)->CleanUp();
-
 		RELEASE(*it);		
 	}
 
@@ -572,33 +604,23 @@ void ModuleScripting::DestroyAllScriptingObjects()
 	scripting_objects.clear();
 }
 
-ScriptingAssembly::ScriptingAssembly(MonoDomain* dom, const char * assembly_path)
+ScriptingAssembly::ScriptingAssembly(const char * assembly_path)
 {
-	domain = dom;
 	path = assembly_path;
-}
-
-void ScriptingAssembly::CleanUp()
-{
-	if (assembly != nullptr)
-		mono_assembly_close(assembly);
 }
 
 void ScriptingAssembly::LoadAssembly()
 {
 	if (!loaded)
-	{
-		if (domain != nullptr)
+	{	
+		assembly = mono_domain_assembly_open(mono_domain_get(), path.c_str());
+
+		if (assembly != nullptr)
 		{
-			assembly = mono_domain_assembly_open(domain, path.c_str());
+			image = mono_assembly_get_image(assembly);
 
-			if (assembly != nullptr)
-			{
-				image = mono_assembly_get_image(assembly);
-
-				if(image != nullptr)
-					loaded = true;
-			}
+			if(image != nullptr)
+				loaded = true;
 		}
 	}
 }
@@ -631,7 +653,7 @@ bool ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_
 	{
 		MonoClass* cl = nullptr;
 
-		cl = mono_class_from_name(image, class_namepsace, class_name);
+		cl = mono_class_from_name(mono_assembly_get_image(assembly), class_namepsace, class_name);
 
 		if (cl != nullptr)
 		{
@@ -795,7 +817,7 @@ ScriptingClassInstance* ScriptingClass::CreateInstance()
 		MonoObject* obj = nullptr;
 		uint id = 0;
 
-		obj = mono_object_new(App->scripting->base_domain, mono_class);
+		obj = mono_object_new(mono_domain_get(), mono_class);
 
 		if (obj != nullptr)
 		{

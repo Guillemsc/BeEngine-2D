@@ -74,6 +74,9 @@ namespace BeEngine
                 {
                     if (compile_parameters != null)
                     {
+                        if (File.Exists(dll_output_path))
+                            File.Delete(dll_output_path);
+
                         compile_parameters.OutputAssembly = dll_output_path;
 
                         CSharpCodeProvider code_provider = new CSharpCodeProvider();
