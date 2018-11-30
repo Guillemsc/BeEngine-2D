@@ -73,11 +73,6 @@ void ScriptingObjectCompiler::CleanUp()
 	}
 }
 
-void ScriptingObjectCompiler::SetScriptsAssemblyOutputFilepath(const char * set)
-{
-	scripts_assembly_output_filepath = set;
-}
-
 bool ScriptingObjectCompiler::AddScript(const char* script_filepath)
 {
 	bool ret = false;
@@ -149,13 +144,16 @@ std::vector<std::string> ScriptingObjectCompiler::GetScripts()
 	return ret;
 }
 
-bool ScriptingObjectCompiler::CompileScripts(std::vector<std::string>& compile_errors)
+bool ScriptingObjectCompiler::CompileScripts(const std::string& output_assembly_filepath, std::vector<std::string>& compile_errors)
 {	
 	bool ret = false;
 	
 	if (script_compiler_instance != nullptr)
 	{
-		MonoObject* dll_output_boxed = (MonoObject*)App->scripting->BoxString(scripts_assembly_output_filepath.c_str());
+		if (App->file_system->FileExists(output_assembly_filepath))
+			App->file_system->FileDelete(output_assembly_filepath);
+
+		MonoObject* dll_output_boxed = (MonoObject*)App->scripting->BoxString(output_assembly_filepath.c_str());
 
 		void* args[1];
 		args[0] = dll_output_boxed;

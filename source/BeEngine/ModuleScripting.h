@@ -25,6 +25,8 @@ class ScriptingAssembly
 public:
 	ScriptingAssembly(const char* assembly_path);
 
+	void CleanUp();
+
 	bool GetAssemblyLoaded() const;
 
 	MonoAssembly* GetAssembly();

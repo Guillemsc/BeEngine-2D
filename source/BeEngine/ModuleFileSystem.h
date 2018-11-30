@@ -49,6 +49,8 @@ public:
 	bool FileRename(const std::string& filepath, const std::string& new_name, bool check_name_collision = false, std::string& new_filepath = std::string()); 
 	bool FileCopyPaste(const std::string& filepath, const std::string& new_path, bool check_name_collision = false, std::string &resultant_path = std::string()); 
 	bool FileSave(const std::string& path, const std::string& name, const std::string& extension, const char * file_content, uint size); 
+	bool FileRead(const std::string& filepath, std::string& returned_file_data);
+	bool FileRead(const std::string& filepath, char*& returned_file_data, uint &data_size);
 
 	// Folders
 	bool FolderExists(const std::string& path); 

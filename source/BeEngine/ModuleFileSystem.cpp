@@ -221,6 +221,53 @@ bool FileSystem::FileSave(const std::string& path, const std::string& name, cons
 	return ret;
 }
 
+bool FileSystem::FileRead(const std::string & filepath, std::string& returned_file_data)
+{
+	bool ret = false;
+
+	std::ifstream file(filepath.c_str());
+
+	if (file) 
+	{
+		// get length of file:
+		file.seekg(0, file.end);
+		auto length = file.tellg();
+		file.seekg(0, file.beg);
+
+		returned_file_data.resize(length); // reserve space
+		file.read(&returned_file_data[0], length);
+		file.close();
+
+		ret = true;
+	}
+
+	return ret;
+}
+
+bool FileSystem::FileRead(const std::string & filepath, char *& returned_file_data, uint& data_size)
+{
+	bool ret = false;
+
+	std::ifstream file(filepath.c_str(), std::ifstream::binary);
+
+	if (file) 
+	{
+		// get length of file:
+		file.seekg(0, file.end);
+		auto length = file.tellg();
+		data_size = length;
+		file.seekg(0, file.beg);
+
+		returned_file_data = new char[length];
+		file.read(returned_file_data, length);
+		file.close();
+
+		ret = true;
+	}
+
+	return ret;
+}
+
 bool FileSystem::FilePathInsideFolder(const std::string& file_path, const std::string& folder_path)
 {
 	bool ret = true;

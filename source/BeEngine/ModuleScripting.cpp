@@ -529,11 +529,6 @@ void ModuleScripting::InitScriptingSolution()
 
 		solution_manager->AddAssembly(curr_lib.c_str());
 	}
-
-	scripting_user_assembly_filepath = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
-	scripting_user_assembly_filepath += "user_scripting.dll";
-
-	compiler->SetScriptsAssemblyOutputFilepath(scripting_user_assembly_filepath.c_str());
 }
 
 void ModuleScripting::ActuallyCompileScripts()
@@ -542,8 +537,11 @@ void ModuleScripting::ActuallyCompileScripts()
 	{
 		App->resource->StopWatchingFolders();
 
+		scripting_user_assembly_filepath = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
+		scripting_user_assembly_filepath += "user_scripting.dll";
+
 		std::vector<std::string> compile_errors;
-		user_code_compiles = compiler->CompileScripts(compile_errors);
+		user_code_compiles = compiler->CompileScripts(scripting_user_assembly_filepath, compile_errors);
 
 		App->editor->console_window->ClearPesonalLogs("scripting");
 		for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
@@ -587,6 +585,7 @@ void ModuleScripting::DestroyAllAssemblys()
 {
 	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
 	{	
+		(*it)->CleanUp();
 		RELEASE(*it);		
 	}
 
@@ -609,18 +608,34 @@ ScriptingAssembly::ScriptingAssembly(const char * assembly_path)
 	path = assembly_path;
 }
 
+void ScriptingAssembly::CleanUp()
+{
+	if (image != nullptr)
+		mono_image_close(image);
+}
+
 void ScriptingAssembly::LoadAssembly()
 {
 	if (!loaded)
 	{	
-		assembly = mono_domain_assembly_open(mono_domain_get(), path.c_str());
-
-		if (assembly != nullptr)
+		char* assembly_data = nullptr;
+		uint assembly_data_size = 0;
+		if (App->file_system->FileRead(path, assembly_data, assembly_data_size))
 		{
-			image = mono_assembly_get_image(assembly);
+			MonoImageOpenStatus status;
+			image = mono_image_open_from_data_with_name(assembly_data, assembly_data_size, true, &status, false, path.c_str());
 
-			if(image != nullptr)
-				loaded = true;
+			if (status == MONO_IMAGE_OK || image != nullptr)
+			{
+				assembly = mono_assembly_load_from_full(image, path.c_str(), &status, false);
+
+				if (assembly != nullptr)
+				{
+					loaded = true; 
+				}
+			}
+
+			RELEASE_ARRAY(assembly_data);
 		}
 	}
 }
