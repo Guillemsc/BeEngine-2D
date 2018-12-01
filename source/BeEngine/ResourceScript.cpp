@@ -132,3 +132,18 @@ ResourceScriptField::ResourceScriptField()
 {
 
 }
+
+ResourceScriptFieldValue::ResourceScriptFieldValue(const ResourceScriptField fiel)
+{
+	field = fiel;
+}
+
+std::string ResourceScriptFieldValue::GetFieldName() const
+{
+	return field.field_name;
+}
+
+ResourceScriptFieldType ResourceScriptFieldValue::GetFieldType() const
+{
+	return field.type;
+}

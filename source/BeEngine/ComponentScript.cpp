@@ -5,6 +5,7 @@
 #include "ResourceScript.h"
 #include "ModuleEvent.h"
 #include "Event.h"
+#include "Functions.h"
 
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
@@ -31,7 +32,16 @@ void ComponentScript::EditorDraw()
 			open_error_script = true;
 		}
 		else
+		{
+			ClearFieldsValues();
+
 			resource_script = (ResourceScript*)res;
+
+			if (resource_script != nullptr)
+			{
+				RecalculateFieldsValues(resource_script->GetFields());
+			}
+		}
 	}
 
 	if (open_error_script)
@@ -58,11 +68,9 @@ void ComponentScript::EditorDraw()
 
 	if (resource_script != nullptr)
 	{
-		std::vector<ResourceScriptField> script_fields = resource_script->GetFields();
-
-		for (std::vector<ResourceScriptField>::iterator it = script_fields.begin(); it != script_fields.end(); ++it)
+		for (std::vector<ResourceScriptFieldValue>::iterator it = fields_values.begin(); it != fields_values.end(); ++it)
 		{
-			ImGui::Text((*it).field_name.c_str());
+			DrawFieldValue((*it));
 		}
 	}
 }
@@ -88,7 +96,11 @@ void ComponentScript::OnEvent(Event * ev)
 		EventResourceDestroyed* erd = (EventResourceDestroyed*)ev;
 
 		if (erd->GetResource() == resource_script)
+		{
 			resource_script = nullptr;
+
+			ClearFieldsValues();
+		}
 		break;
 	}
 	case EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED:
@@ -99,6 +111,10 @@ void ComponentScript::OnEvent(Event * ev)
 			{
 				resource_script = nullptr;
 				break;
+			}
+			else
+			{
+				RecalculateFieldsValues(resource_script->GetFields());
 			}
 		}
 	}
@@ -122,4 +138,86 @@ void ComponentScript::OnParentChanged(GameObject * new_parent)
 void ComponentScript::SetResourceScript(ResourceScript * set)
 {
 	resource_script = set;
+}
+
+void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)
+{
+	std::string field_name = field_value.GetFieldName();
+
+	switch (field_value.GetFieldType())
+	{
+	case ResourceScriptFieldType::SCRIPT_FIELD_BOOL:
+	{
+		if (ImGui::Checkbox(field_name.c_str(), &field_value.bool_field))
+		{
+
+		}
+		break;
+	}
+	case ResourceScriptFieldType::SCRIPT_FIELD_INT:
+	{
+		if (ImGui::DragInt(field_name.c_str(), &field_value.int_field))
+		{
+
+		}
+		break;
+	}
+	case ResourceScriptFieldType::SCRIPT_FIELD_FLOAT:
+	{
+		if (ImGui::DragFloat(field_name.c_str(), &field_value.float_field))
+		{
+
+		}
+		break;
+	}
+	case ResourceScriptFieldType::SCRIPT_FIELD_STRING:
+	{
+		char text[999];
+		memset(text, 0, 999 * sizeof(char));
+		TextCpy(text, field_value.string_field.c_str());
+
+		if (ImGui::InputText(field_name.c_str(), text, 999))
+		{
+			field_value.string_field = text;
+		}
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void ComponentScript::ClearFieldsValues()
+{
+	fields_values.clear();
+}
+
+void ComponentScript::RecalculateFieldsValues(std::vector<ResourceScriptField> fields)
+{
+	std::vector<ResourceScriptFieldValue> fields_values_to_check = fields_values;
+
+	fields_values.clear();
+
+	for (std::vector<ResourceScriptField>::const_iterator fi = fields.begin(); fi != fields.end(); ++fi)
+	{
+		bool found = false;
+
+		for (std::vector<ResourceScriptFieldValue>::iterator it = fields_values_to_check.begin(); it != fields_values_to_check.end(); ++it)
+		{	
+			if ((*it).GetFieldName().compare((*fi).field_name) == 0)
+			{
+				fields_values.push_back((*it));
+				fields_values_to_check.erase(it);
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			ResourceScriptFieldValue nfv((*fi));
+			fields_values.push_back(nfv);
+		}
+	}
+
 }

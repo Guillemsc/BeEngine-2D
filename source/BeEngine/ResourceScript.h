@@ -30,8 +30,19 @@ public:
 
 	ResourceScriptFieldType type = ResourceScriptFieldType::SCRIPT_FIELD_UNDEFINED;
 	std::string field_name;
+};
 
-private:
+class ResourceScriptFieldValue
+{
+	friend class ResourceScript;
+
+public:
+	ResourceScriptFieldValue(const ResourceScriptField field);
+
+	std::string GetFieldName() const;
+	ResourceScriptFieldType GetFieldType() const;
+
+public:
 	int int_field = 0;
 	float float_field = 0.0f;
 	std::string string_field = "";
@@ -39,6 +50,9 @@ private:
 	//GameObject* game_object_field = nullptr;
 	//GameObjectComponent* game_object_class_field = nullptr;
 	//Resource* resource_field = nullptr;
+
+private:
+	ResourceScriptField field;
 };
 
 class ResourceScript : public Resource

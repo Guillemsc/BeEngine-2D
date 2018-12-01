@@ -48,7 +48,8 @@ void TextCpy(char* destination, const char * origen)
 {
 	if (origen != nullptr)
 	{
-		strcpy_s(destination, strlen(origen), origen);
+		if(strlen(origen) > 0)
+			strcpy_s(destination, strlen(origen) + 1, origen);
 	}
 }
 
