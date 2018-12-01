@@ -55,6 +55,8 @@ void InspectorWindow::DrawEditor()
 			{
 				GameObjectComponent* curr_component = (*com);
 
+				ImGui::PushID(curr_component->GetUID().c_str());
+
 				if (curr_component->GetCanDestroy())
 				{
 					if (ImGui::SmallButton("Delete"))
@@ -88,6 +90,8 @@ void InspectorWindow::DrawEditor()
 				}
 
 				ImGui::Separator();
+
+				ImGui::PopID();
 			}
 		}
 

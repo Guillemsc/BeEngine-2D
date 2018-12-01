@@ -41,6 +41,7 @@ enum EventType
 	RESOURCE_DESTROYED,
 
 	SCRIPTS_COMPILED,
+	RESOURCE_SCRIPTS_FIELDS_CHANGED,
 
 	GAME_OBJECT_DESTROYED,
 };
@@ -174,6 +175,18 @@ public:
 	bool GetCompiles()
 	{
 		return compiles;
+	}
+
+private:
+	bool compiles = false;
+};
+
+class EventResourceScriptsFieldsChanged : public Event
+{
+public:
+	EventResourceScriptsFieldsChanged() : Event(EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED)
+	{
+
 	}
 
 private:

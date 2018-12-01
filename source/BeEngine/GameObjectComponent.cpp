@@ -8,6 +8,8 @@ GameObjectComponent::GameObjectComponent(std::string _name, const ComponentType&
 	group = _group;
 	unique_per_game_object = _unique_per_game_object;
 	can_destroy = _can_destroy;
+
+
 }
 
 GameObject * GameObjectComponent::GetOwner()
@@ -23,6 +25,11 @@ ComponentType GameObjectComponent::GetType() const
 std::string GameObjectComponent::GetName() const
 {
 	return name;
+}
+
+std::string GameObjectComponent::GetUID() const
+{
+	return uid;
 }
 
 bool GameObjectComponent::GetCanDestroy() const

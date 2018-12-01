@@ -45,6 +45,7 @@ public:
 
 	ComponentType GetType() const;
 	std::string GetName() const;
+	std::string GetUID() const;
 
 	bool GetCanDestroy() const;
 
@@ -53,6 +54,7 @@ protected:
 
 private:
 	std::string name;
+	std::string uid;
 	ComponentType type;
 	ComponentGroup group;
 	bool can_destroy = true;

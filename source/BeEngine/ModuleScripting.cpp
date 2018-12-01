@@ -562,6 +562,8 @@ void ModuleScripting::ActuallyCompileScripts()
 			}
 
 			user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
+
+			solution_manager->CreateSolutionManagerInstance();
 		}
 
 		App->resource->StartWatchingFolders();
@@ -718,11 +720,14 @@ bool ScriptingClass::GetParentClass(ScriptingClass & returned_parent_class)
 	{
 		MonoClass* parent = mono_class_get_parent(mono_class);
 
-		if (parent != nullptr)
+		if (parent != nullptr )
 		{
-			returned_parent_class = ScriptingClass(parent);
+			if (parent != mono_get_object_class())
+			{
+				returned_parent_class = ScriptingClass(parent);
 
-			ret = true;
+				ret = true;
+			}
 		}
 	}
 

@@ -34,6 +34,9 @@ public:
 	void SetResourceScript(ResourceScript* set);
 
 private:
+
+
+private:
 	ResourceScript* resource_script = nullptr;
 
 	std::string resource_filter;

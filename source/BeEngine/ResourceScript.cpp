@@ -118,6 +118,16 @@ void ResourceScript::AddBoolScriptField(const std::string & field_name)
 	script_fields.push_back(sf);
 }
 
+std::vector<ResourceScriptField> ResourceScript::GetFields()
+{
+	return script_fields;
+}
+
+bool ResourceScript::GetInheritsFromBeengineReference() const
+{
+	return inherits_from_beengine_reference;
+}
+
 ResourceScriptField::ResourceScriptField()
 {
 

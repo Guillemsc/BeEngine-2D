@@ -13,6 +13,7 @@
 
 class Event;
 class LoadResourcesTimeSlicedTask;
+class ResourceScript;
 
 class ModuleResource : public Module
 {

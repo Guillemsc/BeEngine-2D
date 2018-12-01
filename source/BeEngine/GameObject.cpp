@@ -4,6 +4,7 @@
 #include "ComponentTransfrom.h"
 #include "ComponentSpriteRenderer.h"
 #include "ComponentScript.h"
+#include "ModuleResource.h"
 
 GameObject::GameObject(std::string _uid)
 {
@@ -190,6 +191,7 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 		if (ret != nullptr)
 		{
 			ret->owner = this;
+			ret->uid = App->resource->GetNewUID();
 			components.push_back(ret);
 			ret->Start();
 		}

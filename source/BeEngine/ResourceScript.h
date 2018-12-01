@@ -67,6 +67,9 @@ public:
 	void AddFloatScriptField(const std::string& field_name);
 	void AddStringScriptField(const std::string& field_name);
 	void AddBoolScriptField(const std::string& field_name);
+	std::vector<ResourceScriptField> GetFields();
+
+	bool GetInheritsFromBeengineReference() const;
 
 private:
 	bool compiles = false;

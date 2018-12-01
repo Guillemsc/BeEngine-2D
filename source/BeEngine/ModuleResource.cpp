@@ -760,6 +760,9 @@ void ModuleResource::LoadUserScriptsInfo()
 							}
 						}
 					}
+
+					EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
+					App->event->SendEvent(ersfc);
 				}
 			}
 		}
