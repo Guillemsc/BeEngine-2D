@@ -144,7 +144,8 @@ std::vector<std::string> ScriptingObjectCompiler::GetScripts()
 	return ret;
 }
 
-bool ScriptingObjectCompiler::CompileScripts(const std::string& output_assembly_filepath, std::vector<std::string>& compile_errors)
+bool ScriptingObjectCompiler::CompileScripts(const std::string& output_assembly_filepath, std::vector<std::string>& compile_errors, 
+	std::vector<std::string>& compile_warnings)
 {	
 	bool ret = false;
 	
@@ -163,16 +164,33 @@ bool ScriptingObjectCompiler::CompileScripts(const std::string& output_assembly_
 		{
 			if (ret_obj != nullptr)
 			{
-				std::vector<MonoObject*> rest_vector = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_obj);
+				ret = App->scripting->UnboxBool(ret_obj);
+			}
 
-				for (std::vector<MonoObject*>::iterator it = rest_vector.begin(); it != rest_vector.end(); ++it)
+			MonoObject* ret_errors = nullptr;
+			if (script_compiler_instance->InvokeMonoMethod("GetCompileErrors", nullptr, 0, ret_errors))
+			{
+				std::vector<MonoObject*> errors_vector = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_errors);
+
+				for (std::vector<MonoObject*>::iterator it = errors_vector.begin(); it != errors_vector.end(); ++it)
 				{
 					std::string error = App->scripting->UnboxString((MonoString*)(*it));
 
 					compile_errors.push_back(error);
 				}
+			}
 
-				ret = rest_vector.size() == 0;
+			MonoObject* ret_warnings = nullptr;
+			if (script_compiler_instance->InvokeMonoMethod("GetCompileWarnings", nullptr, 0, ret_warnings))
+			{
+				std::vector<MonoObject*> warnings_vector = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_warnings);
+
+				for (std::vector<MonoObject*>::iterator it = warnings_vector.begin(); it != warnings_vector.end(); ++it)
+				{
+					std::string warning = App->scripting->UnboxString((MonoString*)(*it));
+
+					compile_warnings.push_back(warning);
+				}
 			}
 		}
 	}

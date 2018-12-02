@@ -66,9 +66,9 @@ namespace BeEngine
                 return scripts.ToArray();
             }
 
-            public string[] CompileScripts(string dll_output_path)
+            public bool CompileScripts(string dll_output_path)
             {
-                List<string> ret = new List<string>();
+                bool ret = true;
 
                 if (scripts.Count > 0)
                 {
@@ -83,22 +83,43 @@ namespace BeEngine
 
                         CompilerResults results = code_provider.CompileAssemblyFromFile(compile_parameters, scripts.ToArray());
 
+                        compile_errors.Clear();
+                        compile_warnings.Clear();
                         for (int i = 0; i < results.Errors.Count; ++i)
                         {
                             CompilerError curr_error = results.Errors[i];
 
-                            string error = curr_error.FileName + " at (" + curr_error.Line + "," +
-                                curr_error.Column + ")," + (curr_error.IsWarning ? "Warning: " : " Error: ") +
-                                curr_error.ErrorNumber + ": " + curr_error.ErrorText + ".";
+                            string file_name = Path.GetFileNameWithoutExtension(curr_error.FileName);
+                            string error = "Script: " + file_name + " at (" + curr_error.Line + "," +
+                                curr_error.Column + ")," + (curr_error.IsWarning ? " Warning: " : " Error: ") +
+                                ": " + curr_error.ErrorText + ". (" + curr_error.ErrorNumber + ")";
 
-                            ret.Add(error);
+                            if (!curr_error.IsWarning)
+                            {
+                                compile_errors.Add(error);
+                                ret = false;
+                            }
+                            else
+                            {
+                                compile_warnings.Add(error);
+                            }
                         }
 
                         code_provider.Dispose();
                     }
                 }
 
-                return ret.ToArray();
+                return ret;
+            }
+
+            public string[] GetCompileErrors()
+            {
+                return compile_errors.ToArray();
+            }
+
+            public string[] GetCompileWarnings()
+            {
+                return compile_warnings.ToArray();
             }
 
             bool CreateCSScriptFile(string save_filepath, string code)
@@ -177,6 +198,8 @@ namespace BeEngine
 
             private List<string> ref_assemblies = new List<string>();
             List<string> scripts = new List<string>();
+            List<string> compile_errors = new List<string>();
+            List<string> compile_warnings = new List<string>();
 
             CompilerParameters compile_parameters = new CompilerParameters();
         }
