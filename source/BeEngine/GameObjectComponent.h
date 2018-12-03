@@ -6,6 +6,7 @@
 #include "Globals.h"
 
 class GameObject;
+class DataAbstraction;
 
 enum ComponentType
 {
@@ -33,6 +34,8 @@ public:
 	~GameObjectComponent() {};
 
 	virtual void EditorDraw() {};
+	virtual void OnSaveAbstraction(const DataAbstraction& abs) {};
+	virtual void OnLoadAbstraction(const DataAbstraction& abs) {};
 
 	virtual void Start() {};
 	virtual void CleanUp() {};

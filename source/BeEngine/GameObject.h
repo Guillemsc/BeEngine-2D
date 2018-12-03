@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include "GameObjectComponent.h"
 
+class DataAbstraction;
 class ComponentTransform;
 
 class GameObject 
@@ -18,6 +19,9 @@ private:
 public:
 	GameObject(std::string uid);
 	~GameObject() {};
+
+	void OnSaveAbstraction(const DataAbstraction& abs);
+	void OnLoadAbstraction(const DataAbstraction& abs);
 
 	void Start();
 	void Update();

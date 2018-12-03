@@ -11,6 +11,14 @@ GameObject::GameObject(std::string _uid)
 	uid = _uid;
 }
 
+void GameObject::OnSaveAbstraction(const DataAbstraction & abs)
+{
+}
+
+void GameObject::OnLoadAbstraction(const DataAbstraction & abs)
+{
+}
+
 void GameObject::Start()
 {
 	transform = (ComponentTransform*)CreateComponent(ComponentType::COMPONENT_TYPE_TRANSFORM);

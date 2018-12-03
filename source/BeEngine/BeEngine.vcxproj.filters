@@ -528,6 +528,9 @@
     <ClInclude Include="ScriptingObject.h">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjectAbstractor.h">
+      <Filter>Sources\8. GameObjects ===========</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -859,6 +862,9 @@
     </ClCompile>
     <ClCompile Include="ScriptingObject.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectAbstractor.cpp">
+      <Filter>Sources\8. GameObjects ===========</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

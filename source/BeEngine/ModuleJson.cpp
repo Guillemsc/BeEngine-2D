@@ -539,3 +539,332 @@ bool JSON_Doc::FindArrayValue(const char * arr, int index, json_value_type type)
 	
 	return ret;
 }
+
+DataAbstraction::DataAbstraction()
+{
+}
+
+void DataAbstraction::Clear()
+{
+	ints.clear();
+	bools.clear();
+	floats.clear();
+	strings.clear();
+	floats2.clear();
+	floats3.clear();
+	floats4.clear();
+}
+
+void DataAbstraction::AddInt(const std::string & name, int val)
+{
+	ints[name] = val;
+}
+
+void DataAbstraction::AddBool(const std::string & name, bool val)
+{
+	bools[name] = val;
+}
+
+void DataAbstraction::AddFloat(const std::string & name, float val)
+{
+	floats[name] = val;
+}
+
+void DataAbstraction::AddString(const std::string & name, std::string val)
+{
+	strings[name] = val;
+}
+
+void DataAbstraction::AddFloat2(const std::string & name, float2 val)
+{
+	floats2[name] = val;
+}
+
+void DataAbstraction::AddFloat3(const std::string & name, float3 val)
+{
+	floats3[name] = val;
+}
+
+void DataAbstraction::AddFloat4(const std::string & name, float4 val)
+{
+	floats4[name] = val;
+}
+
+int DataAbstraction::GetInt(const std::string & name, int def)
+{
+	std::map<std::string, int>::iterator it = ints.find(name);
+
+	if (it != ints.end())
+		return it->second;
+
+	return def;
+}
+
+bool DataAbstraction::GetBool(const std::string & name, bool def)
+{
+	std::map<std::string, bool>::iterator it = bools.find(name);
+
+	if (it != bools.end())
+		return it->second;
+
+	return def;
+}
+
+float DataAbstraction::GetFloat(const std::string & name, float def)
+{
+	std::map<std::string, float>::iterator it = floats.find(name);
+
+	if (it != floats.end())
+		return it->second;
+
+	return def;
+}
+
+std::string DataAbstraction::GetString(const std::string & name, std::string def)
+{
+	std::map<std::string, std::string>::iterator it = strings.find(name);
+
+	if (it != strings.end())
+		return it->second;
+
+	return def;
+}
+
+float2 DataAbstraction::GetFloat2(const std::string & name, float2 def)
+{
+	std::map<std::string, float2>::iterator it = floats2.find(name);
+
+	if (it != floats2.end())
+		return it->second;
+
+	return def;
+}
+
+float3 DataAbstraction::GetFloat3(const std::string & name, float3 def)
+{
+	std::map<std::string, float3>::iterator it = floats3.find(name);
+
+	if (it != floats3.end())
+		return it->second;
+
+	return def;
+}
+
+float4 DataAbstraction::GetFloat4(const std::string & name, float4 def)
+{
+	std::map<std::string, float4>::iterator it = floats4.find(name);
+
+	if (it != floats4.end())
+		return it->second;
+
+	return def;
+}
+
+void DataAbstraction::Serialize(JSON_Doc & doc)
+{
+	int counter = 0;
+	if (ints.size() > 0)
+	{
+		doc.SetNumber("ints_count", ints.size());
+
+		for (std::map<std::string, int>::iterator it = ints.begin(); it != ints.end(); ++it)
+		{
+			std::string int_name = "int_name_" + std::to_string(counter);
+			std::string int_value = "int_value_" + std::to_string(counter);
+
+			doc.SetString(int_name, (*it).first.c_str());
+			doc.SetNumber(int_value, (*it).second);
+
+			++counter;
+		}
+	}
+
+	counter = 0;
+	if (bools.size() > 0)
+	{
+		doc.SetNumber("bools_count", bools.size());
+
+		for (std::map<std::string, bool>::iterator it = bools.begin(); it != bools.end(); ++it)
+		{
+			std::string bool_name = "bool_name_" + std::to_string(counter);
+			std::string bool_value = "bool_value_" + std::to_string(counter);
+
+			doc.SetString(bool_name, (*it).first.c_str());
+			doc.SetBool(bool_value, (*it).second);
+
+			++counter;
+		}
+	}
+
+	counter = 0;
+	if (floats.size() > 0)
+	{
+		doc.SetNumber("floats_count", floats.size());
+
+		for (std::map<std::string, float>::iterator it = floats.begin(); it != floats.end(); ++it)
+		{
+			std::string float_name = "float_name_" + std::to_string(counter);
+			std::string float_number = "float_value_" + std::to_string(counter);
+
+			doc.SetString(float_name, (*it).first.c_str());
+			doc.SetNumber(float_number, (*it).second);
+			++counter;
+		}
+	}
+
+	counter = 0;
+	if (strings.size() > 0)
+	{
+		doc.SetNumber("strings_count", strings.size());
+
+		for (std::map<std::string, std::string>::iterator it = strings.begin(); it != strings.end(); ++it)
+		{
+			std::string string_name = "string_name_" + std::to_string(counter);
+			std::string string_value = "string_value_" + std::to_string(counter);
+
+			doc.SetString(string_name, (*it).first.c_str());
+			doc.SetString(string_value, (*it).second.c_str());
+
+			++counter;
+		}
+	}
+
+	counter = 0;
+	if (floats2.size() > 0)
+	{
+		doc.SetNumber("floats2_count", floats2.size());
+
+		for (std::map<std::string, float2>::iterator it = floats2.begin(); it != floats2.end(); ++it)
+		{
+			std::string float2_name = "float2_name_" + std::to_string(counter);
+			std::string float2_value = "float2_value_" + std::to_string(counter);
+
+			doc.SetString(float2_name, (*it).first.c_str());
+			doc.SetNumber2(float2_value, (*it).second);
+
+			++counter;
+		}
+	}
+
+	counter = 0;
+	if (floats3.size() > 0)
+	{
+		doc.SetNumber("floats3_count", floats3.size());
+
+		for (std::map<std::string, float3>::iterator it = floats3.begin(); it != floats3.end(); ++it)
+		{
+			std::string float3_name = "float3_name_" + std::to_string(counter);
+			std::string float3_value = "float3_value_" + std::to_string(counter);
+
+			doc.SetString(float3_name, (*it).first.c_str());
+			doc.SetNumber3(float3_value, (*it).second);
+
+			++counter;
+		}
+	}
+
+	counter = 0;
+	if (floats4.size() > 0)
+	{
+		doc.SetNumber("floats4_count", floats4.size());
+
+		for (std::map<std::string, float4>::iterator it = floats4.begin(); it != floats4.end(); ++it)
+		{
+			std::string float4_name = "float4_name_" + std::to_string(counter);
+			std::string float4_value = "float4_value_" + std::to_string(counter);
+
+			doc.SetString(float4_name, (*it).first.c_str());
+			doc.SetNumber4(float4_value, (*it).second);
+
+			++counter;
+		}
+	}
+}
+
+void DataAbstraction::DeSerialize(JSON_Doc & doc)
+{
+	int ints_count = doc.GetNumber("ints_count", 0);
+	int bools_count = doc.GetNumber("bools_count", 0);
+	int floats_count = doc.GetNumber("floats_count", 0);
+	int strings_count = doc.GetNumber("strings_count", 0);
+	int floats2_count = doc.GetNumber("floats2_count", 0);
+	int floats3_count = doc.GetNumber("floats3_count", 0);
+	int floats4_count = doc.GetNumber("floats4_count", 0);
+
+	for (int i = 0; i < ints_count; ++i)
+	{
+		std::string int_name = "int_name_" + std::to_string(i);
+		std::string int_value = "int_value_" + std::to_string(i);
+
+		std::string name = doc.GetString(int_name.c_str());
+		int val = doc.GetNumber(int_value.c_str());
+
+		AddInt(name, val);
+	}
+
+	for (int i = 0; i < bools_count; ++i)
+	{
+		std::string bool_name = "bool_name_" + std::to_string(i);
+		std::string bool_value = "bool_value_" + std::to_string(i);
+
+		std::string name = doc.GetString(bool_name.c_str());
+		bool val = doc.GetBool(bool_value.c_str());
+
+		AddBool(name, val);
+	}
+
+	for (int i = 0; i < floats_count; ++i)
+	{
+		std::string float_name = "float_name_" + std::to_string(i);
+		std::string float_value = "float_value_" + std::to_string(i);
+
+		std::string name = doc.GetString(float_name.c_str());
+		float val = doc.GetNumber(float_value.c_str());
+
+		AddFloat(name, val);
+	}
+
+	for (int i = 0; i < strings_count; ++i)
+	{
+		std::string string_name = "string_name_" + std::to_string(i);
+		std::string string_value = "string_value_" + std::to_string(i);
+
+		std::string name = doc.GetString(string_name.c_str());
+		std::string val = doc.GetString(string_value.c_str());
+
+		AddString(name, val);
+	}
+
+	for (int i = 0; i < floats2_count; ++i)
+	{
+		std::string float2_name = "float2_name_" + std::to_string(i);
+		std::string float2_value = "float2_value_" + std::to_string(i);
+
+		std::string name = doc.GetString(float2_name.c_str());
+		float2 val = doc.GetNumber2(float2_value.c_str());
+
+		AddFloat2(name, val);
+	}
+
+	for (int i = 0; i < floats3_count; ++i)
+	{
+		std::string float3_name = "float3_name_" + std::to_string(i);
+		std::string float3_value = "float3_value_" + std::to_string(i);
+
+		std::string name = doc.GetString(float3_name.c_str());
+		float3 val = doc.GetNumber3(float3_value.c_str());
+
+		AddFloat3(name, val);
+	}
+
+	for (int i = 0; i < floats4_count; ++i)
+	{
+		std::string float4_name = "float4_name_" + std::to_string(i);
+		std::string float4_value = "float4_value_" + std::to_string(i);
+
+		std::string name = doc.GetString(float4_name.c_str());
+		float4 val = doc.GetNumber4(float4_value.c_str());
+
+		AddFloat4(name, val);
+	}
+}

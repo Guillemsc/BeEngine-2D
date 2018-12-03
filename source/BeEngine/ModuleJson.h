@@ -6,6 +6,44 @@
 
 #include "GeometryMath.h"
 
+#include <map>
+
+class DataAbstraction
+{
+public:
+	DataAbstraction();
+
+	void Clear();
+
+	void AddInt(const std::string& name, int val);
+	void AddBool(const std::string& name, bool val);
+	void AddFloat(const std::string& name, float val);
+	void AddString(const std::string& name, std::string val);
+	void AddFloat2(const std::string& name, float2 val);
+	void AddFloat3(const std::string& name, float3 val);
+	void AddFloat4(const std::string& name, float4 val);
+
+	int GetInt(const std::string& name, int def = 0);
+	bool GetBool(const std::string& name, bool def = false);
+	float GetFloat(const std::string& name, float def = 0.0f);
+	std::string GetString(const std::string& name, std::string def = "");
+	float2 GetFloat2(const std::string& name, float2 def = float2::zero);
+	float3 GetFloat3(const std::string& name, float3 def = float3::zero);
+	float4 GetFloat4(const std::string& name, float4 def = float4::zero);
+
+	void Serialize(JSON_Doc& doc);
+	void DeSerialize(JSON_Doc& doc);
+
+private:
+	std::map<std::string, int>		   ints;
+	std::map<std::string, bool>		   bools;
+	std::map<std::string, float>       floats;
+	std::map<std::string, std::string> strings;
+	std::map<std::string, float2>      floats2;
+	std::map<std::string, float3>      floats3;
+	std::map<std::string, float4>      floats4;
+};
+
 class JSON_Doc
 {
 public:
