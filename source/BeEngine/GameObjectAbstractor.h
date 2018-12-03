@@ -18,6 +18,7 @@ class GoToIdRelation
 public:
 	GoToIdRelation() {}
 	GoToIdRelation(uint _id, GameObject* _go, const DataAbstraction& abs, const std::vector<DataAbstraction>& components_abs);
+	GoToIdRelation(uint _id, const DataAbstraction& abs, const std::vector<DataAbstraction>& components_abs);
 
 	void SetGo(GameObject* go);
 
@@ -66,12 +67,13 @@ public:
 	void Abstract(GameObject* go);
 	GameObject* DeAbstract();
 
-	void Serialize(const std::string& path);
-	void DeSerialize(const std::string& path);
+	void Serialize(const std::string& path, const std::string& name, const std::string& extension);
+	void DeSerialize(const std::string& filepath);
 
 private:
 	// Abstraction
 	void AddGoToIdRelation(GameObject* go, uint& curr_id);
+	void AddIdToAbstractionRelation(uint id, DataAbstraction go_abs, std::vector<DataAbstraction> components_abs);
 	void AddChildToParentRelation(uint id, uint parent_id);
 
 	// DeAbstraction

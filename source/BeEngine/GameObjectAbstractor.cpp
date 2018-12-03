@@ -5,6 +5,7 @@
 #include "ModuleGameObject.h"
 #include "App.h"
 #include "ComponentTransfrom.h"
+#include "ModuleFileSystem.h"
 
 GameObjectAbstraction::GameObjectAbstraction()
 {
@@ -138,12 +139,126 @@ GameObject* GameObjectAbstraction::DeAbstract()
 	return ret;
 }
 
-void GameObjectAbstraction::Serialize(const std::string & path)
+void GameObjectAbstraction::Serialize(const std::string& path, const std::string& name, const std::string& extension)
 {
+	if (loaded)
+	{
+		if (App->file_system->FolderExists(path))
+		{
+			std::string filepath = path + name + "." + "extension";
+
+			if (App->file_system->FileExists(filepath.c_str()))
+				App->file_system->FileDelete(filepath.c_str());
+
+			JSON_Doc* doc = App->json->CreateJSON(filepath.c_str());
+
+			if (doc != nullptr)
+			{
+				int curr_go_count = 0;
+				doc->SetNumber("GameObjectsCount", go_to_ids_relations.size());
+
+				for (std::vector<GoToIdRelation>::iterator it = go_to_ids_relations.begin(); it != go_to_ids_relations.end(); ++it, ++curr_go_count)
+				{
+					doc->MoveToRoot();
+
+					std::string curr_go_section_name = "GameObject_" + std::to_string(curr_go_count);
+					doc->AddSection(curr_go_section_name);
+
+					if (doc->MoveToSection(curr_go_section_name))
+					{
+						JSON_Doc go_node = doc->GetNode();
+
+						go_node.SetNumber("id", (*it).GetId());
+						go_node.SetNumber("parent_id", GetParentFromChild((*it).GetId()));
+
+						(*it).GetDataAbstraction().Serialize(go_node);
+
+						doc->SetArray("Components");
+
+						bool curr_comp_count = 0;
+						std::vector<DataAbstraction> components_data = (*it).GetComponentsDataAbstraction();
+						for (std::vector<DataAbstraction>::iterator comp = components_data.begin(); comp != components_data.end(); ++comp, ++curr_comp_count)
+						{
+							JSON_Doc comp_node = doc->GetNode();
+
+							comp_node.AddSectionToArray("Components");
+
+							if (comp_node.MoveToSectionFromArray("Components", curr_comp_count))
+							{
+								(*comp).Serialize(comp_node);
+							}
+						}
+					}
+				}
+
+				doc->Save();
+
+				App->json->UnloadJSON(doc);
+			}
+		}
+	}
 }
 
-void GameObjectAbstraction::DeSerialize(const std::string & path)
+void GameObjectAbstraction::DeSerialize(const std::string & filepath)
 {
+	Clear();
+
+	if (App->file_system->FileExists(filepath))
+	{
+		JSON_Doc* doc = App->json->LoadJSON(filepath.c_str());
+
+		if (doc != nullptr)
+		{
+			int game_objects_count = doc->GetNumber("GameObjectsCount", 0);
+
+			for (int i = 0; i < game_objects_count; ++i)
+			{
+				doc->MoveToRoot();
+
+				std::string curr_go_section_name = "GameObject_" + std::to_string(i);
+
+				if (doc->MoveToSection(curr_go_section_name))
+				{
+					JSON_Doc go_node = doc->GetNode();
+
+					uint id = go_node.GetNumber("id", -1);
+					int parent_id = go_node.GetNumber("parent_id", -1);
+
+					if (id != -1)
+					{
+						if (parent_id != -1)
+							AddChildToParentRelation(id, parent_id);
+						
+						DataAbstraction go_abstraction;
+						go_abstraction.DeSerialize(go_node);
+
+						std::vector<DataAbstraction> components_abstractions;
+
+						int components_count = go_node.GetArrayCount("Components");
+
+						for (int c = 0; c < components_count; ++c)
+						{
+							JSON_Doc comp_node = go_node;
+
+							if (comp_node.MoveToSectionFromArray("Components", c))
+							{
+								DataAbstraction comp_data;
+								comp_data.DeSerialize(comp_node);
+
+								components_abstractions.push_back(comp_data);
+							}
+						}
+
+						AddIdToAbstractionRelation(id, go_abstraction, components_abstractions);
+					}
+				}
+			}
+
+			loaded = true;
+
+			App->json->UnloadJSON(doc);
+		}
+	}
 }
 
 void GameObjectAbstraction::AddGoToIdRelation(GameObject * go, uint & curr_id)
@@ -174,6 +289,12 @@ void GameObjectAbstraction::AddGoToIdRelation(GameObject * go, uint & curr_id)
 
 		go_to_ids_relations.push_back(relation);
 	}
+}
+
+void GameObjectAbstraction::AddIdToAbstractionRelation(uint id, DataAbstraction go_abs, std::vector<DataAbstraction> components_abs)
+{
+	GoToIdRelation go_relation(id, go_abs, components_abs);
+	go_to_ids_relations.push_back(go_relation);
 }
 
 void GameObjectAbstraction::AddChildToParentRelation(uint id, uint parent_id)
@@ -234,6 +355,13 @@ GoToIdRelation::GoToIdRelation(uint _id, GameObject * _go, const DataAbstraction
 {
 	id = _id;
 	go = _go;
+	data_game_object = abs;
+	data_components = components_abs;
+}
+
+GoToIdRelation::GoToIdRelation(uint _id, const DataAbstraction & abs, const std::vector<DataAbstraction>& components_abs)
+{
+	id = _id;
 	data_game_object = abs;
 	data_components = components_abs;
 }
