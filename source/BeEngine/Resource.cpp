@@ -39,7 +39,7 @@ void Resource::EM_CreateAssetMeta()
 {
 	meta_filepath = asset_filepath + ".meta";
 
-	App->resource->AddWatchingException(meta_filepath);
+	App->resource->StopRisingWatchingEvents();
 
 	JSON_Doc* meta_doc = App->json->LoadJSON(meta_filepath.c_str());
 
@@ -69,6 +69,8 @@ void Resource::EM_CreateAssetMeta()
 
 		App->json->UnloadJSON(meta_doc);
 	}
+
+	//App->resource->StartRisingWatchingEvents();
 }
 
 bool Resource::EM_ExistsOnLibrary()
@@ -118,8 +120,7 @@ void Resource::EM_RemoveAsset()
 {
 	if (has_data)
 	{
-		App->resource->AddWatchingException(asset_filepath);
-		App->resource->AddWatchingException(meta_filepath);
+		App->resource->StopRisingWatchingEvents();
 
 		if(App->file_system->FileExists(asset_filepath.c_str()))
 			App->file_system->FileDelete(asset_filepath.c_str());
@@ -131,11 +132,15 @@ void Resource::EM_RemoveAsset()
 			App->file_system->FileDelete(library_filepath.c_str());
 
 		OnRemoveAsset();
+
+		App->resource->StartRisingWatchingEvents();
 	}
 }
 
 void Resource::EM_RenameAsset(const char * new_name)
 {
+	App->resource->StopRisingWatchingEvents();
+
 	std::string last_name = d_asset_filepath.file_name;
 
 	if (App->file_system->FileRename(asset_filepath.c_str(), new_name, true, asset_filepath))
@@ -154,10 +159,14 @@ void Resource::EM_RenameAsset(const char * new_name)
 	}
 
 	SetAssetFilepath(asset_filepath);
+
+	App->resource->StartRisingWatchingEvents();
 }
 
 void Resource::EM_MoveAsset(const char * new_path)
 {
+	App->resource->StopRisingWatchingEvents();
+
 	std::string last_asset_filepath = asset_filepath;
 
 	if (App->file_system->FileExists(asset_filepath.c_str()))
@@ -187,6 +196,8 @@ void Resource::EM_MoveAsset(const char * new_path)
 			}
 		}
 	}
+
+	App->resource->StartRisingWatchingEvents();
 }
 
 void Resource::GM_InitResource(const char * _library_filepath)

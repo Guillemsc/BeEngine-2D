@@ -23,8 +23,7 @@ public:
 
 	bool Watch(const char* path);
 	bool StopWatch(const char* path);
-	void AddException(const std::string& path);
-	void RemoveException(const std::string& path);
+	void SetRiseEvents(bool set);
 
 private:
 	void GetChangesStack();

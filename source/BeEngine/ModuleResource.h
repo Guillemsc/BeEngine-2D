@@ -13,6 +13,7 @@
 
 class Event;
 class LoadResourcesTimeSlicedTask;
+class ManageModifiedAssetsTimeSlicedTask;
 class ResourceScript;
 
 class ModuleResource : public Module
@@ -77,8 +78,8 @@ public:
 
 	void StartWatchingFolders();
 	void StopWatchingFolders();
-	void AddWatchingException(const std::string& path);
-	void RemoveWatchingException(const std::string& path);
+	void StopRisingWatchingEvents();
+	void StartRisingWatchingEvents();
 
 private:
 	void AddAssetExtension(const ResourceType& type, const char* extension);
@@ -95,6 +96,9 @@ private:
 
 	void DestroyAllResources();
 
+	void StartLoadResourcesTimeSlicedTask();
+	void StartManageModifiedAssetsTimeSlicedTask(const std::string& folder, bool check_sub_directories = false);
+
 private:
 	std::string current_assets_folder;
 	std::string assets_folder;
@@ -108,9 +112,27 @@ private:
 
 	std::vector<std::string> files_changed_to_check;
 
-	int watching_folder_index = 0;
+	int rising_watching_events_index = 0;
 
 	LoadResourcesTimeSlicedTask* time_sliced_task_loading_resources = nullptr;
+	ManageModifiedAssetsTimeSlicedTask* time_sliced_task_manage_modified_assets = nullptr;
+};
+
+class ManageModifiedAssetsTimeSlicedTask : public TimeSlicedTask
+{
+public:
+	ManageModifiedAssetsTimeSlicedTask(std::string folder_to_check, bool check_sub_directories);
+
+	void Start();
+	void Update();
+	void Finish();
+
+private:
+	std::string folder_to_check;
+	bool check_sub_directories = false;
+
+	std::vector<std::string> all_asset_files;
+	std::vector<std::string> asset_files_to_check;
 };
 
 class LoadResourcesTimeSlicedTask : public TimeSlicedTask

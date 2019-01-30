@@ -93,31 +93,24 @@ bool ScriptingObjectFileWatcher::StopWatch(const char * path)
 	return ret;
 }
 
-void ScriptingObjectFileWatcher::AddException(const std::string & path)
+void ScriptingObjectFileWatcher::SetRiseEvents(bool set)
 {
 	if (script_file_watcher_instance != nullptr)
 	{		
-		MonoObject* boxed_path = (MonoObject*)App->scripting->BoxString(path.c_str());
+		if (set)
+		{
+			MonoObject* ret_obj = nullptr;
+			script_file_watcher_instance->InvokeMonoMethod("StartRisingEvents", nullptr, 0, ret_obj);
+		}
+		else
+		{
+			MonoObject* ret_obj = nullptr;
+			script_file_watcher_instance->InvokeMonoMethod("StopRisingEvents", nullptr, 0, ret_obj);
 
-		void *args[1];
-		args[0] = boxed_path;
+			std::string response = App->scripting->UnboxString((MonoString*)ret_obj);
 
-		MonoObject* ret_obj = nullptr;
-		script_file_watcher_instance->InvokeMonoMethod("AddException", args, 1, ret_obj);
-	}
-}
-
-void ScriptingObjectFileWatcher::RemoveException(const std::string & path)
-{
-	if (script_file_watcher_instance != nullptr)
-	{
-		MonoObject* boxed_path = (MonoObject*)App->scripting->BoxString(path.c_str());
-
-		void *args[1];
-		args[0] = boxed_path;
-
-		MonoObject* ret_obj = nullptr;
-		script_file_watcher_instance->InvokeMonoMethod("RemoveException", args, 1, ret_obj);
+			int i = 0;
+		}
 	}
 }
 

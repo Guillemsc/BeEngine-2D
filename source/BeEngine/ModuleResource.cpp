@@ -368,7 +368,7 @@ bool ModuleResource::LoadFileToEngine(const char * filepath)
 		{
 			std::string new_path = filepath;
 
-			App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), false, new_path);
+			App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), true, new_path);
 		}
 	}
 
@@ -384,6 +384,8 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 	bool can_load = App->resource->CanLoadFile(filepath);
 	bool is_meta = App->resource->IsMeta(filepath);
 	bool exists = App->file_system->FileExists(filepath);
+	
+	bool to_delete = false;
 
 	if (!is_meta)
 	{
@@ -394,41 +396,50 @@ bool ModuleResource::ManageModifiedAsset(const char * filepath)
 				Resource* loaded_res = nullptr;
 				App->resource->ExportAssetToLibrary(filepath);
 			}
+			/*		else
+					{
+						UnloadAssetFromEngine(filepath);
+					}
+
+					if (dfp.file_extension_lower_case == "cs")
+						App->scripting->CompileScripts();
+				}
+				else
+				{
+					if (exists)
+						to_delete = true;
+				}*/
+		}
+		/*else
+		{
+			if (exists)
+			{
+				std::string asset_filepath = GetAssetFileFromMeta(filepath);
+
+				if (App->file_system->FileExists(asset_filepath.c_str()))
+				{
+					App->resource->ExportAssetToLibrary(filepath);
+				}
+				else
+					to_delete = true;
+			}
 			else
 			{
-				UnloadAssetFromEngine(filepath);
+				std::string asset_filepath = GetAssetFileFromMeta(filepath);
+
+				App->resource->ExportAssetToLibrary(asset_filepath.c_str());
 			}
-
-	//		if (dfp.file_extension_lower_case == "cs")
-	//			App->scripting->CompileScripts();
 		}
-	//	else
-	//	{
-	//		if (exists)
-	//			App->file_system->FileDelete(filepath);
-	//	}
-	//}
-	//else
-	//{
-	//	if (exists)
-	//	{
-	//		std::string asset_filepath = GetAssetFileFromMeta(filepath);
 
-	//		if (App->file_system->FileExists(asset_filepath.c_str()))
-	//		{
-	//			App->resource->ExportAssetToLibrary(filepath);
-	//		}
-	//		else
-	//			App->file_system->FileDelete(filepath);
-	//	}
-	//	else
-	//	{
-	//		std::string asset_filepath = GetAssetFileFromMeta(filepath);
+		if (to_delete)
+		{
+			App->resource->SetRiseWatchingEvents(false);
 
-	//		App->resource->ExportAssetToLibrary(asset_filepath.c_str());
-	//	}
+			App->file_system->FileDelete(filepath);
+
+			App->resource->SetRiseWatchingEvents(true);
+		}*/
 	}
-
 	return ret;
 }
 
@@ -771,8 +782,7 @@ void ModuleResource::OnEvent(Event* ev)
 
 			CreateLibraryFolders();
 
-			time_sliced_task_loading_resources = new LoadResourcesTimeSlicedTask();
-			App->time_sliced->StartTimeSlicedTask(time_sliced_task_loading_resources);
+			LoadResourcesTimeSlicedTask();
 
 			StartWatchingFolders();
 
@@ -825,14 +835,25 @@ void ModuleResource::StopWatchingFolders()
 	App->scripting->file_watcher->StopWatch(GetAssetsPath().c_str());
 }
 
-void ModuleResource::AddWatchingException(const std::string & path)
+void ModuleResource::StopRisingWatchingEvents()
 {
-	App->scripting->file_watcher->AddException(path);
+	--rising_watching_events_index;
+
+	if (rising_watching_events_index < 0)
+		rising_watching_events_index = 0;
+
+	if (rising_watching_events_index == 0)
+	{
+		App->scripting->file_watcher->SetRiseEvents(false);
+	}
 }
 
-void ModuleResource::RemoveWatchingException(const std::string & path)
+void ModuleResource::StartRisingWatchingEvents()
 {
-	App->scripting->file_watcher->RemoveException(path);
+	if(rising_watching_events_index == 0)
+		App->scripting->file_watcher->SetRiseEvents(true);
+
+	++rising_watching_events_index;
 }
 
 void ModuleResource::AddAssetExtension(const ResourceType & type, const char * extension)
@@ -963,8 +984,22 @@ void ModuleResource::DestroyAllResources()
 	resources.clear();
 }
 
-LoadResourcesTimeSlicedTask::LoadResourcesTimeSlicedTask() : TimeSlicedTask(TimeSlicedTaskType::FOCUS, 4)
+void ModuleResource::StartLoadResourcesTimeSlicedTask()
 {
+	time_sliced_task_loading_resources = new LoadResourcesTimeSlicedTask();
+	App->time_sliced->StartTimeSlicedTask(time_sliced_task_loading_resources);
+}
+
+void ModuleResource::StartManageModifiedAssetsTimeSlicedTask(const std::string & folder, bool check_sub_directories)
+{
+	time_sliced_task_manage_modified_assets = new ManageModifiedAssetsTimeSlicedTask(folder, check_sub_directories);
+	App->time_sliced->StartTimeSlicedTask(time_sliced_task_manage_modified_assets);
+}
+
+LoadResourcesTimeSlicedTask::LoadResourcesTimeSlicedTask() 
+	: TimeSlicedTask(TimeSlicedTaskType::FOCUS, 4)
+{
+	
 }
 
 void LoadResourcesTimeSlicedTask::Start()
@@ -1147,4 +1182,46 @@ void LoadResourcesTimeSlicedTask::DeleteUnnecessaryFiles()
 	{
 		FinishTask();
 	}
+}
+
+ManageModifiedAssetsTimeSlicedTask::ManageModifiedAssetsTimeSlicedTask(std::string folder_to_check, bool check_sub_directories)
+	: TimeSlicedTask(TimeSlicedTaskType::FOCUS, 4)
+{
+	this->folder_to_check = folder_to_check;
+	this->check_sub_directories = check_sub_directories;
+}
+
+void ManageModifiedAssetsTimeSlicedTask::Start()
+{
+	if (App->file_system->FolderExists(folder_to_check))
+	{
+		if(check_sub_directories)
+			all_asset_files = App->file_system->GetFilesInPathAndChilds(folder_to_check);
+		else
+			all_asset_files = App->file_system->GetFilesInPath(folder_to_check);
+
+		asset_files_to_check = all_asset_files;
+	}
+	else
+		FinishTask();
+}
+
+void ManageModifiedAssetsTimeSlicedTask::Update()
+{
+	if (!asset_files_to_check.empty())
+	{
+		float progress = 100 - (100.0f / (float)all_asset_files.size()) * (float)asset_files_to_check.size();
+		SetPercentageProgress(progress);
+		SetDescription("Updating files");
+
+		std::string curr_file = *asset_files_to_check.begin();
+
+		App->resource->ManageModifiedAsset(curr_file.c_str());
+	}
+	else
+		FinishTask();
+}
+
+void ManageModifiedAssetsTimeSlicedTask::Finish()
+{
 }
