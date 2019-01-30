@@ -47,7 +47,7 @@ void ScriptingObjectFileWatcher::CleanUp()
 	}
 }
 
-bool ScriptingObjectFileWatcher::WatchFileFolder(const char * path)
+bool ScriptingObjectFileWatcher::Watch(const char * path)
 {
 	bool ret = false;
 
@@ -61,7 +61,7 @@ bool ScriptingObjectFileWatcher::WatchFileFolder(const char * path)
 			args[0] = boxed_path;
 
 			MonoObject* ret_obj = nullptr;
-			script_file_watcher_instance->InvokeMonoMethod("FileFolderWatch", args, 1, ret_obj);
+			script_file_watcher_instance->InvokeMonoMethod("Watch", args, 1, ret_obj);
 
 			ret = App->scripting->UnboxBool(ret_obj);
 		}
@@ -70,7 +70,7 @@ bool ScriptingObjectFileWatcher::WatchFileFolder(const char * path)
 	return ret;
 }
 
-bool ScriptingObjectFileWatcher::StopWatchingFileFolder(const char * path)
+bool ScriptingObjectFileWatcher::StopWatch(const char * path)
 {
 	bool ret = false;
 
@@ -84,13 +84,41 @@ bool ScriptingObjectFileWatcher::StopWatchingFileFolder(const char * path)
 			args[0] = boxed_path;
 
 			MonoObject* ret_obj = nullptr;
-			script_file_watcher_instance->InvokeMonoMethod("StopWatchingFileFolder", args, 1, ret_obj);
+			script_file_watcher_instance->InvokeMonoMethod("StopWatch", args, 1, ret_obj);
 
 			ret = true;
 		}
 	}
 
 	return ret;
+}
+
+void ScriptingObjectFileWatcher::AddException(const std::string & path)
+{
+	if (script_file_watcher_instance != nullptr)
+	{		
+		MonoObject* boxed_path = (MonoObject*)App->scripting->BoxString(path.c_str());
+
+		void *args[1];
+		args[0] = boxed_path;
+
+		MonoObject* ret_obj = nullptr;
+		script_file_watcher_instance->InvokeMonoMethod("AddException", args, 1, ret_obj);
+	}
+}
+
+void ScriptingObjectFileWatcher::RemoveException(const std::string & path)
+{
+	if (script_file_watcher_instance != nullptr)
+	{
+		MonoObject* boxed_path = (MonoObject*)App->scripting->BoxString(path.c_str());
+
+		void *args[1];
+		args[0] = boxed_path;
+
+		MonoObject* ret_obj = nullptr;
+		script_file_watcher_instance->InvokeMonoMethod("RemoveException", args, 1, ret_obj);
+	}
 }
 
 void ScriptingObjectFileWatcher::GetChangesStack()

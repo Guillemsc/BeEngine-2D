@@ -360,8 +360,6 @@ bool ModuleResource::LoadFileToEngine(const char * filepath)
 {
 	bool ret = false;
 
-	StopWatchingFolders();
-
 	if (App->file_system->FileExists(filepath))
 	{		
 		bool can_load = CanLoadFile(filepath);
@@ -370,24 +368,72 @@ bool ModuleResource::LoadFileToEngine(const char * filepath)
 		{
 			std::string new_path = filepath;
 
-			bool can_load = App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), false, new_path);
-
-			if (can_load)
-			{
-				ret = ExportAssetToLibrary(new_path.c_str());
-			}
+			App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), false, new_path);
 		}
 	}
 
-	StartWatchingFolders();
+	return ret;
+}
+
+bool ModuleResource::ManageModifiedAsset(const char * filepath)
+{
+	bool ret = false;
+
+	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
+
+	bool can_load = App->resource->CanLoadFile(filepath);
+	bool is_meta = App->resource->IsMeta(filepath);
+	bool exists = App->file_system->FileExists(filepath);
+
+	if (!is_meta)
+	{
+		if (can_load)
+		{
+			if (exists)
+			{
+				Resource* loaded_res = nullptr;
+				App->resource->ExportAssetToLibrary(filepath);
+			}
+			else
+			{
+				UnloadAssetFromEngine(filepath);
+			}
+
+	//		if (dfp.file_extension_lower_case == "cs")
+	//			App->scripting->CompileScripts();
+		}
+	//	else
+	//	{
+	//		if (exists)
+	//			App->file_system->FileDelete(filepath);
+	//	}
+	//}
+	//else
+	//{
+	//	if (exists)
+	//	{
+	//		std::string asset_filepath = GetAssetFileFromMeta(filepath);
+
+	//		if (App->file_system->FileExists(asset_filepath.c_str()))
+	//		{
+	//			App->resource->ExportAssetToLibrary(filepath);
+	//		}
+	//		else
+	//			App->file_system->FileDelete(filepath);
+	//	}
+	//	else
+	//	{
+	//		std::string asset_filepath = GetAssetFileFromMeta(filepath);
+
+	//		App->resource->ExportAssetToLibrary(asset_filepath.c_str());
+	//	}
+	}
 
 	return ret;
 }
 
 void ModuleResource::UnloadAssetFromEngine(const char * filepath)
 {
-	StopWatchingFolders();
-	
 	Resource* res = GetResourceFromAssetFile(filepath);
 
 	if (res != nullptr)
@@ -396,15 +442,11 @@ void ModuleResource::UnloadAssetFromEngine(const char * filepath)
 
 		DestroyResource(res);
 	}
-	
-	StartWatchingFolders();
 }
 
 bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	Resource* res = GetResourceFromAssetFile(filepath);
 
@@ -433,16 +475,12 @@ bool ModuleResource::ExportAssetToLibrary(const char * filepath)
 		ret = true;
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::ImportAsset(const char * filepath, Resource*& res)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	res = GetResourceFromAssetFile(filepath);
 
@@ -469,76 +507,12 @@ bool ModuleResource::ImportAsset(const char * filepath, Resource*& res)
 		res->EM_ImportFromLibrary();
 	}
 
-	StartWatchingFolders();
-
-	return ret;
-}
-
-bool ModuleResource::ManageModifiedAsset(const char * filepath)
-{
-	bool ret = false;
-
-	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
-
-	StopWatchingFolders();
-
-	bool can_load = App->resource->CanLoadFile(filepath);
-	bool is_meta = App->resource->IsMeta(filepath);
-	bool exists = App->file_system->FileExists(filepath);
-
-	if (!is_meta)
-	{
-		if (can_load)
-		{
-			if (exists)
-			{
-				Resource* loaded_res = nullptr;
-				App->resource->ExportAssetToLibrary(filepath);			}
-			else
-			{
-				UnloadAssetFromEngine(filepath);
-			}
-
-			if (dfp.file_extension_lower_case == "cs")
-				App->scripting->CompileScripts();
-		}
-		else
-		{
-			if(exists)
-				App->file_system->FileDelete(filepath);
-		}
-	}
-	else
-	{
-		if (exists)
-		{
-			std::string asset_filepath = GetAssetFileFromMeta(filepath);
-
-			if (App->file_system->FileExists(asset_filepath.c_str()))
-			{
-				App->resource->ExportAssetToLibrary(filepath);
-			}
-			else
-				App->file_system->FileDelete(filepath);
-		}
-		else
-		{
-			std::string asset_filepath = GetAssetFileFromMeta(filepath);
-
-			App->resource->ExportAssetToLibrary(asset_filepath.c_str());
-		}
-	}
-
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	Resource* res = GetResourceFromAssetFile(filepath);
 
@@ -547,16 +521,12 @@ bool ModuleResource::RenameAsset(const char * filepath, const char * new_name)
 		res->EM_RenameAsset(new_name);
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::MoveAsset(const char * filepath, const char * new_path)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FolderExists(new_path) && App->file_system->FileExists(filepath))
 	{
@@ -570,16 +540,12 @@ bool ModuleResource::MoveAsset(const char * filepath, const char * new_path)
 		}
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::CreateScript(const char * filepath, const char * name)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	std::string asset_path;
 	if (App->scripting->compiler->CreateScriptFromTemplate(filepath, name, asset_path))
@@ -589,16 +555,12 @@ bool ModuleResource::CreateScript(const char * filepath, const char * name)
 
 	App->scripting->CompileScripts();
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
 bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FolderExists(new_path) && App->file_system->FolderExists(folder))
 	{
@@ -639,8 +601,6 @@ bool ModuleResource::MoveAssetsFolder(const char * folder, const char * new_path
 		}
 	}
 
-	StartWatchingFolders();
-
 	return ret;
 }
 
@@ -648,11 +608,7 @@ bool ModuleResource::CreateAssetsFolder(const char * path, const char * name)
 {
 	bool ret = false;
 
-	StopWatchingFolders();
-
 	ret = App->file_system->FolderCreate(path, name, true);
-
-	StartWatchingFolders();
 
 	return ret;
 }
@@ -661,11 +617,7 @@ bool ModuleResource::RenameAssetsFolder(const char* folder_path, const char * ne
 {
 	bool ret = false;
 
-	StopWatchingFolders();
-
 	ret = App->file_system->FolderRename(folder_path, new_name, true);
-
-	StartWatchingFolders();
 
 	return ret;
 }
@@ -673,8 +625,6 @@ bool ModuleResource::RenameAssetsFolder(const char* folder_path, const char * ne
 bool ModuleResource::DeleteAssetsFolder(const char * folder)
 {
 	bool ret = false;
-
-	StopWatchingFolders();
 
 	if (App->file_system->FolderExists(folder))
 	{
@@ -701,8 +651,6 @@ bool ModuleResource::DeleteAssetsFolder(const char * folder)
 
 		ret = true;
 	}
-
-	StartWatchingFolders();
 
 	return ret;
 }
@@ -869,28 +817,22 @@ void ModuleResource::OnEvent(Event* ev)
 
 void ModuleResource::StartWatchingFolders()
 {
-	if (App->project->GetCurrProjectIsSelected())
-	{
-		--watching_folder_index;
-
-		if (watching_folder_index < 0)
-			watching_folder_index = 0;
-
-		if (watching_folder_index == 0)
-		{
-			App->scripting->file_watcher->WatchFileFolder(GetAssetsPath().c_str());
-		}
-	}
+	App->scripting->file_watcher->Watch(GetAssetsPath().c_str());
 }
 
 void ModuleResource::StopWatchingFolders()
 {
-	if (watching_folder_index == 0)
-	{
-		App->scripting->file_watcher->StopWatchingFileFolder(GetAssetsPath().c_str());
-	}
+	App->scripting->file_watcher->StopWatch(GetAssetsPath().c_str());
+}
 
-	++watching_folder_index;
+void ModuleResource::AddWatchingException(const std::string & path)
+{
+	App->scripting->file_watcher->AddException(path);
+}
+
+void ModuleResource::RemoveWatchingException(const std::string & path)
+{
+	App->scripting->file_watcher->RemoveException(path);
 }
 
 void ModuleResource::AddAssetExtension(const ResourceType & type, const char * extension)

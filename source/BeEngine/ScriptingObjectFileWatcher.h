@@ -21,8 +21,10 @@ public:
 	void Update();
 	void CleanUp();
 
-	bool WatchFileFolder(const char* path);
-	bool StopWatchingFileFolder(const char* path);
+	bool Watch(const char* path);
+	bool StopWatch(const char* path);
+	void AddException(const std::string& path);
+	void RemoveException(const std::string& path);
 
 private:
 	void GetChangesStack();

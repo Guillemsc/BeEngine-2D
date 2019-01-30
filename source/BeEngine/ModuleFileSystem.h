@@ -74,9 +74,8 @@ public:
 	std::string SelectFolderDialog(bool& canceled);
 	std::string SelectFileDilog(bool& canceled, const char* filter[]);
 
-private:
-	std::string FileRenameOnNameCollision(const std::string& filepath); 
-	std::string FolderRenameOnCollision(const std::string& path); 
+	std::string GetFileNameOnNameCollision(const std::string& filepath); 
+	std::string GetFolderNameOnNameCollision(const std::string& path); 
 
 private:
 	// Same name file renaming

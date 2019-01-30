@@ -51,10 +51,11 @@ public:
 	// Asset management ---------
 
 	bool LoadFileToEngine(const char* filepath);
+	bool ManageModifiedAsset(const char* filepath);
+
 	void UnloadAssetFromEngine(const char* filepath);
 	bool ExportAssetToLibrary(const char* filepath);
 	bool ImportAsset(const char* filepath, Resource*& res);
-	bool ManageModifiedAsset(const char* filepath);
 	bool RenameAsset(const char* filepath, const char* new_name);
 	bool MoveAsset(const char* filepath, const char* new_path);
 
@@ -76,6 +77,8 @@ public:
 
 	void StartWatchingFolders();
 	void StopWatchingFolders();
+	void AddWatchingException(const std::string& path);
+	void RemoveWatchingException(const std::string& path);
 
 private:
 	void AddAssetExtension(const ResourceType& type, const char* extension);

@@ -4,16 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Timers;
 
 namespace BeEngine.Internal
 {
     class FileWatcher
     {
-        public bool FileFolderWatch(string path)
+        public bool Watch(string path)
         {
             bool ret = true;
 
-            if (!IsFileFolderWatching(path))
+            if (!IsWatching(path))
             {
                 try
                 {
@@ -33,12 +34,12 @@ namespace BeEngine.Internal
                     watcher.Changed += OnChanged;
                     watcher.Created += OnChanged;
                     watcher.Deleted += OnChanged;
-                    watcher.Renamed += OnChangedName;
+                    watcher.Renamed += OnChanged;
 
                     watcher.EnableRaisingEvents = true;
                     watcher.IncludeSubdirectories = true;
 
-                    watching_file_folders.Add(watcher);
+                    watching.Add(watcher);
                 }
                 catch (Exception ex)
                 {
@@ -51,13 +52,33 @@ namespace BeEngine.Internal
             return ret;
         }
 
-        public bool IsFileFolderWatching(string path)
+        public void StopWatch(string path)
+        {
+            for (int i = 0; i < watching.Count; ++i)
+            {
+                FileSystemWatcher curr_watcher = watching[i];
+
+                if (curr_watcher.Path == path)
+                {
+                    curr_watcher.Changed -= OnChanged;
+                    curr_watcher.Created -= OnChanged;
+                    curr_watcher.Deleted -= OnChanged;
+                    curr_watcher.Renamed -= OnChanged;
+                    curr_watcher.Dispose();
+                    watching.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+
+        public bool IsWatching(string path)
         {
             bool ret = false;
 
-            for (int i = 0; i < watching_file_folders.Count; ++i)
+            for (int i = 0; i < watching.Count; ++i)
             {
-                if (watching_file_folders[i].Path == path)
+                if (watching[i].Path == path)
                 {
                     ret = true;
                     break;
@@ -67,45 +88,88 @@ namespace BeEngine.Internal
             return ret;
         }
 
-        public void StopWatchingFileFolder(string path)
+        public void AddException(string path)
         {
-            for (int i = 0; i < watching_file_folders.Count; ++i)
-            {
-                FileSystemWatcher curr_watcher = watching_file_folders[i];
+            RemoveException(path);
 
-                if (curr_watcher.Path == path)
+            exceptions.Add(path);
+
+            if (clear_exceptions_timer == null)
+            {
+                clear_exceptions_timer = new Timer();
+                clear_exceptions_timer.Elapsed += OnClearExceptions;
+                clear_exceptions_timer.AutoReset = true;
+            }
+
+            clear_exceptions_timer.Stop();
+            clear_exceptions_timer.Start();
+            clear_exceptions_timer.Interval = 1000 * 4;
+        }
+
+        public void RemoveException(string path)
+        {
+            for(int i = 0; i < exceptions.Count; ++i)
+            {
+                if(exceptions[i] == path)
                 {
-                    curr_watcher.Changed -= OnChanged;
-                    curr_watcher.Created -= OnChanged;
-                    curr_watcher.Deleted -= OnChanged;
-                    curr_watcher.Renamed -= OnChangedName;
-                    curr_watcher.Dispose();
-                    watching_file_folders.RemoveAt(i);
+                    exceptions.RemoveAt(i);
                     break;
                 }
             }
         }
 
-        public string[] GetChangesStack()
+        public bool IsException(string path)
         {
-            string[] ret = files_changed_stack.ToArray();
+            bool ret = false;
 
-            files_changed_stack.Clear();
+            for (int i = 0; i < exceptions.Count; ++i)
+            {
+                if (exceptions[i] == path)
+                {
+                    ret = true;
+                    break;
+                }
+            }
 
             return ret;
         }
 
+        public string[] GetChangesStack()
+        {
+            if (stack.Count > 0)
+            {
+                for (int i = 0; i < stack.Count; ++i)
+                {
+                    if (IsException(stack[i]))
+                    {
+                        stack.RemoveAt(i);
+                    }
+                    else
+                        ++i;
+                }
+            }
+
+            string[] ret = stack.ToArray();
+
+            stack.Clear();
+
+            return ret;
+        }
+
+        private void OnClearExceptions(object sender, ElapsedEventArgs e)
+        {
+            exceptions.Clear();
+        }
+
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            files_changed_stack.Add(e.FullPath);
+            stack.Add(e.FullPath);
         }
 
-        private void OnChangedName(object sender, RenamedEventArgs e)
-        {
-            files_changed_stack.Add(e.FullPath);
-        }
+        private List<FileSystemWatcher> watching = new List<FileSystemWatcher>();
+        private List<string> stack = new List<string>();
+        private List<string> exceptions = new List<string>();
 
-        private List<FileSystemWatcher> watching_file_folders = new List<FileSystemWatcher>();
-        List<string> files_changed_stack = new List<string>();
+        private Timer clear_exceptions_timer = null;
     }
 }

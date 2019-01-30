@@ -39,6 +39,8 @@ void Resource::EM_CreateAssetMeta()
 {
 	meta_filepath = asset_filepath + ".meta";
 
+	App->resource->AddWatchingException(meta_filepath);
+
 	JSON_Doc* meta_doc = App->json->LoadJSON(meta_filepath.c_str());
 
 	if (meta_doc == nullptr)
@@ -116,6 +118,9 @@ void Resource::EM_RemoveAsset()
 {
 	if (has_data)
 	{
+		App->resource->AddWatchingException(asset_filepath);
+		App->resource->AddWatchingException(meta_filepath);
+
 		if(App->file_system->FileExists(asset_filepath.c_str()))
 			App->file_system->FileDelete(asset_filepath.c_str());
 

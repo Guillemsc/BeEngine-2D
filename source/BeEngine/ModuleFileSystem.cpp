@@ -131,7 +131,7 @@ bool FileSystem::FileRename(const std::string& filepath, const std::string& new_
 		{
 			DecomposedFilePath d_new_filepath = DecomposeFilePath(new_filepath);
 
-			new_filepath = FileRenameOnNameCollision(new_filepath);
+			new_filepath = GetFileNameOnNameCollision(new_filepath);
 		}
 
 		if (rename(filepath.c_str(), new_filepath.c_str()) == 0)
@@ -165,7 +165,7 @@ bool FileSystem::FileCopyPaste(const std::string& filepath, const std::string& n
 
 			if (check_name_collision)
 			{
-				new_filepath = FileRenameOnNameCollision(new_filepath);
+				new_filepath = GetFileNameOnNameCollision(new_filepath);
 
 				DecomposedFilePath new_dfp = DecomposeFilePath(new_filepath);
 
@@ -417,7 +417,7 @@ std::string FileSystem::SetNameCollisionNumber(const char * filename, int number
 	return ret;
 }
 
-std::string FileSystem::FileRenameOnNameCollision(const std::string & filepath)
+std::string FileSystem::GetFileNameOnNameCollision(const std::string & filepath)
 {
 	std::string ret;
 
@@ -438,7 +438,7 @@ std::string FileSystem::FileRenameOnNameCollision(const std::string & filepath)
 	return ret;
 }
 
-std::string FileSystem::FolderRenameOnCollision(const std::string& path)
+std::string FileSystem::GetFolderNameOnNameCollision(const std::string& path)
 {
 	std::string ret;
 
@@ -487,7 +487,7 @@ bool FileSystem::FolderCreate(const std::string& path, const std::string& name, 
 			{
 				filepath += "\\";
 				
-				filepath = FolderRenameOnCollision(filepath.c_str());
+				filepath = GetFolderNameOnNameCollision(filepath.c_str());
 
 				new_filepath = filepath;
 
@@ -563,7 +563,7 @@ bool FileSystem::FolderRename(const std::string& folderpath, const std::string& 
 		{
 			if (check_name_collision)
 			{
-				new_folderpath = FolderRenameOnCollision(new_folderpath.c_str());
+				new_folderpath = GetFolderNameOnNameCollision(new_folderpath.c_str());
 			}
 
 			if (MoveFileEx(folderpath.c_str(), new_folderpath.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED) == 0)

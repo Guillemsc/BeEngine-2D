@@ -535,8 +535,6 @@ void ModuleScripting::ActuallyCompileScripts()
 {
 	if (needs_to_compile_user_scripts)
 	{
-		App->resource->StopWatchingFolders();
-
 		scripting_user_assembly_filepath = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
 		scripting_user_assembly_filepath += "user_scripting.dll";
 
