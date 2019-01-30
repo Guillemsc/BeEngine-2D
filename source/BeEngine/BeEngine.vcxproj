@@ -121,6 +121,7 @@
     <ClInclude Include="Guizmo.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
+    <ClInclude Include="ModuleAssets.h" />
     <ClInclude Include="ModuleGuizmo.h" />
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="PositionGuizmo.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
     <ClCompile Include="InspectorWindow.cpp" />
+    <ClCompile Include="ModuleAssets.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="ModuleGuizmo.cpp" />

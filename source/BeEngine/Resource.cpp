@@ -2,6 +2,7 @@
 #include "App.h"
 #include "ModuleResource.h"
 #include "ModuleJson.h"
+#include "ModuleAssets.h"
 
 Resource::Resource(ResourceType resource_type)
 {
@@ -39,7 +40,7 @@ void Resource::EM_CreateAssetMeta()
 {
 	meta_filepath = asset_filepath + ".meta";
 
-	App->resource->StopRisingWatchingEvents();
+	App->assets->StopRisingWatchingEvents();
 
 	JSON_Doc* meta_doc = App->json->LoadJSON(meta_filepath.c_str());
 
@@ -120,7 +121,7 @@ void Resource::EM_RemoveAsset()
 {
 	if (has_data)
 	{
-		App->resource->StopRisingWatchingEvents();
+		App->assets->StopRisingWatchingEvents();
 
 		if(App->file_system->FileExists(asset_filepath.c_str()))
 			App->file_system->FileDelete(asset_filepath.c_str());
@@ -133,13 +134,13 @@ void Resource::EM_RemoveAsset()
 
 		OnRemoveAsset();
 
-		App->resource->StartRisingWatchingEvents();
+		App->assets->StartRisingWatchingEvents();
 	}
 }
 
 void Resource::EM_RenameAsset(const char * new_name)
 {
-	App->resource->StopRisingWatchingEvents();
+	App->assets->StopRisingWatchingEvents();
 
 	std::string last_name = d_asset_filepath.file_name;
 
@@ -160,12 +161,12 @@ void Resource::EM_RenameAsset(const char * new_name)
 
 	SetAssetFilepath(asset_filepath);
 
-	App->resource->StartRisingWatchingEvents();
+	App->assets->StartRisingWatchingEvents();
 }
 
 void Resource::EM_MoveAsset(const char * new_path)
 {
-	App->resource->StopRisingWatchingEvents();
+	App->assets->StopRisingWatchingEvents();
 
 	std::string last_asset_filepath = asset_filepath;
 
@@ -197,7 +198,7 @@ void Resource::EM_MoveAsset(const char * new_path)
 		}
 	}
 
-	App->resource->StartRisingWatchingEvents();
+	App->assets->StartRisingWatchingEvents();
 }
 
 void Resource::GM_InitResource(const char * _library_filepath)

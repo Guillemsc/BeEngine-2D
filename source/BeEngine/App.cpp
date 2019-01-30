@@ -14,6 +14,7 @@
 #include "ModuleTimeSlicedTask.h"
 #include "ModuleProject.h"
 #include "ModuleResource.h"
+#include "ModuleAssets.h"
 #include "ModuleGameObject.h"
 #include "ModuleGuizmo.h"
 #include "ModuleScripting.h"
@@ -51,6 +52,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	time_sliced = new ModuleTimeSlicedTask();
 	project	    = new ModuleProject();
 	resource	= new ModuleResource();
+	assets		= new ModuleAssets();
 	gameobject  = new ModuleGameObject();
 	guizmo		= new ModuleGuizmo();
 	scripting   = new ModuleScripting();
@@ -75,6 +77,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");
 	AddModule(resource, "Module Resource");
+	AddModule(assets, "Module Assets");
 	AddModule(scripting, "Module Scripting");
 	AddModule(gameobject, "Module GameObject");
 	AddModule(guizmo, "Module Guizmo");

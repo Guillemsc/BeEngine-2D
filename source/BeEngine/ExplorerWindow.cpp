@@ -8,6 +8,7 @@
 #include "ModuleScripting.h"
 #include "ScriptingObjectSolutionManager.h"
 #include "ScriptingObjectCompiler.h"
+#include "ModuleAssets.h"
 
 ExplorerWindow::ExplorerWindow()
 {
@@ -32,7 +33,7 @@ void ExplorerWindow::OnEvent(Event * ev)
 		update_folders = true;
 		update_files = true;
 
-		SetSelectedFolderTree(App->resource->GetAssetsPath().c_str());
+		SetSelectedFolderTree(App->assets->GetAssetsPath().c_str());
 
 		break;
 	default:
@@ -104,7 +105,7 @@ void ExplorerWindow::UpdateFolders()
 {
 	ClearFolders();
 
-	Folder folder_tree = App->file_system->GetFilesAndFoldersTree(App->resource->GetAssetsPath().c_str());
+	Folder folder_tree = App->file_system->GetFilesAndFoldersTree(App->assets->GetAssetsPath().c_str());
 
 	CreateExplorerFolderRecursive(folder_tree, nullptr);
 }
@@ -119,16 +120,16 @@ void ExplorerWindow::UpdateFiles()
 {
 	ClearFiles();
 
-	if (!App->file_system->FolderExists(App->resource->GetCurrentAssetsPath().c_str()))
-		SetSelectedFolderTree(App->resource->GetAssetsPath().c_str());
+	if (!App->file_system->FolderExists(App->assets->GetCurrentAssetsPath().c_str()))
+		SetSelectedFolderTree(App->assets->GetAssetsPath().c_str());
 	
-	std::vector<std::string> selected_folder_files_paths = App->file_system->GetFilesInPath(App->resource->GetCurrentAssetsPath().c_str());
+	std::vector<std::string> selected_folder_files_paths = App->file_system->GetFilesInPath(App->assets->GetCurrentAssetsPath().c_str());
 
 	for (std::vector<std::string>::iterator it = selected_folder_files_paths.begin(); it != selected_folder_files_paths.end(); ++it)
 	{
 		ExplorerFile* ef = new ExplorerFile();
 
-		if (!App->resource->IsMeta((*it).c_str()))
+		if (!App->assets->IsMeta((*it).c_str()))
 		{
 			ef->dfp = App->file_system->DecomposeFilePath((*it).c_str());
 
@@ -273,7 +274,7 @@ void ExplorerWindow::DrawFoldersRecursive(ExplorerFolder* folder)
 
 	bool draw = true;
 
-	if (App->resource->GetAssetsPath().compare(folder->dfp.path) == 0)
+	if (App->assets->GetAssetsPath().compare(folder->dfp.path) == 0)
 	{
 		ImGui::SetNextTreeNodeOpen(true);
 	}
@@ -313,10 +314,10 @@ void ExplorerWindow::SetSelectedFolderTree(const char * path)
 {
 	if (App->file_system->FolderExists(path))
 	{
-		App->resource->SetCurrentAssetsPath(path);
+		App->assets->SetCurrentAssetsPath(path);
 
-		std::string assets_path_parent = App->file_system->FolderParent(App->resource->GetAssetsPath().c_str());
-		files_curr_path = App->file_system->SubstractFolder(App->resource->GetCurrentAssetsPath(), assets_path_parent);
+		std::string assets_path_parent = App->file_system->FolderParent(App->assets->GetAssetsPath().c_str());
+		files_curr_path = App->file_system->SubstractFolder(App->assets->GetCurrentAssetsPath(), assets_path_parent);
 
 		update_files = true;
 	}
@@ -388,7 +389,7 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 {
 	bool folder_is_root = false;
 
-	if (folder->dfp.path.compare(App->resource->GetAssetsPath()) == 0)
+	if (folder->dfp.path.compare(App->assets->GetAssetsPath()) == 0)
 		folder_is_root = true;
 	
 
@@ -408,7 +409,7 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 			{
 				for (std::vector<ExplorerFolder*>::iterator it = selected_folders.begin(); it != selected_folders.end(); ++it)
 				{
-					App->resource->DeleteAssetsFolder((*it)->dfp.path.c_str());
+					App->assets->DeleteAssetsFolder((*it)->dfp.path.c_str());
 				}
 
 				update_folders = true;
@@ -467,7 +468,7 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 
 				if (name.size() > 0)
 				{
-					App->resource->CreateAssetsFolder(selected_folders[0]->dfp.path.c_str(), name_tmp);
+					App->assets->CreateAssetsFolder(selected_folders[0]->dfp.path.c_str(), name_tmp);
 
 					update_folders = true;
 
@@ -521,7 +522,7 @@ void ExplorerWindow::DrawFoldersPopupIntern(ExplorerFolder* folder, bool left_cl
 
 				if (name.size() > 0)
 				{
-					App->resource->RenameAssetsFolder(selected_folders[0]->dfp.path.c_str(), name_tmp);
+					App->assets->RenameAssetsFolder(selected_folders[0]->dfp.path.c_str(), name_tmp);
 
 					update_folders = true;
 
@@ -552,7 +553,7 @@ void ExplorerWindow::FoldersDragAndDrop(ExplorerFolder* folder)
 	// Folder slot become drag target
 	uint drag_drop_flags = ImGuiDragDropFlags_SourceNoDisableHover;
 
-	if (App->resource->GetAssetsPath().compare(folder->dfp.path) != 0)
+	if (App->assets->GetAssetsPath().compare(folder->dfp.path) != 0)
 	{
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
@@ -582,7 +583,7 @@ void ExplorerWindow::FoldersDragAndDrop(ExplorerFolder* folder)
 
 			for (std::vector<ExplorerFolder*>::iterator it = selected_folders.begin(); it != selected_folders.end(); ++it)
 			{
-				bool succes = App->resource->MoveAssetsFolder((*it)->dfp.path.c_str(), folder->dfp.path.c_str());
+				bool succes = App->assets->MoveAssetsFolder((*it)->dfp.path.c_str(), folder->dfp.path.c_str());
 
 				if (succes)
 				{
@@ -606,7 +607,7 @@ void ExplorerWindow::FoldersDragAndDrop(ExplorerFolder* folder)
 
 			for (std::vector<ExplorerFile*>::iterator it = files.begin(); it != files.end(); ++it)
 			{
-				bool succes = App->resource->MoveAsset((*it)->dfp.file_path.c_str(), folder->dfp.path.c_str());
+				bool succes = App->assets->MoveAsset((*it)->dfp.file_path.c_str(), folder->dfp.path.c_str());
 
 				if(succes)
 					update_files = true;
@@ -765,7 +766,7 @@ void ExplorerWindow::DrawFilesPopupIntern(bool left_clicked, bool right_clicked)
 		{
 			for (std::vector<ExplorerFile*>::iterator it = selected.begin(); it != selected.end(); ++it)
 			{
-				App->resource->UnloadAssetFromEngine((*it)->dfp.file_path.c_str());
+				App->assets->UnloadAssetFromEngine((*it)->dfp.file_path.c_str());
 
 				update_files = true;
 			}
@@ -805,7 +806,7 @@ void ExplorerWindow::DrawFilesPopupIntern(bool left_clicked, bool right_clicked)
 		{
 			if (selected.size() > 0)
 			{
-				App->resource->RenameAsset(selected[0]->dfp.file_path.c_str(), name_tmp);
+				App->assets->RenameAsset(selected[0]->dfp.file_path.c_str(), name_tmp);
 				
 				update_files = true;
 			}
@@ -852,7 +853,7 @@ void ExplorerWindow::DrawFilesPopupExtern()
 
 			if (!canceled)
 			{
-				App->resource->LoadFileToEngine(file.c_str());
+				App->assets->LoadFileToEngine(file.c_str());
 			}
 
 			ImGui::CloseCurrentPopup();
@@ -885,7 +886,7 @@ void ExplorerWindow::DrawFilesPopupExtern()
 
 			if (name.size() > 0)
 			{
-				App->resource->CreateScript(App->resource->GetCurrentAssetsPath().c_str(), name_tmp);
+				App->assets->CreateScript(App->assets->GetCurrentAssetsPath().c_str(), name_tmp);
 
 				update_files = true;
 

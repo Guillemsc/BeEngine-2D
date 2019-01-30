@@ -59,6 +59,7 @@ class ResourceScript : public Resource
 {
 	friend class ResourceScriptLoader;
 	friend class ModuleResource;
+	friend class ModuleAssets;
 
 private:
 	void operator delete(void *) {}

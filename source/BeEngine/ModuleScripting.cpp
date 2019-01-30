@@ -11,6 +11,7 @@
 #include "ConsoleWindow.h"
 #include "ModuleResource.h"
 #include "Event.h"
+#include "ModuleAssets.h"
 #include <mono/utils/mono-logger.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/mono-config.h>
@@ -570,7 +571,7 @@ void ModuleScripting::ActuallyCompileScripts()
 			solution_manager->CreateSolutionManagerInstance();
 		}
 
-		App->resource->StartWatchingFolders();
+		App->assets->StartWatchingFolders();
 
 		EventScriptsCompiled* esc = new EventScriptsCompiled(user_code_compiles);
 		App->event->SendEvent(esc);
