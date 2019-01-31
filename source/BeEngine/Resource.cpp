@@ -71,7 +71,7 @@ void Resource::EM_CreateAssetMeta()
 		App->json->UnloadJSON(meta_doc);
 	}
 
-	//App->resource->StartRisingWatchingEvents();
+	App->assets->StartRisingWatchingEvents();
 }
 
 bool Resource::EM_ExistsOnLibrary()
