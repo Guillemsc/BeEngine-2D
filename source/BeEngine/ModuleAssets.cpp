@@ -509,6 +509,8 @@ void ModuleAssets::LoadUserScriptsInfo()
 
 						if (curr_script->inherits_from_beengine_reference)
 						{
+							curr_script->script_class = sc;
+
 							std::map<std::string, MonoType*> fields = sc.GetFields();
 
 							for (std::map<std::string, MonoType*>::iterator it = fields.begin(); it != fields.end(); ++it)

@@ -4,6 +4,7 @@
 #include "Resource.h"
 #include "Globals.h"
 #include <vector>
+#include "ModuleScripting.h"
 
 class ResourceScript;
 class GameObject;
@@ -85,6 +86,7 @@ public:
 	std::vector<ResourceScriptField> GetFields();
 
 	bool GetInheritsFromBeengineReference() const;
+	ScriptingClass GetScriptingClass() const;
 
 private:
 	bool compiles = false;
@@ -94,6 +96,8 @@ private:
 	bool inherits_from_beengine_reference = false;
 
 	std::vector<ResourceScriptField> script_fields;
+
+	ScriptingClass script_class;
 };
 
 #endif // !__RESOURCE_SCRIPT_H__

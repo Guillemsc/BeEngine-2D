@@ -534,6 +534,9 @@
     <ClInclude Include="ModuleAssets.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleState.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -870,6 +873,9 @@
       <Filter>Sources\8. GameObjects ===========</Filter>
     </ClCompile>
     <ClCompile Include="ModuleAssets.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleState.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>

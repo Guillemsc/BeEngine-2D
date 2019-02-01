@@ -6,6 +6,7 @@
 #include "ModuleEvent.h"
 #include "Event.h"
 #include "Functions.h"
+#include "ModuleScripting.h"
 
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
@@ -138,6 +139,114 @@ void ComponentScript::OnParentChanged(GameObject * new_parent)
 void ComponentScript::SetResourceScript(ResourceScript * set)
 {
 	resource_script = set;
+}
+
+void ComponentScript::CreateScriptInstance()
+{
+	if (resource_script != nullptr)
+	{
+		if (resource_script->GetInheritsFromBeengineReference())
+		{
+			if (App->scripting->user_code_assembly != nullptr && App->scripting->scripting_assembly != nullptr)
+			{
+				if (App->scripting->user_code_assembly->GetAssemblyLoaded() && App->scripting->scripting_assembly->GetAssemblyLoaded())
+				{
+					DecomposedFilePath dfp = resource_script->GetDecomposedAssetFilepath();
+
+					ScriptingClass script_class = resource_script->GetScriptingClass();
+
+					script_instance = script_class.CreateInstance();
+
+					if (script_instance != nullptr)
+					{
+						void* args[1];
+						args[0] = owner;
+
+						void* ret_obj = nullptr;
+						if (script_instance->InvokeMonoMethodUnmanaged("InitReference", args, 1, ret_obj))
+						{
+							if (ret_obj == owner)
+							{
+								int i = 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void ComponentScript::DestroyScriptInstance()
+{
+	if (resource_script != nullptr)
+	{
+		if (script_instance != nullptr)
+		{
+			script_instance->CleanUp();
+			RELEASE(script_instance);
+		}
+	}
+}
+
+void ComponentScript::CallAwake()
+{
+	if (resource_script != nullptr)
+	{
+		if (script_instance != nullptr)
+		{
+			MonoObject* ret_obj = nullptr;
+			if (script_instance->InvokeMonoMethod("Awake", nullptr, 1, ret_obj))
+			{
+
+			}
+		}
+	}
+}
+
+void ComponentScript::CallStart()
+{
+	if (resource_script != nullptr)
+	{
+		if (script_instance != nullptr)
+		{
+			MonoObject* ret_obj = nullptr;
+			if (script_instance->InvokeMonoMethod("Start", nullptr, 1, ret_obj))
+			{
+
+			}
+		}
+	}
+}
+
+void ComponentScript::CallUpdate()
+{
+	if (resource_script != nullptr)
+	{
+		if (script_instance != nullptr)
+		{
+			MonoObject* ret_obj = nullptr;
+			if (script_instance->InvokeMonoMethod("Update", nullptr, 1, ret_obj))
+			{
+
+			}
+		}
+	}
+}
+
+void ComponentScript::CallOnDestroy()
+{
+	if (resource_script != nullptr)
+	{
+		if (script_instance != nullptr)
+		{
+			MonoObject* ret_obj = nullptr;
+			if (script_instance->InvokeMonoMethod("OnDestroy", nullptr, 1, ret_obj))
+			{
+
+			}
+		}
+	}
 }
 
 void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)

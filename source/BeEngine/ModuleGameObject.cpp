@@ -2,6 +2,8 @@
 #include "Functions.h"
 #include "ModuleEvent.h"
 #include "Event.h"
+#include "ModuleEvent.h"
+#include "ComponentScript.h"
 
 ModuleGameObject::ModuleGameObject()
 {
@@ -14,6 +16,8 @@ ModuleGameObject::~ModuleGameObject()
 bool ModuleGameObject::Awake()
 {
 	bool ret = true;
+
+	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
 
 	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer");
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
@@ -59,7 +63,22 @@ bool ModuleGameObject::CleanUp()
 
 	DestroyAllGameObjectsNow();
 
+	App->event->UnSuscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
+
 	return ret;
+}
+
+void ModuleGameObject::OnEvent(Event * ev)
+{
+	switch (ev->GetType())
+	{
+	case EventType::EDITOR_GOES_TO_PLAY:
+	{
+		GameObjectsPlay();
+
+		break;
+	}
+	}
 }
 
 GameObject* ModuleGameObject::CreateGameObject()
@@ -343,5 +362,28 @@ void ModuleGameObject::ChangeGameObjectPositionOnParentChildren(GameObject * go,
 			new_pos = parent->childs.size();
 
 		parent->childs.insert(parent->childs.begin() + new_pos, go);
+	}
+}
+
+void ModuleGameObject::GameObjectsPlay()
+{
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		GameObject* curr_go = *it;
+
+		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
+
+		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
+		{
+			GameObjectComponent* curr_component = *co;
+
+			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
+			{
+				ComponentScript* script = (ComponentScript*)curr_component;
+
+				script->DestroyScriptInstance();
+				script->CreateScriptInstance();
+			}
+		}
 	}
 }

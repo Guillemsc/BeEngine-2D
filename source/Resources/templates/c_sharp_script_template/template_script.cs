@@ -4,12 +4,12 @@ using BeEngine;
 
 public class #SCRIPTNAME# : BeEngineReference 
 {
-	void Start () 
+	public override void Start () 
 	{
 		
 	}
 	
-	void Update () 
+	public override void Update () 
 	{
 		
 	}

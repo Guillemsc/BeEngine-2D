@@ -7,21 +7,23 @@ namespace BeEngine
 {
     public class BeEngineReference
     {
-        public IntPtr SetPtr(IntPtr set)
+        public IntPtr InitReference(IntPtr game_object_ptr)
         {
-            ptr = set;
+            this.game_object_ptr = game_object_ptr;
 
-            return set;
+            return game_object_ptr;
         }
 
-        public IntPtr GetPtr()
+        public IntPtr GetGameObjectPtr()
         {
-            return ptr;
+            return game_object_ptr;
         }
 
+        public virtual void Awake() { }
         public virtual void Start() { }
         public virtual void Update() { }
+        public virtual void OnDestroy() { }
 
-        private IntPtr ptr;
+        private IntPtr game_object_ptr;
     }
 }

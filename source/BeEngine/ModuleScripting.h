@@ -195,7 +195,7 @@ private:
 	bool needs_to_compile_user_scripts = false;
 	Timer compile_user_scripts_timer;
 	bool force_compile_scripts = false;
-	bool user_code_compiles = true;
+	bool user_code_compiles = false;
 };
 
 #endif // !__MODULE_SCRIPTING_H__

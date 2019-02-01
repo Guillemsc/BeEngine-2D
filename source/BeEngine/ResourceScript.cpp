@@ -2,7 +2,6 @@
 #include "App.h"
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
-#include "ModuleScripting.h"
 #include "ScriptingObjectCompiler.h"
 #include "ScriptingObjectSolutionManager.h"
 #include "Functions.h"
@@ -126,6 +125,11 @@ std::vector<ResourceScriptField> ResourceScript::GetFields()
 bool ResourceScript::GetInheritsFromBeengineReference() const
 {
 	return inherits_from_beengine_reference;
+}
+
+ScriptingClass ResourceScript::GetScriptingClass() const
+{
+	return script_class;
 }
 
 ResourceScriptField::ResourceScriptField()

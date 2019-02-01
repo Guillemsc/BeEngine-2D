@@ -36,6 +36,10 @@ enum EventType
 
 	PROJECT_SELECTED,
 
+	EDITOR_GOES_TO_PLAY,
+	EDITOR_GOES_TO_IDLE,
+	EDITOR_GOES_TO_PAUSED,
+
 	WATCH_FILE_FOLDER,
 
 	RESOURCE_DESTROYED,
@@ -209,5 +213,31 @@ public:
 private:
 	GameObject* gameobject = nullptr;
 };
+
+class EventEditorGoesToIdle : public Event
+{
+public:
+	EventEditorGoesToIdle() : Event(EventType::EDITOR_GOES_TO_IDLE)
+	{
+	}
+};
+
+class EventEditorGoesToPlay : public Event
+{
+public:
+	EventEditorGoesToPlay() : Event(EventType::EDITOR_GOES_TO_PLAY)
+	{
+
+	}
+};
+
+class EventEditorGoesToPaused : public Event
+{
+public:
+	EventEditorGoesToPaused() : Event(EventType::EDITOR_GOES_TO_PAUSED)
+	{
+	}
+};
+
 
 #endif // !__EVENT_H__

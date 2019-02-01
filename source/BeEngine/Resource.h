@@ -65,7 +65,7 @@ private:
 	virtual void OnRenameAsset(const char* new_name, const char* last_name) = 0;
 	virtual void OnMoveAsset(const char* new_path, const char* last_path) = 0;
 
-private:
+protected:
 	bool has_data = false;
 
 	ResourceType type = ResourceType::RESOURCE_TYPE_UNKWNOWN;

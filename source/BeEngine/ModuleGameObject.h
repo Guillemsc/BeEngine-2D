@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "GameObjectComponent.h"
 
+class Event;
+
 class ModuleGameObject : public Module
 {
 	friend class GameObject;
@@ -22,6 +24,8 @@ public:
 	bool Update();
 	bool PostUpdate();
 	bool CleanUp();
+
+	void OnEvent(Event* ev);
 
 	GameObject* CreateGameObject();
 	void DestroyGameObject(GameObject* go);
@@ -51,6 +55,8 @@ private:
 
 	void ChangeGameObjectPositionOnRootList(GameObject* go, uint new_pos);
 	void ChangeGameObjectPositionOnParentChildren(GameObject* go, uint new_pos);
+
+	void GameObjectsPlay();
 
 private:
 	std::vector<GameObject*> game_objects;

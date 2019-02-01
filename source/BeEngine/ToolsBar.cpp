@@ -2,6 +2,7 @@
 #include "App.h"
 #include "imgui.h"
 #include "ModuleWindow.h"
+#include "ModuleState.h"
 
 ToolsBar::ToolsBar(float2 _margins_left_up)
 {
@@ -30,10 +31,30 @@ void ToolsBar::DrawEditor()
 	ImGui::SetNextWindowPos(ImVec2(tools_bar_pos.x, tools_bar_pos.y));
 	ImGui::SetNextWindowSize(ImVec2(tools_bar_size.x, tools_bar_size.y));
 
+	bool opened = true;
 	if (ImGui::Begin("Tools Bar", &opened, flags))
 	{
+		if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
+		{
+			if(ImGui::Button("Play"))
+			{
+				App->state->SetEditorUpdateState(EditorUpdateState::EDITOR_UPDATE_STATE_PLAY);
+			}
+		}
+		else
+		{
+			if (ImGui::Button("Stop"))
+			{
+				App->state->SetEditorUpdateState(EditorUpdateState::EDITOR_UPDATE_STATE_IDLE);
+			}
 
-		ImGui::Button("Press to die");
+			ImGui::SameLine();
+
+			if (ImGui::Button("Pause"))
+			{
+				App->state->SetEditorUpdateState(EditorUpdateState::EDITOR_UPDATE_STATE_PAUSED);
+			}
+		}
 	}
 
 	ImGui::End();

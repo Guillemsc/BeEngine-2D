@@ -10,6 +10,7 @@ class ResourceScript;
 class Event;
 class ResourceScriptFieldValue;
 class ResourceScriptField;
+class ScriptingClassInstance;
 
 class ComponentScript : public GameObjectComponent
 {
@@ -35,6 +36,14 @@ public:
 
 	void SetResourceScript(ResourceScript* set);
 
+	void CreateScriptInstance();
+	void DestroyScriptInstance();
+
+	void CallAwake();
+	void CallStart();
+	void CallUpdate();
+	void CallOnDestroy();
+
 private:
 	void DrawFieldValue(ResourceScriptFieldValue& field_value);
 
@@ -48,6 +57,7 @@ private:
 
 	std::vector<ResourceScriptFieldValue> fields_values;
 
+	ScriptingClassInstance* script_instance = nullptr;
 };
 
 #endif // !__COMPONENT_SCRIPT_H__

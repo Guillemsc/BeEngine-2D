@@ -508,6 +508,9 @@ void ModuleScripting::CreateBaseDomainAndAssemblys()
 	scripting_assembly = CreateAssembly(scripting_assembly_path.c_str());
 	scripting_internal_assembly = CreateAssembly(scripting_internal_assembly_path.c_str());
 
+	if(user_code_compiles)
+		user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
+
 	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
@@ -598,8 +601,6 @@ void ModuleScripting::ManageScriptsToCompile()
 			{
 				compiler->AddScript((*it).c_str());
 			}
-
-			user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
 
 			solution_manager->CreateSolutionManagerInstance();
 		}

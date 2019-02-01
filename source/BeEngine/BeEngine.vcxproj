@@ -124,6 +124,7 @@
     <ClInclude Include="ModuleAssets.h" />
     <ClInclude Include="ModuleGuizmo.h" />
     <ClInclude Include="ModuleScripting.h" />
+    <ClInclude Include="ModuleState.h" />
     <ClInclude Include="PositionGuizmo.h" />
     <ClInclude Include="QuadRenderer.h" />
     <ClInclude Include="Renderer.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="ModuleGuizmo.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
     <ClCompile Include="ModuleScripting.cpp" />
+    <ClCompile Include="ModuleState.cpp" />
     <ClCompile Include="PositionGuizmo.cpp" />
     <ClCompile Include="ProfilerWindow.cpp" />
     <ClCompile Include="ProgressWindow.cpp" />
