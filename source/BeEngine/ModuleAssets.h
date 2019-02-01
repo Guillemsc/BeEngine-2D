@@ -59,6 +59,8 @@ public:
 
 	// --------------------------
 
+	void ForceUpdateFolders();
+
 	void LoadUserScriptsInfo();
 
 	bool CanLoadFile(const char* filepath);
@@ -87,6 +89,7 @@ private:
 
 	std::vector<std::string> folders_to_update;
 	Timer folders_to_update_timer;
+	bool force_update_folders = false;
 
 	int rising_watching_events_index = 0;
 

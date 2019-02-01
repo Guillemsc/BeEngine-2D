@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GeometryMath.h"
+#include "Timer.h"
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
@@ -150,6 +151,7 @@ public:
 
 	// Compiling
 	void CompileScripts();
+	void ForceCompileScripts();
 	bool GetScriptsCompile() const;
 
 private:
@@ -161,7 +163,7 @@ private:
 
 	void InitScriptingSolution();
 
-	void ActuallyCompileScripts();
+	void ManageScriptsToCompile();
 
 	void UpdateScriptingObjects();
 
@@ -188,9 +190,12 @@ private:
 	std::vector<ScriptingAssembly*> assemblys;
 	std::vector<std::string> base_libs;
 
-	bool needs_to_compile_user_scripts = false;
-	bool user_code_compiles = true;
 	std::string scripting_user_assembly_filepath;
+
+	bool needs_to_compile_user_scripts = false;
+	Timer compile_user_scripts_timer;
+	bool force_compile_scripts = false;
+	bool user_code_compiles = true;
 };
 
 #endif // !__MODULE_SCRIPTING_H__

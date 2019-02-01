@@ -67,6 +67,7 @@ bool ModuleScripting::Awake()
 	INTERNAL_LOG("Init Mono Envirnoment");
 
 	App->event->Suscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+	App->event->Suscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 
 	mono_trace_set_log_handler(MonoLogToLog, this);
 	mono_trace_set_print_handler(MonoInternalWarning);
@@ -83,8 +84,6 @@ bool ModuleScripting::Awake()
 	mono_set_dirs(lib_dir.c_str(), etc_dir.c_str());
 
 	mono_jit_init(App->GetAppName());
-
-	//mono_domain_assembly_open(mono_get_root_domain(), "assembly_base_path\\Dummy.dll");
 
 	CreateBaseDomainAndAssemblys();
 
@@ -104,7 +103,7 @@ bool ModuleScripting::PreUpdate()
 {
 	bool ret = true;
 
-	ActuallyCompileScripts();
+	ManageScriptsToCompile();
 
 	return ret;
 }
@@ -136,6 +135,7 @@ bool ModuleScripting::CleanUp()
 	mono_jit_cleanup(mono_get_root_domain());
 
 	App->event->UnSuscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+	App->event->UnSuscribe(std::bind(&ModuleScripting::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 
 	return ret;
 }
@@ -152,8 +152,20 @@ void ModuleScripting::OnEvent(Event * ev)
 
 		break;
 	}
-	default:
+
+	case EventType::WATCH_FILE_FOLDER:
+	{
+		EventWatchFileFolderChanged* efc = (EventWatchFileFolderChanged*)ev;
+
+		DecomposedFilePath df = efc->GetPath();
+
+		if (df.file_extension_lower_case.compare("cs") == 0)
+		{
+			CompileScripts();
+		}
+
 		break;
+	}
 	}
 }
 
@@ -441,6 +453,13 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 void ModuleScripting::CompileScripts()
 {
 	needs_to_compile_user_scripts = true;
+
+	compile_user_scripts_timer.Start();
+}
+
+void ModuleScripting::ForceCompileScripts()
+{
+	force_compile_scripts = true;
 }
 
 bool ModuleScripting::GetScriptsCompile() const
@@ -454,7 +473,7 @@ void ModuleScripting::LoadDomain()
 	{
 		mono_domain_set(mono_get_root_domain(), false);
 
-		MonoDomain* new_domain = mono_domain_create_appdomain("Asdf", NULL);
+		MonoDomain* new_domain = mono_domain_create_appdomain("BeEngineUserDomain", NULL);
 
 		mono_domain_set(new_domain, false);
 
@@ -532,9 +551,23 @@ void ModuleScripting::InitScriptingSolution()
 	}
 }
 
-void ModuleScripting::ActuallyCompileScripts()
+void ModuleScripting::ManageScriptsToCompile()
 {
-	if (needs_to_compile_user_scripts)
+	bool update = false;
+
+	if (needs_to_compile_user_scripts && compile_user_scripts_timer.ReadSec() > 1.5)
+	{
+		update = true;
+		needs_to_compile_user_scripts = false;
+	}
+
+	if (force_compile_scripts)
+	{
+		update = true;
+		force_compile_scripts = false;
+	}
+
+	if (update)
 	{
 		scripting_user_assembly_filepath = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
 		scripting_user_assembly_filepath += "user_scripting.dll";
@@ -575,9 +608,9 @@ void ModuleScripting::ActuallyCompileScripts()
 
 		EventScriptsCompiled* esc = new EventScriptsCompiled(user_code_compiles);
 		App->event->SendEvent(esc);
+
+		needs_to_compile_user_scripts = false;
 	}
-	
-	needs_to_compile_user_scripts = false;
 }
 
 void ModuleScripting::UpdateScriptingObjects()

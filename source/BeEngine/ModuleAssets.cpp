@@ -110,7 +110,7 @@ void ModuleAssets::OnEvent(Event* ev)
 
 		if (ett->GetTask() == time_sliced_task_loading_resources)
 		{
-			App->scripting->CompileScripts();
+			App->scripting->ForceCompileScripts();
 		}
 
 		break;
@@ -177,6 +177,8 @@ bool ModuleAssets::LoadFileToEngine(const char * filepath)
 			std::string new_path = filepath;
 
 			App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), true, new_path);
+
+			ForceUpdateFolders();
 		}
 	}
 
@@ -474,6 +476,11 @@ bool ModuleAssets::DeleteAssetsFolder(const char * folder)
 	return ret;
 }
 
+void ModuleAssets::ForceUpdateFolders()
+{
+	force_update_folders = true;
+}
+
 void ModuleAssets::LoadUserScriptsInfo()
 {
 	if (App->scripting->user_code_assembly != nullptr && App->scripting->user_code_assembly->GetAssemblyLoaded())
@@ -642,7 +649,19 @@ void ModuleAssets::AddToFoldersToCheck(std::string folder)
 
 void ModuleAssets::ManageFoldersToCheck()
 {
+	bool update = false;
+
 	if (folders_to_update_timer.ReadSec() > 3)
+		update = true;
+
+	if (force_update_folders && folders_to_update.size() > 0)
+	{
+		update = true;
+
+		force_update_folders = false;
+	}
+
+	if (update)
 	{
 		for (std::vector<std::string>::iterator it = folders_to_update.begin(); it != folders_to_update.end(); ++it)
 		{

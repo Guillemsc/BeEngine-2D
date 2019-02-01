@@ -19,6 +19,9 @@ namespace BeEngine
             return ptr;
         }
 
+        public virtual void Start() { }
+        public virtual void Update() { }
+
         private IntPtr ptr;
     }
 }
