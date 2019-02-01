@@ -78,7 +78,7 @@ private:
 	void ManageFoldersToCheck();
 
 	void StartLoadResourcesTimeSlicedTask();
-	void StartManageModifiedAssetsTimeSlicedTask(const std::string& folder, bool check_sub_directories = false);
+	void StartManageModifiedAssetsTimeSlicedTask(const std::string& folder);
 
 private:
 	std::string current_assets_folder;
@@ -97,18 +97,32 @@ private:
 class ManageModifiedAssetsTimeSlicedTask : public TimeSlicedTask
 {
 public:
-	ManageModifiedAssetsTimeSlicedTask(std::string folder_to_check, bool check_sub_directories);
+	enum ManageModifiedAssetsState
+	{
+		CHECK_EXISTING_ASSETS,
+		CHECK_FOR_DELETED_ASSETS,
+	};
+
+	ManageModifiedAssetsTimeSlicedTask(std::string folder_to_check);
 
 	void Start();
 	void Update();
 	void Finish();
 
 private:
+	void CheckExisitingAssets();
+	void CheckForDeletedAssets();
+
+private:
+	ManageModifiedAssetsState state;
+
 	std::string folder_to_check;
-	bool check_sub_directories = false;
 
 	std::vector<std::string> all_asset_files;
 	std::vector<std::string> asset_files_to_check;
+
+	std::vector<Resource*> all_asset_resources;
+	std::vector<Resource*> asset_resources_to_check;
 };
 
 class LoadResourcesTimeSlicedTask : public TimeSlicedTask

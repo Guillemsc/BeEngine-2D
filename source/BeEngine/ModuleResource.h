@@ -36,6 +36,7 @@ public:
 	std::vector<Resource*> GetResourcesFromResourceType(const ResourceType type);
 	std::map<ResourceType, std::vector<Resource*>> GetAllResources() const;
 	std::map<ResourceType, std::string> GetAllResourcesNames() const;
+	std::vector<Resource*> GetResourcesOnAssetsPath(const std::string& path);
 
 	bool EditorResourceSelector(const ResourceType type, Resource *& res, std::string& filter_text);
 
@@ -47,8 +48,6 @@ private:
 	void AddLibraryExtension(const ResourceType& type, const char* extension);
 
 	void AddResourceName(const ResourceType& type, const char* name);
-
-	void CreateLibraryFolders();
 
 	void DestroyAllResources();
 

@@ -661,9 +661,9 @@ void ModuleAssets::StartLoadResourcesTimeSlicedTask()
 	App->time_sliced->StartTimeSlicedTask(time_sliced_task_loading_resources);
 }
 
-void ModuleAssets::StartManageModifiedAssetsTimeSlicedTask(const std::string & folder, bool check_sub_directories)
+void ModuleAssets::StartManageModifiedAssetsTimeSlicedTask(const std::string & folder)
 {
-	time_sliced_task_manage_modified_assets = new ManageModifiedAssetsTimeSlicedTask(folder, check_sub_directories);
+	time_sliced_task_manage_modified_assets = new ManageModifiedAssetsTimeSlicedTask(folder);
 	App->time_sliced->StartTimeSlicedTask(time_sliced_task_manage_modified_assets);
 }
 
@@ -855,33 +855,47 @@ void LoadResourcesTimeSlicedTask::DeleteUnnecessaryFiles()
 	}
 }
 
-ManageModifiedAssetsTimeSlicedTask::ManageModifiedAssetsTimeSlicedTask(std::string folder_to_check, bool check_sub_directories)
+ManageModifiedAssetsTimeSlicedTask::ManageModifiedAssetsTimeSlicedTask(std::string folder_to_check)
 	: TimeSlicedTask(TimeSlicedTaskType::FOCUS, 4)
 {
 	this->folder_to_check = folder_to_check;
-	this->check_sub_directories = check_sub_directories;
 }
 
 void ManageModifiedAssetsTimeSlicedTask::Start()
-{
-	if (App->file_system->FolderExists(folder_to_check))
-	{
-		if (check_sub_directories)
-			all_asset_files = App->file_system->GetFilesInPathAndChilds(folder_to_check);
-		else
-			all_asset_files = App->file_system->GetFilesInPath(folder_to_check);
+{	
+	state = ManageModifiedAssetsState::CHECK_EXISTING_ASSETS;
 
-		asset_files_to_check = all_asset_files;
-	}
-	else
-		FinishTask();
+	all_asset_files = App->file_system->GetFilesInPath(folder_to_check);
+	all_asset_resources = App->resource->GetResourcesOnAssetsPath(folder_to_check);
+
+	asset_files_to_check = all_asset_files;
+	asset_resources_to_check = all_asset_resources;
 }
 
 void ManageModifiedAssetsTimeSlicedTask::Update()
 {
+	switch (state)
+	{
+	case ManageModifiedAssetsTimeSlicedTask::CHECK_EXISTING_ASSETS:
+		CheckExisitingAssets();
+		break;
+	case ManageModifiedAssetsTimeSlicedTask::CHECK_FOR_DELETED_ASSETS:
+		CheckForDeletedAssets();
+		break;
+	}
+}
+
+void ManageModifiedAssetsTimeSlicedTask::Finish()
+{
+}
+
+void ManageModifiedAssetsTimeSlicedTask::CheckExisitingAssets()
+{
 	if (!asset_files_to_check.empty())
 	{
 		float progress = 100 - (100.0f / (float)all_asset_files.size()) * (float)asset_files_to_check.size();
+		progress *= 0.5f;
+		progress += 0;
 		SetPercentageProgress(progress);
 		SetDescription("Updating files");
 
@@ -892,9 +906,36 @@ void ManageModifiedAssetsTimeSlicedTask::Update()
 		asset_files_to_check.erase(asset_files_to_check.begin());
 	}
 	else
-		FinishTask();
+	{
+		state = ManageModifiedAssetsTimeSlicedTask::CHECK_FOR_DELETED_ASSETS;
+	}
 }
 
-void ManageModifiedAssetsTimeSlicedTask::Finish()
+void ManageModifiedAssetsTimeSlicedTask::CheckForDeletedAssets()
 {
+	if (!asset_resources_to_check.empty())
+	{
+		float progress = 100 - (100.0f / (float)all_asset_resources.size()) * (float)asset_resources_to_check.size();
+		progress *= 0.5f;
+		progress += 50;
+		SetPercentageProgress(progress);
+		SetDescription("Checking deleted resources");
+
+		Resource* curr_resource = *asset_resources_to_check.begin();
+
+		std::string asset_path = curr_resource->GetAssetFilepath();
+
+		if (!App->file_system->FileExists(asset_path))
+		{
+			curr_resource->EM_RemoveAsset();
+			App->resource->DestroyResource(curr_resource);
+		}
+
+		asset_resources_to_check.erase(asset_resources_to_check.begin());
+	}
+	else
+	{
+		FinishTask();
+	}
 }
+

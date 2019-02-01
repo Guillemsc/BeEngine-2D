@@ -223,6 +223,24 @@ std::map<ResourceType, std::string> ModuleResource::GetAllResourcesNames() const
 	return resource_names;
 }
 
+std::vector<Resource*> ModuleResource::GetResourcesOnAssetsPath(const std::string& path)
+{
+	std::vector<Resource*> ret;
+
+	for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		for (std::vector<Resource*>::iterator t = (*it).second.begin(); t != (*it).second.end(); ++t)
+		{
+			if ((*t)->d_asset_filepath.path.compare(path) == 0)
+			{
+				ret.push_back(*t);
+			}
+		}
+	}
+
+	return ret;
+}
+
 bool ModuleResource::EditorResourceSelector(const ResourceType type, Resource *& res, std::string& filter_text)
 {
 	bool ret = false;
