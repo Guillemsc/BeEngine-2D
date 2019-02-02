@@ -344,6 +344,15 @@ MonoArray* ModuleScripting::BoxArray(MonoClass * objects_mono_class, const std::
 	return ret;
 }
 
+MonoObject * ModuleScripting::BoxPointer(void * val)
+{
+	MonoObject* ret = nullptr;
+
+	ret = mono_value_box(mono_domain_get(), mono_get_void_class(), val);
+
+	return ret;
+}
+
 std::string ModuleScripting::UnboxString(MonoString* val)
 {
 	std::string ret = "";
@@ -445,6 +454,18 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 	if (val != nullptr)
 	{
 		ret = mono_array_length(val);
+	}
+
+	return ret;
+}
+
+void* ModuleScripting::UnboxPointer(MonoObject * val)
+{
+	void* ret;
+
+	if (val != nullptr)
+	{
+		ret = mono_object_unbox(val);
 	}
 
 	return ret;
@@ -943,6 +964,61 @@ bool ScriptingClassInstance::InvokeMonoMethodUnmanaged(const char * method_name,
 	if (scripting_class.mono_class != nullptr && mono_object != nullptr)
 	{
 		MonoMethod* method = mono_class_get_method_from_name(scripting_class.mono_class, method_name, args_count);
+
+		if (method != nullptr)
+		{
+			MonoObject* exception = nullptr;
+			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+
+			if (exception != nullptr)
+			{
+				mono_print_unhandled_exception(exception);
+			}
+			else
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingClassInstance::InvokeMonoMethodOnParentClass(ScriptingClass parent_mono_class, const char * method_name, void ** args, uint args_count, MonoObject *& return_object)
+{
+	bool ret = false;
+
+	if (parent_mono_class.mono_class != nullptr && mono_object != nullptr)
+	{
+		MonoMethod* method = mono_class_get_method_from_name(parent_mono_class.mono_class, method_name, args_count);
+
+		if (method != nullptr)
+		{
+			MonoObject* exception = nullptr;
+
+			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+
+			if (exception != nullptr)
+			{
+				mono_print_unhandled_exception(exception);
+			}
+			else
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
+}
+
+bool ScriptingClassInstance::InvokeMonoMethodUnmanagedOnParentClass(ScriptingClass parent_mono_class, const char * method_name, void ** args, uint args_count, void *& return_object)
+{
+	bool ret = false;
+
+	if (parent_mono_class.mono_class != nullptr && mono_object != nullptr)
+	{
+		MonoMethod* method = mono_class_get_method_from_name(parent_mono_class.mono_class, method_name, args_count);
 
 		if (method != nullptr)
 		{

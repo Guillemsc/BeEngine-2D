@@ -13,7 +13,7 @@ ScriptingObjectFileWatcher::~ScriptingObjectFileWatcher()
 
 void ScriptingObjectFileWatcher::RegisterInternalCalls()
 {
-	//mono_add_internal_call("BeEngine.Internal.FileWatcher::FileFolderChangedCallback", (const void*)FileFolderChangedCallback);
+	//mono_add_internal_call("BeEngine.Internal.FileWatcher::FileFolderChangedCallback", this->Start);
 }
 
 void ScriptingObjectFileWatcher::Start()

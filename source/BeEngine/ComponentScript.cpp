@@ -7,6 +7,8 @@
 #include "Event.h"
 #include "Functions.h"
 #include "ModuleScripting.h"
+#include "GameObject.h"
+#include "ComponentTransfrom.h"
 
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
@@ -159,15 +161,24 @@ void ComponentScript::CreateScriptInstance()
 
 					if (script_instance != nullptr)
 					{
-						void* args[1];
-						args[0] = owner;
+						owner->transform->SetPosition(float2(3, 0));
 
-						void* ret_obj = nullptr;
-						if (script_instance->InvokeMonoMethodUnmanaged("InitReference", args, 1, ret_obj))
+						void* args[1] = {owner};
+
+						ScriptingClass be_engine_ref_class;
+						if (script_instance->GetClass().GetParentClass(be_engine_ref_class))
 						{
-							if (ret_obj == owner)
+							MonoObject* ret_obj = nullptr;
+							if (script_instance->InvokeMonoMethodOnParentClass(be_engine_ref_class, "InitReference", args, 1, ret_obj))
 							{
-								int i = 0;
+								void* ret_obj_v = mono_object_unbox(ret_obj);
+
+								GameObject* ret_go = (GameObject*)ret_obj_v;
+
+								if (ret_go == owner)
+								{
+									int i = 0;
+								}
 							}
 						}
 					}

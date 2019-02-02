@@ -9,8 +9,6 @@ namespace BeEngine
     {
         public IntPtr InitReference(IntPtr game_object_ptr)
         {
-            this.game_object_ptr = game_object_ptr;
-
             return game_object_ptr;
         }
 

@@ -87,6 +87,9 @@ public:
 	bool InvokeMonoMethod(const char* method_name, void **args, uint args_count, MonoObject*& return_object);
 	bool InvokeMonoMethodUnmanaged(const char* method_name, void **args, uint args_count, void*& return_object);
 
+	bool InvokeMonoMethodOnParentClass(ScriptingClass parent_mono_class, const char* method_name, void **args, uint args_count, MonoObject*& return_object);
+	bool InvokeMonoMethodUnmanagedOnParentClass(ScriptingClass parent_mono_class, const char* method_name, void **args, uint args_count, void*& return_object);
+
 private:
 	ScriptingClass scripting_class;
 	MonoObject* mono_object = nullptr;
@@ -138,6 +141,7 @@ public:
 	MonoObject* BoxFloat(float val);
 	MonoObject* BoxFloat2(const float2& val);
 	MonoArray* BoxArray(MonoClass* objects_mono_class, const std::vector<MonoObject*>& vec);
+	MonoObject* BoxPointer(void* val);
 
 	// Unboxing
 	std::string UnboxString(MonoString* val);
@@ -148,6 +152,7 @@ public:
 	float2 UnboxFloat2(MonoObject* val);
 	std::vector<MonoObject*> UnboxArray(MonoClass* mono_class, MonoArray* val);
 	uint UnboxArrayCount(MonoArray* val);
+	void* UnboxPointer(MonoObject* val);
 
 	// Compiling
 	void CompileScripts();
