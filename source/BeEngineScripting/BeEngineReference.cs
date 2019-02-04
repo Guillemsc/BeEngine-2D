@@ -7,14 +7,11 @@ namespace BeEngine
 {
     public class BeEngineReference
     {
-        public IntPtr InitReference(IntPtr game_object_ptr)
+        public char[] InitReference(char[] game_object_ptr_address)
         {
-            return game_object_ptr;
-        }
+            this.game_object_ptr_address = game_object_ptr_address;
 
-        public IntPtr GetGameObjectPtr()
-        {
-            return game_object_ptr;
+            return game_object_ptr_address;
         }
 
         public virtual void Awake() { }
@@ -22,6 +19,6 @@ namespace BeEngine
         public virtual void Update() { }
         public virtual void OnDestroy() { }
 
-        private IntPtr game_object_ptr;
+        private char[] game_object_ptr_address;
     }
 }

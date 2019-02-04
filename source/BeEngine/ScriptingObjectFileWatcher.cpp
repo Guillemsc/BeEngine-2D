@@ -121,9 +121,7 @@ void ScriptingObjectFileWatcher::GetChangesStack()
 		MonoObject* ret_obj = nullptr;
 		script_file_watcher_instance->InvokeMonoMethod("GetChangesStack", nullptr, 0, ret_obj);
 
-		MonoArray* arr = (MonoArray*)ret_obj;
-
-		std::vector<MonoObject*> unboxed = App->scripting->UnboxArray(mono_get_string_class(), arr);
+		std::vector<MonoObject*> unboxed = App->scripting->UnboxArray((MonoArray*)ret_obj);
 
 		for (std::vector<MonoObject*>::iterator it = unboxed.begin(); it != unboxed.end(); ++it)
 		{

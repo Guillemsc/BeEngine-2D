@@ -163,7 +163,14 @@ void ComponentScript::CreateScriptInstance()
 					{
 						owner->transform->SetPosition(float2(3, 0));
 
-						void* args[1] = {owner};
+						char pointer_data[4];
+						int size = sizeof(owner);
+						memcpy(pointer_data, &owner, sizeof(owner));
+
+						MonoArray* pointer_mono_buffer = App->scripting->BoxBuffer(pointer_data, size);
+						char* ret_buf = App->scripting->UnboxBuffer(pointer_mono_buffer);
+						 
+						void* args[1] = { pointer_mono_buffer };
 
 						ScriptingClass be_engine_ref_class;
 						if (script_instance->GetClass().GetParentClass(be_engine_ref_class))
@@ -171,11 +178,13 @@ void ComponentScript::CreateScriptInstance()
 							MonoObject* ret_obj = nullptr;
 							if (script_instance->InvokeMonoMethodOnParentClass(be_engine_ref_class, "InitReference", args, 1, ret_obj))
 							{
-								void* ret_obj_v = mono_object_unbox(ret_obj);
+								const char* ret_str = App->scripting->UnboxBuffer((MonoArray*)ret_obj);
 
-								GameObject* ret_go = (GameObject*)ret_obj_v;
+								GameObject* new_pointer = nullptr;
 
-								if (ret_go == owner)
+								memcpy(&new_pointer, ret_str, sizeof(new_pointer));
+
+								if (new_pointer == owner)
 								{
 									int i = 0;
 								}

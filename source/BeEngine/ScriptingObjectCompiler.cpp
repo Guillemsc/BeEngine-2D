@@ -130,7 +130,7 @@ std::vector<std::string> ScriptingObjectCompiler::GetScripts()
 		MonoObject* ret_obj = nullptr;
 		if (script_compiler_instance->InvokeMonoMethod("GetScripts", nullptr, 0, ret_obj))
 		{
-			std::vector<MonoObject*> objects_ret = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_obj);
+			std::vector<MonoObject*> objects_ret = App->scripting->UnboxArray((MonoArray*)ret_obj);
 
 			for (std::vector<MonoObject*>::iterator it = objects_ret.begin(); it != objects_ret.end(); ++it)
 			{
@@ -170,7 +170,7 @@ bool ScriptingObjectCompiler::CompileScripts(const std::string& output_assembly_
 			MonoObject* ret_errors = nullptr;
 			if (script_compiler_instance->InvokeMonoMethod("GetCompileErrors", nullptr, 0, ret_errors))
 			{
-				std::vector<MonoObject*> errors_vector = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_errors);
+				std::vector<MonoObject*> errors_vector = App->scripting->UnboxArray((MonoArray*)ret_errors);
 
 				for (std::vector<MonoObject*>::iterator it = errors_vector.begin(); it != errors_vector.end(); ++it)
 				{
@@ -183,7 +183,7 @@ bool ScriptingObjectCompiler::CompileScripts(const std::string& output_assembly_
 			MonoObject* ret_warnings = nullptr;
 			if (script_compiler_instance->InvokeMonoMethod("GetCompileWarnings", nullptr, 0, ret_warnings))
 			{
-				std::vector<MonoObject*> warnings_vector = App->scripting->UnboxArray(mono_get_string_class(), (MonoArray*)ret_warnings);
+				std::vector<MonoObject*> warnings_vector = App->scripting->UnboxArray((MonoArray*)ret_warnings);
 
 				for (std::vector<MonoObject*>::iterator it = warnings_vector.begin(); it != warnings_vector.end(); ++it)
 				{

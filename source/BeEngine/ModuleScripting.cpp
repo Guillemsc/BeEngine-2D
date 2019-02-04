@@ -344,11 +344,25 @@ MonoArray* ModuleScripting::BoxArray(MonoClass * objects_mono_class, const std::
 	return ret;
 }
 
-MonoObject * ModuleScripting::BoxPointer(void * val)
+MonoArray* ModuleScripting::BoxBuffer(const char * buffer, uint buffer_size)
 {
-	MonoObject* ret = nullptr;
+	MonoArray * ret = nullptr;
 
-	ret = mono_value_box(mono_domain_get(), mono_get_void_class(), val);
+	if (buffer != nullptr && buffer_size > 0)
+	{
+		ret = mono_array_new(mono_domain_get(), mono_get_char_class(), buffer_size);
+
+		if (ret != nullptr)
+		{
+			for (int i = 0; i < buffer_size; ++i)
+			{
+				char ch = buffer[i];
+				MonoObject* boxed_char = mono_value_box(mono_domain_get(), mono_get_char_class(), &ch);
+
+				mono_array_set(ret, MonoObject*, i, boxed_char);
+			}
+		}
+	}
 
 	return ret;
 }
@@ -359,7 +373,11 @@ std::string ModuleScripting::UnboxString(MonoString* val)
 
 	if (val != nullptr)
 	{
-		ret = mono_string_to_utf8(val);
+		char* str = mono_string_to_utf8(val);
+
+		ret = str;
+
+		mono_free(str);
 	}
 
 	return ret;
@@ -425,22 +443,19 @@ float2 ModuleScripting::UnboxFloat2(MonoObject * val)
 	return ret;
 }
 
-std::vector<MonoObject*> ModuleScripting::UnboxArray(MonoClass * mono_class, MonoArray * val)
+std::vector<MonoObject*> ModuleScripting::UnboxArray(MonoArray * val)
 {
 	std::vector<MonoObject*> ret;
 
 	if (val != nullptr)
-	{
-		if (mono_class != nullptr && val != nullptr)
+	{		
+		uint count = UnboxArrayCount(val);
+
+		for (int i = 0; i < count; ++i)
 		{
-			uint count = UnboxArrayCount(val);
+			MonoObject* obj = mono_array_get(val, MonoObject*, i);
 
-			for (int i = 0; i < count; ++i)
-			{
-				MonoObject* obj = mono_array_get(val, MonoObject*, i);
-
-				ret.push_back(obj);
-			}
+			ret.push_back(obj);
 		}
 	}
 
@@ -459,13 +474,24 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 	return ret;
 }
 
-void* ModuleScripting::UnboxPointer(MonoObject * val)
+char * ModuleScripting::UnboxBuffer(MonoArray * val)
 {
-	void* ret;
+	char* ret = nullptr;
 
 	if (val != nullptr)
-	{
-		ret = mono_object_unbox(val);
+	{		
+		uint count = UnboxArrayCount(val);
+
+		ret = new char[count];
+
+		for (int i = 0; i < count; ++i)
+		{
+			MonoObject* obj = mono_array_get(val, MonoObject*, i);
+
+			char ch = *(char*)mono_object_unbox(obj);
+
+			ret[i] = ch;
+		}
 	}
 
 	return ret;
