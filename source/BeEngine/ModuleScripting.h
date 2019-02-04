@@ -142,6 +142,7 @@ public:
 	MonoObject* BoxFloat2(const float2& val);
 	MonoArray* BoxArray(MonoClass* objects_mono_class, const std::vector<MonoObject*>& vec);
 	MonoArray* BoxBuffer(const char* buffer, uint buffer_size);
+	MonoArray* BoxPointer(void* pointer);
 
 	// Unboxing
 	std::string UnboxString(MonoString* val);
@@ -152,7 +153,8 @@ public:
 	float2 UnboxFloat2(MonoObject* val);
 	std::vector<MonoObject*> UnboxArray(MonoArray* val);
 	uint UnboxArrayCount(MonoArray* val);
-	char* UnboxBuffer(MonoArray* val);
+	char* UnboxBuffer(MonoArray* val, uint& buffer_size);
+	void* UnboxPointer(MonoArray* val);
 
 	// Compiling
 	void CompileScripts();

@@ -367,6 +367,21 @@ MonoArray* ModuleScripting::BoxBuffer(const char * buffer, uint buffer_size)
 	return ret;
 }
 
+MonoArray * ModuleScripting::BoxPointer(void * pointer)
+{
+	MonoArray* ret = nullptr;
+
+	if (pointer != nullptr)
+	{
+		char pointer_data[4];	
+		memcpy(pointer_data, &pointer, 4);
+
+		ret = App->scripting->BoxBuffer(pointer_data, 4);
+	}
+
+	return ret;
+}
+
 std::string ModuleScripting::UnboxString(MonoString* val)
 {
 	std::string ret = "";
@@ -474,17 +489,17 @@ uint ModuleScripting::UnboxArrayCount(MonoArray * val)
 	return ret;
 }
 
-char * ModuleScripting::UnboxBuffer(MonoArray * val)
+char * ModuleScripting::UnboxBuffer(MonoArray * val, uint& buffer_size)
 {
 	char* ret = nullptr;
 
 	if (val != nullptr)
 	{		
-		uint count = UnboxArrayCount(val);
+		buffer_size = UnboxArrayCount(val);
 
-		ret = new char[count];
+		ret = new char[buffer_size];
 
-		for (int i = 0; i < count; ++i)
+		for (int i = 0; i < buffer_size; ++i)
 		{
 			MonoObject* obj = mono_array_get(val, MonoObject*, i);
 
@@ -492,6 +507,23 @@ char * ModuleScripting::UnboxBuffer(MonoArray * val)
 
 			ret[i] = ch;
 		}
+	}
+
+	return ret;
+}
+
+void * ModuleScripting::UnboxPointer(MonoArray * val)
+{
+	void* ret = nullptr;
+
+	if (val != nullptr)
+	{
+		uint buffer_size = 0;
+		const char* ret_str = App->scripting->UnboxBuffer((MonoArray*)val, buffer_size);
+
+		memcpy(&ret, ret_str, 4);
+
+		RELEASE_ARRAY(ret_str);
 	}
 
 	return ret;
