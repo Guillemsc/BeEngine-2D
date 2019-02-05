@@ -174,6 +174,11 @@ void ModuleScripting::OnEvent(Event * ev)
 	}
 }
 
+bool ModuleScripting::GetUserCodeCompiles() const
+{
+	return user_code_compiles;
+}
+
 ScriptingObject* ModuleScripting::AddScriptingObject(ScriptingObject * obj)
 {
 	ScriptingObject* ret = nullptr;

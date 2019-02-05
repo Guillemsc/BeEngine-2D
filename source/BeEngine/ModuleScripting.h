@@ -120,6 +120,8 @@ public:
 	
 	void OnEvent(Event* ev);
 
+	bool GetUserCodeCompiles() const;
+
 	ScriptingObject* AddScriptingObject(ScriptingObject* obj);
 	void DestroyScriptingObject(ScriptingObject* obj);
 
