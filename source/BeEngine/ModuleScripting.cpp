@@ -241,11 +241,11 @@ ScriptingItem * ModuleScripting::AddScriptingItem(ScriptingItem * it)
 	return ret;
 }
 
-ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path)
+ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path, bool used_to_compìle)
 {
 	ScriptingAssembly* ret = nullptr;
 
-	ret = new ScriptingAssembly(assembly_path);
+	ret = new ScriptingAssembly(assembly_path, used_to_compìle);
 	ret->LoadAssembly();
 
 	if (ret->GetAssemblyLoaded())
@@ -620,7 +620,7 @@ void ModuleScripting::CreateBaseDomainAndAssemblys()
 	scripting_internal_assembly = CreateAssembly(scripting_internal_assembly_path.c_str());
 
 	if(user_code_compiles)
-		user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str());
+		user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str(), false);
 
 	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
@@ -778,9 +778,10 @@ void ModuleScripting::DestroyAllScriptingItems()
 	scripting_items.clear();
 }
 
-ScriptingAssembly::ScriptingAssembly(const char * assembly_path)
+ScriptingAssembly::ScriptingAssembly(const char * assembly_path, bool used_to_compile)
 {
 	path = assembly_path;
+	this->used_to_compile = used_to_compile;
 }
 
 void ScriptingAssembly::CleanUp()
@@ -854,6 +855,11 @@ bool ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_
 	}
 
 	return ret;
+}
+
+bool ScriptingAssembly::GetUsedToCompile() const
+{
+	return used_to_compile;
 }
 
 ScriptingClass::ScriptingClass()

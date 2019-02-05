@@ -26,7 +26,7 @@ class ScriptingAssembly
 	friend class ModuleScripting;
 
 public:
-	ScriptingAssembly(const char* assembly_path);
+	ScriptingAssembly(const char* assembly_path, bool used_to_compile = true);
 
 	void CleanUp();
 
@@ -37,6 +37,8 @@ public:
 	const char* GetPath();
 
 	bool GetClass(const char* class_namepsace, const char* class_name, ScriptingClass& class_returned);
+
+	bool GetUsedToCompile() const;
 
 private:
 	void LoadAssembly();
@@ -49,6 +51,8 @@ private:
 	MonoImage*    image = nullptr;
 
 	std::string path;
+
+	bool used_to_compile = true;
 };
 
 class ScriptingClass
@@ -128,7 +132,7 @@ public:
 	ScriptingItem* AddScriptingItem(ScriptingItem* it);
 
 	// Assembly management
-	ScriptingAssembly* CreateAssembly(const char* assembly_path);
+	ScriptingAssembly* CreateAssembly(const char* assembly_path, bool used_to_compìle = true);
 	std::vector<ScriptingAssembly*> GetScriptingAssemblys() const;
 
 	// C# Base libs

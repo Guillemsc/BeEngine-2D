@@ -27,8 +27,10 @@ namespace BeEngine
 
                     for (int i = 0; i < ref_assemblies.Count; ++i)
                     {
-                        if(File.Exists(ref_assemblies[i]))
+                        if (File.Exists(ref_assemblies[i]))
+                        {
                             compile_parameters.ReferencedAssemblies.Add(ref_assemblies[i]);
+                        }
                     }
 
                     ret = true;

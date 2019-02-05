@@ -33,11 +33,14 @@ void ScriptingObjectCompiler::Start()
 
 				for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
 				{
-					const char* path = (*it)->GetPath();
+					if ((*it)->GetUsedToCompile())
+					{
+						const char* path = (*it)->GetPath();
 
-					MonoObject* obj = (MonoObject*)App->scripting->BoxString(path);
+						MonoObject* obj = (MonoObject*)App->scripting->BoxString(path);
 
-					assembly_objects.push_back(obj);
+						assembly_objects.push_back(obj);
+					}
 				}
 
 				MonoArray* assemblys_array = App->scripting->BoxArray(mono_get_string_class(), assembly_objects);
