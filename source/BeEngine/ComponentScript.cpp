@@ -30,7 +30,7 @@ void ComponentScript::EditorDraw()
 	if (App->resource->EditorResourceSelector(ResourceType::RESOURCE_TYPE_SCRIPT, res, resource_filter))
 	{
 		ResourceScript* resource = (ResourceScript*)res;
-		if (resource != nullptr && !resource->GetInheritsFromBeengineReference())
+		if (resource != nullptr && !resource->GetInheritsFromBeengineScript())
 		{
 			open_error_script = true;
 		}
@@ -88,6 +88,8 @@ void ComponentScript::CleanUp()
 {
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
+
+	DestroyScriptInstance();
 }
 
 void ComponentScript::OnEvent(Event * ev)
@@ -110,7 +112,7 @@ void ComponentScript::OnEvent(Event * ev)
 	{
 		if (resource_script != nullptr)
 		{
-			if (!resource_script->GetInheritsFromBeengineReference())
+			if (!resource_script->GetInheritsFromBeengineScript())
 			{
 				resource_script = nullptr;
 				break;
@@ -147,7 +149,7 @@ void ComponentScript::CreateScriptInstance()
 {
 	if (resource_script != nullptr)
 	{
-		if (resource_script->GetInheritsFromBeengineReference())
+		if (resource_script->GetInheritsFromBeengineScript())
 		{
 			if (App->scripting->user_code_assembly != nullptr && App->scripting->scripting_assembly != nullptr)
 			{
@@ -161,23 +163,24 @@ void ComponentScript::CreateScriptInstance()
 
 					if (script_instance != nullptr)
 					{
-						owner->transform->SetPosition(float2(3, 0));
-						 
-						MonoArray* pointer_arr = App->scripting->BoxPointer(owner);
+						ScriptingClassInstance* class_instance = owner->GetScriptingInstance();
 
-						void* args[1] = { pointer_arr };
-
-						ScriptingClass be_engine_script_class;
-						if (script_instance->GetClass().GetParentClass(be_engine_script_class))
+						if (class_instance != nullptr)
 						{
-							MonoObject* ret_obj = nullptr;
-							if (script_instance->InvokeMonoMethodOnParentClass(be_engine_script_class, "InitReference", args, 1, ret_obj))
-							{
-								GameObject* new_pointer = (GameObject*)App->scripting->UnboxPointer((MonoArray*)ret_obj);
+							MonoObject* owner_object = class_instance->GetMonoObject();
 
-								if (new_pointer == owner)
+							if (owner_object != nullptr)
+							{
+								void* args[1] = { owner_object };
+
+								ScriptingClass be_engine_script_class;
+								if (script_instance->GetClass().GetParentClass(be_engine_script_class))
 								{
-									int i = 0;
+									MonoObject* ret_obj = nullptr;
+									if (script_instance->InvokeMonoMethodOnParentClass(be_engine_script_class, "Init", args, 1, ret_obj))
+									{
+										bool succes = (GameObject*)App->scripting->UnboxBool(ret_obj);
+									}
 								}
 							}
 						}
@@ -207,9 +210,9 @@ void ComponentScript::CallAwake()
 		if (script_instance != nullptr)
 		{
 			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("Awake", nullptr, 1, ret_obj))
+			if (script_instance->InvokeMonoMethod("Awake", nullptr, 0, ret_obj))
 			{
-
+				int i = 0;
 			}
 		}
 	}
@@ -222,7 +225,7 @@ void ComponentScript::CallStart()
 		if (script_instance != nullptr)
 		{
 			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("Start", nullptr, 1, ret_obj))
+			if (script_instance->InvokeMonoMethod("Start", nullptr, 0, ret_obj))
 			{
 
 			}
@@ -237,7 +240,7 @@ void ComponentScript::CallUpdate()
 		if (script_instance != nullptr)
 		{
 			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("Update", nullptr, 1, ret_obj))
+			if (script_instance->InvokeMonoMethod("Update", nullptr, 0, ret_obj))
 			{
 
 			}
@@ -252,7 +255,7 @@ void ComponentScript::CallOnDestroy()
 		if (script_instance != nullptr)
 		{
 			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("OnDestroy", nullptr, 1, ret_obj))
+			if (script_instance->InvokeMonoMethod("OnDestroy", nullptr, 0, ret_obj))
 			{
 
 			}

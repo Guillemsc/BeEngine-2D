@@ -24,6 +24,7 @@ public:
 	void OnEvent(Event* ev);
 
 	void RebuildInstances();
+	void DestroyInstances();
 
 private:
 	void AddScriptingInstance(GameObject* go);

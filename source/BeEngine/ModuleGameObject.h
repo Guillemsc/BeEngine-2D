@@ -57,7 +57,9 @@ private:
 	void ChangeGameObjectPositionOnRootList(GameObject* go, uint new_pos);
 	void ChangeGameObjectPositionOnParentChildren(GameObject* go, uint new_pos);
 
-	void GameObjectsPlay();
+	void UpdateGameObjectsLogic();
+	void GameObjectsLogicPlay();
+	void GameObjectsLogicUpdate();
 
 private:
 	std::vector<GameObject*> game_objects;
@@ -66,6 +68,8 @@ private:
 	std::vector<GameObject*> game_objects_selected;
 
 	std::map<ComponentType, std::string> components_type;
+
+	bool needs_to_start_logic = false;
 };
 
 #endif // !__MODULE_GAME_OBJECT_H__

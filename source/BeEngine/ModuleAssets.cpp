@@ -17,6 +17,7 @@
 #include "ModuleScripting.h"
 #include "ScriptingObjectSolutionManager.h"
 #include "Event.h"
+#include "ModuleState.h"
 
 ModuleAssets::ModuleAssets()
 {
@@ -500,14 +501,14 @@ void ModuleAssets::LoadUserScriptsInfo()
 
 					std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
 
-					curr_script->inherits_from_beengine_reference = false;
+					curr_script->inherits_from_beengine_script = false;
 
 					ScriptingClass sc;
 					if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
 					{
-						curr_script->inherits_from_beengine_reference = sc.GetIsInheritedFrom(be_engine_reference_class);
+						curr_script->inherits_from_beengine_script = sc.GetIsInheritedFrom(be_engine_reference_class);
 
-						if (curr_script->inherits_from_beengine_reference)
+						if (curr_script->inherits_from_beengine_script)
 						{
 							curr_script->script_class = sc;
 
@@ -653,14 +654,17 @@ void ModuleAssets::ManageFoldersToCheck()
 {
 	bool update = false;
 
-	if (folders_to_update_timer.ReadSec() > 3)
-		update = true;
-
-	if (force_update_folders && folders_to_update.size() > 0)
+	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 	{
-		update = true;
+		if (folders_to_update_timer.ReadSec() > 3)
+			update = true;
 
-		force_update_folders = false;
+		if (force_update_folders && folders_to_update.size() > 0)
+		{
+			update = true;
+
+			force_update_folders = false;
+		}
 	}
 
 	if (update)

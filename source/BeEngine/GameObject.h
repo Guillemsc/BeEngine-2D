@@ -50,6 +50,8 @@ public:
 
 	bool GetSelected() const;
 
+	ScriptingClassInstance* GetScriptingInstance() const;
+
 private:
 	void DestroyAllComponentsNow();
 	void ActuallyDestroyComponents();

@@ -14,6 +14,7 @@
 #include "ModuleAssets.h"
 #include "ScriptingItem.h"
 #include "ScriptingItemGameObject.h"
+#include "ModuleState.h"
 #include <mono/utils/mono-logger.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/mono-config.h>
@@ -578,6 +579,11 @@ bool ModuleScripting::GetScriptsCompile() const
 	return user_code_compiles;
 }
 
+bool ModuleScripting::GetNeedsToCompileScripts() const
+{
+	return needs_to_compile_user_scripts;
+}
+
 void ModuleScripting::LoadDomain()
 {
 	if (!has_active_domain)
@@ -671,16 +677,19 @@ void ModuleScripting::ManageScriptsToCompile()
 {
 	bool update = false;
 
-	if (needs_to_compile_user_scripts && compile_user_scripts_timer.ReadSec() > 1.5)
+	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 	{
-		update = true;
-		needs_to_compile_user_scripts = false;
-	}
+		if (needs_to_compile_user_scripts && compile_user_scripts_timer.ReadSec() > 1.5)
+		{
+			update = true;
+			needs_to_compile_user_scripts = false;
+		}
 
-	if (force_compile_scripts)
-	{
-		update = true;
-		force_compile_scripts = false;
+		if (force_compile_scripts)
+		{
+			update = true;
+			force_compile_scripts = false;
+		}
 	}
 
 	if (update)
@@ -1156,4 +1165,9 @@ bool ScriptingClassInstance::InvokeMonoMethodUnmanagedOnParentClass(ScriptingCla
 	}
 
 	return ret;
+}
+
+MonoObject * ScriptingClassInstance::GetMonoObject() const
+{
+	return mono_object;
 }

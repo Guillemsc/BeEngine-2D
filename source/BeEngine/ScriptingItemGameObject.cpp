@@ -28,6 +28,8 @@ void ScriptingItemGameObject::CleanUp()
 {
 	App->event->UnSuscribe(std::bind(&ScriptingItemGameObject::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_CREATED);
 	App->event->UnSuscribe(std::bind(&ScriptingItemGameObject::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_DESTROYED);
+
+	DestroyInstances();
 }
 
 void ScriptingItemGameObject::OnEvent(Event * ev)
@@ -65,6 +67,18 @@ void ScriptingItemGameObject::RebuildInstances()
 
 		RemoveScriptingInstance(curr_go);
 		AddScriptingInstance(curr_go);
+	}
+}
+
+void ScriptingItemGameObject::DestroyInstances()
+{
+	std::vector<GameObject*> go = App->gameobject->GetGameObjects();
+
+	for (std::vector<GameObject*>::iterator it = go.begin(); it != go.end(); ++it)
+	{
+		GameObject* curr_go = (*it);
+
+		RemoveScriptingInstance(curr_go);
 	}
 }
 

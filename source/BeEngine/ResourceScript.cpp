@@ -122,9 +122,9 @@ std::vector<ResourceScriptField> ResourceScript::GetFields()
 	return script_fields;
 }
 
-bool ResourceScript::GetInheritsFromBeengineReference() const
+bool ResourceScript::GetInheritsFromBeengineScript() const
 {
-	return inherits_from_beengine_reference;
+	return inherits_from_beengine_script;
 }
 
 ScriptingClass ResourceScript::GetScriptingClass() const

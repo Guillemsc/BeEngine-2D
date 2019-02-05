@@ -267,6 +267,11 @@ bool GameObject::GetSelected() const
 	return selected;
 }
 
+ScriptingClassInstance * GameObject::GetScriptingInstance() const
+{
+	return scripting_instance;
+}
+
 void GameObject::DestroyAllComponentsNow()
 {
 	std::vector<GameObjectComponent*> all_components = components;

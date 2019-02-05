@@ -5,6 +5,7 @@
 #include "ModuleEvent.h"
 #include "ComponentScript.h"
 #include "Event.h"
+#include "ModuleState.h"
 
 ModuleGameObject::ModuleGameObject()
 {
@@ -46,6 +47,8 @@ bool ModuleGameObject::Update()
 
 	UpdateGameObjects();
 
+	UpdateGameObjectsLogic();
+
 	return ret;
 }
 
@@ -75,7 +78,7 @@ void ModuleGameObject::OnEvent(Event * ev)
 	{
 	case EventType::EDITOR_GOES_TO_PLAY:
 	{
-		GameObjectsPlay();
+		needs_to_start_logic = true;
 
 		break;
 	}
@@ -376,7 +379,21 @@ void ModuleGameObject::ChangeGameObjectPositionOnParentChildren(GameObject * go,
 	}
 }
 
-void ModuleGameObject::GameObjectsPlay()
+void ModuleGameObject::UpdateGameObjectsLogic()
+{
+	if (App->state->GetEditorUpdateState() != EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
+	{
+		if (needs_to_start_logic)
+		{
+			GameObjectsLogicPlay();
+			needs_to_start_logic = false;
+		}
+
+		GameObjectsLogicUpdate();
+	}
+}
+
+void ModuleGameObject::GameObjectsLogicPlay()
 {
 	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
 	{
@@ -394,6 +411,66 @@ void ModuleGameObject::GameObjectsPlay()
 
 				script->DestroyScriptInstance();
 				script->CreateScriptInstance();
+			}
+		}
+	}
+
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		GameObject* curr_go = *it;
+
+		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
+
+		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
+		{
+			GameObjectComponent* curr_component = *co;
+
+			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
+			{
+				ComponentScript* script = (ComponentScript*)curr_component;
+
+				script->CallAwake();
+			}
+		}
+	}
+
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		GameObject* curr_go = *it;
+
+		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
+
+		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
+		{
+			GameObjectComponent* curr_component = *co;
+
+			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
+			{
+				ComponentScript* script = (ComponentScript*)curr_component;
+
+				script->CallStart();
+			}
+		}
+	}
+}
+
+void ModuleGameObject::GameObjectsLogicUpdate()
+{
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		GameObject* curr_go = *it;
+
+		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
+
+		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
+		{
+			GameObjectComponent* curr_component = *co;
+
+			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
+			{
+				ComponentScript* script = (ComponentScript*)curr_component;
+
+				script->CallUpdate();
 			}
 		}
 	}

@@ -85,7 +85,7 @@ public:
 	void AddBoolScriptField(const std::string& field_name);
 	std::vector<ResourceScriptField> GetFields();
 
-	bool GetInheritsFromBeengineReference() const;
+	bool GetInheritsFromBeengineScript() const;
 	ScriptingClass GetScriptingClass() const;
 
 private:
@@ -93,7 +93,7 @@ private:
 
 	std::vector<std::string> compile_errors;
 
-	bool inherits_from_beengine_reference = false;
+	bool inherits_from_beengine_script = false;
 
 	std::vector<ResourceScriptField> script_fields;
 

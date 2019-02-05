@@ -7,6 +7,20 @@ namespace BeEngine
 {
     public class BeEngineScript
     {
+        public bool Init(GameObject go)
+        {
+            bool ret = false;
+
+            if (go != null)
+            {
+                game_object = go;
+
+                ret = true;
+            }
+
+            return ret;
+        }
+
         public virtual void Awake() { }
         public virtual void Start() { }
         public virtual void Update() { }

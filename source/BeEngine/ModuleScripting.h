@@ -96,6 +96,8 @@ public:
 	bool InvokeMonoMethodOnParentClass(ScriptingClass parent_mono_class, const char* method_name, void **args, uint args_count, MonoObject*& return_object);
 	bool InvokeMonoMethodUnmanagedOnParentClass(ScriptingClass parent_mono_class, const char* method_name, void **args, uint args_count, void*& return_object);
 
+	MonoObject* GetMonoObject() const;
+
 private:
 	ScriptingClass scripting_class;
 	MonoObject* mono_object = nullptr;
@@ -170,6 +172,7 @@ public:
 	void CompileScripts();
 	void ForceCompileScripts();
 	bool GetScriptsCompile() const;
+	bool GetNeedsToCompileScripts() const;
 
 private:
 	void LoadDomain();
