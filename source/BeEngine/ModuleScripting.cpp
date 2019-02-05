@@ -12,6 +12,8 @@
 #include "ModuleResource.h"
 #include "Event.h"
 #include "ModuleAssets.h"
+#include "ScriptingItem.h"
+#include "ScriptingItemGameObject.h"
 #include <mono/utils/mono-logger.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/mono-config.h>
@@ -96,6 +98,8 @@ bool ModuleScripting::Start()
 
 	App->editor->console_window->AddConsolePersonalLogs("scripting");
 
+	scripting_game_object = (ScriptingItemGameObject*)AddScriptingItem(new ScriptingItemGameObject());
+
 	return ret;
 }
 
@@ -128,6 +132,7 @@ bool ModuleScripting::CleanUp()
 {
 	bool ret = true;
 
+	DestroyAllScriptingItems();
 	DestroyAllScriptingObjects();
 
 	DestroyAllAssemblys();
@@ -207,6 +212,28 @@ void ModuleScripting::DestroyScriptingObject(ScriptingObject* obj)
 			}
 		}
 	}
+}
+
+ScriptingItem * ModuleScripting::AddScriptingItem(ScriptingItem * it)
+{
+	ScriptingItem* ret = nullptr;
+
+	if (it != nullptr)
+	{
+		if (!it->loaded)
+		{
+			it->RegisterInternalCalls();
+			it->Start();
+
+			scripting_items.push_back(it);
+
+			it->loaded = true;
+		}
+
+		ret = it;
+	}
+
+	return ret;
 }
 
 ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path)
@@ -552,7 +579,7 @@ void ModuleScripting::LoadDomain()
 	{
 		mono_domain_set(mono_get_root_domain(), false);
 
-		MonoDomain* new_domain = mono_domain_create_appdomain("BeEngineUserDomain", NULL);
+		MonoDomain* new_domain = mono_domain_create_appdomain("BeEngineDomain", NULL);
 
 		mono_domain_set(new_domain, false);
 
@@ -593,6 +620,8 @@ void ModuleScripting::CreateBaseDomainAndAssemblys()
 	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
+
+	RebuildScriptingItemInstances();
 }
 
 void ModuleScripting::DestroyBaseDomainAndAssemblys()
@@ -701,6 +730,16 @@ void ModuleScripting::UpdateScriptingObjects()
 	}
 }
 
+void ModuleScripting::RebuildScriptingItemInstances()
+{
+	for(std::vector<ScriptingItem*>::iterator it = scripting_items.begin(); it != scripting_items.end(); ++it)
+	{
+		ScriptingItem* curr_item = (*it);
+
+		curr_item->RebuildInstances();
+	}
+}
+
 void ModuleScripting::DestroyAllAssemblys()
 {
 	for (std::vector<ScriptingAssembly*>::iterator it = assemblys.begin(); it != assemblys.end(); ++it)
@@ -721,6 +760,17 @@ void ModuleScripting::DestroyAllScriptingObjects()
 	}
 
 	scripting_objects.clear();
+}
+
+void ModuleScripting::DestroyAllScriptingItems()
+{
+	for (std::vector<ScriptingItem*>::iterator it = scripting_items.begin(); it != scripting_items.end(); ++it)
+	{
+		(*it)->CleanUp();
+		RELEASE(*it);
+	}
+
+	scripting_items.clear();
 }
 
 ScriptingAssembly::ScriptingAssembly(const char * assembly_path)

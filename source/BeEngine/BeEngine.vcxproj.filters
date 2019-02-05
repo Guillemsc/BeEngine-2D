@@ -88,8 +88,11 @@
     <Filter Include="Sources\4. Rendering =============\DinamicRenderers">
       <UniqueIdentifier>{0f41f913-277f-41fc-9620-72d6b21f30cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\6. Scripting ==============\Core">
+    <Filter Include="Sources\6. Scripting ==============\ScriptingInternal">
       <UniqueIdentifier>{878c19be-270a-4012-883f-14042d699cc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\6. Scripting ==============\Scripting">
+      <UniqueIdentifier>{36a8f41c-76f0-458c-803c-7665d5042c88}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -517,13 +520,13 @@
       <Filter>Sources\8. GameObjects ===========\Components</Filter>
     </ClInclude>
     <ClInclude Include="ScriptingObjectCompiler.h">
-      <Filter>Sources\6. Scripting ==============\Core</Filter>
+      <Filter>Sources\6. Scripting ==============\ScriptingInternal</Filter>
     </ClInclude>
     <ClInclude Include="ScriptingObjectFileWatcher.h">
-      <Filter>Sources\6. Scripting ==============\Core</Filter>
+      <Filter>Sources\6. Scripting ==============\ScriptingInternal</Filter>
     </ClInclude>
     <ClInclude Include="ScriptingObjectSolutionManager.h">
-      <Filter>Sources\6. Scripting ==============\Core</Filter>
+      <Filter>Sources\6. Scripting ==============\ScriptingInternal</Filter>
     </ClInclude>
     <ClInclude Include="ScriptingObject.h">
       <Filter>Sources\6. Scripting ==============</Filter>
@@ -536,6 +539,12 @@
     </ClInclude>
     <ClInclude Include="ModuleState.h">
       <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingItemGameObject.h">
+      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingItem.h">
+      <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -858,13 +867,13 @@
       <Filter>Sources\8. GameObjects ===========\Components</Filter>
     </ClCompile>
     <ClCompile Include="ScriptingObjectCompiler.cpp">
-      <Filter>Sources\6. Scripting ==============\Core</Filter>
+      <Filter>Sources\6. Scripting ==============\ScriptingInternal</Filter>
     </ClCompile>
     <ClCompile Include="ScriptingObjectFileWatcher.cpp">
-      <Filter>Sources\6. Scripting ==============\Core</Filter>
+      <Filter>Sources\6. Scripting ==============\ScriptingInternal</Filter>
     </ClCompile>
     <ClCompile Include="ScriptingObjectSolutionManager.cpp">
-      <Filter>Sources\6. Scripting ==============\Core</Filter>
+      <Filter>Sources\6. Scripting ==============\ScriptingInternal</Filter>
     </ClCompile>
     <ClCompile Include="ScriptingObject.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
@@ -877,6 +886,12 @@
     </ClCompile>
     <ClCompile Include="ModuleState.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingItemGameObject.cpp">
+      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingItem.cpp">
+      <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

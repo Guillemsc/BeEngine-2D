@@ -29,6 +29,7 @@ public:
 
 	GameObject* CreateGameObject();
 	void DestroyGameObject(GameObject* go);
+	std::vector<GameObject*> GetGameObjects();
 
 	GameObject* GetGameObjectByUID(const char* uid);
 

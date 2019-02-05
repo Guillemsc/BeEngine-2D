@@ -8,10 +8,12 @@
 
 class DataAbstraction;
 class ComponentTransform;
+class ScriptingClassInstance;
 
 class GameObject 
 {
 	friend class ModuleGameObject;
+	friend class ScriptingItemGameObject;
 
 private:
 	void operator delete(void *) {}
@@ -67,6 +69,8 @@ private:
 
 	bool selected = false;
 	uint tree_node_order = 0;
+
+	ScriptingClassInstance* scripting_instance = nullptr;
 };
 
 #endif // !__GAME_OBJECT_H__

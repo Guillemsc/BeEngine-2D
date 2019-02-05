@@ -12,12 +12,14 @@
 #include <map>
 
 #include "ScriptingObject.h"
+#include "ScriptingItem.h"
 
 class Event;
 class ScriptingObjectCompiler;
 class ScriptingObjectSolutionManager;
 class ScriptingObjectFileWatcher;
 class ScriptingClass;
+class ScriptingItemGameObject;
 
 class ScriptingAssembly
 {
@@ -121,6 +123,8 @@ public:
 	ScriptingObject* AddScriptingObject(ScriptingObject* obj);
 	void DestroyScriptingObject(ScriptingObject* obj);
 
+	ScriptingItem* AddScriptingItem(ScriptingItem* it);
+
 	// Assembly management
 	ScriptingAssembly* CreateAssembly(const char* assembly_path);
 	std::vector<ScriptingAssembly*> GetScriptingAssemblys() const;
@@ -173,9 +177,11 @@ private:
 	void ManageScriptsToCompile();
 
 	void UpdateScriptingObjects();
+	void RebuildScriptingItemInstances();
 
 	void DestroyAllAssemblys();
 	void DestroyAllScriptingObjects();
+	void DestroyAllScriptingItems();
 
 public:
 	ScriptingAssembly* scripting_assembly = nullptr;
@@ -186,6 +192,8 @@ public:
 	ScriptingObjectSolutionManager* solution_manager = nullptr;
 	ScriptingObjectFileWatcher* file_watcher = nullptr;
 
+	ScriptingItemGameObject* scripting_game_object = nullptr;
+
 private:
 	bool has_active_domain = false;
 
@@ -193,6 +201,7 @@ private:
 	std::string assembly_base_path;
 	
 	std::vector<ScriptingObject*> scripting_objects;
+	std::vector<ScriptingItem*> scripting_items;
 
 	std::vector<ScriptingAssembly*> assemblys;
 	std::vector<std::string> base_libs;

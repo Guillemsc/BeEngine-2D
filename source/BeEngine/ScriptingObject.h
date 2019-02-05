@@ -15,9 +15,9 @@ public:
 	~ScriptingObject();
 	
 	virtual void RegisterInternalCalls() {};
-	virtual void Start(){}
+	virtual void Start(){};
 	virtual void Update() {};
-	virtual void CleanUp(){}
+	virtual void CleanUp(){};
 
 protected:
 	bool loaded = false;

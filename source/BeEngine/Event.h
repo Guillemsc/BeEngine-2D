@@ -47,6 +47,7 @@ enum EventType
 	SCRIPTS_COMPILED,
 	RESOURCE_SCRIPTS_FIELDS_CHANGED,
 
+	GAME_OBJECT_CREATED,
 	GAME_OBJECT_DESTROYED,
 };
 
@@ -195,6 +196,23 @@ public:
 
 private:
 	bool compiles = false;
+};
+
+class EventGameObjectCreated : public Event
+{
+public:
+	EventGameObjectCreated(GameObject* go) : Event(EventType::GAME_OBJECT_CREATED)
+	{
+		gameobject = go;
+	}
+
+	GameObject* GetGameObject()
+	{
+		return gameobject;
+	}
+
+private:
+	GameObject* gameobject = nullptr;
 };
 
 class EventGameObjectDestroyed : public Event

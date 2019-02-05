@@ -4,6 +4,7 @@
 #include "Event.h"
 #include "ModuleEvent.h"
 #include "ComponentScript.h"
+#include "Event.h"
 
 ModuleGameObject::ModuleGameObject()
 {
@@ -96,6 +97,9 @@ GameObject* ModuleGameObject::CreateGameObject()
 
 	ret->Start();
 
+	EventGameObjectCreated* e_go = new EventGameObjectCreated(ret);
+	App->event->SendEvent(e_go);
+
 	return ret;
 }
 
@@ -145,6 +149,11 @@ void ModuleGameObject::DestroyGameObject(GameObject * go)
 			to_check.insert(to_check.begin(), curr->childs.begin(), curr->childs.end());
 		}
 	}
+}
+
+std::vector<GameObject*> ModuleGameObject::GetGameObjects()
+{
+	return game_objects;
 }
 
 GameObject * ModuleGameObject::GetGameObjectByUID(const char * uid)
@@ -267,19 +276,21 @@ void ModuleGameObject::ActuallyDestroyGameObjects()
 {
 	for (std::vector<GameObject*>::iterator it = game_objects_to_destroy.begin(); it != game_objects_to_destroy.end(); ++it)
 	{
-		std::vector<GameObject*> childs = (*it)->childs;
+		GameObject* curr_go = (*it);
+
+		std::vector<GameObject*> childs = curr_go->childs;
 
 		for (std::vector<GameObject*>::iterator ch = childs.begin(); ch != childs.end(); ++ch)
 		{
 			(*ch)->RemoveParent();
 		}
 
-		(*it)->RemoveParent();
+		curr_go->RemoveParent();
 
-		RemoveGameObjectFromRoot((*it));
+		RemoveGameObjectFromRoot(curr_go);
 
-		(*it)->CleanUp();
-		RELEASE(*it);
+		curr_go->CleanUp();
+		RELEASE(curr_go);
 	}
 
 	game_objects_to_destroy.clear();

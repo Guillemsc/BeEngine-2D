@@ -488,7 +488,7 @@ void ModuleAssets::LoadUserScriptsInfo()
 		if (App->scripting->scripting_assembly != nullptr && App->scripting->scripting_assembly->GetAssemblyLoaded())
 		{
 			ScriptingClass be_engine_reference_class;
-			if (App->scripting->scripting_assembly->GetClass("BeEngine", "BeEngineReference", be_engine_reference_class))
+			if (App->scripting->scripting_assembly->GetClass("BeEngine", "BeEngineScript", be_engine_reference_class))
 			{
 				std::vector<Resource*> script_resources = App->resource->GetResourcesFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
 

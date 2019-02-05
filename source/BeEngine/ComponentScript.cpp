@@ -167,11 +167,11 @@ void ComponentScript::CreateScriptInstance()
 
 						void* args[1] = { pointer_arr };
 
-						ScriptingClass be_engine_ref_class;
-						if (script_instance->GetClass().GetParentClass(be_engine_ref_class))
+						ScriptingClass be_engine_script_class;
+						if (script_instance->GetClass().GetParentClass(be_engine_script_class))
 						{
 							MonoObject* ret_obj = nullptr;
-							if (script_instance->InvokeMonoMethodOnParentClass(be_engine_ref_class, "InitReference", args, 1, ret_obj))
+							if (script_instance->InvokeMonoMethodOnParentClass(be_engine_script_class, "InitReference", args, 1, ret_obj))
 							{
 								GameObject* new_pointer = (GameObject*)App->scripting->UnboxPointer((MonoArray*)ret_obj);
 

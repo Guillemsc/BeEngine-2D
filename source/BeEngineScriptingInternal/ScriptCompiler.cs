@@ -85,6 +85,7 @@ namespace BeEngine
 
                         compile_errors.Clear();
                         compile_warnings.Clear();
+
                         for (int i = 0; i < results.Errors.Count; ++i)
                         {
                             CompilerError curr_error = results.Errors[i];
