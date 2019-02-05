@@ -57,6 +57,17 @@ void ScriptingItemGameObject::OnEvent(Event * ev)
 	}
 }
 
+void ScriptingItemGameObject::RebuildClasses()
+{
+	if (App->scripting->scripting_assembly != nullptr && App->scripting->scripting_assembly->GetAssemblyLoaded())
+	{
+		if (App->scripting->scripting_assembly->GetClass("BeEngine", "GameObject", game_object_class))
+		{
+			game_object_class.GetParentClass(beengine_object_class);
+		}
+	}
+}
+
 void ScriptingItemGameObject::RebuildInstances()
 {
 	std::vector<GameObject*> go = App->gameobject->GetGameObjects();
@@ -90,32 +101,24 @@ void ScriptingItemGameObject::AddScriptingInstance(GameObject * go)
 			RemoveScriptingInstance(go);
 
 		if (App->scripting->scripting_assembly != nullptr && App->scripting->scripting_assembly->GetAssemblyLoaded())
-		{
-			ScriptingClass game_object_class;
-			if (App->scripting->scripting_assembly->GetClass("BeEngine", "GameObject", game_object_class))
+		{			
+			ScriptingClassInstance* ins = game_object_class.CreateInstance();
+
+			if (ins != nullptr)
 			{
-				ScriptingClass be_engine_object_class;
-				if (game_object_class.GetParentClass(be_engine_object_class))
+				MonoArray* mono_pointer = App->scripting->BoxPointer(go);
+
+				void* args[1] = { mono_pointer };
+
+				MonoObject* ret_obj = nullptr;
+				if (ins->InvokeMonoMethodOnParentClass(beengine_object_class, "SetPointerRef", args, 1, ret_obj))
 				{
-					ScriptingClassInstance* ins = game_object_class.CreateInstance();
-
-					if (ins != nullptr)
-					{
-						MonoArray* mono_pointer = App->scripting->BoxPointer(go);
-
-						void* args[1] = { mono_pointer };
-
-						MonoObject* ret_obj = nullptr;
-						if (ins->InvokeMonoMethodOnParentClass(be_engine_object_class, "SetPointerRef", args, 1, ret_obj))
-						{
-							go->scripting_instance = ins;
-						}
-						else
-						{
-							ins->CleanUp();
-							RELEASE(ins);
-						}
-					}
+					go->scripting_instance = ins;
+				}
+				else
+				{
+					ins->CleanUp();
+					RELEASE(ins);
 				}
 			}
 		}
@@ -139,21 +142,14 @@ GameObject * ScriptingItemGameObject::GetGameObjectFromMonoObject(MonoObject * m
 	GameObject* ret = nullptr;
 
 	if (mono_object != nullptr)
-	{
-		ScriptingClass game_object_class;
-		if (App->scripting->scripting_assembly->GetClass("BeEngine", "GameObject", game_object_class))
+	{		
+		MonoObject* obj_ret = nullptr;
+		if (App->scripting->InvokeMonoMethod(mono_object, 
+			App->scripting->scripting_game_object->beengine_object_class.GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
 		{
-			ScriptingClass be_engine_object_class;
-			if (game_object_class.GetParentClass(be_engine_object_class))
+			if (obj_ret != nullptr)
 			{
-				MonoObject* obj_ret = nullptr;
-				if (App->scripting->InvokeMonoMethod(mono_object, be_engine_object_class.GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
-				{
-					if (obj_ret != nullptr)
-					{
-						ret = (GameObject*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
-					}
-				}
+				ret = (GameObject*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
 			}
 		}
 	}

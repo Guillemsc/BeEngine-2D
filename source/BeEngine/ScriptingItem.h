@@ -18,6 +18,7 @@ public:
 
 	virtual void Start() {};
 	virtual void RegisterInternalCalls() {};
+	virtual void RebuildClasses() {};
 	virtual void RebuildInstances() {};
 	virtual void CleanUp() {};
 

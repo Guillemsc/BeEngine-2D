@@ -24,6 +24,8 @@ public:
 
 	void OnEvent(Event* ev);
 
+	void RebuildClasses();
+
 	void RebuildInstances();
 	void DestroyInstances();
 
@@ -36,9 +38,11 @@ private:
 	// Internal Calls
 
 	static void SetName(MonoObject* mono_object, MonoString* mono_string);
-	void GetName();
+	static void GetName();
 
 	// --------------
+	ScriptingClass game_object_class;
+	ScriptingClass beengine_object_class;
 
 };
 

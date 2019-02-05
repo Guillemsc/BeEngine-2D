@@ -778,6 +778,7 @@ void ModuleScripting::RebuildScriptingItemInstances()
 	{
 		ScriptingItem* curr_item = (*it);
 
+		curr_item->RebuildClasses();
 		curr_item->RebuildInstances();
 	}
 }
