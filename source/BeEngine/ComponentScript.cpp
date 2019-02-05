@@ -210,10 +210,7 @@ void ComponentScript::CallAwake()
 		if (script_instance != nullptr)
 		{
 			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("Awake", nullptr, 0, ret_obj))
-			{
-				int i = 0;
-			}
+			script_instance->InvokeMonoMethod("Awake", nullptr, 0, ret_obj);
 		}
 	}
 }
@@ -225,10 +222,7 @@ void ComponentScript::CallStart()
 		if (script_instance != nullptr)
 		{
 			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("Start", nullptr, 0, ret_obj))
-			{
-
-			}
+			script_instance->InvokeMonoMethod("Start", nullptr, 0, ret_obj);
 		}
 	}
 }
@@ -240,10 +234,7 @@ void ComponentScript::CallUpdate()
 		if (script_instance != nullptr)
 		{
 			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("Update", nullptr, 0, ret_obj))
-			{
-
-			}
+			script_instance->InvokeMonoMethod("Update", nullptr, 0, ret_obj);
 		}
 	}
 }

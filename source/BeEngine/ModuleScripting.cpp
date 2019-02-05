@@ -637,7 +637,7 @@ void ModuleScripting::UnloadDomain()
 		mono_domain_finalize(domain_to_unload, -1);
 		mono_domain_unload(domain_to_unload);
 
-		mono_gc_collect(mono_gc_max_generation());
+		//mono_gc_collect(mono_gc_max_generation());
 
 		has_active_domain = false;
 	}
@@ -1063,21 +1063,20 @@ ScriptingClassInstance* ScriptingClass::CreateInstance()
 
 		if (obj != nullptr)
 		{
-			id = mono_gchandle_new(obj, true);
-
 			mono_runtime_object_init(obj);
 
-			ret = new ScriptingClassInstance(*this, obj, id);
+			id = mono_gchandle_new(obj, true);
+
+			ret = new ScriptingClassInstance(*this, id);
 		}
 	}
 
 	return ret;
 }
 
-ScriptingClassInstance::ScriptingClassInstance(ScriptingClass _scripting_class, MonoObject * _mono_object, uint _id)
+ScriptingClassInstance::ScriptingClassInstance(ScriptingClass _scripting_class, uint _id)
 {
 	scripting_class = _scripting_class;
-	mono_object = _mono_object;
 	id = _id;
 }
 
@@ -1095,7 +1094,9 @@ bool ScriptingClassInstance::InvokeMonoMethod(const char * method_name, void ** 
 {
 	bool ret = false;
 
-	if (scripting_class.mono_class != nullptr && mono_object != nullptr)
+	MonoObject* mono_obj = GetMonoObject();
+
+	if (scripting_class.mono_class != nullptr && mono_obj != nullptr)
 	{
 		MonoMethod* method = mono_class_get_method_from_name(scripting_class.mono_class, method_name, args_count);
 
@@ -1103,7 +1104,7 @@ bool ScriptingClassInstance::InvokeMonoMethod(const char * method_name, void ** 
 		{
 			MonoObject* exception = nullptr;
 
-			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+			return_object = mono_runtime_invoke(method, mono_obj, args, &exception);
 
 			if (exception != nullptr)
 			{
@@ -1123,14 +1124,16 @@ bool ScriptingClassInstance::InvokeMonoMethodUnmanaged(const char * method_name,
 {
 	bool ret = false;
 
-	if (scripting_class.mono_class != nullptr && mono_object != nullptr)
+	MonoObject* mono_obj = GetMonoObject();
+
+	if (scripting_class.mono_class != nullptr && mono_obj != nullptr)
 	{
 		MonoMethod* method = mono_class_get_method_from_name(scripting_class.mono_class, method_name, args_count);
 
 		if (method != nullptr)
 		{
 			MonoObject* exception = nullptr;
-			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+			return_object = mono_runtime_invoke(method, mono_obj, args, &exception);
 
 			if (exception != nullptr)
 			{
@@ -1150,7 +1153,9 @@ bool ScriptingClassInstance::InvokeMonoMethodOnParentClass(ScriptingClass parent
 {
 	bool ret = false;
 
-	if (parent_mono_class.mono_class != nullptr && mono_object != nullptr)
+	MonoObject* mono_obj = GetMonoObject();
+
+	if (parent_mono_class.mono_class != nullptr && mono_obj != nullptr)
 	{
 		MonoMethod* method = mono_class_get_method_from_name(parent_mono_class.mono_class, method_name, args_count);
 
@@ -1158,7 +1163,7 @@ bool ScriptingClassInstance::InvokeMonoMethodOnParentClass(ScriptingClass parent
 		{
 			MonoObject* exception = nullptr;
 
-			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+			return_object = mono_runtime_invoke(method, mono_obj, args, &exception);
 
 			if (exception != nullptr)
 			{
@@ -1178,14 +1183,16 @@ bool ScriptingClassInstance::InvokeMonoMethodUnmanagedOnParentClass(ScriptingCla
 {
 	bool ret = false;
 
-	if (parent_mono_class.mono_class != nullptr && mono_object != nullptr)
+	MonoObject* mono_obj = GetMonoObject();
+
+	if (parent_mono_class.mono_class != nullptr && mono_obj != nullptr)
 	{
 		MonoMethod* method = mono_class_get_method_from_name(parent_mono_class.mono_class, method_name, args_count);
 
 		if (method != nullptr)
 		{
 			MonoObject* exception = nullptr;
-			return_object = mono_runtime_invoke(method, mono_object, args, &exception);
+			return_object = mono_runtime_invoke(method, mono_obj, args, &exception);
 
 			if (exception != nullptr)
 			{
@@ -1203,5 +1210,5 @@ bool ScriptingClassInstance::InvokeMonoMethodUnmanagedOnParentClass(ScriptingCla
 
 MonoObject * ScriptingClassInstance::GetMonoObject() const
 {
-	return mono_object;
+	return mono_gchandle_get_target(id);
 }

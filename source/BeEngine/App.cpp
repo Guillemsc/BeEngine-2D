@@ -83,6 +83,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(scripting, "Module Scripting");
 	AddModule(gameobject, "Module GameObject");
 	AddModule(guizmo, "Module Guizmo");
+	AddModule(state, "Module State");
 }
 
 Application::~Application()

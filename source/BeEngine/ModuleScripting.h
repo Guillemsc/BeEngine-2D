@@ -85,7 +85,7 @@ class ScriptingClassInstance
 	friend class ScriptingClass;
 
 public:
-	ScriptingClassInstance(ScriptingClass sci, MonoObject* mono_objec, uint id);
+	ScriptingClassInstance(ScriptingClass sci, uint id);
 
 	void CleanUp();
 
@@ -101,7 +101,6 @@ public:
 
 private:
 	ScriptingClass scripting_class;
-	MonoObject* mono_object = nullptr;
 	uint id = 0;
 };
 

@@ -82,6 +82,13 @@ void ModuleGameObject::OnEvent(Event * ev)
 
 		break;
 	}
+
+	case EventType::EDITOR_GOES_TO_IDLE:
+	{
+		needs_to_stop_logic = true;
+
+		break;
+	}
 	}
 }
 
@@ -385,15 +392,21 @@ void ModuleGameObject::UpdateGameObjectsLogic()
 	{
 		if (needs_to_start_logic)
 		{
-			GameObjectsLogicPlay();
+			GameObjectsLogicStart();
 			needs_to_start_logic = false;
 		}
 
 		GameObjectsLogicUpdate();
+
+		if (needs_to_stop_logic)
+		{
+			GameObjectsLogicStop();
+			needs_to_stop_logic = false;
+		}
 	}
 }
 
-void ModuleGameObject::GameObjectsLogicPlay()
+void ModuleGameObject::GameObjectsLogicStart()
 {
 	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
 	{
@@ -471,6 +484,28 @@ void ModuleGameObject::GameObjectsLogicUpdate()
 				ComponentScript* script = (ComponentScript*)curr_component;
 
 				script->CallUpdate();
+			}
+		}
+	}
+}
+
+void ModuleGameObject::GameObjectsLogicStop()
+{
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	{
+		GameObject* curr_go = *it;
+
+		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
+
+		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
+		{
+			GameObjectComponent* curr_component = *co;
+
+			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
+			{
+				ComponentScript* script = (ComponentScript*)curr_component;
+
+				script->DestroyScriptInstance();
 			}
 		}
 	}

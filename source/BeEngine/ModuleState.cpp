@@ -1,6 +1,8 @@
 #include "ModuleState.h"
 #include "Event.h"
 #include "ModuleEvent.h"
+#include "ModuleScripting.h"
+#include "ModuleAssets.h"
 
 ModuleState::ModuleState() : Module()
 {
@@ -17,6 +19,15 @@ bool ModuleState::Awake()
 	return ret;
 }
 
+bool ModuleState::PreUpdate()
+{
+	bool ret = true;
+
+	ActuallySetEditorState();
+
+	return ret;
+}
+
 bool ModuleState::CleanUp()
 {
 	bool ret = true;
@@ -28,33 +39,53 @@ void ModuleState::SetEditorUpdateState(EditorUpdateState state)
 {
 	if (editor_state != state)
 	{
-		editor_state = state;
+		editor_state_to_set = state;
 
-		switch (editor_state)
-		{
-		case EDITOR_UPDATE_STATE_IDLE:
-		{
-			EventEditorGoesToIdle* egi = new EventEditorGoesToIdle();
-			App->event->SendEvent(egi);
-			break;
-		}
-		case EDITOR_UPDATE_STATE_PLAY:
-		{
-			EventEditorGoesToPlay* egp = new EventEditorGoesToPlay();
-			App->event->SendEvent(egp);
-			break;
-		}
-		case EDITOR_UPDATE_STATE_PAUSED:
-		{
-			EventEditorGoesToPaused* egp = new EventEditorGoesToPaused();
-			App->event->SendEvent(egp);
-			break;
-		}
-		}
+		needs_to_change_state = true;
 	}
 }
 
 EditorUpdateState ModuleState::GetEditorUpdateState() const
 {
 	return editor_state;
+}
+
+void ModuleState::ActuallySetEditorState()
+{
+	bool can_update = true;
+
+	if (App->scripting->GetNeedsToCompileScripts())
+		can_update = false;
+
+	if (can_update)
+	{
+		if (needs_to_change_state)
+		{
+			needs_to_change_state = false;
+
+			editor_state = editor_state_to_set;
+
+			switch (editor_state_to_set)
+			{
+			case EDITOR_UPDATE_STATE_IDLE:
+			{
+				EventEditorGoesToIdle* egi = new EventEditorGoesToIdle();
+				App->event->SendEvent(egi);
+				break;
+			}
+			case EDITOR_UPDATE_STATE_PLAY:
+			{
+				EventEditorGoesToPlay* egp = new EventEditorGoesToPlay();
+				App->event->SendEvent(egp);
+				break;
+			}
+			case EDITOR_UPDATE_STATE_PAUSED:
+			{
+				EventEditorGoesToPaused* egp = new EventEditorGoesToPaused();
+				App->event->SendEvent(egp);
+				break;
+			}
+			}
+		}
+	}
 }
