@@ -562,6 +562,34 @@ void * ModuleScripting::UnboxPointer(MonoArray * val)
 	return ret;
 }
 
+bool ModuleScripting::InvokeMonoMethod(MonoObject * mono_object_ins, MonoClass * mono_class, const char * method_name, void ** args, uint args_count, MonoObject *& return_object)
+{
+	bool ret = false;
+
+	if (mono_class != nullptr && mono_object_ins != nullptr)
+	{
+		MonoMethod* method = mono_class_get_method_from_name(mono_class, method_name, args_count);
+
+		if (method != nullptr)
+		{
+			MonoObject* exception = nullptr;
+
+			return_object = mono_runtime_invoke(method, mono_object_ins, args, &exception);
+
+			if (exception != nullptr)
+			{
+				mono_print_unhandled_exception(exception);
+			}
+			else
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
+}
+
 void ModuleScripting::CompileScripts()
 {
 	needs_to_compile_user_scripts = true;
@@ -898,6 +926,11 @@ std::string ScriptingClass::GetName() const
 		ret = mono_class_get_name(mono_class);
 
 	return ret;
+}
+
+MonoClass * ScriptingClass::GetMonoClass() const
+{
+	return mono_class;
 }
 
 bool ScriptingClass::GetParentClass(ScriptingClass & returned_parent_class)

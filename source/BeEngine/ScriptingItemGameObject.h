@@ -2,6 +2,7 @@
 #define __SCRIPTING_ITEM_GAME_OBJECT_H__
 
 #include "ScriptingItem.h"
+#include "ModuleScripting.h"
 
 class GameObject;
 class Event;
@@ -29,6 +30,16 @@ public:
 private:
 	void AddScriptingInstance(GameObject* go);
 	void RemoveScriptingInstance(GameObject* go);
+
+	static GameObject* GetGameObjectFromMonoObject(MonoObject* mono_object);
+
+	// Internal Calls
+
+	static void SetName(MonoObject* mono_object, MonoString* mono_string);
+	void GetName();
+
+	// --------------
+
 };
 
 #endif // !__SCRIPTING_ITEM_GAME_OBJECT_H__

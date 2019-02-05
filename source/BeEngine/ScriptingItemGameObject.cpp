@@ -1,6 +1,5 @@
 #include "ScriptingItemGameObject.h"
 #include "App.h"
-#include "ModuleScripting.h"
 #include "GameObject.h"
 #include "ModuleGameObject.h"
 #include "App.h"
@@ -22,6 +21,7 @@ void ScriptingItemGameObject::Start()
 
 void ScriptingItemGameObject::RegisterInternalCalls()
 {
+	mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)this->SetName);
 }
 
 void ScriptingItemGameObject::CleanUp()
@@ -132,4 +132,47 @@ void ScriptingItemGameObject::RemoveScriptingInstance(GameObject * go)
 			RELEASE(go->scripting_instance);
 		}
 	}
+}
+
+GameObject * ScriptingItemGameObject::GetGameObjectFromMonoObject(MonoObject * mono_object)
+{
+	GameObject* ret = nullptr;
+
+	if (mono_object != nullptr)
+	{
+		ScriptingClass game_object_class;
+		if (App->scripting->scripting_assembly->GetClass("BeEngine", "GameObject", game_object_class))
+		{
+			ScriptingClass be_engine_object_class;
+			if (game_object_class.GetParentClass(be_engine_object_class))
+			{
+				MonoObject* obj_ret = nullptr;
+				if (App->scripting->InvokeMonoMethod(mono_object, be_engine_object_class.GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
+				{
+					if (obj_ret != nullptr)
+					{
+						ret = (GameObject*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+void ScriptingItemGameObject::SetName(MonoObject * mono_object, MonoString * mono_string)
+{
+	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+
+	if (go != nullptr)
+	{
+		std::string new_name = App->scripting->UnboxString(mono_string);
+
+		go->SetName(new_name.c_str());
+	}
+}
+
+void ScriptingItemGameObject::GetName()
+{
 }

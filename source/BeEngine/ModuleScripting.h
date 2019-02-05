@@ -65,6 +65,7 @@ public:
 
 	std::string GetNamespace() const;
 	std::string GetName() const;
+	MonoClass* GetMonoClass() const;
 
 	bool GetParentClass(ScriptingClass& returned_parent_class);
 	bool GetIsInheritedFrom(const ScriptingClass& class_parent);
@@ -167,6 +168,9 @@ public:
 	uint UnboxArrayCount(MonoArray* val);
 	char* UnboxBuffer(MonoArray* val, uint& buffer_size);
 	void* UnboxPointer(MonoArray* val);
+
+	bool InvokeMonoMethod(MonoObject* mono_object_ins, MonoClass* mono_class, const char* method_name,
+		void **args, uint args_count, MonoObject*& return_object);
 
 	// Compiling
 	void CompileScripts();

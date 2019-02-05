@@ -4,5 +4,10 @@
         <name>BeEngineScripting</name>
     </assembly>
     <members>
+        <member name="P:BeEngine.GameObject.Name">
+            <summary>
+              <para>Sets or gets the GameObject name</para>
+            </summary>
+        </member>
     </members>
 </doc>
