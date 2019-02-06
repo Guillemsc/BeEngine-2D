@@ -58,7 +58,7 @@ void ComponentScript::EditorDraw()
 		ImGui::Separator();
 		ImGui::Text("Check that the script class has the same");
 		ImGui::Text("name as the script file. Also, the class");
-		ImGui::Text("needs to derive from BeEngineReference.");
+		ImGui::Text("needs to derive from BeEngineScript.");
 
 		ImGui::Spacing();
 		if (ImGui::Button("Ok", ImVec2(230, 0)))

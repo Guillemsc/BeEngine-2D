@@ -58,15 +58,6 @@ void HierarchyWindow::DrawMenuBar()
 			App->gameobject->AddGameObjectToSelected(obj);
 		}
 
-		if (ImGui::Button("DebugGameObjects"))
-		{
-			for(int i = 0; i < 5; ++i)
-			{
-				GameObject* obj = App->gameobject->CreateGameObject();
-				obj->CreateComponent(ComponentType::COMPONENT_TYPE_SCRIPT);
-			}
-		}
-
 		ImGui::EndMenuBar();
 	}
 }

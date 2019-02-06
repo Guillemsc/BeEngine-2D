@@ -7,7 +7,7 @@ namespace BeEngine
 {
     public class BeEngineScript
     {
-        public bool Init(GameObject go)
+        private bool Init(GameObject go)
         {
             bool ret = false;
 
