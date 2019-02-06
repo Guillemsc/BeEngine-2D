@@ -5,6 +5,7 @@
 #include "ComponentSpriteRenderer.h"
 #include "ComponentScript.h"
 #include "ModuleResource.h"
+#include "ComponentCamera.h"
 
 GameObject::GameObject(std::string _uid)
 {
@@ -180,6 +181,9 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 		break;
 	case ComponentType::COMPONENT_TYPE_SCRIPT:
 		ret = new ComponentScript();
+		break;
+	case ComponentType::COMPONENT_TYPE_CAMERA:
+		ret = new ComponentCamera();
 		break;
 	default:
 		break;

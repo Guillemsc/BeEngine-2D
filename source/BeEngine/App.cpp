@@ -19,6 +19,7 @@
 #include "ModuleGuizmo.h"
 #include "ModuleScripting.h"
 #include "ModuleState.h"
+#include "ModuleSceneRenderer.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -38,26 +39,27 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	CreateProfiles();
 
 	// Create modules
-	json        = new ModuleJson();
-	window      = new ModuleWindow();
-	input       = new ModuleInput();
-	audio       = new ModuleAudio();
-	renderer    = new ModuleRenderer();
-	camera      = new ModuleCamera();
-	shader      = new ModuleShader();
-	editor      = new ModuleEditor();
-	event       = new ModuleEvent();
-	file_system = new FileSystem();
-	action      = new ModuleAction();
-	thread      = new ModuleThreadTask();
-	time_sliced = new ModuleTimeSlicedTask();
-	project	    = new ModuleProject();
-	resource	= new ModuleResource();
-	assets		= new ModuleAssets();
-	gameobject  = new ModuleGameObject();
-	guizmo		= new ModuleGuizmo();
-	scripting   = new ModuleScripting();
-	state		= new ModuleState();
+	json           = new ModuleJson();
+	window         = new ModuleWindow();
+	input          = new ModuleInput();
+	audio          = new ModuleAudio();
+	renderer       = new ModuleRenderer();
+	scene_renderer = new ModuleSceneRenderer();
+	camera         = new ModuleCamera();
+	shader         = new ModuleShader();
+	editor         = new ModuleEditor();
+	event          = new ModuleEvent();
+	file_system    = new FileSystem();
+	action         = new ModuleAction();
+	thread         = new ModuleThreadTask();
+	time_sliced    = new ModuleTimeSlicedTask();
+	project	       = new ModuleProject();
+	resource	   = new ModuleResource();
+	assets		   = new ModuleAssets();
+	gameobject     = new ModuleGameObject();
+	guizmo		   = new ModuleGuizmo();
+	scripting      = new ModuleScripting();
+	state		   = new ModuleState();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -75,6 +77,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(input, "Module Input");
 	AddModule(audio, "Module Audio");
 	AddModule(renderer, "Module Renderer");
+	AddModule(scene_renderer, "Module Renderer");
 	AddModule(editor, "Module Editor");
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");

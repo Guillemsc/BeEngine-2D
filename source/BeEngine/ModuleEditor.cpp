@@ -20,6 +20,7 @@
 #include "ConsoleWindow.h"
 #include "BottomBar.h"
 #include "imgui_docking.h"
+#include "GameWindow.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -50,6 +51,7 @@ bool ModuleEditor::Awake()
 	bottom_bar = (BottomBar*)AddEditorElement(new BottomBar(30), true);
 
 	scene_window = (SceneWindow*)AddEditorWindow("Scene", new SceneWindow());
+	game_window = (GameWindow*)AddEditorWindow("Game", new GameWindow());
 	AddEditorWindow("Profiler", new ProfilerWindow());
 	AddEditorWindow("Resources", new ResourcesWindow());
 	AddEditorWindow("Hierarchy", new HierarchyWindow());

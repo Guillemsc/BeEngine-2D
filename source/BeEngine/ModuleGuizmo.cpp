@@ -2,7 +2,7 @@
 #include "App.h"
 #include "ModuleCamera.h"
 #include "PositionGuizmo.h"
-#include "ModuleRenderer.h"
+#include "ModuleSceneRenderer.h"
 #include "QuadRenderer.h"
 #include "ModuleInput.h"
 #include "ModuleEditor.h"
@@ -122,7 +122,7 @@ void ModuleGuizmo::RenderGuizmos()
 				GuizmoHandler* handler = (*it)->GetHandler(i);
 
 				if (render_handlers)
-					App->renderer->quad_renderer->DrawQuad(handler->GetPos(), handler->GetSize(), float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
+					App->scene_renderer->quad_renderer->DrawQuad(handler->GetPos(), handler->GetSize(), float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
 
 				LineSegment ls = App->camera->GetEditorCamera()->ShootRay(App->editor->scene_window->GetSceneRect(), App->input->GetMouse());
 

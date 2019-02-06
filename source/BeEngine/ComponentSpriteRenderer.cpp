@@ -6,6 +6,7 @@
 #include "ModuleResource.h"
 #include "imgui.h"
 #include "ModuleEvent.h"
+#include "ModuleSceneRenderer.h"
 
 ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::COMPONENT_TYPE_SPRITE_RENDERER,
 	ComponentGroup::RENDERING, true)
@@ -39,12 +40,12 @@ void ComponentSpriteRenderer::Start()
 {
 	App->event->Suscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
-	App->renderer->static_sprite_renderer->AddSpriteRenderer(this);
+	App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
 }
 
 void ComponentSpriteRenderer::CleanUp()
 {
-	App->renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
+	App->scene_renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
 
 	App->event->UnSuscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }

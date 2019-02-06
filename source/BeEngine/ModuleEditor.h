@@ -17,6 +17,7 @@ class ExplorerWindow;
 class InspectorWindow;
 class ConsoleWindow;
 class BottomBar;
+class GameWindow;
 
 class EditorWindow
 {
@@ -144,6 +145,7 @@ public:
 	BottomBar*		 bottom_bar = nullptr;
 
 	SceneWindow*     scene_window = nullptr;
+	GameWindow*	     game_window = nullptr;
 	InspectorWindow* inspector_window = nullptr;
 	ExplorerWindow*  explorer_window = nullptr;
 	ConsoleWindow*	 console_window = nullptr;

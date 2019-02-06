@@ -13,6 +13,7 @@ enum ComponentType
 	COMPONENT_TYPE_TRANSFORM,
 	COMPONENT_TYPE_SPRITE_RENDERER,
 	COMPONENT_TYPE_SCRIPT,
+	COMPONENT_TYPE_CAMERA,
 };
 
 enum ComponentGroup
@@ -20,6 +21,7 @@ enum ComponentGroup
 	TRANSFORMATIONS,
 	RENDERING,
 	SCRIPTING,
+	CAMERA,
 };
 
 class GameObjectComponent
@@ -38,7 +40,9 @@ public:
 	virtual void OnLoadAbstraction(const DataAbstraction& abs) {};
 
 	virtual void Start() {};
+	virtual void Update() {};
 	virtual void CleanUp() {};
+
 
 	virtual void OnChildAdded(GameObject* child) {};
 	virtual void OnChildRemoved(GameObject* child) {};

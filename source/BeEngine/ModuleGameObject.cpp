@@ -23,6 +23,7 @@ bool ModuleGameObject::Awake()
 
 	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer");
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
+	AddComponentType(ComponentType::COMPONENT_TYPE_CAMERA, "Camera");
 
 	return ret;
 }
@@ -261,7 +262,16 @@ void ModuleGameObject::UpdateGameObjects()
 {
 	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
 	{
-		(*it)->Update();
+		GameObject* curr_go = (*it);
+
+		curr_go->Update();
+
+		for (std::vector<GameObjectComponent*>::iterator co = curr_go->components.begin(); co != curr_go->components.end(); ++co)
+		{
+			GameObjectComponent* curr_component = *co;
+
+			curr_component->Update();
+		}
 	}
 
 	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)

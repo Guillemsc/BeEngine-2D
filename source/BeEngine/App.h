@@ -12,6 +12,7 @@ class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
 class ModuleRenderer;
+class ModuleSceneRenderer;
 class ModuleCamera;
 class ModuleShader;
 class ModuleEditor;
@@ -89,6 +90,7 @@ public:
 	ModuleInput*          input = nullptr;
 	ModuleAudio*          audio = nullptr;
 	ModuleRenderer*       renderer = nullptr;
+	ModuleSceneRenderer*  scene_renderer = nullptr;
 	ModuleCamera*         camera = nullptr;
 	ModuleShader*	      shader = nullptr;
 	ModuleEditor*	      editor = nullptr;

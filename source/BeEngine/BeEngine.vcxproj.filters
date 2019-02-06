@@ -546,6 +546,15 @@
     <ClInclude Include="ScriptingItem.h">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
+    <ClInclude Include="GameWindow.h">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Sources\8. GameObjects ===========\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneRenderer.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -892,6 +901,15 @@
     </ClCompile>
     <ClCompile Include="ScriptingItem.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="GameWindow.cpp">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\8. GameObjects ===========\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneRenderer.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,7 @@ enum EventType
 	THREAD_TASK_FINISHED,
 
 	SCENE_WINDOW_RESIZE,
+	GAME_WINDOW_RESIZE,
 
 	PROJECT_SELECTED,
 
@@ -106,6 +107,30 @@ class EventSceneWindowResize : public Event
 {
 public:
 	EventSceneWindowResize(float2 last_s, float2 new_s) : Event(EventType::SCENE_WINDOW_RESIZE)
+	{
+		last_size = last_s;
+		new_size = new_s;
+	}
+
+	float2 GetLastSize() const
+	{
+		return last_size;
+	};
+
+	float2 GetNewSize() const
+	{
+		return new_size;
+	};
+
+private:
+	float2 last_size = float2::zero;
+	float2 new_size = float2::zero;
+};
+
+class EventGameWindowResize : public Event
+{
+public:
+	EventGameWindowResize(float2 last_s, float2 new_s) : Event(EventType::GAME_WINDOW_RESIZE)
 	{
 		last_size = last_s;
 		new_size = new_s;

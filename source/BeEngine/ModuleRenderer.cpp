@@ -11,13 +11,7 @@
 #include "ImGuizmo.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "LineRenderer.h"
-#include "GridRenderer.h"
-#include "QuadRenderer.h"
-#include "DinamicTriangleRenderer.h"
 #include "VertexBuffer.h"
-#include "ModuleGuizmo.h"
-#include "StaticSpriteRenderer.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -133,14 +127,6 @@ bool ModuleRenderer::Awake()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glDisable(GL_CULL_FACE);
-
-		line_renderer = (LineRenderer*)AddRenderer(new LineRenderer());
-		quad_renderer = (QuadRenderer*)AddRenderer(new QuadRenderer());
-		triangle_renderer = (DinamicTriangleRenderer*)AddRenderer(new DinamicTriangleRenderer());
-
-		static_sprite_renderer = (StaticSpriteRenderer*)AddRenderer(new StaticSpriteRenderer());
-
-		//AddRenderer(new GridRenderer());
 	}
 
 	return ret;
@@ -149,8 +135,6 @@ bool ModuleRenderer::Awake()
 bool ModuleRenderer::Start()
 {
 	bool ret = true;
-	
-	test = prof_module_postupdate->AddProfileChild("lines");
 
 	return ret;
 }
@@ -159,8 +143,6 @@ bool ModuleRenderer::Start()
 bool ModuleRenderer::PreUpdate()
 {
 	bool ret = true;
-
-	//fbo_texture->Bind();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -172,35 +154,6 @@ bool ModuleRenderer::PostUpdate()
 {
 	bool ret = true;
 
-	// Draw scene
-	//RenderScene();
-
-	// ---------------------------------------------------------------------
-
-	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
-
-	//line_renderer->DrawLine(float2(0, 0), float2(0, 50), float3(178.0f/255.0f, 242.0f / 255.0f, 82.0f / 255.0f), 0.1f, 1);
-	//line_renderer->DrawLine(float2(0, 0), float2(50, 0), float3(220.0f / 255.0f, 61.0f / 255.0f, 30.0f / 255.0f), 1, 1);
-
-	//quad_renderer->DrawQuad(float2(-100, 0), float2(50, 50), float3(1, 1, 1));
-
-	App->guizmo->RenderGuizmos();
-
-	RenderRenderers();
-
-	App->camera->GetEditorCamera()->Unbind(); 
-
-	// ---------------------------------------------------------------------
-
-	// ---------------------------------------------------------------------
-
-	App->editor->RenderEditor();
-
-	// ---------------------------------------------------------------------
-
-	// Swap
-	SDL_GL_SwapWindow(App->window->GetWindow());
-
 	return ret;
 }
 
@@ -210,8 +163,6 @@ bool ModuleRenderer::CleanUp()
 	bool ret = true;
 
 	INTERNAL_LOG("Destroying 3D Renderer");
-
-	DestroyAllRenderers();
 
 	SDL_GL_DeleteContext(context);
 
@@ -223,27 +174,9 @@ SDL_GLContext ModuleRenderer::GetSDLGLContext() const
 	return context;
 }
 
-void ModuleRenderer::RenderScene()
+void ModuleRenderer::SwapWindowBuffers()
 {
-	//std::vector<Camera3D*> cameras = App->camera->GetCameras();
-
-	//float2 window_size = App->window->GetWindowSize();
-
-	//for (std::vector<Camera3D*>::iterator it = cameras.begin(); it != cameras.end(); ++it)
-	//{
-	//	Camera3D* curr_camera = (*it);
-
-	//	curr_camera->Bind(0, 0, window_size.x, window_size.y);
-
-	//	const std::vector<GameObject*> game_object = App->gameobj->GetListGameObjects();
-
-	//	for (std::vector<GameObject*>::const_iterator go = game_object.begin(); go != game_object.end(); ++go)
-	//	{
-	//		(*go)->Draw();
-	//	}
-
-	//	curr_camera->Unbind();
-	//}
+	SDL_GL_SwapWindow(App->window->GetWindow());
 }
 
 void ModuleRenderer::SetPoligonModeWireframe() const
@@ -1288,49 +1221,4 @@ void ModuleRenderer::DeleteProgram(uint program_id)
 			INTERNAL_LOG("Error deleting shader program %s\n", gluErrorString(error));
 		}
 	}
-}
-
-bool ModuleRenderer::RenderEditorAsync()
-{
-	App->editor->RenderEditor();
-
-	return false;
-}
-
-Renderer* ModuleRenderer::AddRenderer(Renderer * gm)
-{
-	Renderer* ret = nullptr;
-
-	if (gm != nullptr)
-	{
-		gm->Start();
-
-		renderers.push_back(gm);
-
-		ret = gm;
-	}
-
-	return ret;
-}
-
-void ModuleRenderer::RenderRenderers()
-{
-	float4x4 view_mat = App->camera->GetEditorCamera()->GetOpenGLViewMatrix();
-	float4x4 projection_mat = App->camera->GetEditorCamera()->GetOpenGLProjectionMatrix();
-
-	for (std::vector<Renderer*>::iterator it = renderers.begin(); it != renderers.end(); ++it)
-	{
-		(*it)->Render(view_mat, projection_mat);
-	}
-}
-
-void ModuleRenderer::DestroyAllRenderers()
-{
-	for (std::vector<Renderer*>::iterator it = renderers.begin(); it != renderers.end(); ++it)
-	{
-		(*it)->CleanUp();
-		RELEASE(*it);
-	}
-
-	renderers.clear();
 }

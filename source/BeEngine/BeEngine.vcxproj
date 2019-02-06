@@ -101,6 +101,7 @@
     <ClInclude Include="Algorithm\SAT.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="BottomBar.h" />
+    <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="ComponentSpriteRenderer.h" />
     <ClInclude Include="ComponentTransfrom.h" />
@@ -117,12 +118,14 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectAbstractor.h" />
     <ClInclude Include="GameObjectComponent.h" />
+    <ClInclude Include="GameWindow.h" />
     <ClInclude Include="GridRenderer.h" />
     <ClInclude Include="Guizmo.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="ModuleAssets.h" />
     <ClInclude Include="ModuleGuizmo.h" />
+    <ClInclude Include="ModuleSceneRenderer.h" />
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="ModuleState.h" />
     <ClInclude Include="PositionGuizmo.h" />
@@ -252,6 +255,7 @@
     <ClCompile Include="Algorithm\Random\LCG.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="BottomBar.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="ComponentSpriteRenderer.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
@@ -265,6 +269,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectAbstractor.cpp" />
     <ClCompile Include="GameObjectComponent.cpp" />
+    <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GridRenderer.cpp" />
     <ClCompile Include="Guizmo.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
@@ -275,6 +280,7 @@
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="ModuleGuizmo.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
+    <ClCompile Include="ModuleSceneRenderer.cpp" />
     <ClCompile Include="ModuleScripting.cpp" />
     <ClCompile Include="ModuleState.cpp" />
     <ClCompile Include="PositionGuizmo.cpp" />

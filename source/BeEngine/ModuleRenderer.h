@@ -12,11 +12,6 @@
 
 class FBO;
 class ShaderProgram;
-class Renderer;
-class LineRenderer;
-class QuadRenderer;
-class DinamicTriangleRenderer;
-class StaticSpriteRenderer;
 
 class ModuleRenderer : public Module
 {
@@ -32,7 +27,7 @@ public:
 
 	SDL_GLContext GetSDLGLContext() const;
 
-	void RenderScene();
+	void SwapWindowBuffers();
 
 	void SetPoligonModeWireframe() const;
 	void SetPoligonModePoints(float point_size = 4.0f) const;
@@ -145,26 +140,8 @@ public:
 	void DeleteProgram(uint program_id);
 	// --------------------------------------------------------
 
-	bool RenderEditorAsync();
-
-private:
-	Renderer* AddRenderer(Renderer* gm);
-	void RenderRenderers();
-	void DestroyAllRenderers();
-
-public:
-	LineRenderer*	  line_renderer = nullptr;
-	QuadRenderer*	  quad_renderer = nullptr;
-	DinamicTriangleRenderer* triangle_renderer = nullptr;
-
-	StaticSpriteRenderer* static_sprite_renderer = nullptr;
-
 private:
 	SDL_GLContext context;
-
-	std::vector<Renderer*> renderers;
-
-	Profile* test = nullptr;
 };
 
 #endif // !__MODULE_RENDERER_H__

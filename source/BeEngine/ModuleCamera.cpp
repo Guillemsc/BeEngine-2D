@@ -15,9 +15,6 @@
 ModuleCamera::ModuleCamera() : Module()
 {
 	editor_camera = CreateCamera();
-	game_camera = CreateCamera();
-	editor_camera->SetFrustumCulling(false);
-	game_camera->SetFrustumCulling(false);
 }
 
 ModuleCamera::~ModuleCamera()
@@ -279,7 +276,6 @@ uint Camera2D::GetTextId()
 
 void Camera2D::SetPosition(const float2& pos)
 {
-
 	frustum.SetPos(float3(pos.x, pos.y, -1));
 }
 
@@ -338,8 +334,8 @@ void Camera2D::SetSize(float _size)
 {	
 	size = _size;
 
-	if (size < 0.001f)
-		size = 0.001f;
+	if (size < 0.0001f)
+		size = 0.0001f;
 
 	SetViewportSize(viewport_size.x, viewport_size.y);
 	
