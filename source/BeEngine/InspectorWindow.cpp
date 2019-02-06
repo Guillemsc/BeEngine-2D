@@ -30,8 +30,8 @@ void InspectorWindow::DrawEditor()
 	{
 		GameObject* selected_go = *selected_gos.begin();
 
-		char name[51];
-		strcpy_s(name, 51, selected_go->GetName().c_str());
+		char name[99];
+		strcpy_s(name, 99, selected_go->GetName().c_str());
 		if (ImGui::InputText("", name, 50, ImGuiInputTextFlags_AutoSelectAll))
 			selected_go->SetName(name);
 

@@ -4,6 +4,7 @@
 #include "ModuleGameObject.h"
 #include "App.h"
 #include "ModuleEvent.h"
+#include "Globals.h"
 
 ScriptingItemGameObject::ScriptingItemGameObject() : ScriptingItem()
 {
@@ -106,7 +107,9 @@ void ScriptingItemGameObject::AddScriptingInstance(GameObject * go)
 
 			if (ins != nullptr)
 			{
-				MonoArray* mono_pointer = App->scripting->BoxPointer(go);
+				go->scripting_instance = ins;
+
+			/*	MonoArray* mono_pointer = App->scripting->BoxPointer(go);
 
 				void* args[1] = { mono_pointer };
 
@@ -119,7 +122,7 @@ void ScriptingItemGameObject::AddScriptingInstance(GameObject * go)
 				{
 					ins->CleanUp();
 					RELEASE(ins);
-				}
+				}*/
 			}
 		}
 	}
@@ -160,6 +163,10 @@ GameObject * ScriptingItemGameObject::GetGameObjectFromMonoObject(MonoObject * m
 void ScriptingItemGameObject::SetName(MonoObject * mono_object, MonoString * mono_string)
 {
 	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+
+	std::string new_name = App->scripting->UnboxString(mono_string);
+
+	INTERNAL_LOG("%s", new_name.c_str());
 
 	if (go != nullptr)
 	{

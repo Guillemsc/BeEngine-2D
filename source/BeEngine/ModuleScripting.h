@@ -211,6 +211,8 @@ private:
 
 	std::string mono_base_path;
 	std::string assembly_base_path;
+
+	MonoDomain* mono_root_domain = nullptr;
 	
 	std::vector<ScriptingObject*> scripting_objects;
 	std::vector<ScriptingItem*> scripting_items;

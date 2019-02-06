@@ -179,7 +179,7 @@ void ComponentScript::CreateScriptInstance()
 									MonoObject* ret_obj = nullptr;
 									if (script_instance->InvokeMonoMethodOnParentClass(be_engine_script_class, "Init", args, 1, ret_obj))
 									{
-										bool succes = (GameObject*)App->scripting->UnboxBool(ret_obj);
+										bool succes = App->scripting->UnboxBool(ret_obj);
 									}
 								}
 							}

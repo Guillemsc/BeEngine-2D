@@ -86,7 +86,7 @@ bool ModuleScripting::Awake()
 	std::string etc_dir = mono_base_path + "etc\\";
 	mono_set_dirs(lib_dir.c_str(), etc_dir.c_str());
 
-	mono_jit_init(App->GetAppName());
+	mono_jit_init_version(App->GetAppName(), "v4.0.30319");
 
 	CreateBaseDomainAndAssemblys();
 
@@ -616,11 +616,15 @@ void ModuleScripting::LoadDomain()
 {
 	if (!has_active_domain)
 	{
-		mono_domain_set(mono_get_root_domain(), false);
+		if (mono_root_domain == nullptr)
+			mono_root_domain = mono_get_root_domain();
+
+		mono_domain_set(mono_root_domain, true);
 
 		MonoDomain* new_domain = mono_domain_create_appdomain("BeEngineDomain", NULL);
+		mono_domain_set_config(new_domain, ".", "");
 
-		mono_domain_set(new_domain, false);
+		mono_domain_set(new_domain, true);
 
 		has_active_domain = true;
 	}
@@ -632,12 +636,19 @@ void ModuleScripting::UnloadDomain()
 	{
 		MonoDomain* domain_to_unload = mono_domain_get();
 
-		mono_domain_set(mono_get_root_domain(), false);
+		if (mono_domain_get() != mono_root_domain)
+		{
+			mono_domain_set(mono_root_domain, true);
 
-		mono_domain_finalize(domain_to_unload, -1);
-		mono_domain_unload(domain_to_unload);
+			mono_gc_collect(mono_gc_max_generation());
 
-		//mono_gc_collect(mono_gc_max_generation());
+			mono_domain_finalize(domain_to_unload, 2000);
+
+			mono_gc_collect(mono_gc_max_generation());
+
+			MonoException* exc = nullptr;
+			mono_domain_try_unload(domain_to_unload, (MonoObject **)&exc);
+		}
 
 		has_active_domain = false;
 	}
@@ -882,7 +893,7 @@ bool ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_
 	{
 		MonoClass* cl = nullptr;
 
-		cl = mono_class_from_name(mono_assembly_get_image(assembly), class_namepsace, class_name);
+		cl = mono_class_from_name_case(image, class_namepsace, class_name);
 
 		if (cl != nullptr)
 		{
@@ -1044,6 +1055,8 @@ bool ScriptingClass::InvokeStaticMonoMethod(const char * method_name, void ** ar
 			{
 				ret = true;
 			}
+
+			mono_free_method(method);
 		}
 	}
 
@@ -1114,6 +1127,8 @@ bool ScriptingClassInstance::InvokeMonoMethod(const char * method_name, void ** 
 			{
 				ret = true;
 			}
+
+			mono_free_method(method);
 		}
 	}
 
