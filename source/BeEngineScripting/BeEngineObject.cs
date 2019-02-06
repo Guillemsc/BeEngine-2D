@@ -7,16 +7,16 @@ namespace BeEngine
 {
     public class BeEngineObject
     {
-        public void SetPointerRef(char[] pointer_ref)
+        public void SetPointerRef(int[] pointer_ref)
         {
             this.pointer_ref = pointer_ref;
         }
 
-        public char[] GetPointerRef()
+        public int[] GetPointerRef()
         {
             return pointer_ref;
         }
 
-        private char[] pointer_ref = null;
+        private int[] pointer_ref = null;
     }
 }

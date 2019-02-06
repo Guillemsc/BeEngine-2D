@@ -107,9 +107,7 @@ void ScriptingItemGameObject::AddScriptingInstance(GameObject * go)
 
 			if (ins != nullptr)
 			{
-				go->scripting_instance = ins;
-
-			/*	MonoArray* mono_pointer = App->scripting->BoxPointer(go);
+				MonoArray* mono_pointer = App->scripting->BoxPointer(go);
 
 				void* args[1] = { mono_pointer };
 
@@ -120,9 +118,11 @@ void ScriptingItemGameObject::AddScriptingInstance(GameObject * go)
 				}
 				else
 				{
+					go->scripting_instance = nullptr;
+
 					ins->CleanUp();
 					RELEASE(ins);
-				}*/
+				}
 			}
 		}
 	}
