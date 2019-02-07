@@ -60,6 +60,14 @@ std::string FileSystem::GetWorkingDirectory()
 	return ret;
 }
 
+std::string FileSystem::GetExecutableFilePath()
+{
+	char buffer[MAX_PATH];
+	GetModuleFileName(NULL, buffer,sizeof(buffer));
+
+	return buffer;
+}
+
 bool FileSystem::FileExists(const std::string& filepath)
 {
 	bool ret = false;

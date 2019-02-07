@@ -35,9 +35,24 @@ void InspectorWindow::DrawEditor()
 		if (ImGui::InputText("", name, 50, ImGuiInputTextFlags_AutoSelectAll))
 			selected_go->SetName(name);
 
+		ImGui::SameLine();
+
+		bool enabled = true;
+
+		if (ImGui::Checkbox("Enabled", &enabled))
+		{
+
+		}
+
+		bool serialize_independent = selected_go->GetSerializeIndependent();
+
+		if (ImGui::Checkbox("Serialize independent", &serialize_independent))
+		{
+			selected_go->SetSerializeIndependent(serialize_independent);
+		}
+
 		ImGui::Separator();
 
-		ImGui::Spacing();
 	}
 
 	int count = 0;
@@ -53,35 +68,43 @@ void InspectorWindow::DrawEditor()
 		{
 			for (std::vector<GameObjectComponent*>::iterator com = components.begin(); com != components.end(); ++com)
 			{
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Spacing();
+
 				GameObjectComponent* curr_component = (*com);
 
 				ImGui::PushID(curr_component->GetUID().c_str());
 
-				if (curr_component->GetCanDestroy())
-				{
-					if (ImGui::SmallButton("Delete"))
-					{
-						curr_game_object->DestroyComponent(curr_component);
-					}
-				}
-
-				ImGui::SameLine();
-
-				if (ImGui::SmallButton("Move Up"))
-				{
-
-				}
-
-				ImGui::SameLine();
-
-
-				if (ImGui::SmallButton("Move Down"))
-				{
-
-				}
-
 				if (ImGui::CollapsingHeader(curr_component->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 				{
+					if (curr_component->GetCanDestroy())
+					{
+						if (ImGui::SmallButton("Delete"))
+						{
+							curr_game_object->DestroyComponent(curr_component);
+						}
+
+						ImGui::SameLine();
+					}
+
+					if (ImGui::SmallButton("Move Up"))
+					{
+
+					}
+
+					ImGui::SameLine();
+
+
+					if (ImGui::SmallButton("Move Down"))
+					{
+
+					}
+
+					ImGui::Spacing();
+					ImGui::Spacing();
+					ImGui::Spacing();
+
 					ImGui::Indent(15);
 
 					curr_component->EditorDraw();

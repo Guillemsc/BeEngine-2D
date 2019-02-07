@@ -21,7 +21,7 @@ public:
 	GameObjectAbstractionRelation();
 
 private:
-	uint id = -1;
+	int id = -1;
 	int parent_id = -1;
 
 	DataAbstraction go_abstraction;
@@ -43,7 +43,7 @@ public:
 	void Abstract(const std::vector<GameObject*>& to_abstract);
 	std::vector<GameObject*> DeAbstract();
 
-	bool Serialize(const std::string& filepath);
+	bool Serialize(const std::string& path, const std::string& name, const std::string& extension);
 	bool DeSerialize(const std::string& filepath);
 
 	void Clear();

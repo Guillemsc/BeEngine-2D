@@ -84,7 +84,7 @@ void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked
 				open_rename = true;
 			}
 
-			if (ImGui::Button("CreatePrefab"))
+			if (ImGui::Button("Duplicate"))
 			{
 				GameObjectAbstraction abs;
 				abs.Abstract(selected);
@@ -233,7 +233,20 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 
 		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 32 + ( go_count * 20)));
 		ImGui::PushID(go->GetUID().c_str());
-		bool opened = ImGui::TreeNodeEx(go->GetName().c_str(), flags);
+
+		std::string go_text = go->GetName();
+
+		if (go->GetSerializeIndependent())
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 1.0f, 0.5f, 1));
+
+			go_text += " [Serializable]";
+		}
+
+		bool opened = ImGui::TreeNodeEx(go_text.c_str(), flags);
+
+		if (go->GetSerializeIndependent())
+			ImGui::PopStyleColor();
 
 		bool left_clicked = false;
 		bool right_clicked = false;

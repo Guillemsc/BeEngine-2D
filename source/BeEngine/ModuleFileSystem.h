@@ -42,6 +42,7 @@ public:
 	bool CleanUp();
 
 	std::string GetWorkingDirectory();
+	std::string GetExecutableFilePath();
 
 	// Files
 	bool FileExists(const std::string& filepath); 

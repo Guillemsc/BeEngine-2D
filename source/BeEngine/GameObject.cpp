@@ -280,6 +280,16 @@ bool GameObject::GetSelected() const
 	return selected;
 }
 
+void GameObject::SetSerializeIndependent(bool set)
+{
+	serialize_independent = set;
+}
+
+bool GameObject::GetSerializeIndependent() const
+{
+	return serialize_independent;
+}
+
 ScriptingClassInstance * GameObject::GetScriptingInstance() const
 {
 	return scripting_instance;

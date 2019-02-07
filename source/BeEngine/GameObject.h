@@ -50,6 +50,9 @@ public:
 
 	bool GetSelected() const;
 
+	void SetSerializeIndependent(bool set);
+	bool GetSerializeIndependent() const;
+
 	ScriptingClassInstance* GetScriptingInstance() const;
 
 private:
@@ -71,6 +74,8 @@ private:
 
 	bool selected = false;
 	uint tree_node_order = 0;
+
+	bool serialize_independent = false;
 
 	ScriptingClassInstance* scripting_instance = nullptr;
 };

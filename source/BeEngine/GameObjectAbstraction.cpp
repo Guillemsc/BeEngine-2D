@@ -161,14 +161,129 @@ std::vector<GameObject*> GameObjectAbstraction::DeAbstract()
 	return ret;
 }
 
-bool GameObjectAbstraction::Serialize(const std::string & filepath)
+bool GameObjectAbstraction::Serialize(const std::string& path, const std::string& name, const std::string& extension)
 {
-	return false;
+	bool ret = false;
+
+	if (abstracted)
+	{
+		if (App->file_system->FolderExists(path))
+		{
+			std::string filepath = path + name + "." + extension;
+
+			if(App->file_system->FileExists(filepath))
+				App->file_system->FileDelete(filepath);
+
+			JSON_Doc* doc = App->json->CreateJSON(filepath.c_str());
+
+			if (doc != nullptr)
+			{
+				doc->MoveToRoot();
+
+				doc->SetNumber("game_objects_count", relations.size());
+
+				int go_count = 0;
+				for (std::vector<GameObjectAbstractionRelation>::iterator it = relations.begin(); it != relations.end(); ++it)
+				{
+					doc->MoveToRoot();
+
+					std::string curr_go_section = "game_object_" + std::to_string(go_count++);
+					doc->AddSection(curr_go_section);
+
+					if (doc->MoveToSection(curr_go_section))
+					{
+						JSON_Doc go_node = doc->GetNode();
+
+						go_node.SetNumber("id", (*it).id);
+						go_node.SetNumber("parent_id", (*it).parent_id);
+
+						(*it).go_abstraction.Serialize(go_node);
+
+						doc->SetArray("components");
+
+						int component_count = 0;
+
+						for (std::vector<DataAbstraction>::iterator c = (*it).components_abstraction.begin(); c != (*it).components_abstraction.end(); ++c)
+						{
+							JSON_Doc comp_node = doc->GetNode();
+
+							comp_node.AddSectionToArray("components");
+
+							if (comp_node.MoveToSectionFromArray("components", component_count++))
+							{
+								(*c).Serialize(comp_node);
+							}
+						}
+					}
+				}
+
+				doc->Save();
+				doc->MoveToRoot();
+
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
 }
 
 bool GameObjectAbstraction::DeSerialize(const std::string & filepath)
 {
-	return false;
+	bool ret = false;
+
+	Clear();
+
+	if (App->file_system->FileExists(filepath))
+	{
+		JSON_Doc* doc = App->json->LoadJSON(filepath.c_str());
+
+		if (doc != nullptr)
+		{
+			int game_objects_count = doc->GetNumber("game_objects_count", 0);
+
+			for (int i = 0; i < game_objects_count; ++i)
+			{
+				doc->MoveToRoot();
+
+				std::string curr_go_section = "game_object_" + std::to_string(i);
+
+				if (doc->MoveToSection(curr_go_section))
+				{
+					JSON_Doc go_node = doc->GetNode();
+
+					GameObjectAbstractionRelation curr_relation;
+
+					curr_relation.id = go_node.GetNumber("id", -1);
+					curr_relation.parent_id = go_node.GetNumber("parent_id", -1);
+
+					if (curr_relation.id > -1)
+					{
+						curr_relation.go_abstraction.DeSerialize(go_node);
+
+						int components_count = go_node.GetArrayCount("components");
+
+						for (int c = 0; c < components_count; ++c)
+						{
+							JSON_Doc comp_node = go_node.GetNode();
+
+							if (comp_node.MoveToSectionFromArray("components", c))
+							{
+								DataAbstraction comp_data;
+								comp_data.DeSerialize(comp_node);
+
+								curr_relation.components_abstraction.push_back(comp_data);
+							}
+						}
+					}
+				}
+			}
+
+			ret = true;
+		}
+	}
+
+	return ret;
 }
 
 void GameObjectAbstraction::Clear()

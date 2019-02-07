@@ -125,6 +125,7 @@
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="ModuleAssets.h" />
     <ClInclude Include="ModuleGuizmo.h" />
+    <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleSceneRenderer.h" />
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="ModuleState.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="ResourceScript.h" />
     <ClInclude Include="ResourcesWindow.h" />
     <ClInclude Include="ResourceTexture.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="Geometry\AABB.h" />
     <ClInclude Include="Geometry\AABB2D.h" />
@@ -280,6 +282,7 @@
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="ModuleGuizmo.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
+    <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleSceneRenderer.cpp" />
     <ClCompile Include="ModuleScripting.cpp" />
     <ClCompile Include="ModuleState.cpp" />
@@ -293,6 +296,7 @@
     <ClCompile Include="ResourceScript.cpp" />
     <ClCompile Include="ResourcesWindow.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="Geometry\AABB.cpp" />
     <ClCompile Include="Geometry\Capsule.cpp" />
