@@ -36,8 +36,8 @@ public:
 	~GameObjectComponent() {};
 
 	virtual void EditorDraw() {};
-	virtual void OnSaveAbstraction(const DataAbstraction& abs) {};
-	virtual void OnLoadAbstraction(const DataAbstraction& abs) {};
+	virtual void OnSaveAbstraction(DataAbstraction& abs) {};
+	virtual void OnLoadAbstraction(DataAbstraction& abs) {};
 
 	virtual void Start() {};
 	virtual void Update() {};

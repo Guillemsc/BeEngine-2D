@@ -163,7 +163,7 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			////par.SetTextures("texture", 0);
 			//program->SetProgramParameters(par);
 
-			App->renderer->SetUniformMatrix(program->GetID(), "Model", transform->GetGlobalTransform().Transposed().ptr());
+			App->renderer->SetUniformMatrix(program->GetID(), "Model", transform->GetWorldTransform().Transposed().ptr());
 
 			if(curr_sprite->GetHasTexture())
 				App->renderer->BindTexture(curr_sprite->GetTextureId());

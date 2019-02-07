@@ -6,18 +6,23 @@
 #include "ComponentScript.h"
 #include "ModuleResource.h"
 #include "ComponentCamera.h"
+#include "ModuleJson.h"
 
 GameObject::GameObject(std::string _uid)
 {
 	uid = _uid;
 }
 
-void GameObject::OnSaveAbstraction(const DataAbstraction & abs)
+void GameObject::OnSaveAbstraction(DataAbstraction & abs)
 {
+	abs.Clear();
+
+	abs.AddString("name", name);
 }
 
-void GameObject::OnLoadAbstraction(const DataAbstraction & abs)
+void GameObject::OnLoadAbstraction(DataAbstraction & abs)
 {
+	name = abs.GetString("name");
 }
 
 void GameObject::Start()
@@ -85,7 +90,11 @@ void GameObject::SetParent(GameObject* set)
 		if (set == nullptr && parent != nullptr)
 			App->gameobject->AddGameObjectToRoot(this);
 
+		float4x4 last_trans = transform->GetWorldTransform();
+
 		parent = set;
+
+		transform->SetWorldTransform(last_trans);
 	}
 }
 

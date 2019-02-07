@@ -52,11 +52,11 @@ bool ModuleGuizmo::Update()
 
 		GameObject* selected = App->gameobject->GetSelectedGameObjects()[0];
 
-		float4x4 local_trans = selected->transform->GetLocalTransform();
+		float4x4 world_trans = selected->transform->GetWorldTransform();
 
-		if (position_guizmo->UpdateTransform(local_trans))
+		if (position_guizmo->UpdateTransform(world_trans))
 		{
-			selected->transform->SetLocalTransform(local_trans);
+			selected->transform->SetWorldTransform(world_trans);
 		}
 	}
 	else

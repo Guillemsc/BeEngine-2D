@@ -116,7 +116,7 @@
     <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameObjectAbstractor.h" />
+    <ClInclude Include="GameObjectAbstraction.h" />
     <ClInclude Include="GameObjectComponent.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="GridRenderer.h" />
@@ -267,7 +267,7 @@
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameObjectAbstractor.cpp" />
+    <ClCompile Include="GameObjectAbstraction.cpp" />
     <ClCompile Include="GameObjectComponent.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GridRenderer.cpp" />

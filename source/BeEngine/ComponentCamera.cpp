@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "GameObject.h"
 #include "ComponentTransfrom.h"
+#include "ModuleJson.h"
 
 ComponentCamera::ComponentCamera() : GameObjectComponent("Camera", ComponentType::COMPONENT_TYPE_CAMERA, ComponentGroup::CAMERA, true)
 {
@@ -63,6 +64,22 @@ void ComponentCamera::CleanUp()
 		App->camera->SetGameCamera(nullptr);
 
 	App->camera->DestroyCamera(camera);
+}
+
+void ComponentCamera::OnSaveAbstraction(DataAbstraction & abs)
+{
+	if (camera != nullptr)
+	{
+		abs.AddFloat("size", camera->GetSize());
+	}
+}
+
+void ComponentCamera::OnLoadAbstraction(DataAbstraction & abs)
+{
+	if (camera != nullptr)
+	{
+		camera->SetSize(abs.GetFloat("size"));
+	}
 }
 
 void ComponentCamera::OnEvent(Event * ev)

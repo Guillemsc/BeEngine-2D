@@ -33,6 +33,7 @@ public:
 	Resource* CreateResource(const ResourceType type);
 	void DestroyResource(Resource* res);
 	Resource* GetResourceFromAssetFile(const char* filepath);
+	Resource* GetResourceFromUid(std::string uid, ResourceType type = ResourceType::RESOURCE_TYPE_UNKWNOWN);
 	std::vector<Resource*> GetResourcesFromResourceType(const ResourceType type);
 	std::map<ResourceType, std::vector<Resource*>> GetAllResources() const;
 	std::map<ResourceType, std::string> GetAllResourcesNames() const;

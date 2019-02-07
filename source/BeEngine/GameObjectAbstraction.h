@@ -15,14 +15,14 @@ class GameObjectAbstraction;
 
 class GameObjectAbstractionRelation
 {
-	friend GameObjectAbstraction;
+	friend class GameObjectAbstraction;
+
+public:
+	GameObjectAbstractionRelation();
 
 private:
-	void operator delete(void *) {}
-
-private:
-	uint id = 0;
-	uint parent_id = 0;
+	uint id = -1;
+	int parent_id = -1;
 
 	DataAbstraction go_abstraction;
 	std::vector<DataAbstraction> components_abstraction;
@@ -31,6 +31,7 @@ private:
 class GameObjectAbstraction
 {
 	friend class GameObject;
+	friend class GameObjectAbstractionRelation;
 
 private:
 	void operator delete(void *) {}
@@ -39,10 +40,22 @@ public:
 	GameObjectAbstraction();
 	~GameObjectAbstraction();
 
+	void Abstract(const std::vector<GameObject*>& to_abstract);
+	std::vector<GameObject*> DeAbstract();
+
+	bool Serialize(const std::string& filepath);
+	bool DeSerialize(const std::string& filepath);
+
 	void Clear();
 
 private:
+	uint GetParentId(uint id);
+
+private:
 	std::vector<GameObjectAbstractionRelation> relations;
+
+	std::string uid = "";
+	bool abstracted = false;
 };
 
 #endif // !__GAME_OBJECT_COMPONENT_H__

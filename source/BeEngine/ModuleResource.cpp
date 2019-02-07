@@ -197,6 +197,45 @@ Resource* ModuleResource::GetResourceFromAssetFile(const char* filepath)
 	return ret;
 }
 
+Resource * ModuleResource::GetResourceFromUid(std::string uid, ResourceType type)
+{
+	Resource* ret = nullptr;
+
+	if (type != ResourceType::RESOURCE_TYPE_UNKWNOWN)
+	{
+		std::vector<Resource*> to_check = resources[type];
+
+		for (std::vector<Resource*>::iterator it = to_check.begin(); it != to_check.end(); ++it)
+		{
+			if ((*it)->uid.compare(uid) == 0)
+			{
+				ret = (*it);
+				break;
+			}
+		}
+	}
+
+	if (ret == nullptr)
+	{
+		for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
+		{
+			if (type != (*it).first)
+			{
+				for (std::vector<Resource*>::iterator t = (*it).second.begin(); t != (*it).second.end(); ++t)
+				{
+					if ((*t)->uid.compare(uid) == 0)
+					{
+						ret = (*t);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
 std::vector<Resource*> ModuleResource::GetResourcesFromResourceType(const ResourceType type)
 {
 	std::vector<Resource*> ret;

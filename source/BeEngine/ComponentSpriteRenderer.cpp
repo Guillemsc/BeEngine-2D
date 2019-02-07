@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "ModuleEvent.h"
 #include "ModuleSceneRenderer.h"
+#include "ModuleJson.h"
 
 ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::COMPONENT_TYPE_SPRITE_RENDERER,
 	ComponentGroup::RENDERING, true)
@@ -48,6 +49,22 @@ void ComponentSpriteRenderer::CleanUp()
 	App->scene_renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
 
 	App->event->UnSuscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+}
+
+void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
+{
+	if(resource_texture != nullptr)
+		abs.AddString("resource", resource_texture->GetUID());
+}
+
+void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
+{
+	std::string resource_uid = abs.GetString("resource");
+
+	if (resource_uid.compare("") != 0)
+	{
+		resource_texture = (ResourceTexture*)App->resource->GetResourceFromUid(resource_uid, ResourceType::RESOURCE_TYPE_TEXTURE);
+	}
 }
 
 void ComponentSpriteRenderer::OnEvent(Event * ev)

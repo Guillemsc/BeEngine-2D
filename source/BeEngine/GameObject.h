@@ -22,8 +22,8 @@ public:
 	GameObject(std::string uid);
 	~GameObject() {};
 
-	void OnSaveAbstraction(const DataAbstraction& abs);
-	void OnLoadAbstraction(const DataAbstraction& abs);
+	void OnSaveAbstraction(DataAbstraction& abs);
+	void OnLoadAbstraction(DataAbstraction& abs);
 
 	void Start();
 	void Update();

@@ -9,6 +9,7 @@
 #include "ModuleScripting.h"
 #include "GameObject.h"
 #include "ComponentTransfrom.h"
+#include "ModuleJson.h"
 
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
@@ -90,6 +91,22 @@ void ComponentScript::CleanUp()
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 
 	DestroyScriptInstance();
+}
+
+void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)
+{
+	if (resource_script != nullptr)
+		abs.AddString("resource", resource_script->GetUID());
+}
+
+void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
+{
+	std::string resource_uid = abs.GetString("resource");
+
+	if (resource_uid.compare("") != 0)
+	{
+		resource_script = (ResourceScript*)App->resource->GetResourceFromUid(resource_uid, ResourceType::RESOURCE_TYPE_SCRIPT);
+	}
 }
 
 void ComponentScript::OnEvent(Event * ev)

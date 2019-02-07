@@ -3,6 +3,7 @@
 #include "ModuleGameObject.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
+#include "GameObjectAbstraction.h"
 
 HierarchyWindow::HierarchyWindow()
 {
@@ -82,15 +83,16 @@ void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked
 				ImGui::CloseCurrentPopup();
 				open_rename = true;
 			}
-		}
 
-		//if (ImGui::Button("Duplicate"))
-		//{
-		//	for (std::vector<GameObject*>::iterator it = selected.begin(); it != selected.end(); ++it)
-		//	{
-		//		//App->gameobject->DestroyGameObject(*it);
-		//	}
-		//}
+			if (ImGui::Button("CreatePrefab"))
+			{
+				GameObjectAbstraction abs;
+				abs.Abstract(selected);
+				abs.DeAbstract();
+
+				ImGui::CloseCurrentPopup();
+			}
+		}
 
 		if (ImGui::Button("Delete"))
 		{

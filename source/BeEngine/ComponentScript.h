@@ -28,6 +28,9 @@ public:
 	void Start();
 	void CleanUp();
 
+	void OnSaveAbstraction(DataAbstraction& abs);
+	void OnLoadAbstraction(DataAbstraction& abs);
+
 	void OnEvent(Event* ev);
 
 	void OnChildAdded(GameObject* child);

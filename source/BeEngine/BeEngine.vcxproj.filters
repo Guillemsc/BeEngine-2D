@@ -531,9 +531,6 @@
     <ClInclude Include="ScriptingObject.h">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectAbstractor.h">
-      <Filter>Sources\8. GameObjects ===========</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleAssets.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
@@ -554,6 +551,9 @@
     </ClInclude>
     <ClInclude Include="ModuleSceneRenderer.h">
       <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectAbstraction.h">
+      <Filter>Sources\8. GameObjects ===========</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -887,9 +887,6 @@
     <ClCompile Include="ScriptingObject.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectAbstractor.cpp">
-      <Filter>Sources\8. GameObjects ===========</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleAssets.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
@@ -910,6 +907,9 @@
     </ClCompile>
     <ClCompile Include="ModuleSceneRenderer.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectAbstraction.cpp">
+      <Filter>Sources\8. GameObjects ===========</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
