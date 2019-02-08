@@ -22,7 +22,7 @@
 #include "imgui_docking.h"
 #include "GameWindow.h"
 
-ModuleEditor::ModuleEditor()
+ModuleEditor::ModuleEditor() : Module()
 {
 	docking_layouts_json_filepath = App->GetConfigurationPath() + std::string("layouts.json");
 }

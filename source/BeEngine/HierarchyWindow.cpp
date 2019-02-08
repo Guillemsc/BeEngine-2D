@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "ModuleInput.h"
 #include "GameObjectAbstraction.h"
+#include "ModuleScene.h"
 
 HierarchyWindow::HierarchyWindow()
 {
@@ -54,9 +55,7 @@ void HierarchyWindow::DrawMenuBar()
 	{
 		if (ImGui::Button("New GameObject"))
 		{
-			GameObject* obj = App->gameobject->CreateGameObject();
-			App->gameobject->RemoveAllGameObjectsFromSelected();
-			App->gameobject->AddGameObjectToSelected(obj);
+			App->gameobject->CreateGameObject();
 		}
 
 		ImGui::EndMenuBar();
@@ -91,6 +90,30 @@ void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked
 				abs.DeAbstract();
 
 				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::Button("Create new Prefab"))
+			{
+				App->scene->CreateNewPrefab(selected[0]);
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (selected[0]->GetHasPrefab())
+			{
+				if (ImGui::Button("Update Prefab"))
+				{
+					App->scene->UpdatePrefab(selected[0]);
+
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::Button("Update Gameobject from Prefab"))
+				{
+					App->scene->UpdateFromPrefab(selected[0]);
+
+					ImGui::CloseCurrentPopup();
+				}
 			}
 		}
 
@@ -241,6 +264,11 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 1.0f, 0.5f, 1));
 
 			go_text += " [Serializable]";
+		}
+
+		if (go->GetPrefab())
+		{
+			go_text += " [P]";
 		}
 
 		bool opened = ImGui::TreeNodeEx(go_text.c_str(), flags);

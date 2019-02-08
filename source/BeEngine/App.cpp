@@ -20,6 +20,7 @@
 #include "ModuleScripting.h"
 #include "ModuleState.h"
 #include "ModuleSceneRenderer.h"
+#include "ModuleScene.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -60,6 +61,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	guizmo		   = new ModuleGuizmo();
 	scripting      = new ModuleScripting();
 	state		   = new ModuleState();
+	scene		   = new ModuleScene();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -85,6 +87,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(assets, "Module Assets");
 	AddModule(scripting, "Module Scripting");
 	AddModule(gameobject, "Module GameObject");
+	AddModule(scene, "Module Scene");
 	AddModule(guizmo, "Module Guizmo");
 	AddModule(state, "Module State");
 

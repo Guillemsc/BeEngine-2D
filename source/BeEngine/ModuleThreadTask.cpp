@@ -3,7 +3,7 @@
 #include "Event.h"
 #include "ModuleEvent.h"
 
-ModuleThreadTask::ModuleThreadTask()
+ModuleThreadTask::ModuleThreadTask() : Module()
 {
 }
 

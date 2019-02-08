@@ -25,7 +25,7 @@
 
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 
-ModuleScripting::ModuleScripting()
+ModuleScripting::ModuleScripting() : Module()
 {
 }
 

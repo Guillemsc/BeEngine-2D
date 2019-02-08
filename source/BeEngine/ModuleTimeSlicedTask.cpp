@@ -5,7 +5,7 @@
 #include "ModuleEditor.h"
 #include "ProgressWindow.h"
 
-ModuleTimeSlicedTask::ModuleTimeSlicedTask()
+ModuleTimeSlicedTask::ModuleTimeSlicedTask() : Module()
 {
 }
 

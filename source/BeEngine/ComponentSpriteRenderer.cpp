@@ -105,6 +105,26 @@ uint ComponentSpriteRenderer::GetTextureId() const
 	return ret;
 }
 
+float ComponentSpriteRenderer::GetTextureHeightWidthRatio() const
+{
+	float ret = 1.0f;
+
+	if (resource_texture != nullptr)
+		ret = resource_texture->GetHeightWidthRatio();
+
+	return ret;
+}
+
+float ComponentSpriteRenderer::GetTextureWidthHeightRatio() const
+{
+	float ret = 1.0f;
+
+	if (resource_texture != nullptr)
+		ret = resource_texture->GetWidthHeightRatio();
+
+	return ret;
+}
+
 bool ComponentSpriteRenderer::GetHasTexture() const
 {
 	return resource_texture != nullptr;

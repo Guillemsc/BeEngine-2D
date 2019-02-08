@@ -17,6 +17,8 @@ void ComponentTransform::EditorDraw()
 	float rotation = GetLocalRotationDegrees();
 	float2 scale = GetLocalScale();
 
+	float2 world_position = GetPosition();
+
 	if (ImGui::DragFloat2("Position", (float*)&position, 0.1f))
 		SetLocalPosition(position);
 
@@ -25,6 +27,16 @@ void ComponentTransform::EditorDraw()
 
 	if (ImGui::DragFloat2("Scale", (float*)&scale, 0.1f))
 		SetLocalScale(scale);
+
+	ImGui::Text("World Positions: ");
+
+	std::string x_world = "x: " + std::to_string(world_position.x);
+	std::string y_world = "y: " + std::to_string(world_position.y);
+
+	ImGui::Text(x_world.c_str());
+	ImGui::SameLine();
+	ImGui::Text(y_world.c_str());
+
 }
 
 void ComponentTransform::Start()
@@ -155,53 +167,58 @@ void ComponentTransform::SetScale(const float2 & scale)
 	}
 }
 
-float2 ComponentTransform::GetLocalPosition() const
+float2 ComponentTransform::GetLocalPosition()
 {
 	return local_pos;
 }
 
-float ComponentTransform::GetLocalRotationDegrees() const
+float ComponentTransform::GetLocalRotationDegrees()
 {
 	return local_rotation * RADTODEG;
 }
 
-float2 ComponentTransform::GetLocalScale() const
+float2 ComponentTransform::GetLocalScale()
 {
 	return local_scale;
 }
 
-float2 ComponentTransform::GetPosition() const
+float2 ComponentTransform::GetPosition()
 {
 	return world_pos;
 }
 
-float ComponentTransform::GetRotationDegrees() const
+float ComponentTransform::GetRotationDegrees()
 {
 	return world_rotation * RADTODEG;
 }
 
-float2 ComponentTransform::GetScale() const
+float2 ComponentTransform::GetScale()
 {
 	return world_scale;
 }
 
-float4x4 ComponentTransform::GetLocalTransform() const
+float4x4 ComponentTransform::GetLocalTransform()
 {
 	return local_transform;
 }
 
-float4x4 ComponentTransform::GetWorldTransform() const
+float4x4 ComponentTransform::GetWorldTransform()
 {
-	float4x4 ret = float4x4::identity;
+	float4x4 parent_world_transform = float4x4::identity;
 
 	if (owner->GetParent() != nullptr)
 	{
-		ret = owner->GetParent()->transform->GetWorldTransform();
+		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
 	}
 
-	ret = ret * local_transform;
+	float4x4 test_trans = parent_world_transform * local_transform;
 
-	return ret;
+	if (!world_transform.Equals(test_trans))
+	{
+		UpdateWorldFromLocalTransform();
+	}
+
+	return world_transform;
 }
 
 void ComponentTransform::UpdateLocalFromWorldTransform()
@@ -210,7 +227,7 @@ void ComponentTransform::UpdateLocalFromWorldTransform()
 
 	if (owner->GetParent() != nullptr)
 	{
-		parent_world_transform = owner->GetParent()->transform->world_transform;
+		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
 	}
 
 	local_transform = parent_world_transform.Inverted() * world_transform;
@@ -224,7 +241,7 @@ void ComponentTransform::UpdateWorldFromLocalTransform()
 
 	if(owner->GetParent() != nullptr)
 	{
-		parent_world_transform = owner->GetParent()->transform->world_transform;
+		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
 	}
 
 	world_transform = parent_world_transform * local_transform;

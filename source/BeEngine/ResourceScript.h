@@ -88,6 +88,8 @@ public:
 	bool GetInheritsFromBeengineScript() const;
 	ScriptingClass GetScriptingClass() const;
 
+	bool DrawEditorExplorer();
+
 private:
 	bool compiles = false;
 

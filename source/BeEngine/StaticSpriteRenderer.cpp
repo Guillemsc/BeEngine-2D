@@ -154,6 +154,13 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 
 			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
 
+			float ratio = 1.0f;
+			
+			if (curr_sprite->GetHasTexture())
+			{
+				ratio = curr_sprite->gett
+			}
+
 			App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
 			App->renderer->SetUniformInt(program->GetID(), "hasTexture", curr_sprite->GetHasTexture());
 

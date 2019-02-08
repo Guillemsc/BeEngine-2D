@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+class GameObject;
+
 class ModuleScene : public Module
 {
 public:
@@ -12,6 +14,9 @@ public:
 	bool Awake();
 	bool CleanUp();
 
+	bool CreateNewPrefab(GameObject* go);
+	bool UpdatePrefab(GameObject* go);
+	bool UpdateFromPrefab(GameObject* go);
 };
 
 #endif // !__MODULE_SCENE_H__

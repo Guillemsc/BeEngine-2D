@@ -31,7 +31,7 @@ void EventDelegate::CallListeners(Event* ev)
 	}
 }
 
-ModuleEvent::ModuleEvent()
+ModuleEvent::ModuleEvent() : Module()
 {
 
 }

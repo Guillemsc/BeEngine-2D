@@ -18,8 +18,11 @@
 #include "ScriptingObjectSolutionManager.h"
 #include "Event.h"
 #include "ModuleState.h"
+#include "GameObject.h"
+#include "GameObjectAbstraction.h"
+#include "ExplorerWindow.h"
 
-ModuleAssets::ModuleAssets()
+ModuleAssets::ModuleAssets() : Module()
 {
 	ilInit();
 	iluInit();
@@ -114,6 +117,8 @@ void ModuleAssets::OnEvent(Event* ev)
 			App->scripting->ForceCompileScripts();
 		}
 
+		App->editor->explorer_window->UpdateFiles();
+
 		break;
 	}
 	case EventType::WATCH_FILE_FOLDER:
@@ -205,7 +210,7 @@ bool ModuleAssets::ManageModifiedAsset(const char * filepath)
 			if (exists)
 			{
 				Resource* loaded_res = nullptr;
-				ExportAssetToLibrary(filepath);
+				ExportAssetToLibrary(filepath, loaded_res);
 			}
 			else
 			{
@@ -229,7 +234,8 @@ bool ModuleAssets::ManageModifiedAsset(const char * filepath)
 
 			if (App->file_system->FileExists(asset_filepath.c_str()))
 			{
-				App->assets->ExportAssetToLibrary(filepath);
+				Resource* loaded_res = nullptr;
+				App->assets->ExportAssetToLibrary(filepath, loaded_res);
 			}
 			else
 				to_delete = true;
@@ -238,7 +244,8 @@ bool ModuleAssets::ManageModifiedAsset(const char * filepath)
 		{
 			std::string asset_filepath = GetAssetFileFromMeta(filepath);
 
-			App->assets->ExportAssetToLibrary(asset_filepath.c_str());
+			Resource* loaded_res = nullptr;
+			App->assets->ExportAssetToLibrary(asset_filepath.c_str(), loaded_res);
 		}
 	}
 
@@ -266,11 +273,11 @@ void ModuleAssets::UnloadAssetFromEngine(const char * filepath)
 	}
 }
 
-bool ModuleAssets::ExportAssetToLibrary(const char * filepath)
+bool ModuleAssets::ExportAssetToLibrary(const char * filepath, Resource*& res)
 {
 	bool ret = false;
 
-	Resource* res = App->resource->GetResourceFromAssetFile(filepath);
+	res = App->resource->GetResourceFromAssetFile(filepath);
 
 	if (res == nullptr)
 	{
@@ -372,10 +379,48 @@ bool ModuleAssets::CreateScript(const char * filepath, const char * name)
 	std::string asset_path;
 	if (App->scripting->compiler->CreateScriptFromTemplate(filepath, name, asset_path))
 	{
-		ExportAssetToLibrary(asset_path.c_str());
+		Resource* loaded_res = nullptr;
+		ExportAssetToLibrary(asset_path.c_str(), loaded_res);
 	}
 
 	App->scripting->CompileScripts();
+
+	return ret;
+}
+
+bool ModuleAssets::CreatePrefab(GameObject * go)
+{
+	bool ret = false;
+
+	if (go != nullptr)
+	{
+		std::string curr_path = App->assets->GetCurrentAssetsPath();
+
+		std::string new_filepath = curr_path + go->GetName() + "." + "prefab";
+
+		new_filepath = App->file_system->GetFileNameOnNameCollision(new_filepath);
+
+		DecomposedFilePath dfp = App->file_system->DecomposeFilePath(new_filepath);
+
+		GameObjectAbstraction abs;
+
+		std::vector<GameObject*> gos;
+		gos.push_back(go);
+
+		abs.Abstract(gos);
+		ret = abs.Serialize(curr_path, dfp.file_name, "prefab");
+
+		if (ret)
+		{
+			Resource* created_res = nullptr;
+			if (App->assets->ExportAssetToLibrary(new_filepath.c_str(), created_res))
+			{
+				go->resource_prefab = (ResourcePrefab*)created_res;
+
+				App->editor->explorer_window->UpdateFiles();
+			}
+		}
+	}
 
 	return ret;
 }

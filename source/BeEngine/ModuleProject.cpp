@@ -6,7 +6,7 @@
 #include "ModuleEvent.h"
 #include "Event.h"
 
-ModuleProject::ModuleProject()
+ModuleProject::ModuleProject() : Module()
 {
 	projects_json_filepath = App->GetConfigurationPath() + std::string("projects.json");
 }

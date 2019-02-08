@@ -16,6 +16,7 @@ class Event;
 class LoadResourcesTimeSlicedTask;
 class ManageModifiedAssetsTimeSlicedTask;
 class ResourceScript;
+class GameObject;
 
 class ModuleAssets : public Module
 {
@@ -45,12 +46,13 @@ public:
 	bool ManageModifiedAsset(const char* filepath);
 
 	void UnloadAssetFromEngine(const char* filepath);
-	bool ExportAssetToLibrary(const char* filepath);
+	bool ExportAssetToLibrary(const char* filepath, Resource*& res);
 	bool ImportAsset(const char* filepath, Resource*& res);
 	bool RenameAsset(const char* filepath, const char* new_name);
 	bool MoveAsset(const char* filepath, const char* new_path);
 
 	bool CreateScript(const char* filepath, const char* name);
+	bool CreatePrefab(GameObject* go);
 
 	bool MoveAssetsFolder(const char* folder, const char* new_path);
 	bool CreateAssetsFolder(const char* path, const char* name);
@@ -73,10 +75,11 @@ public:
 	void StopRisingWatchingEvents();
 	void StartRisingWatchingEvents();
 
+	void AddToFoldersToCheck(std::string folder);
+
 private:
 	void CreateLibraryFolders();
 
-	void AddToFoldersToCheck(std::string folder);
 	void ManageFoldersToCheck();
 
 	void StartLoadResourcesTimeSlicedTask();

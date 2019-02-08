@@ -4,6 +4,10 @@
 #include "ModuleAssets.h"
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
+#include "imgui.h"
+#include "ModuleGameObject.h"
+#include "GameObject.h"
+#include "ComponentSpriteRenderer.h"
 
 ResourceTexture::ResourceTexture() : Resource(ResourceType::RESOURCE_TYPE_TEXTURE)
 {
@@ -186,4 +190,24 @@ byte * ResourceTexture::GetData() const
 uint ResourceTexture::GetDataSize() const
 {
 	return texture_data_size;
+}
+
+bool ResourceTexture::DrawEditorExplorer()
+{
+	bool ret = false;
+
+	if (ImGui::Button("Load to Scene"))
+	{
+		GameObject* go = App->gameobject->CreateGameObject();
+		go->SetName(d_asset_filepath.file_name.c_str());
+
+		ComponentSpriteRenderer* cs = (ComponentSpriteRenderer*)go->CreateComponent(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER);
+
+		if (cs != nullptr)
+			cs->SetResourceTexture(this);
+
+		ret = true;
+	}
+
+	return ret;
 }

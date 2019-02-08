@@ -7,7 +7,7 @@
 #include "Event.h"
 #include "ModuleState.h"
 
-ModuleGameObject::ModuleGameObject()
+ModuleGameObject::ModuleGameObject() : Module()
 {
 }
 
@@ -110,6 +110,9 @@ GameObject* ModuleGameObject::CreateGameObject()
 
 	EventGameObjectCreated* e_go = new EventGameObjectCreated(ret);
 	App->event->SendEvent(e_go);
+
+	RemoveAllGameObjectsFromSelected();
+	AddGameObjectToSelected(ret);
 
 	return ret;
 }

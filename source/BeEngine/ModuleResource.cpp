@@ -11,6 +11,7 @@
 #include "ModuleInput.h"
 #include "ResourceTexture.h"
 #include "ResourceScript.h"
+#include "ResourcePrefab.h"
 #include "ScriptingObjectCompiler.h"
 #include "ModuleInput.h"
 #include "ModuleScripting.h"
@@ -22,7 +23,7 @@
 #pragma comment (lib, "Devil/libx86/ILU.lib")
 #pragma comment (lib, "Devil/libx86/ILUT.lib")
 
-ModuleResource::ModuleResource()
+ModuleResource::ModuleResource() : Module()
 {
 
 }
@@ -38,11 +39,14 @@ bool ModuleResource::Awake()
 
 	AddResourceName(ResourceType::RESOURCE_TYPE_TEXTURE, "texture");
 	AddResourceName(ResourceType::RESOURCE_TYPE_SCRIPT, "script");
+	AddResourceName(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "png");
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "jpg");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_SCRIPT, "cs");
+
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");
 
 	return ret;
 }
@@ -122,6 +126,13 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 		ret = new ResourceScript();
 
 		break;
+
+	case ResourceType::RESOURCE_TYPE_PREFAB:
+
+		ret = new ResourcePrefab();
+
+		break;
+
 	default:
 		break;
 	}

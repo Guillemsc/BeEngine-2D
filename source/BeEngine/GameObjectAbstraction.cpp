@@ -110,6 +110,7 @@ std::vector<GameObject*> GameObjectAbstraction::DeAbstract()
 		for (std::vector<GameObjectAbstractionRelation>::iterator it = relations.begin(); it != relations.end(); ++it)
 		{
 			GameObject* go = App->gameobject->CreateGameObject();
+			ret.push_back(go);
 
 			go->OnLoadAbstraction((*it).go_abstraction);
 
@@ -220,6 +221,8 @@ bool GameObjectAbstraction::Serialize(const std::string& path, const std::string
 				doc->Save();
 				doc->MoveToRoot();
 
+				App->json->UnloadJSON(doc);
+
 				ret = true;
 			}
 		}
@@ -276,10 +279,15 @@ bool GameObjectAbstraction::DeSerialize(const std::string & filepath)
 							}
 						}
 					}
+
+					relations.push_back(curr_relation);
 				}
 			}
 
+			abstracted = true;
 			ret = true;
+
+			App->json->UnloadJSON(doc);
 		}
 	}
 

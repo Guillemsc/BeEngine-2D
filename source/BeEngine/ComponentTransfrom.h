@@ -41,16 +41,16 @@ public:
 	void SetRotationDegrees(float rotation);
 	void SetScale(const float2& scale);
 
-	float2 GetLocalPosition() const;
-	float GetLocalRotationDegrees() const;
-	float2 GetLocalScale() const;
+	float2 GetLocalPosition();
+	float GetLocalRotationDegrees();
+	float2 GetLocalScale();
 
-	float2 GetPosition() const;
-	float GetRotationDegrees() const;
-	float2 GetScale() const;
+	float2 GetPosition();
+	float GetRotationDegrees();
+	float2 GetScale();
 
-	float4x4 GetLocalTransform() const;
-	float4x4 GetWorldTransform() const;
+	float4x4 GetLocalTransform();
+	float4x4 GetWorldTransform();
 
 private:
 	void UpdateLocalFromWorldTransform();

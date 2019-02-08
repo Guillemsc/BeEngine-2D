@@ -7,6 +7,9 @@
 #include "ModuleResource.h"
 #include "ComponentCamera.h"
 #include "ModuleJson.h"
+#include "ResourcePrefab.h"
+#include "Event.h"
+#include "ModuleEvent.h"
 
 GameObject::GameObject(std::string _uid)
 {
@@ -18,15 +21,25 @@ void GameObject::OnSaveAbstraction(DataAbstraction & abs)
 	abs.Clear();
 
 	abs.AddString("name", name);
+
+	if(resource_prefab != nullptr)
+		abs.AddString("resource_prefab", resource_prefab->GetUID());
 }
 
 void GameObject::OnLoadAbstraction(DataAbstraction & abs)
 {
 	name = abs.GetString("name");
+
+	std::string prefab_uid = abs.GetString("resource_prefab");
+
+	if (prefab_uid.compare("") != 0)
+		resource_prefab = (ResourcePrefab*)App->resource->GetResourceFromUid(prefab_uid, ResourceType::RESOURCE_TYPE_PREFAB);
 }
 
 void GameObject::Start()
 {
+	App->event->Suscribe(std::bind(&GameObject::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+
 	transform = (ComponentTransform*)CreateComponent(ComponentType::COMPONENT_TYPE_TRANSFORM);
 }
 
@@ -38,6 +51,17 @@ void GameObject::Update()
 void GameObject::CleanUp()
 {
 	DestroyAllComponentsNow();
+}
+
+void GameObject::OnEvent(Event * ev)
+{
+	if (ev->GetType() == EventType::RESOURCE_DESTROYED)
+	{
+		EventResourceDestroyed* erd = (EventResourceDestroyed*)ev;
+
+		if (erd->GetResource() == resource_prefab)
+			resource_prefab = nullptr;
+	}
 }
 
 void GameObject::SetName(const char * set)
@@ -288,6 +312,16 @@ void GameObject::SetSerializeIndependent(bool set)
 bool GameObject::GetSerializeIndependent() const
 {
 	return serialize_independent;
+}
+
+bool GameObject::GetHasPrefab() const
+{
+	return resource_prefab != nullptr;
+}
+
+ResourcePrefab * GameObject::GetPrefab() const
+{
+	return resource_prefab;
 }
 
 ScriptingClassInstance * GameObject::GetScriptingInstance() const

@@ -1,6 +1,6 @@
 #include "ModuleAction.h"
 
-ModuleAction::ModuleAction()
+ModuleAction::ModuleAction() : Module()
 {
 }
 

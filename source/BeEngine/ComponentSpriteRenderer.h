@@ -37,6 +37,8 @@ public:
 	void SetResourceTexture(ResourceTexture* set);
 
 	uint GetTextureId() const;
+	float GetTextureHeightWidthRatio() const;
+	float GetTextureWidthHeightRatio() const;
 	bool GetHasTexture() const;
 
 private:

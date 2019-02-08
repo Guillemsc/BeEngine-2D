@@ -6,6 +6,7 @@
 #include "ScriptingObjectSolutionManager.h"
 #include "Functions.h"
 #include "ModuleJson.h"
+#include "imgui.h"
 
 ResourceScript::ResourceScript() : Resource(ResourceType::RESOURCE_TYPE_SCRIPT)
 {
@@ -130,6 +131,20 @@ bool ResourceScript::GetInheritsFromBeengineScript() const
 ScriptingClass ResourceScript::GetScriptingClass() const
 {
 	return script_class;
+}
+
+bool ResourceScript::DrawEditorExplorer()
+{
+	bool ret = false;
+
+	if (ImGui::Button("Edit Script"))
+	{
+		App->scripting->solution_manager->OpenSolutionWithExternalProgram();
+
+		ret = true;
+	}
+
+	return ret;
 }
 
 ResourceScriptField::ResourceScriptField()

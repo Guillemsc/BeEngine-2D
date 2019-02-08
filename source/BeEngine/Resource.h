@@ -12,6 +12,7 @@ enum ResourceType
 	RESOURCE_TYPE_TEXTURE,
 	RESOURCE_TYPE_SCRIPT,
 	RESOURCE_TYPE_SHADER,
+	RESOURCE_TYPE_PREFAB,
 };
 
 class Resource
@@ -48,6 +49,8 @@ public:
 	std::string GetUID() const;
 
 	virtual void CleanUp();
+
+	virtual bool DrawEditorExplorer();
 
 protected:
 	void SetAssetFilepath(const std::string& set);

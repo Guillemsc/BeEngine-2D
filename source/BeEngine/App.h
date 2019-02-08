@@ -28,6 +28,7 @@ class ModuleGuizmo;
 class ModuleScripting;
 class ModuleAssets;
 class ModuleState;
+class ModuleScene;
 
 class Profiler;
 class JSON_Doc;
@@ -106,6 +107,7 @@ public:
 	ModuleGuizmo*		  guizmo = nullptr;
 	ModuleScripting*	  scripting = nullptr;
 	ModuleState*		  state = nullptr;
+	ModuleScene*          scene = nullptr;
 
 	Profiler*			  profiler = nullptr;
 

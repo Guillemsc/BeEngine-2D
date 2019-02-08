@@ -11,7 +11,7 @@
 #include "ModuleGuizmo.h"
 #include "ModuleEditor.h"
 
-ModuleSceneRenderer::ModuleSceneRenderer()
+ModuleSceneRenderer::ModuleSceneRenderer() : Module()
 {
 }
 

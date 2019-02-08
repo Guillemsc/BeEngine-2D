@@ -9,11 +9,16 @@
 class DataAbstraction;
 class ComponentTransform;
 class ScriptingClassInstance;
+class ResourcePrefab;
+class Event;
 
 class GameObject 
 {
 	friend class ModuleGameObject;
+	friend class ModuleScene;
+	friend class ModuleAssets;
 	friend class ScriptingItemGameObject;
+	friend class ResourcePrefab;
 
 private:
 	void operator delete(void *) {}
@@ -28,6 +33,7 @@ public:
 	void Start();
 	void Update();
 	void CleanUp();
+	void OnEvent(Event* ev);
 
 	void SetName(const char* set);
 	std::string GetName();
@@ -53,6 +59,9 @@ public:
 	void SetSerializeIndependent(bool set);
 	bool GetSerializeIndependent() const;
 
+	bool GetHasPrefab() const;
+	ResourcePrefab* GetPrefab() const;
+
 	ScriptingClassInstance* GetScriptingInstance() const;
 
 private:
@@ -71,6 +80,8 @@ private:
 
 	std::string name;
 	std::string uid;
+
+	ResourcePrefab* resource_prefab = nullptr;
 
 	bool selected = false;
 	uint tree_node_order = 0;

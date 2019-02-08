@@ -32,6 +32,8 @@ public:
 	byte* GetData() const;
 	uint GetDataSize() const;
 
+	bool DrawEditorExplorer();
+
 private:
 	byte*  texture_data = nullptr;
 	uint   texture_data_size = 0;

@@ -135,9 +135,13 @@ void ExplorerWindow::UpdateFiles()
 
 			ef->selected = false;
 
+			ef->resource = App->resource->GetResourceFromAssetFile((*it).c_str());
+
 			curr_files.push_back(ef);
 		}
 	}
+
+	SetSelectedFolderTree(App->assets->GetCurrentAssetsPath().c_str());
 }
 
 void ExplorerWindow::ClearFiles()
@@ -740,13 +744,14 @@ void ExplorerWindow::DrawFilesPopupIntern(bool left_clicked, bool right_clicked)
 		{
 			DecomposedFilePath selected_file = selected[0]->dfp;
 
-			if (selected_file.file_extension_lower_case == "cs")
+			if (selected[0]->resource != nullptr)
 			{
-				if (ImGui::Button("Edit Script"))
-				{
+				bool close = selected[0]->resource->DrawEditorExplorer();
+
+				if(close)
 					ImGui::CloseCurrentPopup();
-					App->scripting->solution_manager->OpenSolutionWithExternalProgram();
-				}
+
+				ImGui::Separator();
 			}
 
 			if (ImGui::Button("Show in Explorer"))

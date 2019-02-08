@@ -6,6 +6,7 @@
 #include "ModuleFileSystem.h"
 
 class GameObject;
+class Resource;
 class Event;
 
 class ExplorerFile
@@ -15,6 +16,7 @@ public:
 
 	DecomposedFilePath dfp;
 	bool selected = false;
+	Resource* resource = nullptr;
 };
 
 class ExplorerFolder
@@ -46,11 +48,13 @@ public:
 	void DrawEditor();
 	ImGuiWindowFlags GetWindowFlags();
 
-private:
+public:
 	void UpdateFolders();
-	void ClearFolders();
 	void UpdateFiles();
-	void ClearFiles();;
+
+private:
+	void ClearFolders();
+	void ClearFiles();
 
 	void DrawFilesMenuBar();
 

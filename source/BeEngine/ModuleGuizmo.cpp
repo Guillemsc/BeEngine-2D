@@ -10,7 +10,7 @@
 #include "ModuleGameObject.h"
 #include "ComponentTransfrom.h"
 
-ModuleGuizmo::ModuleGuizmo()
+ModuleGuizmo::ModuleGuizmo() : Module()
 {
 }
 
