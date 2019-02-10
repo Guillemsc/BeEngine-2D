@@ -151,19 +151,25 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprites.begin(); it != sprites.end(); ++it)
 		{
 			ComponentSpriteRenderer* curr_sprite = (*it);
+			float2 texture_size = curr_sprite->GetTextureSize();
 
 			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
+
+			float4x4 size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(texture_size.x * 0.1f, texture_size.y * 0.1f, 1));
+
+			float4x4 world_transform = transform->GetWorldTransform() * size_mat;
+
+			if (curr_sprite->GetFlipX())
+				world_transform[0][0] = -world_transform[0][0];
+
+			if (curr_sprite->GetFlipY())
+				world_transform[1][1] = -world_transform[1][1];
+
 
 			App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
 			App->renderer->SetUniformInt(program->GetID(), "hasTexture", curr_sprite->GetHasTexture());
 
-			//ShaderProgramParameters par;
-			//par.SetVector4("col", float4(1.0f, 0.0f, 1.0f, 1.0f));
-			//par.SetInt("hasTexture", curr_sprite->GetHasTexture());
-			////par.SetTextures("texture", 0);
-			//program->SetProgramParameters(par);
-
-			App->renderer->SetUniformMatrix(program->GetID(), "Model", transform->GetWorldTransform().Transposed().ptr());
+			App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
 
 			if(curr_sprite->GetHasTexture())
 				App->renderer->BindTexture(curr_sprite->GetTextureId());

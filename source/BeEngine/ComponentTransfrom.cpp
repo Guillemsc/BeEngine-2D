@@ -28,6 +28,8 @@ void ComponentTransform::EditorDraw()
 	if (ImGui::DragFloat2("Scale", (float*)&scale, 0.1f))
 		SetLocalScale(scale);
 
+	ImGui::Checkbox("Keep scale ratio", &keep_scale_ratio);
+
 	ImGui::Text("World Positions: ");
 
 	std::string x_world = "x: " + std::to_string(world_position.x);
@@ -115,9 +117,29 @@ void ComponentTransform::SetLocalRotationDegrees(float rotation)
 
 void ComponentTransform::SetLocalScale(const float2 & scale)
 {
-	if (scale.x != local_scale.x || scale.y != local_scale.y)
+	bool update_scale = false;
+
+	float2 to_set = scale;
+
+	if (scale.x != local_scale.x)
 	{
-		local_scale = scale;
+		if (keep_scale_ratio)
+			to_set.y = scale.x;
+
+		update_scale = true;
+	}
+
+	if (scale.y != local_scale.y)
+	{
+		if (keep_scale_ratio)
+			to_set.x = scale.y;
+
+		update_scale = true;
+	}
+
+	if (update_scale)
+	{
+		local_scale = to_set;
 
 		if (local_scale.x <= 0)
 			local_scale.x = 0.01f;
@@ -153,9 +175,29 @@ void ComponentTransform::SetRotationDegrees(float rotation)
 
 void ComponentTransform::SetScale(const float2 & scale)
 {
-	if (scale.x != world_scale.x || scale.y != world_scale.y)
+	bool update_scale = false;
+
+	float2 to_set = scale;
+
+	if (scale.x != world_scale.x)
 	{
-		world_scale = scale;
+		if (keep_scale_ratio)
+			to_set.y = scale.x;
+
+		update_scale = true;
+	}
+
+	if (scale.y != world_scale.y)
+	{
+		if (keep_scale_ratio)
+			to_set.x = scale.y;
+
+		update_scale = true;
+	}
+
+	if (update_scale)
+	{
+		world_scale = to_set;
 
 		if (world_scale.x <= 0)
 			world_scale.x = 0.01f;
@@ -232,6 +274,14 @@ void ComponentTransform::UpdateLocalFromWorldTransform()
 
 	local_transform = parent_world_transform.Inverted() * world_transform;
 
+	if (keep_scale_ratio)
+	{
+		if (local_transform[0][0] != local_transform[1][1])
+		{
+			local_transform[1][1] = local_transform[0][0];
+		}
+	}
+
 	UpdateWorldAndLocalValues();
 }
 
@@ -245,6 +295,14 @@ void ComponentTransform::UpdateWorldFromLocalTransform()
 	}
 
 	world_transform = parent_world_transform * local_transform;
+
+	if (keep_scale_ratio)
+	{
+		if (world_transform[0][0] != world_transform[1][1])
+		{
+			world_transform[1][1] = world_transform[0][0];
+		}
+	}
 
 	UpdateWorldAndLocalValues();
 }

@@ -70,7 +70,9 @@ private:
 
 	float2 world_pos = float2::zero;
 	float  world_rotation = 0;
-	float2  world_scale = float2::zero;
+	float2 world_scale = float2::zero;
+
+	bool keep_scale_ratio = false;
 };
 
 #endif // !__COMPONENT_TRANSFORM_H__

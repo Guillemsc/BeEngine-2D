@@ -177,6 +177,11 @@ float ResourceTexture::GetHeightWidthRatio()
 	return ret;
 }
 
+float2 ResourceTexture::GetSize() const
+{
+	return float2(texture_width, texture_height);
+}
+
 uint ResourceTexture::GetDataId() const
 {
 	return texture_data_id;

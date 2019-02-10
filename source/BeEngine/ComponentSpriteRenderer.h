@@ -39,12 +39,22 @@ public:
 	uint GetTextureId() const;
 	float GetTextureHeightWidthRatio() const;
 	float GetTextureWidthHeightRatio() const;
+	float2 GetTextureSize() const;
 	bool GetHasTexture() const;
+
+	void SetFilpX(bool set);
+	bool GetFlipX() const;
+
+	void SetFilpY(bool set);
+	bool GetFlipY() const;
 
 private:
 	ResourceTexture* resource_texture = nullptr;
 
 	std::string resource_filter;
+
+	bool flip_x = false;
+	bool flip_y = false;
 
 };
 

@@ -3,6 +3,7 @@
 
 #include "Resource.h"
 #include "Globals.h"
+#include "GeometryMath.h"
 
 class ResourceTexture : public Resource
 {
@@ -27,6 +28,7 @@ public:
 	uint GetTextureId() const;
 	float GetWidthHeightRatio();
 	float GetHeightWidthRatio();
+	float2 GetSize() const;
 
 	uint GetDataId() const;
 	byte* GetData() const;

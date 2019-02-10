@@ -32,6 +32,19 @@ void ComponentSpriteRenderer::EditorDraw()
 
 	if (resource_texture != nullptr)
 	{
+		ImGui::Text("Filp");
+		ImGui::SameLine();
+		ImGui::Checkbox("X", &flip_x);
+		ImGui::SameLine();
+		ImGui::Checkbox("Y", &flip_y);
+
+		ImGui::Spacing();
+
+		float2 image_size = resource_texture->GetSize();
+
+		std::string size_text = "Size: x: " + std::to_string((int)image_size.x) + "  y: " + std::to_string((int)image_size.y);
+		ImGui::Text(size_text.c_str());
+
 		float ratio = resource_texture->GetHeightWidthRatio();
 		ImGui::Image((ImTextureID)resource_texture->GetTextureId(), ImVec2(100, 100 * ratio));
 	}
@@ -55,6 +68,9 @@ void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
 {
 	if(resource_texture != nullptr)
 		abs.AddString("resource", resource_texture->GetUID());
+
+	abs.AddBool("flip_x", flip_x);
+	abs.AddBool("flip_y", flip_y);
 }
 
 void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
@@ -65,6 +81,9 @@ void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
 	{
 		resource_texture = (ResourceTexture*)App->resource->GetResourceFromUid(resource_uid, ResourceType::RESOURCE_TYPE_TEXTURE);
 	}
+
+	flip_x = abs.GetBool("flip_x");
+	flip_y = abs.GetBool("flip_y");
 }
 
 void ComponentSpriteRenderer::OnEvent(Event * ev)
@@ -125,7 +144,37 @@ float ComponentSpriteRenderer::GetTextureWidthHeightRatio() const
 	return ret;
 }
 
+float2 ComponentSpriteRenderer::GetTextureSize() const
+{
+	float2 ret = float2::zero;
+
+	if (resource_texture != nullptr)
+		ret = resource_texture->GetSize();
+
+	return ret;
+}
+
 bool ComponentSpriteRenderer::GetHasTexture() const
 {
 	return resource_texture != nullptr;
+}
+
+void ComponentSpriteRenderer::SetFilpX(bool set)
+{
+	flip_x = set;
+}
+
+bool ComponentSpriteRenderer::GetFlipX() const
+{
+	return flip_x;
+}
+
+void ComponentSpriteRenderer::SetFilpY(bool set)
+{
+	flip_y = set;
+}
+
+bool ComponentSpriteRenderer::GetFlipY() const
+{
+	return flip_y;
 }

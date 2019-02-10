@@ -101,6 +101,8 @@ void InspectorWindow::DrawEditor()
 
 					}
 
+					ImGui::Separator();
+
 					ImGui::Spacing();
 					ImGui::Spacing();
 					ImGui::Spacing();
