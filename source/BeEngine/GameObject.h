@@ -26,7 +26,7 @@ private:
 	void operator delete(void *) {}
 
 public:
-	GameObject(std::string uid);
+	GameObject(const std::string& uid);
 	~GameObject() {};
 
 	void OnSaveAbstraction(DataAbstraction& abs);

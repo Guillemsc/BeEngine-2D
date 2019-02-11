@@ -1,5 +1,5 @@
-#ifndef __TEXTURE_RENDERER_H__
-#define __TEXTURE_RENDERER_H__
+#ifndef __STATIC_SPRITE_RENDERER_H__
+#define __STATIC_SPRITE_RENDERER_H__
 
 #include "Renderer.h"
 
@@ -26,9 +26,7 @@ private:
 
 	uint vao = 0;
 
-	uint* quad_indices_buffer = nullptr;
-
 	std::vector<ComponentSpriteRenderer*> sprite_renderers;
 };
 
-#endif // !__TEXTURE_RENDERER_H__
+#endif // !__STATIC_SPRITE_RENDERER_H__

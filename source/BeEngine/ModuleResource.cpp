@@ -12,6 +12,7 @@
 #include "ResourceTexture.h"
 #include "ResourceScript.h"
 #include "ResourcePrefab.h"
+#include "ResourceScene.h"
 #include "ScriptingObjectCompiler.h"
 #include "ModuleInput.h"
 #include "ModuleScripting.h"
@@ -133,6 +134,12 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 	case ResourceType::RESOURCE_TYPE_PREFAB:
 
 		ret = new ResourcePrefab();
+
+		break;
+
+	case ResourceType::RESOURCE_TYPE_SCENE:
+
+		ret = new ResourceScene();
 
 		break;
 

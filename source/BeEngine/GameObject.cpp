@@ -12,9 +12,9 @@
 #include "ModuleEvent.h"
 #include "Scene.h"
 
-GameObject::GameObject(std::string _uid)
+GameObject::GameObject(const std::string& set_uid)
 {
-	uid = _uid;
+	uid = set_uid;
 }
 
 void GameObject::OnSaveAbstraction(DataAbstraction & abs)

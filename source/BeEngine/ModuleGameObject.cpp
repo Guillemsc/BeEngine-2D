@@ -268,7 +268,7 @@ uint ModuleGameObject::GetSelectedGameObjectsCount() const
 
 void ModuleGameObject::CreateSubScene()
 {
-	Scene* sub_scene = new Scene();
+	Scene* sub_scene = new Scene(GetUIDRandomHexadecimal());
 	sub_scene->SetName("Sub Scene");
 
 	sub_scenes.push_back(sub_scene);
@@ -323,6 +323,9 @@ void ModuleGameObject::DestroyScene(Scene * scene)
 					break;
 				}
 			}
+
+			if (scene->selected)
+				RemoveSceneFromSelected(scene);
 
 			if (!found)
 			{
@@ -390,6 +393,11 @@ void ModuleGameObject::RemoveAllScenesFromSelected()
 	}
 
 	sub_scenes_selected.clear();
+}
+
+std::vector<Scene*> ModuleGameObject::GetSelectedScenes() const
+{
+	return sub_scenes_selected;
 }
 
 void ModuleGameObject::SetGameObjectScene(Scene * scene, GameObject* go)
@@ -488,6 +496,9 @@ void ModuleGameObject::ChangeGameObjectPositionOnRootList(GameObject * go, uint 
 				if (new_pos > go->scene->root_game_objects.size())
 					new_pos = go->scene->root_game_objects.size();
 
+				if (new_pos < 0)
+					new_pos = 0;
+
 				go->scene->root_game_objects.insert(go->scene->root_game_objects.begin() + new_pos, go);
 			}
 		}
@@ -527,6 +538,9 @@ void ModuleGameObject::ChangeGameObjectPositionOnParentChildren(GameObject * go,
 				if (new_pos > parent->childs.size())
 					new_pos = parent->childs.size();
 
+				if (new_pos < 0)
+					new_pos = 0;
+
 				parent->childs.insert(parent->childs.begin() + new_pos, go);
 			}
 		}
@@ -560,6 +574,9 @@ void ModuleGameObject::ChangeScenePositionOnList(Scene * scene, uint new_pos)
 			if (new_pos > sub_scenes.size())
 				new_pos = sub_scenes.size();
 
+			if (new_pos < 0)
+				new_pos = 0;
+
 			sub_scenes.insert(sub_scenes.begin() + new_pos, scene);
 		}
 	}
@@ -577,7 +594,7 @@ void ModuleGameObject::AddComponentType(const ComponentType & type, const std::s
 
 void ModuleGameObject::CreateRootScene()
 {
-	root_scene = new Scene();
+	root_scene = new Scene(GetUIDRandomHexadecimal());
 	root_scene->SetName("undefined");
 }
 

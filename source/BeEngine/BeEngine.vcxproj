@@ -119,7 +119,6 @@
     <ClInclude Include="GameObjectAbstraction.h" />
     <ClInclude Include="GameObjectComponent.h" />
     <ClInclude Include="GameWindow.h" />
-    <ClInclude Include="GridRenderer.h" />
     <ClInclude Include="Guizmo.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
@@ -246,6 +245,7 @@
     <ClInclude Include="ScriptingObjectCompiler.h" />
     <ClInclude Include="ScriptingObjectFileWatcher.h" />
     <ClInclude Include="ScriptingObjectSolutionManager.h" />
+    <ClInclude Include="StaticGridRenderer.h" />
     <ClInclude Include="StaticSpriteRenderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Time\Clock.h" />
@@ -274,7 +274,6 @@
     <ClCompile Include="GameObjectAbstraction.cpp" />
     <ClCompile Include="GameObjectComponent.cpp" />
     <ClCompile Include="GameWindow.cpp" />
-    <ClCompile Include="GridRenderer.cpp" />
     <ClCompile Include="Guizmo.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
@@ -369,6 +368,7 @@
     <ClCompile Include="ScriptingObjectCompiler.cpp" />
     <ClCompile Include="ScriptingObjectFileWatcher.cpp" />
     <ClCompile Include="ScriptingObjectSolutionManager.cpp" />
+    <ClCompile Include="StaticGridRenderer.cpp" />
     <ClCompile Include="StaticSpriteRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Time\Clock.cpp" />

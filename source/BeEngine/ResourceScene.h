@@ -32,11 +32,14 @@ public:
 	void OnMoveAsset(const char* new_asset_path, const char* last_asset_path);
 
 	void UpdateScene(const GameObjectAbstraction& abstraction);
+	void LoadToScene();
 
 	bool DrawEditorExplorer();
 
 private:
 	GameObjectAbstraction abstraction;
+
+	std::vector<std::string> related_scenes;
 };
 
 #endif // !__RESOURCE_PREFAB_H__

@@ -26,6 +26,9 @@ public:
 private:
 	void DrawMenuBar();
 
+	void DrawScenesPopup(bool left_clicked, bool right_clicked, uint scenes_count);
+	void SceneInput(Scene* scene, bool left_clicked, bool right_clicked);
+
 	void DrawScene(Scene* scene, uint scene_count, uint& go_count, uint& height_count);
 	void DrawSceneDragAndDrop(Scene* scene, uint scene_count);
 
@@ -38,6 +41,7 @@ private:
 
 private:
 	ImFont* font = nullptr;
+	ImFont* scenes_font = nullptr;
 
 	bool disable_button_up = true;
 	bool dragging = false;

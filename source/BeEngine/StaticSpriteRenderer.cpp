@@ -135,9 +135,8 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 	{
 		glEnable(GL_DEPTH_TEST);
 
-		//glEnable(GL_BLEND);
-		//glBlendEquation(GL_FUNC_ADD);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		program->UseProgram();
 

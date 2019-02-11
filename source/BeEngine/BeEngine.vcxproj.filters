@@ -462,9 +462,6 @@
     <ClInclude Include="VertexBuffer.h">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
-    <ClInclude Include="GridRenderer.h">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
-    </ClInclude>
     <ClInclude Include="LineRenderer.h">
       <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
     </ClInclude>
@@ -572,6 +569,9 @@
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Sources\8. SceneObjects ==========\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticGridRenderer.h">
+      <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -833,9 +833,6 @@
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClCompile>
-    <ClCompile Include="GridRenderer.cpp">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
-    </ClCompile>
     <ClCompile Include="LineRenderer.cpp">
       <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
     </ClCompile>
@@ -940,6 +937,9 @@
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Sources\8. SceneObjects ==========\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticGridRenderer.cpp">
+      <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

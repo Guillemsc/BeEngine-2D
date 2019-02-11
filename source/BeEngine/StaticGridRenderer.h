@@ -1,5 +1,5 @@
-#ifndef __GRID_RENDERER_H__
-#define __GRID_RENDERER_H__
+#ifndef __STATIC_GRID_RENDERER_H__
+#define __STATIC_GRID_RENDERER_H__
 
 #include "Renderer.h"
 
@@ -7,11 +7,11 @@
 #include "ModuleShader.h"
 #include "VertexBuffer.h"
 
-class GridRenderer : public Renderer
+class StaticGridRenderer : public Renderer
 {
 public:
-	GridRenderer();
-	~GridRenderer();
+	StaticGridRenderer();
+	~StaticGridRenderer();
 
 	void Start();
 	void CleanUp();
@@ -20,7 +20,7 @@ public:
 private:
 	ShaderProgram* program = nullptr;
 
-	uint vbo = 0;
+	uint vao = 0;
 };
 
-#endif // !__GRID_RENDERER_H__
+#endif // !__STATIC_GRID_RENDERER_H__

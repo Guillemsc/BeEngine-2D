@@ -45,10 +45,11 @@ public:
 	void DestroyScene(Scene* scene);
 	Scene* GetRootScene() const;
 	std::vector<Scene*> GetSubScenes() const;
+
 	void AddSceneToSelected(Scene* scene);
 	void RemoveSceneFromSelected(Scene* go);
 	void RemoveAllScenesFromSelected();
-
+	std::vector<Scene*> GetSelectedScenes() const;
 
 	void SetGameObjectScene(Scene* scene, GameObject* go);
 	void AddGameObjectToRoot(GameObject* go);

@@ -85,18 +85,23 @@ void ResourcePrefab::UpdatePrefab(const GameObjectAbstraction & abs)
 	App->assets->StartRisingWatchingEvents();
 }
 
+void ResourcePrefab::LoadToScene()
+{
+	std::vector<GameObject*> gos = abstraction.DeAbstract();
+
+	for (std::vector<GameObject*>::iterator it = gos.begin(); it != gos.end(); ++it)
+	{
+		(*it)->resource_prefab = this;
+	}
+}
+
 bool ResourcePrefab::DrawEditorExplorer()
 {
 	bool ret = false;
 
 	if (ImGui::Button("Load Prefab"))
 	{
-		std::vector<GameObject*> gos = abstraction.DeAbstract();
-
-		for (std::vector<GameObject*>::iterator it = gos.begin(); it != gos.end(); ++it)
-		{
-			(*it)->resource_prefab = this;
-		}
+		LoadToScene();
 
 		ret = true;
 	}

@@ -7,6 +7,7 @@
 #include "ModuleScene.h"
 #include "ResourceScene.h"
 #include "Scene.h"
+#include "ModuleAssets.h"
 
 HierarchyWindow::HierarchyWindow()
 {
@@ -19,6 +20,7 @@ HierarchyWindow::~HierarchyWindow()
 void HierarchyWindow::Start()
 {
 	font = App->editor->GetLoadedFont("RobotoMedium_15");
+	scenes_font = App->editor->GetLoadedFont("RobotoMedium_20");
 }
 
 void HierarchyWindow::CleanUp()
@@ -80,21 +82,221 @@ void HierarchyWindow::DrawMenuBar()
 	}
 }
 
+void HierarchyWindow::DrawScenesPopup(bool left_clicked, bool right_clicked, uint scene_count)
+{
+	if (right_clicked)
+	{
+		ImGui::OpenPopupOnItemClick("SceneHerarchyPopup", 1);
+	}
+
+	std::vector<Scene*> selected = App->gameobject->GetSelectedScenes();
+
+	bool open_rename = false;
+
+	if (ImGui::BeginPopupContextItem("SceneHerarchyPopup"))
+	{
+		if (selected.size() == 1)
+		{
+			if (ImGui::Button("Move Up"))
+			{
+				App->gameobject->ChangeScenePositionOnList(selected[0], scene_count - 2);
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::Button("Move Down"))
+			{
+				App->gameobject->ChangeScenePositionOnList(selected[0], scene_count + 1);
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::Button("Save"))
+			{
+				App->gameobject->ChangeScenePositionOnList(selected[0], scene_count - 2);
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("Rename"))
+			{
+				ImGui::CloseCurrentPopup();
+				open_rename = true;
+			}
+		}
+
+		if (ImGui::Button("Delete"))
+		{
+			for (std::vector<Scene*>::iterator it = selected.begin(); it != selected.end(); ++it)
+			{
+				App->gameobject->DestroyScene(*it);
+			}
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (open_rename)
+	{
+		ImGui::OpenPopup("RenamePopup");
+
+		if (selected.size() > 0)
+		{
+			Scene* sel_scene = *selected.begin();
+
+			int size = sel_scene->GetName().size();
+
+			if (size > 50)
+				size = 50;
+
+			memset(change_name_tmp, 0, sizeof(char) * 50);
+
+			strcpy_s(change_name_tmp, sizeof(char) * size + 1, sel_scene->GetName().c_str());
+		}
+	}
+
+	if (ImGui::BeginPopup("RenamePopup"))
+	{
+		ImGui::Text("Name: ");
+
+		ImGui::SameLine();
+
+		ImGui::InputText("", change_name_tmp, sizeof(char) * 50, ImGuiInputTextFlags_AutoSelectAll);
+
+		if (ImGui::Button("Accept"))
+		{
+			if (selected.size() > 0)
+			{
+				Scene* sel_scene = *selected.begin();
+
+				sel_scene->SetName(change_name_tmp);
+			}
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void HierarchyWindow::SceneInput(Scene * scene, bool left_clicked, bool right_clicked)
+{
+	//If ctrl is pressed do multiselection
+
+	int selected_count = App->gameobject->GetSelectedGameObjectsCount();
+
+	if ((App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL)) && ImGui::IsItemClicked(0))
+	{
+		if (!scene->GetSelected())
+			App->gameobject->AddSceneToSelected(scene);
+		else
+			App->gameobject->RemoveSceneFromSelected(scene);
+
+		disable_button_up = true;
+	}
+
+	// If shift is pressed do fill gap selection
+	else if ((App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT) || App->input->GetKeyRepeat(SDL_SCANCODE_RSHIFT)) && ImGui::IsItemClicked(0))
+	{
+
+	}
+
+	// Monoselection
+	else
+	{
+		if ((left_clicked || right_clicked) && !scene->GetSelected())
+		{
+			App->gameobject->RemoveAllScenesFromSelected();
+			App->gameobject->AddSceneToSelected(scene);
+
+			disable_button_up = true;
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && scene->GetSelected() && selected_count == 1)
+		{
+			if (!disable_button_up)
+			{
+				App->gameobject->RemoveSceneFromSelected(scene);
+			}
+			else
+				disable_button_up = false;
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered())
+		{
+			if (!disable_button_up)
+			{
+				if (selected_count > 1)
+				{
+					App->gameobject->RemoveAllScenesFromSelected();
+					App->gameobject->AddSceneToSelected(scene);
+				}
+			}
+			else
+				disable_button_up = false;
+		}
+
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsAnyItemHovered() && ImGui::IsMouseHoveringWindow())
+		{
+			App->gameobject->RemoveAllScenesFromSelected();
+		}
+	}
+}
+
 void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count, uint& height_count)
 {
 	if (scene != nullptr)
 	{
 		if (scene_count == 0)
 		{
-			std::string curr_scene_text = "Current scene: " + scene->GetName();
+			ImGui::PushFont(scenes_font);
+
+			ImGui::PushID(scene->GetUid().c_str());
+			std::string curr_scene_text = "Current scene: asdasdasdasdasd" + scene->GetName();
 			ImGui::Text(curr_scene_text.c_str());
+
+			ImGui::SameLine();
+
+			if (ImGui::SmallButton("Save"))
+			{
+				App->assets->CreateScene();
+			}
+
+			ImGui::PopFont();
 
 			ImGui::Separator();
 		}
 		else
 		{
+			bool selected = scene->GetSelected();
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(47.0f / 255.0f, 197.0f / 255.0f, 104.0f / 255.0f, 1));
+
 			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
-			ImGui::TextColored(ImVec4(47.0f / 255.0f, 197.0f / 255.0f, 104.0f / 255.0f, 1), scene->GetName().c_str());
+			ImGui::PushID(scene->GetUid().c_str());
+			ImGui::Selectable(scene->GetName().c_str(), selected);
+
+			ImGui::PopStyleColor();
+
+			bool left_clicked = false;
+			bool right_clicked = false;
+
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+				left_clicked = true;
+
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+				right_clicked = true;
+
+			SceneInput(scene, left_clicked, right_clicked);
+
+			DrawScenesPopup(left_clicked, right_clicked, scene_count);
 
 			height_count += 20;
 		}
@@ -126,6 +328,8 @@ void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count,
 
 			++root_index;
 		}
+
+		ImGui::PopID();
 	}
 }
 

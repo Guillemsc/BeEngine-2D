@@ -8,6 +8,7 @@
 #include "GameObjectAbstraction.h"
 #include "ModuleFileSystem.h"
 #include "ModuleGameObject.h"
+#include "Scene.h"
 
 ModuleScene::ModuleScene() : Module()
 {
@@ -80,9 +81,10 @@ bool ModuleScene::CreateNewScene()
 {
 	bool ret = false;
 
-	//std::vector<GameObject*> root_gos = App->gameobject->GetRootGameObjects();
+	Scene* root = App->gameobject->GetRootScene();
 
-	//App->assets->CreateScene(root_gos);
+	GameObjectAbstraction abs;
+	abs.Abstract(root->GetRootGameObjects());
 
 	return ret;
 }

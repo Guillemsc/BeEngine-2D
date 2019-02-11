@@ -324,6 +324,7 @@ void ModuleEditor::ImGuiInit()
 	LoadImGuiFont("Roboto-Medium.ttf", 16, "RobotoMedium_16");
 	LoadImGuiFont("Roboto-Medium.ttf", 18, "RobotoMedium_18");
 	LoadImGuiFont("Roboto-Medium.ttf", 30, "RobotoMedium_30");
+	LoadImGuiFont("Roboto-Medium.ttf", 20, "RobotoMedium_20");
 	LoadImGuiFont("Roboto-Medium.ttf", 60, "RobotoMedium_60");
 	LoadImGuiFont("Roboto-Medium.ttf", 15, "RobotoMedium_15");
 	LoadImGuiFont("Roboto-Black.ttf", 16, "RobotoBlack_16");

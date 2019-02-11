@@ -22,6 +22,8 @@
 #include "GameObjectAbstraction.h"
 #include "ExplorerWindow.h"
 #include "ResourceScene.h"
+#include "ModuleGameObject.h"
+#include "Scene.h"
 
 ModuleAssets::ModuleAssets() : Module()
 {
@@ -426,7 +428,7 @@ bool ModuleAssets::CreatePrefab(GameObject * go)
 	return ret;
 }
 
-bool ModuleAssets::CreateScene(std::vector<GameObject*> gos)
+bool ModuleAssets::CreateScene()
 {
 	bool ret = false;
 	
@@ -438,19 +440,67 @@ bool ModuleAssets::CreateScene(std::vector<GameObject*> gos)
 
 	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(new_filepath);
 
-	GameObjectAbstraction abs;
+	Scene* root = App->gameobject->GetRootScene();
 
-	abs.Abstract(gos);
+	GameObjectAbstraction abs;
+	abs.Abstract(root->GetRootGameObjects());
+
+	std::vector<Scene*> sub_scenes = App->gameobject->GetSubScenes();
+
+	std::vector<std::string> used_uids;
+	for (std::vector<Scene*>::iterator it = sub_scenes.begin(); it != sub_scenes.end(); ++it)
+	{
+		Scene* curr_scene = (*it);
+
+		GameObjectAbstraction abs;
+		abs.Abstract(curr_scene->GetRootGameObjects());
+
+		std::string new_filepath = curr_path + curr_scene->GetName() + "." + "scene";
+
+		new_filepath = App->file_system->GetFileNameOnNameCollision(new_filepath);
+
+		DecomposedFilePath dfp = App->file_system->DecomposeFilePath(new_filepath);
+
+		ret = abs.Serialize(curr_path, dfp.file_name, "scene");
+
+		if (ret)
+		{
+			Resource* created_res = nullptr;
+			if (App->assets->ExportAssetToLibrary(new_filepath.c_str(), created_res))
+			{
+				used_uids.push_back(created_res->GetUID());
+			}
+		}
+	}
+
 	ret = abs.Serialize(curr_path, dfp.file_name, "scene");
+
+	JSON_Doc* doc = App->json->LoadJSON(new_filepath.c_str());
+
+	if (doc != nullptr)
+	{
+		doc->SetArray("sub_scenes");
+
+		for (std::vector<std::string>::iterator it = used_uids.begin(); it != used_uids.end(); ++it)
+		{
+			doc->AddStringToArray("sub_scenes", (*it).c_str());
+		}
+
+		doc->Save();
+
+		App->json->UnloadJSON(doc);
+	}
 
 	if (ret)
 	{
 		Resource* created_res = nullptr;
 		if (App->assets->ExportAssetToLibrary(new_filepath.c_str(), created_res))
 		{
-			App->editor->explorer_window->UpdateFiles();
+
 		}
 	}
+
+	App->editor->explorer_window->UpdateFiles();
 	
 	return ret;
 }

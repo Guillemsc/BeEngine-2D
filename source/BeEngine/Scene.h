@@ -15,7 +15,7 @@ private:
 	void operator delete(void *) {}
 
 public:
-	Scene();
+	Scene(const std::string& uid);
 	~Scene() {};
 
 	void Start();
@@ -24,12 +24,15 @@ public:
 	void SetName(const char* set);
 	std::string GetName();
 
+	std::string GetUid() const;
+
 	bool GetSelected() const;
 
 	std::vector<GameObject*> GetRootGameObjects() const;
 
 private:
 	std::string name;
+	std::string uid;
 
 	bool selected = false;
 

@@ -1,8 +1,8 @@
 #include "Scene.h"
 
-Scene::Scene()
+Scene::Scene(const std::string& set_uid)
 {
-	
+	uid = set_uid;
 }
 
 void Scene::Start()
@@ -21,6 +21,11 @@ void Scene::SetName(const char * set)
 std::string Scene::GetName()
 {
 	return name;
+}
+
+std::string Scene::GetUid() const
+{
+	return uid;
 }
 
 bool Scene::GetSelected() const
