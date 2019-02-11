@@ -6,6 +6,7 @@
 #include "Devil\include\ilut.h"
 
 #include <map>
+#include <vector>
 
 #include "Module.h"
 #include "Timer.h"
@@ -53,6 +54,7 @@ public:
 
 	bool CreateScript(const char* filepath, const char* name);
 	bool CreatePrefab(GameObject* go);
+	bool CreateScene(std::vector<GameObject*> gos);
 
 	bool MoveAssetsFolder(const char* folder, const char* new_path);
 	bool CreateAssetsFolder(const char* path, const char* name);

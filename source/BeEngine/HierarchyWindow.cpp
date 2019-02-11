@@ -5,6 +5,8 @@
 #include "ModuleInput.h"
 #include "GameObjectAbstraction.h"
 #include "ModuleScene.h"
+#include "ResourceScene.h"
+#include "Scene.h"
 
 HierarchyWindow::HierarchyWindow()
 {
@@ -26,19 +28,30 @@ void HierarchyWindow::CleanUp()
 void HierarchyWindow::DrawEditor()
 {
 	DrawMenuBar();
-
-	std::vector<GameObject*> root_game_objects = App->gameobject->GetRootGameObjects();
 	
 	ImGui::PushFont(font);
 
+	Scene* root_scene = App->gameobject->GetRootScene();
+
+	uint scene_count = 0;
 	uint go_count = 0;
+	uint height_count = 0;
 
-	uint root_index = 0;
-	for (std::vector<GameObject*>::iterator it = root_game_objects.begin(); it != root_game_objects.end(); ++it)
+	height_count = ImGui::GetCursorPosY() + 30;
+
+	DrawScene(root_scene, scene_count, go_count, height_count);
+
+	++scene_count;
+
+	std::vector<Scene*> sub_scenes = App->gameobject->GetSubScenes();
+
+	for (std::vector<Scene*>::iterator it = sub_scenes.begin(); it != sub_scenes.end(); ++it)
 	{
-		DrawGameObjectRecursive((*it), root_index, go_count);
+		Scene* curr_sub_scene = (*it);
 
-		++root_index;
+		DrawScene(curr_sub_scene, scene_count, go_count, height_count);
+
+		++scene_count;
 	}
 
 	ImGui::PopFont();
@@ -53,6 +66,11 @@ void HierarchyWindow::DrawMenuBar()
 {
 	if (ImGui::BeginMenuBar())
 	{
+		if (ImGui::Button("New Sub Scene"))
+		{
+			App->gameobject->CreateSubScene();
+		}
+
 		if (ImGui::Button("New GameObject"))
 		{
 			App->gameobject->CreateGameObject();
@@ -60,6 +78,78 @@ void HierarchyWindow::DrawMenuBar()
 
 		ImGui::EndMenuBar();
 	}
+}
+
+void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count, uint& height_count)
+{
+	if (scene != nullptr)
+	{
+		if (scene_count == 0)
+		{
+			std::string curr_scene_text = "Current scene: " + scene->GetName();
+			ImGui::Text(curr_scene_text.c_str());
+
+			ImGui::Separator();
+		}
+		else
+		{
+			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
+			ImGui::TextColored(ImVec4(47.0f / 255.0f, 197.0f / 255.0f, 104.0f / 255.0f, 1), scene->GetName().c_str());
+
+			height_count += 20;
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
+			{
+				std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
+				for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+				{
+					if ((*it)->GetScene() != scene)
+						App->gameobject->SetGameObjectScene(scene, (*it));
+				}
+
+				dragging = false;
+			}
+
+			ImGui::EndDragDropTarget();
+		}
+
+		std::vector<GameObject*> root_game_objects = scene->GetRootGameObjects();
+
+		uint root_index = 0;
+
+		for (std::vector<GameObject*>::iterator it = root_game_objects.begin(); it != root_game_objects.end(); ++it)
+		{
+			DrawGameObjectRecursive(scene, (*it), root_index, go_count, height_count);
+
+			++root_index;
+		}
+	}
+}
+
+void HierarchyWindow::DrawSceneDragAndDrop(Scene * scene, uint scene_count)
+{
+	//// GO slot become drag target
+	//uint drag_drop_flags = ImGuiDragDropFlags_SourceNoDisableHover;
+
+	//if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	//{
+	//	int size = sizeof(go);
+	//	ImGui::SetDragDropPayload("GameObjects", go, size);
+
+	//	std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
+
+	//	for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+	//	{
+	//		ImGui::Text((*it)->GetName().c_str());
+	//	}
+
+	//	dragging = true;
+
+	//	ImGui::EndDragDropSource();
+	//}
 }
 
 void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked)
@@ -240,9 +330,9 @@ void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool ri
 	}	
 }
 
-void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, uint& go_count)
+void HierarchyWindow::DrawGameObjectRecursive(Scene* scene, GameObject* go, uint child_index, uint& go_count, uint& height_count)
 {
-	if (go != nullptr)
+	if (go != nullptr && scene != nullptr)
 	{
 		uint flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -254,17 +344,10 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 		if (go->GetSelected())
 			flags |= ImGuiTreeNodeFlags_Selected;
 
-		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 32 + ( go_count * 20)));
+		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
 		ImGui::PushID(go->GetUID().c_str());
 
 		std::string go_text = go->GetName();
-
-		if (go->GetSerializeIndependent())
-		{
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 1.0f, 0.5f, 1));
-
-			go_text += " [Serializable]";
-		}
 
 		if (go->GetPrefab())
 		{
@@ -272,9 +355,6 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 		}
 
 		bool opened = ImGui::TreeNodeEx(go_text.c_str(), flags);
-
-		if (go->GetSerializeIndependent())
-			ImGui::PopStyleColor();
 
 		bool left_clicked = false;
 		bool right_clicked = false;
@@ -291,30 +371,33 @@ void HierarchyWindow::DrawGameObjectRecursive(GameObject* go, uint child_index, 
 
 		DrawGameObjectsPopup(left_clicked, right_clicked);
 
-		DragAndDropBeforeChilds(go, child_index, go_count);
+		uint height_before = height_count + 18;
+		DragAndDropBeforeChilds(scene, go, child_index, height_before);
 
 		// -----
 
 		ImGui::PopID();
 
 		++go_count;
+		height_count += 20;
 
 		if (opened)
 		{
 			std::vector<GameObject*> childs = go->GetChilds();
 			for (int i = 0; i < childs.size(); ++i)
 			{
-				DrawGameObjectRecursive(childs[i], i, go_count);
+				DrawGameObjectRecursive(scene, childs[i], i, go_count, height_count);
 			}
 
-			DragAndDropAfterChilds(go, child_index, go_count);
+			uint height_after = height_count - 18;
+			DragAndDropAfterChilds(scene, go, child_index, height_count);
 
 			ImGui::TreePop();
 		}
 	}
 }
 
-void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index, uint & go_count)
+void HierarchyWindow::DragAndDropBeforeChilds(Scene* scene, GameObject * go, uint child_index, uint height_count)
 {
 	// GO slot become drag target
 	uint drag_drop_flags = ImGuiDragDropFlags_SourceNoDisableHover;
@@ -345,6 +428,9 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 
 			for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
 			{
+				if ((*it)->GetScene() != go->GetScene())
+					App->gameobject->SetGameObjectScene(go->GetScene(), (*it));
+
 				(*it)->SetParent(go);
 			}
 
@@ -358,7 +444,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 		// Slot in between on top of go become drop target
 		if (child_index == 0)
 		{
-			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 28 + (go_count * 20)));
+			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count - 20));
 			ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
 			if (ImGui::BeginDragDropTarget())
@@ -368,6 +454,9 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 					std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 					for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
 					{
+						if ((*it)->GetScene() != scene)
+							App->gameobject->SetGameObjectScene(scene, (*it));
+
 						if (go->GetParent() == nullptr)
 						{
 							(*it)->SetParent(nullptr);
@@ -377,6 +466,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 						else
 						{
 							(*it)->SetParent(go->GetParent());
+
 							App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index);
 						}
 					}
@@ -392,7 +482,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 		{
 			if (go->GetParent() == nullptr || (go->GetParent() != nullptr && child_index != go->GetParent()->GetChildsCount() - 1))
 			{
-				ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 49 + (go_count * 20)));
+				ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
 				ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
 				if (ImGui::BeginDragDropTarget())
@@ -402,6 +492,9 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 						std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 						for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
 						{
+							if ((*it)->GetScene() != scene)
+								App->gameobject->SetGameObjectScene(scene, (*it));
+
 							if (go->GetParent() == nullptr)
 							{
 								(*it)->SetParent(nullptr);
@@ -411,6 +504,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 							else
 							{
 								(*it)->SetParent(go->GetParent());
+
 								App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index + 1);
 							}
 						}
@@ -429,11 +523,11 @@ void HierarchyWindow::DragAndDropBeforeChilds(GameObject * go, uint child_index,
 	}
 }
 
-void HierarchyWindow::DragAndDropAfterChilds(GameObject * go, uint child_index, uint & go_count)
+void HierarchyWindow::DragAndDropAfterChilds(Scene* scene, GameObject * go, uint child_index, uint height_count)
 {
 	if (go->GetChildsCount() > 0 && go->GetParent() == nullptr && dragging)
 	{
-		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, 28 + (go_count * 20)));
+		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
 		ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
 		if (ImGui::BeginDragDropTarget())
@@ -443,6 +537,9 @@ void HierarchyWindow::DragAndDropAfterChilds(GameObject * go, uint child_index, 
 				std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 				for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
 				{
+					if ((*it)->GetScene() != scene)
+						App->gameobject->SetGameObjectScene(scene, (*it));
+
 					if (go->GetParent() == nullptr)
 					{
 						(*it)->SetParent(nullptr);
@@ -452,6 +549,7 @@ void HierarchyWindow::DragAndDropAfterChilds(GameObject * go, uint child_index, 
 					else
 					{
 						(*it)->SetParent(go->GetParent());
+
 						App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index + 1);
 					}
 				}

@@ -31,27 +31,27 @@ void MenuBar::DrawEditor()
 
 		if (ImGui::MenuItem("File"))
 		{
-			ImGui::EndMenu();
+
 		}
 
 		if (ImGui::MenuItem("Edit"))
 		{
-			ImGui::EndMenu();
+	
 		}
 
 		if (ImGui::MenuItem("Assets"))
 		{
-			ImGui::EndMenu();
+		
 		}
 
 		if (ImGui::MenuItem("GameObjects"))
 		{
-			ImGui::EndMenu();
+			
 		}
 
 		if (ImGui::MenuItem("Components"))
 		{
-			ImGui::EndMenu();
+			
 		}
 
 		if (ImGui::BeginMenu("Windows"))
@@ -63,7 +63,7 @@ void MenuBar::DrawEditor()
 
 		if (ImGui::MenuItem("About"))
 		{
-			ImGui::EndMenu();
+	
 		}
 
 		if (ImGui::BeginMenu("Layouts"))
@@ -78,6 +78,7 @@ void MenuBar::DrawEditor()
 
 		ImGui::EndMainMenuBar();
 	}
+
 	ImGui::PopFont();
 }
 

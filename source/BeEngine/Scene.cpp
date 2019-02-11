@@ -1,8 +1,8 @@
 #include "Scene.h"
 
-Scene::Scene(std::string uid)
+Scene::Scene()
 {
-	this->uid = uid;
+	
 }
 
 void Scene::Start()
@@ -23,7 +23,12 @@ std::string Scene::GetName()
 	return name;
 }
 
-std::string Scene::GetUID()
+bool Scene::GetSelected() const
 {
-	return uid;
+	return selected;
+}
+
+std::vector<GameObject*> Scene::GetRootGameObjects() const
+{
+	return root_game_objects;
 }

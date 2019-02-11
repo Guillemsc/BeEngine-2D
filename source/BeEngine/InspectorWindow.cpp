@@ -44,13 +44,6 @@ void InspectorWindow::DrawEditor()
 
 		}
 
-		bool serialize_independent = selected_go->GetSerializeIndependent();
-
-		if (ImGui::Checkbox("Serialize independent", &serialize_independent))
-		{
-			selected_go->SetSerializeIndependent(serialize_independent);
-		}
-
 		ImGui::Separator();
 
 	}

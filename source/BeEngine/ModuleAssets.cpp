@@ -21,6 +21,7 @@
 #include "GameObject.h"
 #include "GameObjectAbstraction.h"
 #include "ExplorerWindow.h"
+#include "ResourceScene.h"
 
 ModuleAssets::ModuleAssets() : Module()
 {
@@ -422,6 +423,35 @@ bool ModuleAssets::CreatePrefab(GameObject * go)
 		}
 	}
 
+	return ret;
+}
+
+bool ModuleAssets::CreateScene(std::vector<GameObject*> gos)
+{
+	bool ret = false;
+	
+	std::string curr_path = App->assets->GetCurrentAssetsPath();
+
+	std::string new_filepath = curr_path + "scene" + "." + "scene";
+
+	new_filepath = App->file_system->GetFileNameOnNameCollision(new_filepath);
+
+	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(new_filepath);
+
+	GameObjectAbstraction abs;
+
+	abs.Abstract(gos);
+	ret = abs.Serialize(curr_path, dfp.file_name, "scene");
+
+	if (ret)
+	{
+		Resource* created_res = nullptr;
+		if (App->assets->ExportAssetToLibrary(new_filepath.c_str(), created_res))
+		{
+			App->editor->explorer_window->UpdateFiles();
+		}
+	}
+	
 	return ret;
 }
 

@@ -10,6 +10,7 @@
 #include "ResourcePrefab.h"
 #include "Event.h"
 #include "ModuleEvent.h"
+#include "Scene.h"
 
 GameObject::GameObject(std::string _uid)
 {
@@ -79,46 +80,59 @@ std::string GameObject::GetUID()
 	return uid;
 }
 
+Scene * GameObject::GetScene() const
+{
+	return scene;
+}
+
 void GameObject::SetParent(GameObject* set)
 {
-	if (set != parent && set != this)
-	{
-		if (IsInChildTree(set))
-		{
-			set->RemoveParent();
-		}
+	bool wrong_scene = false;
 
-		if (parent != nullptr)
+	if (set != nullptr && set->GetScene() != scene)
+		wrong_scene = true;
+
+	if (!wrong_scene)
+	{
+		if (set != parent && set != this)
 		{
-			for (std::vector<GameObject*>::iterator it = parent->childs.begin(); it != parent->childs.end(); ++it)
+			if (IsInChildTree(set))
 			{
-				if ((*it) == this)
+				set->RemoveParent();
+			}
+
+			if (parent != nullptr)
+			{
+				for (std::vector<GameObject*>::iterator it = parent->childs.begin(); it != parent->childs.end(); ++it)
 				{
-					parent->childs.erase(it);
-					break;
+					if ((*it) == this)
+					{
+						parent->childs.erase(it);
+						break;
+					}
 				}
 			}
-		}
 
-		if (set != nullptr)
-		{
-			if (!set->IsChild(this))
+			if (set != nullptr)
 			{
-				set->childs.push_back(this);
+				if (!set->IsChild(this))
+				{
+					set->childs.push_back(this);
 
-				if (parent == nullptr)
-					App->gameobject->RemoveGameObjectFromRoot(this);
+					if (parent == nullptr)
+						App->gameobject->RemoveGameObjectFromRoot(this);
+				}
 			}
+
+			if (set == nullptr && parent != nullptr)
+				App->gameobject->AddGameObjectToRoot(this);
+
+			float4x4 last_trans = transform->GetWorldTransform();
+
+			parent = set;
+
+			transform->SetWorldTransform(last_trans);
 		}
-
-		if (set == nullptr && parent != nullptr)
-			App->gameobject->AddGameObjectToRoot(this);
-
-		float4x4 last_trans = transform->GetWorldTransform();
-
-		parent = set;
-
-		transform->SetWorldTransform(last_trans);
 	}
 }
 
@@ -131,7 +145,6 @@ GameObject* GameObject::GetParent() const
 {
 	return parent;
 }
-
 
 uint GameObject::GetChildsCount() const
 {
@@ -197,6 +210,22 @@ bool GameObject::IsInChildTree(GameObject* go)
 std::vector<GameObject*> GameObject::GetChilds() const
 {
 	return childs;
+}
+
+uint GameObject::GetChildDeepness()
+{
+	uint ret = 0;
+
+	GameObject* curr_parent = parent;
+
+	while (curr_parent != nullptr)
+	{
+		curr_parent = curr_parent->parent;
+
+		++ret;
+	}
+
+	return ret;
 }
 
 GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
@@ -302,16 +331,6 @@ std::vector<GameObjectComponent*> GameObject::GetComponents() const
 bool GameObject::GetSelected() const
 {
 	return selected;
-}
-
-void GameObject::SetSerializeIndependent(bool set)
-{
-	serialize_independent = set;
-}
-
-bool GameObject::GetSerializeIndependent() const
-{
-	return serialize_independent;
 }
 
 bool GameObject::GetHasPrefab() const

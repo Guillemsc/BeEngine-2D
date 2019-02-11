@@ -8,6 +8,7 @@
 #include "GameObjectComponent.h"
 
 class Event;
+class Scene;
 
 class ModuleGameObject : public Module
 {
@@ -27,13 +28,12 @@ public:
 
 	void OnEvent(Event* ev);
 
-	GameObject* CreateGameObject();
+	GameObject* CreateGameObject(Scene* scene = nullptr);
 	void DestroyGameObject(GameObject* go);
+	void DuplicateGameObjects(std::vector<GameObject*> gos);
 	std::vector<GameObject*> GetGameObjects();
 
 	GameObject* GetGameObjectByUID(const char* uid);
-
-	std::vector<GameObject*> GetRootGameObjects() const;
 
 	void AddGameObjectToSelected(GameObject* go);
 	void RemoveGameObjectFromSelected(GameObject* go);
@@ -41,21 +41,35 @@ public:
 	std::vector<GameObject*> GetSelectedGameObjects() const;
 	uint GetSelectedGameObjectsCount() const;
 
+	void CreateSubScene();
+	void DestroyScene(Scene* scene);
+	Scene* GetRootScene() const;
+	std::vector<Scene*> GetSubScenes() const;
+	void AddSceneToSelected(Scene* scene);
+	void RemoveSceneFromSelected(Scene* go);
+	void RemoveAllScenesFromSelected();
+
+
+	void SetGameObjectScene(Scene* scene, GameObject* go);
+	void AddGameObjectToRoot(GameObject* go);
+	void RemoveGameObjectFromRoot(GameObject* go);
+	void ChangeGameObjectPositionOnRootList(GameObject * go, uint new_pos);
+	void ChangeGameObjectPositionOnParentChildren(GameObject* go, uint new_pos);
+	void ChangeScenePositionOnList(Scene* scene, uint new_pos);
+
 	std::map<ComponentType, std::string> GetComponentsTypes() const;
 
 private:
 	void AddComponentType(const ComponentType& type, const std::string& name);
 
+	void CreateRootScene();
+	void MergeScenes();
+
 	void UpdateGameObjects();
 
-	void DestroyAllGameObjectsNow();
 	void ActuallyDestroyGameObjects();
-
-	void AddGameObjectToRoot(GameObject* go);
-	void RemoveGameObjectFromRoot(GameObject* go);
-
-	void ChangeGameObjectPositionOnRootList(GameObject* go, uint new_pos);
-	void ChangeGameObjectPositionOnParentChildren(GameObject* go, uint new_pos);
+	void ActuallyDestroyScenes();
+	void DestroyAllScenesNow();
 
 	void UpdateGameObjectsLogic();
 	void GameObjectsLogicStart();
@@ -65,8 +79,12 @@ private:
 private:
 	std::vector<GameObject*> game_objects;
 	std::vector<GameObject*> game_objects_to_destroy;
-	std::vector<GameObject*> game_objects_root;
 	std::vector<GameObject*> game_objects_selected;
+
+	Scene* root_scene;
+	std::vector<Scene*> sub_scenes;
+	std::vector<Scene*> scenes_to_destroy;
+	std::vector<Scene*> sub_scenes_selected;
 
 	std::map<ComponentType, std::string> components_type;
 

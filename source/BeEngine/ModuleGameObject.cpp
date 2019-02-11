@@ -6,9 +6,11 @@
 #include "ComponentScript.h"
 #include "Event.h"
 #include "ModuleState.h"
+#include "Scene.h"
 
 ModuleGameObject::ModuleGameObject() : Module()
 {
+	
 }
 
 ModuleGameObject::~ModuleGameObject()
@@ -18,6 +20,8 @@ ModuleGameObject::~ModuleGameObject()
 bool ModuleGameObject::Awake()
 {
 	bool ret = true;
+
+	CreateRootScene();
 
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
 
@@ -58,6 +62,7 @@ bool ModuleGameObject::PostUpdate()
 	bool ret = true;
 
 	ActuallyDestroyGameObjects();
+	ActuallyDestroyScenes();
 
 	return ret;
 }
@@ -66,7 +71,10 @@ bool ModuleGameObject::CleanUp()
 {
 	bool ret = true;
 
-	DestroyAllGameObjectsNow();
+	DestroyAllScenesNow();
+
+	root_scene->CleanUp();
+	RELEASE(root_scene);
 
 	App->event->UnSuscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
 
@@ -93,9 +101,12 @@ void ModuleGameObject::OnEvent(Event * ev)
 	}
 }
 
-GameObject* ModuleGameObject::CreateGameObject()
+GameObject* ModuleGameObject::CreateGameObject(Scene* scene)
 {
 	GameObject* ret = nullptr;
+
+	if (scene == nullptr)
+		scene = root_scene;
 
 	ret = new GameObject(GetUIDRandomHexadecimal());
 
@@ -104,6 +115,7 @@ GameObject* ModuleGameObject::CreateGameObject()
 
 	game_objects.push_back(ret);
 
+	SetGameObjectScene(scene, ret);
 	AddGameObjectToRoot(ret);
 
 	ret->Start();
@@ -156,13 +168,21 @@ void ModuleGameObject::DestroyGameObject(GameObject * go)
 			}
 
 			if(curr->GetSelected())
-				RemoveGameObjectFromSelected(curr);
+				RemoveGameObjectFromSelected(curr);			
+
+			if (curr->GetParent() == nullptr)
+				RemoveGameObjectFromRoot(curr);
 
 			to_check.erase(to_check.begin());
 
 			to_check.insert(to_check.begin(), curr->childs.begin(), curr->childs.end());
 		}
 	}
+}
+
+void ModuleGameObject::DuplicateGameObjects(std::vector<GameObject*> gos)
+{
+	std::vector<GameObject*> to_duplicate;
 }
 
 std::vector<GameObject*> ModuleGameObject::GetGameObjects()
@@ -184,11 +204,6 @@ GameObject * ModuleGameObject::GetGameObjectByUID(const char * uid)
 	}
 
 	return ret;
-}
-
-std::vector<GameObject*> ModuleGameObject::GetRootGameObjects() const
-{
-	return game_objects_root;
 }
 
 void ModuleGameObject::AddGameObjectToSelected(GameObject * go)
@@ -251,6 +266,305 @@ uint ModuleGameObject::GetSelectedGameObjectsCount() const
 	return game_objects_selected.size();
 }
 
+void ModuleGameObject::CreateSubScene()
+{
+	Scene* sub_scene = new Scene();
+	sub_scene->SetName("Sub Scene");
+
+	sub_scenes.push_back(sub_scene);
+}
+
+void ModuleGameObject::DestroyScene(Scene * scene)
+{
+	if (scene != nullptr)
+	{
+		if (scene == root_scene)
+		{
+			std::vector<GameObject*> gos = scene->GetRootGameObjects();
+
+			for (std::vector<GameObject*>::iterator it = gos.begin(); it != gos.end(); ++it)
+			{
+				DestroyGameObject((*it));
+			}
+
+			scene->root_game_objects.clear();
+
+			while (sub_scenes.size() > 0)
+			{
+				DestroyScene(*sub_scenes.begin());
+			}
+		}
+		else
+		{
+			std::vector<GameObject*> gos = scene->GetRootGameObjects();
+
+			for (std::vector<GameObject*>::iterator it = gos.begin(); it != gos.end(); ++it)
+			{
+				DestroyGameObject((*it));
+			}
+
+			scene->root_game_objects.clear();
+
+			for (std::vector<Scene*>::iterator it = sub_scenes.begin(); it != sub_scenes.end(); ++it)
+			{
+				if ((*it) == scene)
+				{
+					sub_scenes.erase(it);
+					break;
+				}
+			}
+
+			bool found = false;
+			for (std::vector<Scene*>::iterator it = scenes_to_destroy.begin(); it != scenes_to_destroy.end(); ++it)
+			{
+				if ((*it) == scene)
+				{
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				scenes_to_destroy.push_back(scene);
+			}
+		}
+	}
+}
+
+Scene * ModuleGameObject::GetRootScene() const
+{
+	return root_scene;
+}
+
+std::vector<Scene*> ModuleGameObject::GetSubScenes() const
+{
+	return sub_scenes;
+}
+
+void ModuleGameObject::AddSceneToSelected(Scene * scene)
+{
+	if (scene != nullptr && scene != root_scene)
+	{
+		bool found = false;
+		for (std::vector<Scene*>::iterator it = sub_scenes_selected.begin(); it != sub_scenes_selected.end(); ++it)
+		{
+			if (scene == (*it))
+			{
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			scene->selected = true;
+
+			sub_scenes_selected.push_back(scene);
+		}
+	}
+}
+
+void ModuleGameObject::RemoveSceneFromSelected(Scene * scene)
+{
+	if (scene != nullptr)
+	{
+		for (std::vector<Scene*>::iterator it = sub_scenes_selected.begin(); it != sub_scenes_selected.end(); ++it)
+		{
+			if (scene == (*it))
+			{
+				scene->selected = false;
+
+				sub_scenes_selected.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+void ModuleGameObject::RemoveAllScenesFromSelected()
+{
+	for (std::vector<Scene*>::iterator it = sub_scenes_selected.begin(); it != sub_scenes_selected.end(); ++it)
+	{
+		(*it)->selected = false;
+	}
+
+	sub_scenes_selected.clear();
+}
+
+void ModuleGameObject::SetGameObjectScene(Scene * scene, GameObject* go)
+{
+	if (scene != nullptr && go != nullptr)
+	{
+		std::vector<GameObject*> to_check;
+
+		to_check.push_back(go);
+
+		while (to_check.size() > 0)
+		{
+			GameObject* curr_go = *to_check.begin();
+
+			if (go->scene != nullptr)
+			{
+				if (go->GetParent() == nullptr)
+					RemoveGameObjectFromRoot(go);
+			}
+
+			go->scene = scene;
+
+			if (go->GetParent() == nullptr)
+				AddGameObjectToRoot(go);
+
+			to_check.erase(to_check.begin());
+
+			to_check.insert(to_check.begin(), curr_go->childs.begin(), curr_go->childs.end());
+		}
+	}
+}
+
+void ModuleGameObject::AddGameObjectToRoot(GameObject * go)
+{
+	if (go != nullptr &&  go->scene != nullptr)
+	{
+		bool exists = false;
+
+		for (std::vector<GameObject*>::iterator it = go->scene->root_game_objects.begin(); it != go->scene->root_game_objects.end(); ++it)
+		{
+			if ((*it) == go)
+			{
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists)
+		{
+			go->scene->root_game_objects.push_back(go);
+		}
+	}
+}
+
+void ModuleGameObject::RemoveGameObjectFromRoot( GameObject * go)
+{
+	if (go != nullptr &&  go->scene != nullptr)
+	{
+		for (std::vector<GameObject*>::iterator it = go->scene->root_game_objects.begin(); it != go->scene->root_game_objects.end(); ++it)
+		{
+			if ((*it) == go)
+			{
+				go->scene->root_game_objects.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+void ModuleGameObject::ChangeGameObjectPositionOnRootList(GameObject * go, uint new_pos)
+{
+	if (go != nullptr &&  go->scene != nullptr)
+	{
+		if (go->GetParent() == nullptr)
+		{
+			bool exists = false;
+			uint last_pos = 0;
+
+			for (std::vector<GameObject*>::iterator it = go->scene->root_game_objects.begin(); it != go->scene->root_game_objects.end(); ++it)
+			{
+				if ((*it) == go)
+				{
+					go->scene->root_game_objects.erase(it);
+					exists = true;
+					break;
+				}
+
+				++last_pos;
+			}
+
+			if (exists)
+			{
+				if (last_pos < new_pos)
+					--new_pos;
+
+				if (new_pos > go->scene->root_game_objects.size())
+					new_pos = go->scene->root_game_objects.size();
+
+				go->scene->root_game_objects.insert(go->scene->root_game_objects.begin() + new_pos, go);
+			}
+		}
+	}
+}
+
+void ModuleGameObject::ChangeGameObjectPositionOnParentChildren(GameObject * go, uint new_pos)
+{
+	if (go != nullptr)
+	{
+		GameObject* parent = go->GetParent();
+
+		if (parent != nullptr)
+		{
+			go->scene = parent->scene;
+
+			bool exists = false;
+			uint last_pos = 0;
+
+			for (std::vector<GameObject*>::iterator it = parent->childs.begin(); it != parent->childs.end(); ++it)
+			{
+				if ((*it) == go)
+				{
+					parent->childs.erase(it);
+					exists = true;
+					break;
+				}
+
+				++last_pos;
+			}
+
+			if (exists)
+			{
+				if (last_pos < new_pos)
+					--new_pos;
+
+				if (new_pos > parent->childs.size())
+					new_pos = parent->childs.size();
+
+				parent->childs.insert(parent->childs.begin() + new_pos, go);
+			}
+		}
+	}
+}
+
+void ModuleGameObject::ChangeScenePositionOnList(Scene * scene, uint new_pos)
+{
+	if (scene != nullptr)
+	{
+		bool exists = false;
+		uint last_pos = 0;
+
+		for (std::vector<Scene*>::iterator it = sub_scenes.begin(); it != sub_scenes.end(); ++it)
+		{
+			if ((*it) == scene)
+			{
+				sub_scenes.erase(it);
+				exists = true;
+				break;
+			}
+
+			++last_pos;
+		}
+
+		if (exists)
+		{
+			if (last_pos < new_pos)
+				--new_pos;
+
+			if (new_pos > sub_scenes.size())
+				new_pos = sub_scenes.size();
+
+			sub_scenes.insert(sub_scenes.begin() + new_pos, scene);
+		}
+	}
+}
+
 std::map<ComponentType, std::string> ModuleGameObject::GetComponentsTypes() const
 {
 	return components_type;
@@ -259,6 +573,16 @@ std::map<ComponentType, std::string> ModuleGameObject::GetComponentsTypes() cons
 void ModuleGameObject::AddComponentType(const ComponentType & type, const std::string& name)
 {
 	components_type[type] = name;
+}
+
+void ModuleGameObject::CreateRootScene()
+{
+	root_scene = new Scene();
+	root_scene->SetName("undefined");
+}
+
+void ModuleGameObject::MergeScenes()
+{
 }
 
 void ModuleGameObject::UpdateGameObjects()
@@ -283,18 +607,6 @@ void ModuleGameObject::UpdateGameObjects()
 	}
 }
 
-void ModuleGameObject::DestroyAllGameObjectsNow()
-{
-	std::vector<GameObject*> all_game_objects = game_objects;
-
-	for (std::vector<GameObject*>::iterator it = all_game_objects.begin(); it != all_game_objects.end(); ++it)
-	{
-		DestroyGameObject(*it);
-	}
-
-	ActuallyDestroyGameObjects();
-}
-
 void ModuleGameObject::ActuallyDestroyGameObjects()
 {
 	for (std::vector<GameObject*>::iterator it = game_objects_to_destroy.begin(); it != game_objects_to_destroy.end(); ++it)
@@ -305,12 +617,12 @@ void ModuleGameObject::ActuallyDestroyGameObjects()
 
 		for (std::vector<GameObject*>::iterator ch = childs.begin(); ch != childs.end(); ++ch)
 		{
+			(*ch)->scene = nullptr;
 			(*ch)->RemoveParent();
 		}
 
+		curr_go->scene = nullptr;
 		curr_go->RemoveParent();
-
-		RemoveGameObjectFromRoot(curr_go);
 
 		curr_go->CleanUp();
 		RELEASE(curr_go);
@@ -319,84 +631,25 @@ void ModuleGameObject::ActuallyDestroyGameObjects()
 	game_objects_to_destroy.clear();
 }
 
-void ModuleGameObject::AddGameObjectToRoot(GameObject * go)
+void ModuleGameObject::ActuallyDestroyScenes()
 {
-	if (go != nullptr)
+	for (std::vector<Scene*>::iterator it = scenes_to_destroy.begin(); it != scenes_to_destroy.end(); ++it)
 	{
-		bool found = false;
-		for (std::vector<GameObject*>::iterator it = game_objects_root.begin(); it != game_objects_root.end(); ++it)
-		{
-			if (go == (*it))
-			{
-				found = true;
-				break;
-			}
-		}
+		Scene* curr_scene = (*it);
 
-		if (!found)
-		{
-			game_objects_root.push_back(go);
-		}
+		curr_scene->CleanUp();
+		RELEASE(curr_scene);
 	}
+
+	scenes_to_destroy.clear();
 }
 
-void ModuleGameObject::RemoveGameObjectFromRoot(GameObject * go)
+void ModuleGameObject::DestroyAllScenesNow()
 {
-	if (go != nullptr)
-	{
-		for (std::vector<GameObject*>::iterator it = game_objects_root.begin(); it != game_objects_root.end(); ++it)
-		{
-			if (go == (*it))
-			{
-				game_objects_root.erase(it);
-				break;
-			}
-		}
-	}
-}
+	DestroyScene(root_scene);
 
-void ModuleGameObject::ChangeGameObjectPositionOnRootList(GameObject * go, uint new_pos)
-{
-	if (go != nullptr)
-	{
-		bool exists = false;
-		for (std::vector<GameObject*>::iterator it = game_objects_root.begin(); it != game_objects_root.end(); ++it)
-		{
-			if ((*it) == go)
-			{
-				game_objects_root.erase(it);
-				break;
-			}
-		}
-
-		if (new_pos > game_objects_root.size())
-			new_pos = game_objects_root.size();
-
-		game_objects_root.insert(game_objects_root.begin() + new_pos, go);
-	}
-}
-
-void ModuleGameObject::ChangeGameObjectPositionOnParentChildren(GameObject * go, uint new_pos)
-{
-	if (go != nullptr && go->GetParent() != nullptr)
-	{
-		GameObject* parent = go->GetParent();
-
-		bool exists = false;
-		for (std::vector<GameObject*>::iterator it = parent->childs.begin(); it != parent->childs.end(); ++it)
-		{
-			if ((*it) == go)
-			{
-				parent->childs.erase(it);
-				break;
-			}
-		}
-
-		if (new_pos > parent->childs.size())
-			new_pos = parent->childs.size();
-
-		parent->childs.insert(parent->childs.begin() + new_pos, go);
-	}
+	ActuallyDestroyGameObjects();
+	ActuallyDestroyScenes();
 }
 
 void ModuleGameObject::UpdateGameObjectsLogic()

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Globals.h"
+#include "GameObject.h"
 
 class Scene
 {
@@ -14,7 +15,7 @@ private:
 	void operator delete(void *) {}
 
 public:
-	Scene(std::string uid);
+	Scene();
 	~Scene() {};
 
 	void Start();
@@ -23,12 +24,16 @@ public:
 	void SetName(const char* set);
 	std::string GetName();
 
-	std::string GetUID();
+	bool GetSelected() const;
 
+	std::vector<GameObject*> GetRootGameObjects() const;
 
 private:
 	std::string name;
-	std::string uid;
+
+	bool selected = false;
+
+	std::vector<GameObject*> root_game_objects;
 };
 
 #endif // !__SCENE_H__

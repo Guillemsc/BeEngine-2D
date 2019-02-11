@@ -7,6 +7,7 @@
 #include "ModuleAssets.h"
 #include "GameObjectAbstraction.h"
 #include "ModuleFileSystem.h"
+#include "ModuleGameObject.h"
 
 ModuleScene::ModuleScene() : Module()
 {
@@ -73,4 +74,20 @@ bool ModuleScene::UpdateFromPrefab(GameObject * go)
 	}
 
 	return ret;
+}
+
+bool ModuleScene::CreateNewScene()
+{
+	bool ret = false;
+
+	//std::vector<GameObject*> root_gos = App->gameobject->GetRootGameObjects();
+
+	//App->assets->CreateScene(root_gos);
+
+	return ret;
+}
+
+ResourceScene * ModuleScene::GetCurrentScene() const
+{
+	return curr_scene;
 }

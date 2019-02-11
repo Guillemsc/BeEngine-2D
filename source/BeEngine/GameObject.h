@@ -11,6 +11,7 @@ class ComponentTransform;
 class ScriptingClassInstance;
 class ResourcePrefab;
 class Event;
+class Scene;
 
 class GameObject 
 {
@@ -19,6 +20,7 @@ class GameObject
 	friend class ModuleAssets;
 	friend class ScriptingItemGameObject;
 	friend class ResourcePrefab;
+	friend class Scene;
 
 private:
 	void operator delete(void *) {}
@@ -40,6 +42,8 @@ public:
 
 	std::string GetUID();
 
+	Scene* GetScene() const;
+
 	void SetParent(GameObject* set); 
 	void RemoveParent();
 	GameObject* GetParent() const;
@@ -48,6 +52,7 @@ public:
 	bool IsChild(GameObject* go);
 	bool IsInChildTree(GameObject* go);
 	std::vector<GameObject*> GetChilds() const;
+	uint GetChildDeepness();
 
 	GameObjectComponent* CreateComponent(const ComponentType& type);
 	void DestroyComponent(GameObjectComponent* component, bool check_can_destroy = true);
@@ -55,9 +60,6 @@ public:
 	std::vector<GameObjectComponent*> GetComponents() const;
 
 	bool GetSelected() const;
-
-	void SetSerializeIndependent(bool set);
-	bool GetSerializeIndependent() const;
 
 	bool GetHasPrefab() const;
 	ResourcePrefab* GetPrefab() const;
@@ -75,6 +77,8 @@ private:
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> childs;
 
+	Scene* scene = nullptr;
+
 	std::vector<GameObjectComponent*> components;
 	std::vector<GameObjectComponent*> components_to_destroy;
 
@@ -84,9 +88,6 @@ private:
 	ResourcePrefab* resource_prefab = nullptr;
 
 	bool selected = false;
-	uint tree_node_order = 0;
-
-	bool serialize_independent = false;
 
 	ScriptingClassInstance* scripting_instance = nullptr;
 };

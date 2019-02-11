@@ -5,6 +5,7 @@
 #include "imgui.h"
 
 class GameObject;
+class Scene;
 
 class HierarchyWindow : public EditorWindow
 {
@@ -24,11 +25,16 @@ public:
 
 private:
 	void DrawMenuBar();
+
+	void DrawScene(Scene* scene, uint scene_count, uint& go_count, uint& height_count);
+	void DrawSceneDragAndDrop(Scene* scene, uint scene_count);
+
 	void DrawGameObjectsPopup(bool left_clicked, bool right_clicked);
 	void GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked);
-	void DrawGameObjectRecursive(GameObject* go, uint child_index, uint &go_count);
-	void DragAndDropBeforeChilds(GameObject* go, uint child_index, uint &go_count);
-	void DragAndDropAfterChilds(GameObject* go, uint child_index, uint &go_count);
+
+	void DrawGameObjectRecursive(Scene* scene, GameObject* go, uint child_index, uint &go_count, uint& height_count);
+	void DragAndDropBeforeChilds(Scene* scene, GameObject* go, uint child_index, uint height_count);
+	void DragAndDropAfterChilds(Scene* scene, GameObject* go, uint child_index, uint height_count);
 
 private:
 	ImFont* font = nullptr;

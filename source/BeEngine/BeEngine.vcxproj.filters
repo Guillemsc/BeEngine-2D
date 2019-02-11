@@ -97,6 +97,9 @@
     <Filter Include="Sources\8. SceneObjects ==========\GameObject\Components">
       <UniqueIdentifier>{c384d477-08e1-4ba8-b4ea-684bb9921c8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\8. SceneObjects ==========\Scene">
+      <UniqueIdentifier>{9752b16c-2a54-4875-90dc-063d44045e8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -564,6 +567,12 @@
     <ClInclude Include="ResourcePrefab.h">
       <Filter>Sources\5. Resources =============</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceScene.h">
+      <Filter>Sources\5. Resources =============</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Sources\8. SceneObjects ==========\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -925,6 +934,12 @@
     </ClCompile>
     <ClCompile Include="ResourcePrefab.cpp">
       <Filter>Sources\5. Resources =============</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceScene.cpp">
+      <Filter>Sources\5. Resources =============</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Sources\8. SceneObjects ==========\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

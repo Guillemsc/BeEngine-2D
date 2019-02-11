@@ -58,10 +58,12 @@ void ComponentTransform::OnSaveAbstraction(DataAbstraction & abs)
 	abs.AddFloat2("position", GetPosition());
 	abs.AddFloat2("scale", GetScale());
 	abs.AddFloat("rotation", GetRotationDegrees());
+	abs.AddBool("keep_ratio", keep_scale_ratio);
 }
 
 void ComponentTransform::OnLoadAbstraction(DataAbstraction & abs)
 {
+	keep_scale_ratio = abs.GetBool("keep_ratio");
 	SetPosition(abs.GetFloat2("position"));
 	SetScale(abs.GetFloat2("scale"));
 	SetRotationDegrees(abs.GetFloat("rotation"));

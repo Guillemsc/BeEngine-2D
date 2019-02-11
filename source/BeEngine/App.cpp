@@ -79,7 +79,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(input, "Module Input");
 	AddModule(audio, "Module Audio");
 	AddModule(renderer, "Module Renderer");
-	AddModule(scene_renderer, "Module Renderer");
+	AddModule(scene_renderer, "Module SceneRenderer");
 	AddModule(editor, "Module Editor");
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");
@@ -250,6 +250,8 @@ bool Application::CleanUp()
 
 	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 	{
+		INTERNAL_LOG("Module [%s] Release", (*it)->GetName());
+
 		RELEASE(*it);
 	}
 
