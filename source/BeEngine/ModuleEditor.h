@@ -170,6 +170,8 @@ private:
 	bool draw_editor = true;
 
 	bool demo_window_open = true;
+
+	bool draw_imgui_debug = true;
 };
 
 #endif // !__MODULE_EDITOR_H__

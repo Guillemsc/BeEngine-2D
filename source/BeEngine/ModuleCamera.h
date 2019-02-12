@@ -47,8 +47,8 @@ private:
 	uint last_width = 0;
 	uint last_height = 0;
 
-	int max_msaa_samples = 8;
-	int current_msaa_samples = 8;
+	int max_msaa_samples = 2;
+	int current_msaa_samples = 2;
 
 	bool created = false;
 };
@@ -65,7 +65,7 @@ public:
 
 	void CleanUp();
 
-	void Bind(uint width, uint heigth);
+	void Bind();
 	void Unbind();
 	uint GetTextId();
 

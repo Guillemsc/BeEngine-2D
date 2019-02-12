@@ -67,17 +67,12 @@ void StaticGridRenderer::Start()
 		\
 		void main()\
 		{\
-			vec2 grid_uv = oUvs.xy * 200000; \
-			float x = grid(grid_uv, 0.030); \
-			if(x == 0)\
-			{\
-				finalColor.rgb = vec3(1);\
-				finalColor.a = 0.5;\
-			}\
-			else\
-			{\
-				finalColor.a = 0.0;\
-			}\
+			vec2 coord = oUvs.xy * 10000;\
+			\
+			vec2 grid = abs(fract(coord - 0.5) - 0.5) / fwidth(coord);\
+			float line = min(grid.x, grid.y);\
+			\
+			finalColor = vec4(vec3(1.0 - min(line, 1.0)), 0.6); \
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);

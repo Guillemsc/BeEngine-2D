@@ -40,7 +40,7 @@ bool ModuleSceneRenderer::PostUpdate()
 
 	// ---------------------------------------------------------------------
 
-	App->camera->GetEditorCamera()->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
+	App->camera->GetEditorCamera()->Bind();
 
 	App->guizmo->RenderGuizmos();
 
@@ -88,7 +88,7 @@ void ModuleSceneRenderer::RenderRenderers(Camera2D* camera)
 {
 	if (camera != nullptr)
 	{
-		camera->Bind(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
+		camera->Bind();
 
 		float4x4 view_mat = camera->GetOpenGLViewMatrix();
 		float4x4 projection_mat = camera->GetOpenGLProjectionMatrix();

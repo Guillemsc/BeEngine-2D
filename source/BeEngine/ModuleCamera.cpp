@@ -252,10 +252,10 @@ void Camera2D::CleanUp()
 	RELEASE(render_tex);
 }
 
-void Camera2D::Bind(uint width, uint heigth)
+void Camera2D::Bind()
 {
 	if(render_tex != nullptr)
-		render_tex->Bind(width, heigth);
+		render_tex->Bind(viewport_size.x, viewport_size.y);
 }
 
 void Camera2D::Unbind()
@@ -338,7 +338,6 @@ void Camera2D::SetSize(float _size)
 		size = 0.0001f;
 
 	SetViewportSize(viewport_size.x, viewport_size.y);
-	
 }
 
 const float Camera2D::GetSize() const

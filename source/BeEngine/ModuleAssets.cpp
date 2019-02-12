@@ -302,6 +302,7 @@ bool ModuleAssets::ExportAssetToLibrary(const char * filepath, Resource*& res)
 	}
 	else
 	{
+		res->SetAssetFilepath(std::string(filepath));
 		res->EM_ExportToLibrary();
 
 		ret = true;
@@ -583,7 +584,11 @@ bool ModuleAssets::CreateAssetsFolder(const char * path, const char * name)
 {
 	bool ret = false;
 
+	StopRisingWatchingEvents();
+
 	ret = App->file_system->FolderCreate(path, name, true);
+
+	StopRisingWatchingEvents();
 
 	return ret;
 }

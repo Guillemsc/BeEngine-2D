@@ -79,8 +79,11 @@ bool ModuleEditor::PreUpdate()
 
 	ImGuiStartFrame();
 
-	DrawEditorElements();
-	DrawEditorWindows();
+	if (draw_imgui_debug)
+	{
+		DrawEditorElements();
+		DrawEditorWindows();
+	}
 
 	ImGuiEndFrame();
 
@@ -90,6 +93,11 @@ bool ModuleEditor::PreUpdate()
 bool ModuleEditor::Update()
 {
 	bool ret = true;
+
+	//if (App->input->GetKeyDown("a"))
+	//{
+	//	draw_imgui_debug = !draw_imgui_debug;
+	//}
 
 	// ImGui::ShowDemoWindow(&demo_window_open);
 	
