@@ -269,6 +269,7 @@ uint ModuleGameObject::GetSelectedGameObjectsCount() const
 Scene* ModuleGameObject::CreateSubScene()
 {
 	Scene* sub_scene = new Scene(GetUIDRandomHexadecimal());
+	sub_scene->Start();
 	sub_scene->SetName("Sub Scene");
 
 	sub_scenes.push_back(sub_scene);
@@ -597,6 +598,7 @@ void ModuleGameObject::AddComponentType(const ComponentType & type, const std::s
 void ModuleGameObject::CreateRootScene()
 {
 	root_scene = new Scene(GetUIDRandomHexadecimal());
+	root_scene->Start();
 	root_scene->SetName("undefined");
 }
 

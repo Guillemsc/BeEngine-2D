@@ -437,16 +437,16 @@ bool ModuleAssets::CreateScene()
 	bool ret = false;
 
 	StopRisingWatchingEvents();
+
+	Scene* root = App->gameobject->GetRootScene();
 	
 	std::string curr_path = App->assets->GetCurrentAssetsPath();
 
-	std::string new_filepath = curr_path + "scene" + "." + "scene";
+	std::string new_filepath = curr_path + root->GetName() + "." + "scene";
 
 	new_filepath = App->file_system->GetFileNameOnNameCollision(new_filepath);
 
 	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(new_filepath);
-
-	Scene* root = App->gameobject->GetRootScene();
 
 	GameObjectAbstraction abs;
 	abs.Abstract(root->GetRootGameObjects());
