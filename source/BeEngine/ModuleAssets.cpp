@@ -395,6 +395,8 @@ bool ModuleAssets::CreatePrefab(GameObject * go)
 {
 	bool ret = false;
 
+	StopRisingWatchingEvents();
+
 	if (go != nullptr)
 	{
 		std::string curr_path = App->assets->GetCurrentAssetsPath();
@@ -425,12 +427,16 @@ bool ModuleAssets::CreatePrefab(GameObject * go)
 		}
 	}
 
+	StartRisingWatchingEvents();
+
 	return ret;
 }
 
 bool ModuleAssets::CreateScene()
 {
 	bool ret = false;
+
+	StopRisingWatchingEvents();
 	
 	std::string curr_path = App->assets->GetCurrentAssetsPath();
 
@@ -452,56 +458,78 @@ bool ModuleAssets::CreateScene()
 	{
 		Scene* curr_scene = (*it);
 
-		GameObjectAbstraction abs;
-		abs.Abstract(curr_scene->GetRootGameObjects());
+		ResourceScene* rs = curr_scene->GetResourceScene();
 
-		std::string new_filepath = curr_path + curr_scene->GetName() + "." + "scene";
+		if (rs == nullptr)
+		{
+			GameObjectAbstraction abs;
+			abs.Abstract(curr_scene->GetRootGameObjects());
 
-		new_filepath = App->file_system->GetFileNameOnNameCollision(new_filepath);
+			std::string new_filepath = curr_path + curr_scene->GetName() + "." + "scene";
 
-		DecomposedFilePath dfp = App->file_system->DecomposeFilePath(new_filepath);
+			new_filepath = App->file_system->GetFileNameOnNameCollision(new_filepath);
 
+			DecomposedFilePath dfp = App->file_system->DecomposeFilePath(new_filepath);
+
+			ret = abs.Serialize(curr_path, dfp.file_name, "scene");
+
+			if (ret)
+			{
+				Resource* created_res = nullptr;
+				if (App->assets->ExportAssetToLibrary(new_filepath.c_str(), created_res))
+				{
+					used_uids.push_back(created_res->GetUID());
+				}
+			}
+		}
+		else
+		{
+			rs->UpdateScene(curr_scene);
+
+			used_uids.push_back(rs->GetUID());
+		}
+	}
+
+	ResourceScene* root_rs = root->GetResourceScene();
+
+	if (root_rs == nullptr)
+	{
 		ret = abs.Serialize(curr_path, dfp.file_name, "scene");
+
+		JSON_Doc* doc = App->json->LoadJSON(new_filepath.c_str());
+
+		if (doc != nullptr)
+		{
+			doc->SetArray("sub_scenes");
+
+			for (std::vector<std::string>::iterator it = used_uids.begin(); it != used_uids.end(); ++it)
+			{
+				doc->AddStringToArray("sub_scenes", (*it).c_str());
+			}
+
+			doc->Save();
+
+			App->json->UnloadJSON(doc);
+		}
 
 		if (ret)
 		{
 			Resource* created_res = nullptr;
 			if (App->assets->ExportAssetToLibrary(new_filepath.c_str(), created_res))
 			{
-				used_uids.push_back(created_res->GetUID());
+				root->SetResourceScene((ResourceScene*)created_res);
 			}
 		}
 	}
-
-	ret = abs.Serialize(curr_path, dfp.file_name, "scene");
-
-	JSON_Doc* doc = App->json->LoadJSON(new_filepath.c_str());
-
-	if (doc != nullptr)
+	else
 	{
-		doc->SetArray("sub_scenes");
-
-		for (std::vector<std::string>::iterator it = used_uids.begin(); it != used_uids.end(); ++it)
-		{
-			doc->AddStringToArray("sub_scenes", (*it).c_str());
-		}
-
-		doc->Save();
-
-		App->json->UnloadJSON(doc);
-	}
-
-	if (ret)
-	{
-		Resource* created_res = nullptr;
-		if (App->assets->ExportAssetToLibrary(new_filepath.c_str(), created_res))
-		{
-
-		}
+		root_rs->UpdateScene(root, used_uids);
 	}
 
 	App->editor->explorer_window->UpdateFiles();
 	
+	StopRisingWatchingEvents();
+
 	return ret;
 }
 

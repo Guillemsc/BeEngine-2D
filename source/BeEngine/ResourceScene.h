@@ -9,6 +9,7 @@
 class ResourceScript;
 class GameObject;
 class GameObjectComponent;
+class Scene;
 
 class ResourceScene : public Resource
 {
@@ -31,8 +32,8 @@ public:
 	void OnRenameAsset(const char* new_name, const char* last_name);
 	void OnMoveAsset(const char* new_asset_path, const char* last_asset_path);
 
-	void UpdateScene(const GameObjectAbstraction& abstraction);
-	void LoadToScene();
+	void UpdateScene(Scene* sc, std::vector<std::string> used_uids = std::vector<std::string>());
+	std::vector<GameObject*> LoadToScene(Scene* sc);
 
 	bool DrawEditorExplorer();
 

@@ -2,6 +2,9 @@
 #include "App.h"
 #include "ModuleResource.h"
 #include "imgui.h"
+#include "ModuleGameObject.h"
+#include "Scene.h"
+#include "ModuleAssets.h"
 
 ResourceScene::ResourceScene() : Resource(ResourceType::RESOURCE_TYPE_SCENE)
 {
@@ -55,26 +58,30 @@ void ResourceScene::ImportFromLibrary()
 
 		JSON_Doc* doc = App->json->LoadJSON(resource_filepath.c_str());
 
-		related_scenes.clear();
-
 		if (doc != nullptr)
 		{
-			uint count = doc->GetArrayCount("sub_scenes");
+			related_scenes.clear();
 
-			for (int i = 0; i < count; ++i)
+			if (doc != nullptr)
 			{
-				std::string uid = doc->GetStringFromArray("sub_scenes", i);
+				uint count = doc->GetArrayCount("sub_scenes");
 
-				related_scenes.push_back(uid);
+				for (int i = 0; i < count; ++i)
+				{
+					std::string uid = doc->GetStringFromArray("sub_scenes", i);
+
+					related_scenes.push_back(uid);
+				}
 			}
-		}
 
-		App->json->UnloadJSON(doc);
+			App->json->UnloadJSON(doc);
+		}
 	}
 }
 
 void ResourceScene::OnRemoveAsset()
 {
+	
 }
 
 void ResourceScene::OnRenameAsset(const char * new_name, const char * last_name)
@@ -85,13 +92,74 @@ void ResourceScene::OnMoveAsset(const char * new_asset_path, const char * last_a
 {
 }
 
-void ResourceScene::UpdateScene(const GameObjectAbstraction & abstraction)
+void ResourceScene::UpdateScene(Scene* sc, std::vector<std::string> used_uids)
 {
+	App->assets->StopRisingWatchingEvents();
+
+	if (sc != nullptr)
+	{
+		std::vector<GameObject*> root_gos = sc->GetRootGameObjects();
+
+		abstraction.Abstract(root_gos);
+
+		related_scenes.clear();
+
+		abstraction.Serialize(d_asset_filepath.path, d_asset_filepath.file_name, "scene");
+
+		JSON_Doc* doc = App->json->LoadJSON(d_asset_filepath.file_path.c_str());
+
+		if (doc != nullptr)
+		{
+			doc->SetArray("sub_scenes");
+
+			for (std::vector<std::string>::iterator it = used_uids.begin(); it != used_uids.end(); ++it)
+			{
+				doc->AddStringToArray("sub_scenes", (*it).c_str());
+				related_scenes.push_back((*it));
+			}
+
+			doc->Save();
+
+			App->json->UnloadJSON(doc);
+		}
+
+		ExportToLibrary(uid);
+
+		App->assets->RenameAsset(asset_filepath.c_str(), sc->GetName().c_str());
+	}
+
+	App->assets->StartRisingWatchingEvents();
 }
 
-void ResourceScene::LoadToScene()
+std::vector<GameObject*> ResourceScene::LoadToScene(Scene* sc)
 {
+	std::vector<GameObject*> ret;
 
+	if (sc != nullptr)
+	{
+		ret = abstraction.DeAbstract();
+
+		sc->SetResourceScene(this);
+		sc->SetName(GetDecomposedAssetFilepath().file_name.c_str());
+
+		for (std::vector<GameObject*>::iterator it = ret.begin(); it != ret.end(); ++it)
+		{
+			App->gameobject->SetGameObjectScene(sc, (*it));
+		}
+
+		for (std::vector<std::string>::iterator it = related_scenes.begin(); it != related_scenes.end(); ++it)
+		{
+			ResourceScene* sc = (ResourceScene*)App->resource->GetResourceFromUid((*it), ResourceType::RESOURCE_TYPE_SCENE);
+
+			if (sc != nullptr)
+			{
+				Scene* new_scene = App->gameobject->CreateSubScene();
+				sc->LoadToScene(new_scene);
+			}
+		}
+	}
+
+	return ret;
 }
 
 bool ResourceScene::DrawEditorExplorer()
@@ -100,7 +168,8 @@ bool ResourceScene::DrawEditorExplorer()
 
 	if (ImGui::Button("Load Scene"))
 	{
-		LoadToScene();
+		App->gameobject->DestroyScene(App->gameobject->GetRootScene());
+		LoadToScene(App->gameobject->GetRootScene());
 
 		ret = true;
 	}

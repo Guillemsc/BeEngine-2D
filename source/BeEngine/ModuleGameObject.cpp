@@ -266,12 +266,14 @@ uint ModuleGameObject::GetSelectedGameObjectsCount() const
 	return game_objects_selected.size();
 }
 
-void ModuleGameObject::CreateSubScene()
+Scene* ModuleGameObject::CreateSubScene()
 {
 	Scene* sub_scene = new Scene(GetUIDRandomHexadecimal());
 	sub_scene->SetName("Sub Scene");
 
 	sub_scenes.push_back(sub_scene);
+
+	return sub_scene;
 }
 
 void ModuleGameObject::DestroyScene(Scene * scene)

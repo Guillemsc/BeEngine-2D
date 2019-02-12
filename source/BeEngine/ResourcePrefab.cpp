@@ -75,9 +75,6 @@ void ResourcePrefab::UpdatePrefab(const GameObjectAbstraction & abs)
 
 	App->assets->StopRisingWatchingEvents();
 
-	DecomposedFilePath library_dfp = App->file_system->DecomposeFilePath(library_filepath);
-
-	abstraction.Serialize(library_dfp.path, uid, "prefab");
 	abstraction.Serialize(d_asset_filepath.path, d_asset_filepath.file_name, "prefab");
 
 	ExportToLibrary(uid);

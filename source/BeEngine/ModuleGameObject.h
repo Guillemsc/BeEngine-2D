@@ -41,7 +41,7 @@ public:
 	std::vector<GameObject*> GetSelectedGameObjects() const;
 	uint GetSelectedGameObjectsCount() const;
 
-	void CreateSubScene();
+	Scene* CreateSubScene();
 	void DestroyScene(Scene* scene);
 	Scene* GetRootScene() const;
 	std::vector<Scene*> GetSubScenes() const;

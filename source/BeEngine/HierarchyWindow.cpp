@@ -259,7 +259,7 @@ void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count,
 			ImGui::PushFont(scenes_font);
 
 			ImGui::PushID(scene->GetUid().c_str());
-			std::string curr_scene_text = "Current scene: asdasdasdasdasd" + scene->GetName();
+			std::string curr_scene_text = "Current scene: " + scene->GetName();
 			ImGui::Text(curr_scene_text.c_str());
 
 			ImGui::SameLine();
