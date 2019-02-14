@@ -302,7 +302,6 @@ bool ModuleAssets::ExportAssetToLibrary(const char * filepath, Resource*& res)
 	}
 	else
 	{
-		res->SetAssetFilepath(std::string(filepath));
 		res->EM_ExportToLibrary();
 
 		ret = true;

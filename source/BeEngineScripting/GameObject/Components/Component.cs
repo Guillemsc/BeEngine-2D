@@ -7,5 +7,6 @@ namespace BeEngine
 {
     class Component : BeEngineObject
     {
+
     }
 }

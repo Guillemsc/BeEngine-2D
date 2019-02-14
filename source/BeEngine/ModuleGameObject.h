@@ -6,6 +6,7 @@
 #include "Module.h"
 #include "GameObject.h"
 #include "GameObjectComponent.h"
+#include "GameObjectAbstraction.h"
 
 class Event;
 class Scene;
@@ -25,6 +26,9 @@ public:
 	bool Update();
 	bool PostUpdate();
 	bool CleanUp();
+
+	void OnLoadProject(JSON_Doc* config);
+	void OnSaveProject(JSON_Doc* config);
 
 	void OnEvent(Event* ev);
 
@@ -77,6 +81,9 @@ private:
 	void GameObjectsLogicUpdate();
 	void GameObjectsLogicStop();
 
+	void SaveSceneEditorPlay();
+	void LoadSceneEditorPlay();
+
 private:
 	std::vector<GameObject*> game_objects;
 	std::vector<GameObject*> game_objects_to_destroy;
@@ -91,6 +98,9 @@ private:
 
 	bool needs_to_start_logic = false;
 	bool needs_to_stop_logic = false;
+
+	GameObjectAbstraction editor_play_scene_abs;
+	std::vector<GameObjectAbstraction> editor_play_sub_scenes_abs;
 };
 
 #endif // !__MODULE_GAME_OBJECT_H__

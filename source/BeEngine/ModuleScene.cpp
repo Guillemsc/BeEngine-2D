@@ -77,19 +77,3 @@ bool ModuleScene::UpdateFromPrefab(GameObject * go)
 	return ret;
 }
 
-bool ModuleScene::CreateNewScene()
-{
-	bool ret = false;
-
-	Scene* root = App->gameobject->GetRootScene();
-
-	GameObjectAbstraction abs;
-	abs.Abstract(root->GetRootGameObjects());
-
-	return ret;
-}
-
-ResourceScene * ModuleScene::GetCurrentScene() const
-{
-	return curr_scene;
-}

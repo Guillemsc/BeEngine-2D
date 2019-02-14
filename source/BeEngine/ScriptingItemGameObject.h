@@ -5,6 +5,7 @@
 #include "ModuleScripting.h"
 
 class GameObject;
+class GameObjectComponent;
 class Event;
 
 class ScriptingItemGameObject : public ScriptingItem
@@ -34,13 +35,18 @@ private:
 	void RemoveScriptingInstance(GameObject* go);
 
 	static GameObject* GetGameObjectFromMonoObject(MonoObject* mono_object);
+	static GameObjectComponent* CreateGameObjectComponentFromComponentType(GameObject* go, MonoType* type);
 
 	// Internal Calls
 
 	static void SetName(MonoObject* mono_object, MonoString* mono_string);
-	static void GetName();
+	static MonoString* GetName(MonoObject * mono_object);
+
+	static void AddComponent(MonoObject* mono_object, MonoType* component_type);
 
 	// --------------
+
+private:
 	ScriptingClass game_object_class;
 	ScriptingClass beengine_object_class;
 

@@ -24,6 +24,7 @@ bool ModuleGameObject::Awake()
 	CreateRootScene();
 
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
+	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
 
 	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer");
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
@@ -79,6 +80,14 @@ bool ModuleGameObject::CleanUp()
 	App->event->UnSuscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
 
 	return ret;
+}
+
+void ModuleGameObject::OnLoadProject(JSON_Doc * config)
+{
+}
+
+void ModuleGameObject::OnSaveProject(JSON_Doc * config)
+{
 }
 
 void ModuleGameObject::OnEvent(Event * ev)
@@ -674,23 +683,36 @@ void ModuleGameObject::DestroyAllScenesNow()
 }
 
 void ModuleGameObject::UpdateGameObjectsLogic()
-{
+{	
+	if (needs_to_start_logic)
+	{
+		if (App->state->GetEditorUpdateState() != EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
+		{
+			SaveSceneEditorPlay();
+
+			GameObjectsLogicStart();
+		}
+
+		needs_to_start_logic = false;
+	}
+
 	if (App->state->GetEditorUpdateState() != EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 	{
-		if (needs_to_start_logic)
-		{
-			GameObjectsLogicStart();
-			needs_to_start_logic = false;
-		}
-
 		GameObjectsLogicUpdate();
-
-		if (needs_to_stop_logic)
+	}
+	
+	if (needs_to_stop_logic)
+	{
+		if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 		{
 			GameObjectsLogicStop();
-			needs_to_stop_logic = false;
+
+			LoadSceneEditorPlay();
 		}
+
+		needs_to_stop_logic = false;
 	}
+	
 }
 
 void ModuleGameObject::GameObjectsLogicStart()
@@ -793,6 +815,48 @@ void ModuleGameObject::GameObjectsLogicStop()
 				ComponentScript* script = (ComponentScript*)curr_component;
 
 				script->DestroyScriptInstance();
+			}
+		}
+	}
+}
+
+void ModuleGameObject::SaveSceneEditorPlay()
+{
+	editor_play_sub_scenes_abs.clear();
+
+	std::vector<GameObject*> root_gos = root_scene->GetRootGameObjects();
+
+	editor_play_scene_abs.Abstract(root_gos);
+
+	for (std::vector<Scene*>::iterator it = sub_scenes.begin(); it != sub_scenes.end(); ++it)
+	{
+		GameObjectAbstraction sub_abs;
+		
+		std::vector<GameObject*> root_sub_gos = (*it)->GetRootGameObjects();
+
+		sub_abs.Abstract(root_sub_gos);
+
+		editor_play_sub_scenes_abs.push_back(sub_abs);
+	}
+}
+
+void ModuleGameObject::LoadSceneEditorPlay()
+{
+	DestroyScene(root_scene);
+
+	editor_play_scene_abs.DeAbstract();
+
+	for (std::vector<GameObjectAbstraction>::iterator it = editor_play_sub_scenes_abs.begin(); it != editor_play_sub_scenes_abs.end(); ++it)
+	{
+		Scene* new_scene = CreateSubScene();
+
+		std::vector<GameObject*> new_gos = (*it).DeAbstract();
+
+		for (std::vector<GameObject*>::iterator it = new_gos.begin(); it != new_gos.end(); ++it)
+		{
+			if ((*it)->GetParent() == nullptr)
+			{
+				SetGameObjectScene(new_scene, (*it));
 			}
 		}
 	}

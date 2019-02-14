@@ -100,6 +100,12 @@
     <Filter Include="Sources\8. SceneObjects ==========\Scene">
       <UniqueIdentifier>{9752b16c-2a54-4875-90dc-063d44045e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\6. Scripting ==============\Scripting\Components">
+      <UniqueIdentifier>{30e31431-d2df-4f24-af11-5f51f275dd56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\6. Scripting ==============\TestScriptingItems">
+      <UniqueIdentifier>{47770464-19a3-45df-8d4d-213041913b2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -573,6 +579,9 @@
     <ClInclude Include="StaticGridRenderer.h">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingItemComponentTransform.h">
+      <Filter>Sources\6. Scripting ==============\Scripting\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -940,6 +949,9 @@
     </ClCompile>
     <ClCompile Include="StaticGridRenderer.cpp">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingItemComponentTransform.cpp">
+      <Filter>Sources\6. Scripting ==============\Scripting\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

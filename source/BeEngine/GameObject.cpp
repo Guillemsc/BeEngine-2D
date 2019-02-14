@@ -241,12 +241,15 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 	case ComponentType::COMPONENT_TYPE_SPRITE_RENDERER:
 		ret = new ComponentSpriteRenderer();
 		break;
+
 	case ComponentType::COMPONENT_TYPE_SCRIPT:
 		ret = new ComponentScript();
 		break;
+
 	case ComponentType::COMPONENT_TYPE_CAMERA:
 		ret = new ComponentCamera();
 		break;
+
 	default:
 		break;
 	}

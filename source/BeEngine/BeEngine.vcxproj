@@ -239,6 +239,7 @@
     <ClInclude Include="Parson\parson.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Profiler.h" />
+    <ClInclude Include="ScriptingItemComponentTransform.h" />
     <ClInclude Include="ScriptingItemGameObject.h" />
     <ClInclude Include="ScriptingItem.h" />
     <ClInclude Include="ScriptingObject.h" />
@@ -362,6 +363,7 @@
     <ClCompile Include="Parson\parson.c" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Profiler.cpp" />
+    <ClCompile Include="ScriptingItemComponentTransform.cpp" />
     <ClCompile Include="ScriptingItemGameObject.cpp" />
     <ClCompile Include="ScriptingItem.cpp" />
     <ClCompile Include="ScriptingObject.cpp" />

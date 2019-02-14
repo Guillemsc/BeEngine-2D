@@ -18,15 +18,6 @@ public:
 	bool CreateNewPrefab(GameObject* go);
 	bool UpdatePrefab(GameObject* go);
 	bool UpdateFromPrefab(GameObject* go);
-
-	bool CreateNewScene();
-
-	ResourceScene* GetCurrentScene() const;
-
-private:
-	ResourceScene* curr_scene = nullptr;
-
-	std::vector<ResourceScene*> curr_sub_scenes;
 };
 
 #endif // !__MODULE_SCENE_H__

@@ -431,6 +431,18 @@ MonoArray * ModuleScripting::BoxPointer(void * pointer)
 	return ret;
 }
 
+MonoType * ModuleScripting::BoxType(MonoClass * val)
+{
+	MonoType * ret = nullptr;
+
+	if (val != nullptr)
+	{
+		ret = mono_class_get_type(val);
+	}
+
+	return ret;
+}
+
 std::string ModuleScripting::UnboxString(MonoString* val)
 {
 	std::string ret = "";
@@ -585,6 +597,18 @@ void * ModuleScripting::UnboxPointer(MonoArray * val)
 		memcpy(&ret, ret_str, 4);
 
 		RELEASE_ARRAY(ret_str);
+	}
+
+	return ret;
+}
+
+MonoClass * ModuleScripting::UnboxType(MonoType * val)
+{
+	MonoClass * ret = nullptr;
+
+	if (val != nullptr)
+	{
+		ret = mono_type_get_class(val);
 	}
 
 	return ret;

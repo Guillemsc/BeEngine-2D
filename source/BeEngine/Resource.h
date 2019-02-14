@@ -49,11 +49,12 @@ public:
 	const ResourceType GetType() const;
 	std::string GetUID() const;
 
-	void SetAssetFilepath(const std::string& set);
-
 	virtual void CleanUp();
 
 	virtual bool DrawEditorExplorer();
+
+protected:
+	void SetAssetFilepath(const std::string& set);
 
 private:
 	bool AssetFileExists() const;

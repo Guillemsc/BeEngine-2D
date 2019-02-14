@@ -2,6 +2,7 @@
 #include "App.h"
 #include "GameObject.h"
 #include "ModuleGameObject.h"
+#include "GameObjectComponent.h"
 #include "App.h"
 #include "ModuleEvent.h"
 #include "Globals.h"
@@ -23,6 +24,7 @@ void ScriptingItemGameObject::Start()
 void ScriptingItemGameObject::RegisterInternalCalls()
 {
 	mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)this->SetName);
+	mono_add_internal_call("BeEngine.GameObject::GetName", (const void*)this->GetName);
 }
 
 void ScriptingItemGameObject::CleanUp()
@@ -160,13 +162,30 @@ GameObject * ScriptingItemGameObject::GetGameObjectFromMonoObject(MonoObject * m
 	return ret;
 }
 
+GameObjectComponent * ScriptingItemGameObject::CreateGameObjectComponentFromComponentType(GameObject* go, MonoType * type)
+{
+	GameObjectComponent * ret = nullptr;
+
+	if (go != nullptr)
+	{
+		MonoClass* type_class = App->scripting->UnboxType(type);
+
+		if (type_class != nullptr)
+		{
+			ScriptingClass component_class(type_class);
+
+
+		}
+	}
+
+	return ret;
+}
+
 void ScriptingItemGameObject::SetName(MonoObject * mono_object, MonoString * mono_string)
 {
 	GameObject* go = GetGameObjectFromMonoObject(mono_object);
 
 	std::string new_name = App->scripting->UnboxString(mono_string);
-
-	INTERNAL_LOG("%s", new_name.c_str());
 
 	if (go != nullptr)
 	{
@@ -176,6 +195,26 @@ void ScriptingItemGameObject::SetName(MonoObject * mono_object, MonoString * mon
 	}
 }
 
-void ScriptingItemGameObject::GetName()
+MonoString* ScriptingItemGameObject::GetName(MonoObject * mono_object)
 {
+	MonoString* ret = nullptr;
+
+	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+
+	if (go != nullptr)
+	{
+		ret = App->scripting->BoxString(go->GetName().c_str());
+	}
+
+	return ret;
+}
+
+void ScriptingItemGameObject::AddComponent(MonoObject * mono_object, MonoType * component_type)
+{
+	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+
+	if (go != nullptr)
+	{
+
+	}
 }
