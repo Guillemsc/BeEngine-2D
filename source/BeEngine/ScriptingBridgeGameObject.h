@@ -1,39 +1,33 @@
 #ifndef __SCRIPTING_ITEM_GAME_OBJECT_H__
 #define __SCRIPTING_ITEM_GAME_OBJECT_H__
 
-#include "ScriptingItem.h"
+#include "ScriptingBridgeObject.h"
 #include "ModuleScripting.h"
 
 class GameObject;
 class GameObjectComponent;
 class Event;
 
-class ScriptingItemGameObject : public ScriptingItem
+class ScriptingBridgeGameObject : public ScriptingBridgeObject
 {
+	friend class ScriptingCluster;
 	friend class ModuleScripting;
+	friend class GameObject;
 
 private:
 	void operator delete(void *) {}
 
 public:
-	ScriptingItemGameObject();
-	~ScriptingItemGameObject();
+	ScriptingBridgeGameObject(GameObject* go_ref);
+	~ScriptingBridgeGameObject();
 
 	void Start();
-	void RegisterInternalCalls();
+	void RebuildInstances();
 	void CleanUp();
 
-	void OnEvent(Event* ev);
-
-	void RebuildClasses();
-
-	void RebuildInstances();
-	void DestroyInstances();
+	ScriptingClassInstance* GetGoScriptingInstance() const;
 
 private:
-	void AddScriptingInstance(GameObject* go);
-	void RemoveScriptingInstance(GameObject* go);
-
 	static GameObject* GetGameObjectFromMonoObject(MonoObject* mono_object);
 	static GameObjectComponent* CreateGameObjectComponentFromComponentType(GameObject* go, MonoType* type);
 
@@ -47,9 +41,8 @@ private:
 	// --------------
 
 private:
-	ScriptingClass game_object_class;
-	ScriptingClass beengine_object_class;
-
+	GameObject* go_ref = nullptr;
+	ScriptingClassInstance* go_scripting_instance = nullptr;
 };
 
 #endif // !__SCRIPTING_ITEM_GAME_OBJECT_H__

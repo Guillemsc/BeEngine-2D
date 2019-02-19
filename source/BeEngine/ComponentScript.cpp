@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "ComponentTransfrom.h"
 #include "ModuleJson.h"
+#include "ScriptingBridgeGameObject.h"
 
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
@@ -180,7 +181,7 @@ void ComponentScript::CreateScriptInstance()
 
 					if (script_instance != nullptr)
 					{
-						ScriptingClassInstance* class_instance = owner->GetScriptingInstance();
+						ScriptingClassInstance* class_instance = owner->GetScriptingBridge()->GetGoScriptingInstance();
 
 						if (class_instance != nullptr)
 						{

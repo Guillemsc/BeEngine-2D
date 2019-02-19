@@ -12,7 +12,7 @@
 #include <map>
 
 #include "ScriptingObject.h"
-#include "ScriptingItem.h"
+#include "ScriptingBridgeObject.h"
 
 class Event;
 class ScriptingObjectCompiler;
@@ -21,6 +21,7 @@ class ScriptingObjectFileWatcher;
 class ScriptingClass;
 class ScriptingItemGameObject;
 class ScriptingItemComponent;
+class ScriptingCluster;
 
 class ScriptingAssembly
 {
@@ -132,7 +133,8 @@ public:
 	ScriptingObject* AddScriptingObject(ScriptingObject* obj);
 	void DestroyScriptingObject(ScriptingObject* obj);
 
-	ScriptingItem* AddScriptingItem(ScriptingItem* it);
+	void AddScriptingBridgeObject(ScriptingBridgeObject* obj);
+	void DestroyScriptingBridgeObject(ScriptingBridgeObject* obj);
 
 	// Assembly management
 	ScriptingAssembly* CreateAssembly(const char* assembly_path, bool used_to_compìle = true);
@@ -194,13 +196,14 @@ private:
 	void ManageScriptsToCompile();
 
 	void UpdateScriptingObjects();
-	void RebuildScriptingItemInstances();
+	void RebuildScriptingBridgeObjects();
 
 	void DestroyAllAssemblys();
 	void DestroyAllScriptingObjects();
-	void DestroyAllScriptingItems();
 
 public:
+	ScriptingCluster* scripting_cluster = nullptr;
+
 	ScriptingAssembly* scripting_assembly = nullptr;
 	ScriptingAssembly* scripting_internal_assembly = nullptr;
 	ScriptingAssembly* user_code_assembly = nullptr;
@@ -208,8 +211,6 @@ public:
 	ScriptingObjectCompiler* compiler = nullptr;
 	ScriptingObjectSolutionManager* solution_manager = nullptr;
 	ScriptingObjectFileWatcher* file_watcher = nullptr;
-
-	ScriptingItemGameObject* scripting_game_object = nullptr;
 
 private:
 	bool has_active_domain = false;
@@ -220,7 +221,7 @@ private:
 	MonoDomain* mono_root_domain = nullptr;
 	
 	std::vector<ScriptingObject*> scripting_objects;
-	std::vector<ScriptingItem*> scripting_items;
+	std::vector<ScriptingBridgeObject*> scripting_bridge_objects;
 
 	std::vector<ScriptingAssembly*> assemblys;
 	std::vector<std::string> base_libs;

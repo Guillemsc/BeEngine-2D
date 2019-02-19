@@ -11,6 +11,7 @@
 #include "Event.h"
 #include "ModuleEvent.h"
 #include "Scene.h"
+#include "ScriptingBridgeGameObject.h"
 
 GameObject::GameObject(const std::string& set_uid)
 {
@@ -39,6 +40,9 @@ void GameObject::OnLoadAbstraction(DataAbstraction & abs)
 
 void GameObject::Start()
 {
+	scripting_bridge = new ScriptingBridgeGameObject(this);
+	App->scripting->AddScriptingBridgeObject(scripting_bridge);
+
 	App->event->Suscribe(std::bind(&GameObject::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	transform = (ComponentTransform*)CreateComponent(ComponentType::COMPONENT_TYPE_TRANSFORM);
@@ -52,6 +56,8 @@ void GameObject::Update()
 void GameObject::CleanUp()
 {
 	DestroyAllComponentsNow();
+
+	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
 }
 
 void GameObject::OnEvent(Event * ev)
@@ -346,9 +352,9 @@ ResourcePrefab * GameObject::GetPrefab() const
 	return resource_prefab;
 }
 
-ScriptingClassInstance * GameObject::GetScriptingInstance() const
+ScriptingBridgeGameObject * GameObject::GetScriptingBridge() const
 {
-	return scripting_instance;
+	return scripting_bridge;
 }
 
 void GameObject::DestroyAllComponentsNow()

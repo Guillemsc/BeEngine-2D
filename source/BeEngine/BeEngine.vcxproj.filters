@@ -103,9 +103,6 @@
     <Filter Include="Sources\6. Scripting ==============\Scripting\Components">
       <UniqueIdentifier>{30e31431-d2df-4f24-af11-5f51f275dd56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\6. Scripting ==============\TestScriptingItems">
-      <UniqueIdentifier>{47770464-19a3-45df-8d4d-213041913b2b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -540,12 +537,6 @@
     <ClInclude Include="ModuleState.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptingItemGameObject.h">
-      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptingItem.h">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClInclude>
     <ClInclude Include="GameWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
@@ -579,8 +570,14 @@
     <ClInclude Include="StaticGridRenderer.h">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptingItemComponentTransform.h">
-      <Filter>Sources\6. Scripting ==============\Scripting\Components</Filter>
+    <ClInclude Include="ScriptingBridgeObject.h">
+      <Filter>Sources\6. Scripting ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeGameObject.h">
+      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingCluster.h">
+      <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -911,12 +908,6 @@
     <ClCompile Include="ModuleState.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptingItemGameObject.cpp">
-      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptingItem.cpp">
-      <Filter>Sources\6. Scripting ==============</Filter>
-    </ClCompile>
     <ClCompile Include="GameWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
@@ -950,8 +941,14 @@
     <ClCompile Include="StaticGridRenderer.cpp">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptingItemComponentTransform.cpp">
-      <Filter>Sources\6. Scripting ==============\Scripting\Components</Filter>
+    <ClCompile Include="ScriptingBridgeObject.cpp">
+      <Filter>Sources\6. Scripting ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeGameObject.cpp">
+      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingCluster.cpp">
+      <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

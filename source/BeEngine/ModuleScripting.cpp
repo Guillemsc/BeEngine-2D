@@ -12,9 +12,9 @@
 #include "ModuleResource.h"
 #include "Event.h"
 #include "ModuleAssets.h"
-#include "ScriptingItem.h"
-#include "ScriptingItemGameObject.h"
+#include "ScriptingBridgeObject.h"
 #include "ModuleState.h"
+#include "ScriptingCluster.h"
 #include <mono/utils/mono-logger.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/mono-config.h>
@@ -88,6 +88,8 @@ bool ModuleScripting::Awake()
 
 	mono_jit_init_version(App->GetAppName(), "v4.0.30319");
 
+	scripting_cluster = new ScriptingCluster();
+
 	CreateBaseDomainAndAssemblys();
 
 	return ret;
@@ -98,8 +100,6 @@ bool ModuleScripting::Start()
 	bool ret = true;
 
 	App->editor->console_window->AddConsolePersonalLogs("scripting");
-
-	scripting_game_object = (ScriptingItemGameObject*)AddScriptingItem(new ScriptingItemGameObject());
 
 	return ret;
 }
@@ -133,10 +133,11 @@ bool ModuleScripting::CleanUp()
 {
 	bool ret = true;
 
-	DestroyAllScriptingItems();
 	DestroyAllScriptingObjects();
 
 	DestroyAllAssemblys();
+
+	RELEASE(scripting_cluster);
 
 	mono_jit_cleanup(mono_get_root_domain());
 
@@ -220,26 +221,32 @@ void ModuleScripting::DestroyScriptingObject(ScriptingObject* obj)
 	}
 }
 
-ScriptingItem * ModuleScripting::AddScriptingItem(ScriptingItem * it)
+void ModuleScripting::AddScriptingBridgeObject(ScriptingBridgeObject * obj)
 {
-	ScriptingItem* ret = nullptr;
-
-	if (it != nullptr)
+	if (obj != nullptr)
 	{
-		if (!it->loaded)
-		{
-			it->RegisterInternalCalls();
-			it->Start();
+		obj->Start();
+		obj->RebuildInstances();
 
-			scripting_items.push_back(it);
-
-			it->loaded = true;
-		}
-
-		ret = it;
+		scripting_bridge_objects.push_back(obj);
 	}
+}
 
-	return ret;
+void ModuleScripting::DestroyScriptingBridgeObject(ScriptingBridgeObject * obj)
+{
+	if (obj != nullptr)
+	{
+		for (std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
+		{
+			if ((*it) == obj)
+			{
+				obj->CleanUp();
+				RELEASE(obj);
+				scripting_bridge_objects.erase(it);
+				break;
+			}
+		}
+	}
 }
 
 ScriptingAssembly* ModuleScripting::CreateAssembly(const char * assembly_path, bool used_to_compìle)
@@ -719,11 +726,14 @@ void ModuleScripting::CreateBaseDomainAndAssemblys()
 	if(user_code_compiles)
 		user_code_assembly = CreateAssembly(scripting_user_assembly_filepath.c_str(), false);
 
+	scripting_cluster->RegisterInternalCalls();
+	scripting_cluster->RebuildClasses();
+
 	compiler = (ScriptingObjectCompiler*)AddScriptingObject(new ScriptingObjectCompiler());
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
 
-	RebuildScriptingItemInstances();
+	RebuildScriptingBridgeObjects();
 }
 
 void ModuleScripting::DestroyBaseDomainAndAssemblys()
@@ -835,14 +845,11 @@ void ModuleScripting::UpdateScriptingObjects()
 	}
 }
 
-void ModuleScripting::RebuildScriptingItemInstances()
+void ModuleScripting::RebuildScriptingBridgeObjects()
 {
-	for(std::vector<ScriptingItem*>::iterator it = scripting_items.begin(); it != scripting_items.end(); ++it)
+	for(std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
 	{
-		ScriptingItem* curr_item = (*it);
-
-		curr_item->RebuildClasses();
-		curr_item->RebuildInstances();
+		(*it)->RebuildInstances();
 	}
 }
 
@@ -866,17 +873,6 @@ void ModuleScripting::DestroyAllScriptingObjects()
 	}
 
 	scripting_objects.clear();
-}
-
-void ModuleScripting::DestroyAllScriptingItems()
-{
-	for (std::vector<ScriptingItem*>::iterator it = scripting_items.begin(); it != scripting_items.end(); ++it)
-	{
-		(*it)->CleanUp();
-		RELEASE(*it);
-	}
-
-	scripting_items.clear();
 }
 
 ScriptingAssembly::ScriptingAssembly(const char * assembly_path, bool used_to_compile)

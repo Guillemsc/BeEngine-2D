@@ -8,7 +8,7 @@
 
 class DataAbstraction;
 class ComponentTransform;
-class ScriptingClassInstance;
+class ScriptingBridgeGameObject;
 class ResourcePrefab;
 class Event;
 class Scene;
@@ -21,9 +21,6 @@ class GameObject
 	friend class ScriptingItemGameObject;
 	friend class ResourcePrefab;
 	friend class Scene;
-
-private:
-	void operator delete(void *) {}
 
 public:
 	GameObject(const std::string& uid);
@@ -64,7 +61,7 @@ public:
 	bool GetHasPrefab() const;
 	ResourcePrefab* GetPrefab() const;
 
-	ScriptingClassInstance* GetScriptingInstance() const;
+	ScriptingBridgeGameObject* GetScriptingBridge() const;
 
 private:
 	void DestroyAllComponentsNow();
@@ -89,7 +86,7 @@ private:
 
 	bool selected = false;
 
-	ScriptingClassInstance* scripting_instance = nullptr;
+	ScriptingBridgeGameObject* scripting_bridge = nullptr;
 };
 
 #endif // !__GAME_OBJECT_H__
