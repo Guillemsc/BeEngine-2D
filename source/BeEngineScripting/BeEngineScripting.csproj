@@ -45,8 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeEngineObject.cs" />
-    <Compile Include="BeEngineScript.cs" />
     <Compile Include="GameObject\Components\Component.cs" />
+    <Compile Include="GameObject\Components\ComponentScript.cs" />
     <Compile Include="GameObject\GameObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

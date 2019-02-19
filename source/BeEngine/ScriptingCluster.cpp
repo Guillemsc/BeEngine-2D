@@ -10,8 +10,8 @@ void ScriptingCluster::RegisterInternalCalls()
 		rebuild_internal_calls = false;
 
 		// GameObject -------------------------------
-		mono_add_internal_call("BeEngine.GameObject::SetName", ScriptingBridgeGameObject::SetName);
-		mono_add_internal_call("BeEngine.GameObject::GetName", ScriptingBridgeGameObject::GetName);
+		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
+		mono_add_internal_call("BeEngine.GameObject::GetName", (const void*)ScriptingBridgeGameObject::GetName);
 		// ------------------------------- GameObject
 	}
 }
@@ -25,5 +25,10 @@ void ScriptingCluster::RebuildClasses()
 
 		// GameObject
 		App->scripting->scripting_assembly->GetClass("BeEngine", "GameObject", game_object_class);
+
+		// Components
+		App->scripting->scripting_assembly->GetClass("BeEngine", "Component", component_class);
+
+		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentScript", component_script_class);
 	}
 }

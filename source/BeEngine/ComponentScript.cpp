@@ -10,10 +10,11 @@
 #include "GameObject.h"
 #include "ComponentTransfrom.h"
 #include "ModuleJson.h"
-#include "ScriptingBridgeGameObject.h"
+#include "ScriptingBridgeComponentScript.h"
 
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
+	
 }
 
 ComponentScript::~ComponentScript()
@@ -35,6 +36,8 @@ void ComponentScript::EditorDraw()
 		if (resource != nullptr && !resource->GetInheritsFromBeengineScript())
 		{
 			open_error_script = true;
+
+			scripting_bridge->RemoveGeneratedClass();
 		}
 		else
 		{
@@ -45,6 +48,8 @@ void ComponentScript::EditorDraw()
 			if (resource_script != nullptr)
 			{
 				RecalculateFieldsValues(resource_script->GetFields());
+
+				scripting_bridge->SetGeneratedClass(resource_script->GetScriptingClass());
 			}
 		}
 	}
@@ -82,6 +87,9 @@ void ComponentScript::EditorDraw()
 
 void ComponentScript::Start()
 {
+	scripting_bridge = new ScriptingBridgeComponentScript(this);
+	App->scripting->AddScriptingBridgeObject(scripting_bridge);
+
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 }
@@ -92,6 +100,8 @@ void ComponentScript::CleanUp()
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 
 	DestroyScriptInstance();
+
+	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
 }
 
 void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)
@@ -123,6 +133,8 @@ void ComponentScript::OnEvent(Event * ev)
 			resource_script = nullptr;
 
 			ClearFieldsValues();
+
+			scripting_bridge->RemoveGeneratedClass();
 		}
 		break;
 	}
@@ -133,11 +145,18 @@ void ComponentScript::OnEvent(Event * ev)
 			if (!resource_script->GetInheritsFromBeengineScript())
 			{
 				resource_script = nullptr;
+
+				ClearFieldsValues();
+
+				scripting_bridge->RemoveGeneratedClass();
+
 				break;
 			}
 			else
 			{
 				RecalculateFieldsValues(resource_script->GetFields());
+
+				scripting_bridge->SetGeneratedClass(resource_script->GetScriptingClass());
 			}
 		}
 	}
@@ -167,109 +186,33 @@ void ComponentScript::CreateScriptInstance()
 {
 	if (resource_script != nullptr)
 	{
-		if (resource_script->GetInheritsFromBeengineScript())
-		{
-			if (App->scripting->user_code_assembly != nullptr && App->scripting->scripting_assembly != nullptr)
-			{
-				if (App->scripting->user_code_assembly->GetAssemblyLoaded() && App->scripting->scripting_assembly->GetAssemblyLoaded())
-				{
-					DecomposedFilePath dfp = resource_script->GetDecomposedAssetFilepath();
-
-					ScriptingClass script_class = resource_script->GetScriptingClass();
-
-					script_instance = script_class.CreateInstance();
-
-					if (script_instance != nullptr)
-					{
-						ScriptingClassInstance* class_instance = owner->GetScriptingBridge()->GetGoScriptingInstance();
-
-						if (class_instance != nullptr)
-						{
-							MonoObject* owner_object = class_instance->GetMonoObject();
-
-							if (owner_object != nullptr)
-							{
-								void* args[1] = { owner_object };
-
-								ScriptingClass be_engine_script_class;
-								if (script_instance->GetClass().GetParentClass(be_engine_script_class))
-								{
-									MonoObject* ret_obj = nullptr;
-									if (script_instance->InvokeMonoMethodOnParentClass(be_engine_script_class, "Init", args, 1, ret_obj))
-									{
-										bool succes = App->scripting->UnboxBool(ret_obj);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		App->scripting->ScriptingBridgeRebuildInstances(scripting_bridge);
 	}
 }
 
 void ComponentScript::DestroyScriptInstance()
 {
-	if (resource_script != nullptr)
-	{
-		if (script_instance != nullptr)
-		{
-			script_instance->CleanUp();
-			RELEASE(script_instance);
-		}
-	}
+	
 }
 
 void ComponentScript::CallAwake()
 {
-	if (resource_script != nullptr)
-	{
-		if (script_instance != nullptr)
-		{
-			MonoObject* ret_obj = nullptr;
-			script_instance->InvokeMonoMethod("Awake", nullptr, 0, ret_obj);
-		}
-	}
+	scripting_bridge->CallAwake();
 }
 
 void ComponentScript::CallStart()
 {
-	if (resource_script != nullptr)
-	{
-		if (script_instance != nullptr)
-		{
-			MonoObject* ret_obj = nullptr;
-			script_instance->InvokeMonoMethod("Start", nullptr, 0, ret_obj);
-		}
-	}
+	scripting_bridge->CallStart();
 }
 
 void ComponentScript::CallUpdate()
 {
-	if (resource_script != nullptr)
-	{
-		if (script_instance != nullptr)
-		{
-			MonoObject* ret_obj = nullptr;
-			script_instance->InvokeMonoMethod("Update", nullptr, 0, ret_obj);
-		}
-	}
+	scripting_bridge->CallUpdate();
 }
 
 void ComponentScript::CallOnDestroy()
 {
-	if (resource_script != nullptr)
-	{
-		if (script_instance != nullptr)
-		{
-			MonoObject* ret_obj = nullptr;
-			if (script_instance->InvokeMonoMethod("OnDestroy", nullptr, 0, ret_obj))
-			{
-
-			}
-		}
-	}
+	scripting_bridge->CallOnDestroy();
 }
 
 void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)

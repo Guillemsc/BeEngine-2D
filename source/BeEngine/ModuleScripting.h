@@ -64,6 +64,9 @@ class ScriptingClass
 public:
 	ScriptingClass();
 	ScriptingClass(MonoClass* mono_class);
+	ScriptingClass(const ScriptingClass& scripting_class);
+
+	bool GetLoaded() const;
 
 	std::string GetNamespace() const;
 	std::string GetName() const;
@@ -134,6 +137,7 @@ public:
 	void DestroyScriptingObject(ScriptingObject* obj);
 
 	void AddScriptingBridgeObject(ScriptingBridgeObject* obj);
+	void ScriptingBridgeRebuildInstances(ScriptingBridgeObject* obj);
 	void DestroyScriptingBridgeObject(ScriptingBridgeObject* obj);
 
 	// Assembly management

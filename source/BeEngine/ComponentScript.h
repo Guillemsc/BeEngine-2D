@@ -10,7 +10,7 @@ class ResourceScript;
 class Event;
 class ResourceScriptFieldValue;
 class ResourceScriptField;
-class ScriptingClassInstance;
+class ScriptingBridgeComponentScript;
 
 class ComponentScript : public GameObjectComponent
 {
@@ -60,7 +60,7 @@ private:
 
 	std::vector<ResourceScriptFieldValue> fields_values;
 
-	ScriptingClassInstance* script_instance = nullptr;
+	ScriptingBridgeComponentScript* scripting_bridge = nullptr;
 };
 
 #endif // !__COMPONENT_SCRIPT_H__

@@ -15,7 +15,9 @@ public:
 	~ScriptingBridgeObject();
 
 	virtual void Start() {};
+	virtual void PreRebuildInstances() {};
 	virtual void RebuildInstances() {};
+	virtual void PostRebuildInstances() {};
 	virtual void CleanUp() {};
 
 protected:

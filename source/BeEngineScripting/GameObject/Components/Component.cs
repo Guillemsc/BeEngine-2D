@@ -5,8 +5,13 @@ using System.Text;
 
 namespace BeEngine
 {
-    class Component : BeEngineObject
+    public class Component : BeEngineObject
     {
+        private void SetOwner(GameObject game_object)
+        {
+            this.game_object = game_object;
+        }
 
+        public GameObject game_object = null;
     }
 }

@@ -1,5 +1,5 @@
-#ifndef __SCRIPTING_ITEM_GAME_OBJECT_H__
-#define __SCRIPTING_ITEM_GAME_OBJECT_H__
+#ifndef __SCRIPTING_BRIDGE_GAME_OBJECT_H__
+#define __SCRIPTING_BRIDGE_GAME_OBJECT_H__
 
 #include "ScriptingBridgeObject.h"
 #include "ModuleScripting.h"
@@ -45,4 +45,4 @@ private:
 	ScriptingClassInstance* go_scripting_instance = nullptr;
 };
 
-#endif // !__SCRIPTING_ITEM_GAME_OBJECT_H__
+#endif // !__SCRIPTING_BRIDGE_GAME_OBJECT_H__

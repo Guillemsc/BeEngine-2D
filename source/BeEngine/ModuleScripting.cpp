@@ -226,9 +226,20 @@ void ModuleScripting::AddScriptingBridgeObject(ScriptingBridgeObject * obj)
 	if (obj != nullptr)
 	{
 		obj->Start();
-		obj->RebuildInstances();
+
+		ScriptingBridgeRebuildInstances(obj);
 
 		scripting_bridge_objects.push_back(obj);
+	}
+}
+
+void ModuleScripting::ScriptingBridgeRebuildInstances(ScriptingBridgeObject * obj)
+{
+	if (obj != nullptr)
+	{
+		obj->PreRebuildInstances();
+		obj->RebuildInstances();
+		obj->PostRebuildInstances();
 	}
 }
 
@@ -847,9 +858,19 @@ void ModuleScripting::UpdateScriptingObjects()
 
 void ModuleScripting::RebuildScriptingBridgeObjects()
 {
+	for (std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
+	{
+		(*it)->PreRebuildInstances();
+	}
+
 	for(std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
 	{
 		(*it)->RebuildInstances();
+	}
+
+	for (std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
+	{
+		(*it)->PostRebuildInstances();
 	}
 }
 
@@ -966,6 +987,16 @@ ScriptingClass::ScriptingClass()
 ScriptingClass::ScriptingClass(MonoClass * _mono_class)
 {
 	mono_class = _mono_class;
+}
+
+ScriptingClass::ScriptingClass(const ScriptingClass & scripting_class)
+{
+	mono_class = scripting_class.mono_class;
+}
+
+bool ScriptingClass::GetLoaded() const
+{
+	return mono_class != nullptr;
 }
 
 std::string ScriptingClass::GetNamespace() const

@@ -23,6 +23,20 @@ namespace BeEngine
             }
         }
 
+        public T AddComponent<T>() where T : Component
+        {
+            T ret = null;
+
+            Type type = typeof(T);
+
+            Component created_comp = AddComponentType(type);
+
+            if(created_comp != null)
+                ret = (T)Convert.ChangeType(created_comp, type);
+
+            return ret;
+        }
+
         // Internal Calls --------------------------------------
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -30,6 +44,9 @@ namespace BeEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern string GetName();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern Component AddComponentType(Type type);
 
         // -----------------------------------------------------
     }

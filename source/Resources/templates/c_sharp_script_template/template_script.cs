@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BeEngine;
 
-public class #SCRIPTNAME# : BeEngineScript 
+public class #SCRIPTNAME# : ComponentScript 
 {
 	public override void Start () 
 	{

@@ -85,9 +85,6 @@
     <Filter Include="Sources\6. Scripting ==============\ScriptingInternal">
       <UniqueIdentifier>{878c19be-270a-4012-883f-14042d699cc6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\6. Scripting ==============\Scripting">
-      <UniqueIdentifier>{36a8f41c-76f0-458c-803c-7665d5042c88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\8. SceneObjects ==========">
       <UniqueIdentifier>{99ae2367-b349-443b-94d3-f8aebcab11e7}</UniqueIdentifier>
     </Filter>
@@ -100,7 +97,13 @@
     <Filter Include="Sources\8. SceneObjects ==========\Scene">
       <UniqueIdentifier>{9752b16c-2a54-4875-90dc-063d44045e8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\6. Scripting ==============\Scripting\Components">
+    <Filter Include="Sources\6. Scripting ==============\Bridges">
+      <UniqueIdentifier>{36a8f41c-76f0-458c-803c-7665d5042c88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\6. Scripting ==============\Bridges\GameObject">
+      <UniqueIdentifier>{e622f6d2-c168-4183-ad83-1f14eeeda058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\6. Scripting ==============\Bridges\GameObject\Components">
       <UniqueIdentifier>{30e31431-d2df-4f24-af11-5f51f275dd56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -573,11 +576,14 @@
     <ClInclude Include="ScriptingBridgeObject.h">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptingBridgeGameObject.h">
-      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptingCluster.h">
       <Filter>Sources\6. Scripting ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeGameObject.h">
+      <Filter>Sources\6. Scripting ==============\Bridges\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeComponentScript.h">
+      <Filter>Sources\6. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -944,11 +950,14 @@
     <ClCompile Include="ScriptingBridgeObject.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptingBridgeGameObject.cpp">
-      <Filter>Sources\6. Scripting ==============\Scripting</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptingCluster.cpp">
       <Filter>Sources\6. Scripting ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeGameObject.cpp">
+      <Filter>Sources\6. Scripting ==============\Bridges\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeComponentScript.cpp">
+      <Filter>Sources\6. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

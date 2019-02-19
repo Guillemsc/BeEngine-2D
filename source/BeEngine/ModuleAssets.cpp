@@ -23,6 +23,7 @@
 #include "ExplorerWindow.h"
 #include "ResourceScene.h"
 #include "ModuleGameObject.h"
+#include "ScriptingCluster.h"
 #include "Scene.h"
 
 ModuleAssets::ModuleAssets() : Module()
@@ -645,60 +646,57 @@ void ModuleAssets::LoadUserScriptsInfo()
 	{
 		if (App->scripting->scripting_assembly != nullptr && App->scripting->scripting_assembly->GetAssemblyLoaded())
 		{
-			ScriptingClass be_engine_reference_class;
-			if (App->scripting->scripting_assembly->GetClass("BeEngine", "BeEngineScript", be_engine_reference_class))
+			std::vector<Resource*> script_resources = App->resource->GetResourcesFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
+
+			for (std::vector<Resource*>::iterator it = script_resources.begin(); it != script_resources.end(); ++it)
 			{
-				std::vector<Resource*> script_resources = App->resource->GetResourcesFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
+				ResourceScript* curr_script = (ResourceScript*)(*it);
 
-				for (std::vector<Resource*>::iterator it = script_resources.begin(); it != script_resources.end(); ++it)
+				curr_script->ClearScriptFields();
+
+				std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
+
+				curr_script->inherits_from_beengine_script = false;
+
+				ScriptingClass sc;
+				if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
 				{
-					ResourceScript* curr_script = (ResourceScript*)(*it);
+					curr_script->inherits_from_beengine_script = sc.GetIsInheritedFrom(App->scripting->scripting_cluster->component_script_class);
 
-					curr_script->ClearScriptFields();
-
-					std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
-
-					curr_script->inherits_from_beengine_script = false;
-
-					ScriptingClass sc;
-					if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
+					if (curr_script->inherits_from_beengine_script)
 					{
-						curr_script->inherits_from_beengine_script = sc.GetIsInheritedFrom(be_engine_reference_class);
+						curr_script->script_class = sc;
 
-						if (curr_script->inherits_from_beengine_script)
+						std::map<std::string, MonoType*> fields = sc.GetFields();
+
+						for (std::map<std::string, MonoType*>::iterator it = fields.begin(); it != fields.end(); ++it)
 						{
-							curr_script->script_class = sc;
+							std::string type_name = mono_type_get_name((*it).second);
 
-							std::map<std::string, MonoType*> fields = sc.GetFields();
-
-							for (std::map<std::string, MonoType*>::iterator it = fields.begin(); it != fields.end(); ++it)
+							if (type_name.compare("System.String") == 0)
 							{
-								std::string type_name = mono_type_get_name((*it).second);
-
-								if (type_name.compare("System.String") == 0)
-								{
-									curr_script->AddStringScriptField((*it).first);
-								}
-								else if (type_name.compare("System.Int32") == 0)
-								{
-									curr_script->AddIntScriptField((*it).first);
-								}
-								else if (type_name.compare("System.Single") == 0)
-								{
-									curr_script->AddFloatScriptField((*it).first);
-								}
-								else if (type_name.compare("System.Boolean") == 0)
-								{
-									curr_script->AddBoolScriptField((*it).first);
-								}
+								curr_script->AddStringScriptField((*it).first);
+							}
+							else if (type_name.compare("System.Int32") == 0)
+							{
+								curr_script->AddIntScriptField((*it).first);
+							}
+							else if (type_name.compare("System.Single") == 0)
+							{
+								curr_script->AddFloatScriptField((*it).first);
+							}
+							else if (type_name.compare("System.Boolean") == 0)
+							{
+								curr_script->AddBoolScriptField((*it).first);
 							}
 						}
 					}
-
-					EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
-					App->event->SendEvent(ersfc);
 				}
 			}
+
+			EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
+			App->event->SendEvent(ersfc);
+			
 		}
 	}
 }
