@@ -39,8 +39,7 @@ public:
 
 	void SetResourceScript(ResourceScript* set);
 
-	void CreateScriptInstance();
-	void DestroyScriptInstance();
+	void UpdateScriptInstance();
 
 	void CallAwake();
 	void CallStart();

@@ -36,8 +36,6 @@ void ComponentScript::EditorDraw()
 		if (resource != nullptr && !resource->GetInheritsFromBeengineScript())
 		{
 			open_error_script = true;
-
-			scripting_bridge->RemoveGeneratedClass();
 		}
 		else
 		{
@@ -48,10 +46,10 @@ void ComponentScript::EditorDraw()
 			if (resource_script != nullptr)
 			{
 				RecalculateFieldsValues(resource_script->GetFields());
-
-				scripting_bridge->SetGeneratedClass(resource_script->GetScriptingClass());
 			}
 		}
+
+		UpdateScriptInstance();
 	}
 
 	if (open_error_script)
@@ -99,8 +97,6 @@ void ComponentScript::CleanUp()
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 
-	DestroyScriptInstance();
-
 	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
 }
 
@@ -117,6 +113,8 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 	if (resource_uid.compare("") != 0)
 	{
 		resource_script = (ResourceScript*)App->resource->GetResourceFromUid(resource_uid, ResourceType::RESOURCE_TYPE_SCRIPT);
+
+		UpdateScriptInstance();
 	}
 }
 
@@ -134,8 +132,9 @@ void ComponentScript::OnEvent(Event * ev)
 
 			ClearFieldsValues();
 
-			scripting_bridge->RemoveGeneratedClass();
+			UpdateScriptInstance();
 		}
+
 		break;
 	}
 	case EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED:
@@ -147,18 +146,16 @@ void ComponentScript::OnEvent(Event * ev)
 				resource_script = nullptr;
 
 				ClearFieldsValues();
-
-				scripting_bridge->RemoveGeneratedClass();
-
-				break;
 			}
 			else
 			{
 				RecalculateFieldsValues(resource_script->GetFields());
-
-				scripting_bridge->SetGeneratedClass(resource_script->GetScriptingClass());
 			}
+
+			UpdateScriptInstance();
 		}
+
+		break;
 	}
 	default:
 		break;
@@ -182,17 +179,18 @@ void ComponentScript::SetResourceScript(ResourceScript * set)
 	resource_script = set;
 }
 
-void ComponentScript::CreateScriptInstance()
+void ComponentScript::UpdateScriptInstance()
 {
 	if (resource_script != nullptr)
 	{
+		scripting_bridge->SetGeneratedClass(resource_script->GetScriptingClass());
 		App->scripting->ScriptingBridgeRebuildInstances(scripting_bridge);
 	}
-}
-
-void ComponentScript::DestroyScriptInstance()
-{
-	
+	else
+	{
+		scripting_bridge->RemoveGeneratedClass();
+		App->scripting->ScriptingBridgeRebuildInstances(scripting_bridge);
+	}
 }
 
 void ComponentScript::CallAwake()

@@ -731,26 +731,6 @@ void ModuleGameObject::GameObjectsLogicStart()
 			{
 				ComponentScript* script = (ComponentScript*)curr_component;
 
-				script->DestroyScriptInstance();
-				script->CreateScriptInstance();
-			}
-		}
-	}
-
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
-	{
-		GameObject* curr_go = *it;
-
-		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
-
-		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
-		{
-			GameObjectComponent* curr_component = *co;
-
-			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)curr_component;
-
 				script->CallAwake();
 			}
 		}
@@ -800,24 +780,7 @@ void ModuleGameObject::GameObjectsLogicUpdate()
 
 void ModuleGameObject::GameObjectsLogicStop()
 {
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
-	{
-		GameObject* curr_go = *it;
 
-		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
-
-		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
-		{
-			GameObjectComponent* curr_component = *co;
-
-			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)curr_component;
-
-				script->DestroyScriptInstance();
-			}
-		}
-	}
 }
 
 void ModuleGameObject::SaveSceneEditorPlay()
