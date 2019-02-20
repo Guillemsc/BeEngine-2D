@@ -6,6 +6,8 @@
 #include "App.h"
 #include "Globals.h"
 #include "ScriptingCluster.h"
+#include "ComponentTransfrom.h"
+#include "ScriptingBridgeComponentTransform.h"
 
 ScriptingBridgeGameObject::ScriptingBridgeGameObject(GameObject* go) : ScriptingBridgeObject()
 {
@@ -43,6 +45,11 @@ void ScriptingBridgeGameObject::RebuildInstances()
 	}
 }
 
+void ScriptingBridgeGameObject::PostRebuildInstances()
+{
+
+}
+
 void ScriptingBridgeGameObject::CleanUp()
 {
 	if (go_scripting_instance != nullptr)
@@ -55,6 +62,28 @@ void ScriptingBridgeGameObject::CleanUp()
 ScriptingClassInstance * ScriptingBridgeGameObject::GetGoScriptingInstance() const
 {
 	return go_scripting_instance;
+}
+
+void ScriptingBridgeGameObject::SetComponentTransform(ComponentTransform * trans)
+{
+	if (go_scripting_instance != nullptr)
+	{
+		if (trans != nullptr)
+		{
+			ScriptingClassInstance* scripting_instance_transform = trans->GetScriptingBridge()->GetComponentTransformScriptingInstance();
+
+			if (scripting_instance_transform != nullptr)
+			{
+				MonoObject* mono_object_transform = scripting_instance_transform->GetMonoObject();
+
+				void* args[1] = { mono_object_transform };
+
+				MonoObject* ret_obj = nullptr;
+				go_scripting_instance->InvokeMonoMethodOnParentClass(
+					App->scripting->scripting_cluster->game_object_class, "SetComponentTransform", args, 1, ret_obj);
+			}
+		}
+	}
 }
 
 GameObject* ScriptingBridgeGameObject::GetGameObjectFromMonoObject(MonoObject * mono_object)

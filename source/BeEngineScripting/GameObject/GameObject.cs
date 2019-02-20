@@ -37,6 +37,18 @@ namespace BeEngine
             return ret;
         }
 
+        public ComponentTransform transform
+        {
+            get; private set;
+        }
+
+        // -----------------------------------------------------
+
+        private void SetComponentTransform(ComponentTransform transform)
+        {
+            this.transform = transform;
+        }
+
         // Internal Calls --------------------------------------
 
         [MethodImpl(MethodImplOptions.InternalCall)]

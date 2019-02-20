@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include "imgui.h"
 #include "ModuleJson.h"
+#include "ScriptingBridgeComponentTransform.h"
+#include "ModuleScripting.h"
+#include "App.h"
 
 ComponentTransform::ComponentTransform() : GameObjectComponent("Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
 {
@@ -43,6 +46,9 @@ void ComponentTransform::EditorDraw()
 
 void ComponentTransform::Start()
 {
+	scripting_bridge = new ScriptingBridgeComponentTransform(this);
+	App->scripting->AddScriptingBridgeObject(scripting_bridge);
+
 	local_transform = float4x4::identity;
 	world_transform = float4x4::identity;
 
@@ -51,6 +57,7 @@ void ComponentTransform::Start()
 
 void ComponentTransform::CleanUp()
 {
+	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
 }
 
 void ComponentTransform::OnSaveAbstraction(DataAbstraction & abs)
@@ -263,6 +270,11 @@ float4x4 ComponentTransform::GetWorldTransform()
 	}
 
 	return world_transform;
+}
+
+ScriptingBridgeComponentTransform * ComponentTransform::GetScriptingBridge() const
+{
+	return scripting_bridge;
 }
 
 void ComponentTransform::UpdateLocalFromWorldTransform()

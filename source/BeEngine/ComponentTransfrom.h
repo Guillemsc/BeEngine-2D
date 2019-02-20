@@ -6,6 +6,7 @@
 #include "GeometryMath.h"
 
 class GameObject;
+class ScriptingBridgeComponentTransform;
 
 class ComponentTransform : public GameObjectComponent
 {
@@ -52,6 +53,8 @@ public:
 	float4x4 GetLocalTransform();
 	float4x4 GetWorldTransform();
 
+	ScriptingBridgeComponentTransform* GetScriptingBridge() const;
+
 private:
 	void UpdateLocalFromWorldTransform();
 	void UpdateWorldFromLocalTransform();
@@ -73,6 +76,9 @@ private:
 	float2 world_scale = float2::zero;
 
 	bool keep_scale_ratio = false;
+
+private:
+	ScriptingBridgeComponentTransform* scripting_bridge = nullptr;
 };
 
 #endif // !__COMPONENT_TRANSFORM_H__

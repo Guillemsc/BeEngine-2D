@@ -1,7 +1,8 @@
 #include "ScriptingCluster.h"
-#include "ScriptingBridgeGameObject.h"
 #include "App.h"
 #include "ModuleScripting.h"
+#include "ScriptingBridgeGameObject.h"
+#include "ScriptingBridgeComponentTransform.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -13,6 +14,12 @@ void ScriptingCluster::RegisterInternalCalls()
 		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
 		mono_add_internal_call("BeEngine.GameObject::GetName", (const void*)ScriptingBridgeGameObject::GetName);
 		// ------------------------------- GameObject
+
+		// ComponentTransform -----------------------
+		mono_add_internal_call("BeEngine.ComponentTransform::SetPosition", (const void*)ScriptingBridgeComponentTransform::SetPosition);
+		mono_add_internal_call("BeEngine.ComponentTransform::GetPosition", (const void*)ScriptingBridgeComponentTransform::GetPosition);
+		// ----------------------- ComponentTransform
+
 	}
 }
 
@@ -23,6 +30,9 @@ void ScriptingCluster::RebuildClasses()
 		// BeEngineObject
 		App->scripting->scripting_assembly->GetClass("BeEngine", "BeEngineObject", beengine_object_class);
 
+		// Math
+		App->scripting->scripting_assembly->GetClass("BeEngine", "float2", float2_class);
+
 		// GameObject
 		App->scripting->scripting_assembly->GetClass("BeEngine", "GameObject", game_object_class);
 
@@ -30,5 +40,6 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->GetClass("BeEngine", "Component", component_class);
 
 		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentScript", component_script_class);
+		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentTransform", component_transform_class);
 	}
 }

@@ -6,6 +6,7 @@
 
 class GameObject;
 class GameObjectComponent;
+class ComponentTransform;
 class Event;
 
 class ScriptingBridgeGameObject : public ScriptingBridgeObject
@@ -23,9 +24,12 @@ public:
 
 	void Start();
 	void RebuildInstances();
+	void PostRebuildInstances();
 	void CleanUp();
 
 	ScriptingClassInstance* GetGoScriptingInstance() const;
+
+	void SetComponentTransform(ComponentTransform* trans);
 
 private:
 	static GameObject* GetGameObjectFromMonoObject(MonoObject* mono_object);

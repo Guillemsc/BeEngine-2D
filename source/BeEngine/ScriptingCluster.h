@@ -17,10 +17,13 @@ public:
 public:
 	ScriptingClass beengine_object_class;
 
+	ScriptingClass float2_class;
+
 	ScriptingClass game_object_class;
 
 	ScriptingClass component_class;
 	ScriptingClass component_script_class;
+	ScriptingClass component_transform_class;
 
 private:
 	bool rebuild_internal_calls = true;

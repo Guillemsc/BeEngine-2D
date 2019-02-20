@@ -43,9 +43,9 @@ void GameObject::Start()
 	scripting_bridge = new ScriptingBridgeGameObject(this);
 	App->scripting->AddScriptingBridgeObject(scripting_bridge);
 
-	App->event->Suscribe(std::bind(&GameObject::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
-
 	transform = (ComponentTransform*)CreateComponent(ComponentType::COMPONENT_TYPE_TRANSFORM);
+
+	App->event->Suscribe(std::bind(&GameObject::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }
 
 void GameObject::Update()

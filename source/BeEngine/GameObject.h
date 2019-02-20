@@ -86,6 +86,7 @@ private:
 
 	bool selected = false;
 
+private:
 	ScriptingBridgeGameObject* scripting_bridge = nullptr;
 };
 
