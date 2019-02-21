@@ -23,23 +23,29 @@ void ScriptingBridgeComponentScript::RebuildInstances()
 {
 	if (component_script_scripting_instance != nullptr)
 	{
-		component_script_scripting_instance->CleanUp();
+		component_script_scripting_instance->DestroyReference();
 		RELEASE(component_script_scripting_instance);
 	}
 
 	if (class_generated.GetLoaded())
 	{
-		component_script_scripting_instance = class_generated.CreateInstance();
-
-		if (component_script_scripting_instance != nullptr)
+		if (App->scripting->user_code_assembly != nullptr && App->scripting->user_code_assembly->GetAssemblyLoaded())
 		{
-			MonoArray* mono_pointer = App->scripting->BoxPointer(component_script_ref);
+			App->scripting->user_code_assembly->GetClass(class_generated.GetNamespace().c_str(),
+				class_generated.GetName().c_str(), class_generated);
 
-			void* args[1] = { mono_pointer };
+			component_script_scripting_instance = class_generated.CreateInstance();
 
-			MonoObject* ret_obj = nullptr;
-			component_script_scripting_instance->InvokeMonoMethodOnParentClass(
-				App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
+			if (component_script_scripting_instance != nullptr)
+			{
+				MonoArray* mono_pointer = App->scripting->BoxPointer(component_script_ref);
+
+				void* args[1] = { mono_pointer };
+
+				MonoObject* ret_obj = nullptr;
+				component_script_scripting_instance->InvokeMonoMethodOnParentClass(
+					App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
+			}
 		}
 	}
 }
@@ -62,7 +68,7 @@ void ScriptingBridgeComponentScript::CleanUp()
 {
 	if (component_script_scripting_instance != nullptr)
 	{
-		component_script_scripting_instance->CleanUp();
+		component_script_scripting_instance->DestroyReference();
 		RELEASE(component_script_scripting_instance);
 	}
 }

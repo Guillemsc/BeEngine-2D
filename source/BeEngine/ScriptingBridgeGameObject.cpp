@@ -27,7 +27,7 @@ void ScriptingBridgeGameObject::RebuildInstances()
 {
 	if (go_scripting_instance != nullptr)
 	{
-		go_scripting_instance->CleanUp();
+		go_scripting_instance->DestroyReference();
 		RELEASE(go_scripting_instance);
 	}
 
@@ -54,7 +54,7 @@ void ScriptingBridgeGameObject::CleanUp()
 {
 	if (go_scripting_instance != nullptr)
 	{
-		go_scripting_instance->CleanUp();
+		go_scripting_instance->DestroyReference();
 		RELEASE(go_scripting_instance);
 	}
 }

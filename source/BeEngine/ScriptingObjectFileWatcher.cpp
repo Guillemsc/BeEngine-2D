@@ -42,7 +42,7 @@ void ScriptingObjectFileWatcher::CleanUp()
 {
 	if (script_file_watcher_instance != nullptr)
 	{
-		script_file_watcher_instance->CleanUp();
+		script_file_watcher_instance->DestroyReference();
 		RELEASE(script_file_watcher_instance);
 	}
 }

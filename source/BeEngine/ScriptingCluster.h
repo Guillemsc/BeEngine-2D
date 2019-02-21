@@ -10,9 +10,16 @@ class ScriptingCluster
 private:
 	void operator delete(void *) {}
 
-public:
+private:
 	void RegisterInternalCalls();
 	void RebuildClasses();
+
+public:
+	// Boxing
+	float2 UnboxFloat2(MonoObject* obj);
+
+	// Unboxing
+	MonoObject* BoxFloat2(const float2& val);
 
 public:
 	ScriptingClass beengine_object_class;

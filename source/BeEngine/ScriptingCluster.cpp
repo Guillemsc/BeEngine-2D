@@ -43,3 +43,31 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentTransform", component_transform_class);
 	}
 }
+
+float2 ScriptingCluster::UnboxFloat2(MonoObject* obj)
+{
+	float2 ret = float2::zero;
+
+	if (obj != nullptr)
+	{
+		MonoObject* x_val = App->scripting->GetFieldValue(obj, float2_class.GetMonoClass(), "_x");
+		MonoObject* y_val = App->scripting->GetFieldValue(obj, float2_class.GetMonoClass(), "_y");
+
+		if (x_val != nullptr && y_val != nullptr)
+		{
+			ret.x = App->scripting->UnboxFloat(x_val);
+			ret.y = App->scripting->UnboxFloat(y_val);
+		}
+	}
+
+	return ret;
+}
+
+MonoObject * ScriptingCluster::BoxFloat2(const float2 & val)
+{
+	MonoObject* ret = nullptr;
+
+
+
+	return ret;
+}

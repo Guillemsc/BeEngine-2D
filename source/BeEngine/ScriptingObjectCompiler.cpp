@@ -71,7 +71,7 @@ void ScriptingObjectCompiler::CleanUp()
 {
 	if (script_compiler_instance != nullptr)
 	{
-		script_compiler_instance->CleanUp();
+		script_compiler_instance->DestroyReference();
 		RELEASE(script_compiler_instance);
 	}
 }

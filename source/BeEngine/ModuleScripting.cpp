@@ -322,6 +322,42 @@ const char * ModuleScripting::GetMonoTypeName(MonoType * mono_type)
 	return ret;
 }
 
+bool ModuleScripting::SetFieldValue(MonoObject * field_object, MonoClass * field_object_class, const char * field_name, MonoObject * new_field_value)
+{
+	bool ret = false;
+
+	if (field_object != nullptr && field_object_class != nullptr)
+	{
+		MonoClassField* field = mono_class_get_field_from_name(field_object_class, field_name);
+
+		if (field != nullptr)
+		{
+			mono_field_set_value(field_object, field, new_field_value);
+
+			ret = true;
+		}
+	}
+
+	return ret;
+}
+
+MonoObject* ModuleScripting::GetFieldValue(MonoObject * field_object, MonoClass * field_object_class, const char * field_name)
+{
+	MonoObject* ret = nullptr;
+
+	if (field_object != nullptr && field_object_class != nullptr)
+	{
+		MonoClassField* field = mono_class_get_field_from_name(field_object_class, field_name);
+
+		if (field != nullptr)
+		{
+			ret = mono_field_get_value_object(mono_domain_get(), field, field_object);
+		}
+	}
+
+	return ret;
+}
+
 MonoString* ModuleScripting::BoxString(const char * val)
 {
 	MonoString* ret = nullptr;
@@ -987,11 +1023,19 @@ ScriptingClass::ScriptingClass()
 ScriptingClass::ScriptingClass(MonoClass * _mono_class)
 {
 	mono_class = _mono_class;
+
+	if (mono_class != nullptr)
+	{
+		class_namespace = mono_class_get_namespace(mono_class);
+		class_name = mono_class_get_name(mono_class);
+	}
 }
 
 ScriptingClass::ScriptingClass(const ScriptingClass & scripting_class)
 {
 	mono_class = scripting_class.mono_class;
+	class_namespace = scripting_class.class_namespace;
+	class_name = scripting_class.class_name;
 }
 
 bool ScriptingClass::GetLoaded() const
@@ -1001,22 +1045,12 @@ bool ScriptingClass::GetLoaded() const
 
 std::string ScriptingClass::GetNamespace() const
 {
-	std::string ret = "";
-
-	if (mono_class != nullptr)
-		ret = mono_class_get_namespace(mono_class);
-
-	return ret;
+	return class_namespace;
 }
 
 std::string ScriptingClass::GetName() const
 {
-	std::string ret = "";
-
-	if (mono_class != nullptr)
-		ret = mono_class_get_name(mono_class);
-
-	return ret;
+	return class_name;
 }
 
 MonoClass * ScriptingClass::GetMonoClass() const
@@ -1144,35 +1178,40 @@ bool ScriptingClass::InvokeStaticMonoMethod(const char * method_name, void ** ar
 
 ScriptingClassInstance* ScriptingClass::CreateInstance()
 {
-	ScriptingClassInstance* ret = nullptr;
+	return new ScriptingClassInstance(*this, false);
+}
 
-	if (mono_class != nullptr)
+ScriptingClassInstance ScriptingClass::CreateWeakInstance()
+{
+	return ScriptingClassInstance(*this, true);
+}
+
+ScriptingClassInstance::ScriptingClassInstance(ScriptingClass sc, bool gb_c)
+{
+	scripting_class = sc;
+	gb_collectable = gb_c;
+
+	if (sc.GetLoaded())
 	{
-		MonoObject* obj = nullptr;
-		uint id = 0;
-
-		obj = mono_object_new(mono_domain_get(), mono_class);
+		MonoObject* obj = mono_object_new(mono_domain_get(), sc.GetMonoClass());
 
 		if (obj != nullptr)
 		{
 			mono_runtime_object_init(obj);
 
-			id = mono_gchandle_new(obj, true);
-
-			ret = new ScriptingClassInstance(*this, id);
+			if (gb_collectable)
+			{
+				id = mono_gchandle_new_weakref(obj, false);
+			}
+			else
+			{
+				id = mono_gchandle_new(obj, true);
+			}
 		}
 	}
-
-	return ret;
 }
 
-ScriptingClassInstance::ScriptingClassInstance(ScriptingClass _scripting_class, uint _id)
-{
-	scripting_class = _scripting_class;
-	id = _id;
-}
-
-void ScriptingClassInstance::CleanUp()
+void ScriptingClassInstance::DestroyReference()
 {
 	mono_gchandle_free(id);
 }
@@ -1180,6 +1219,28 @@ void ScriptingClassInstance::CleanUp()
 ScriptingClass ScriptingClassInstance::GetClass()
 {
 	return scripting_class;
+}
+
+bool ScriptingClassInstance::SetFieldValue(const char * field_name, MonoObject * obj_value)
+{
+	bool ret = false;
+
+	MonoObject* mono_obj = GetMonoObject();
+
+	ret = App->scripting->SetFieldValue(mono_obj, scripting_class.GetMonoClass(), field_name, obj_value);
+
+	return ret;
+}
+
+MonoObject * ScriptingClassInstance::GetFieldValue(const char * field_name)
+{
+	MonoObject* ret = nullptr;
+
+	MonoObject* mono_obj = GetMonoObject();
+
+	ret = App->scripting->GetFieldValue(mono_obj, scripting_class.GetMonoClass(), field_name);
+
+	return ret;
 }
 
 bool ScriptingClassInstance::InvokeMonoMethod(const char * method_name, void ** args, uint args_count, MonoObject *& return_object)

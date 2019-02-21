@@ -22,7 +22,7 @@ void ScriptingBridgeComponentTransform::RebuildInstances()
 {
 	if (component_transform_scripting_instance != nullptr)
 	{
-		component_transform_scripting_instance->CleanUp();
+		component_transform_scripting_instance->DestroyReference();
 		RELEASE(component_transform_scripting_instance);
 	}
 
@@ -91,7 +91,9 @@ void ScriptingBridgeComponentTransform::SetPosition(MonoObject * mono_object, Mo
 
 	if (component_trans != nullptr)
 	{
-		int i = 0;
+		float2 new_pos = App->scripting->scripting_cluster->UnboxFloat2(mono_float2);
+
+		component_trans->SetPosition(new_pos);
 	}
 }
 

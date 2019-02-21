@@ -29,7 +29,7 @@ void ScriptingObjectSolutionManager::CleanUp()
 {
 	if (solution_manager_instance != nullptr)
 	{
-		solution_manager_instance->CleanUp();
+		solution_manager_instance->DestroyReference();
 		RELEASE(solution_manager_instance);
 	}
 }
