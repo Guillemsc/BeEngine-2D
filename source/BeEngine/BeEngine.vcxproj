@@ -64,7 +64,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <AdditionalIncludeDirectories>Box2D\Box2D;..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>

@@ -242,7 +242,7 @@ protected:
 	void* m_userData;
 
 public:
-	fixture_type type;
+	fixture_type type = fixture_type::f_t_null;
 };
 
 inline b2Shape::Type b2Fixture::GetType() const
