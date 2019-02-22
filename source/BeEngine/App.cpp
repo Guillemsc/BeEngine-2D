@@ -21,6 +21,7 @@
 #include "ModuleState.h"
 #include "ModuleSceneRenderer.h"
 #include "ModuleScene.h"
+#include "ModulePhysics.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -46,6 +47,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	audio          = new ModuleAudio();
 	renderer       = new ModuleRenderer();
 	scene_renderer = new ModuleSceneRenderer();
+	physics		   = new ModulePhysics();
 	camera         = new ModuleCamera();
 	shader         = new ModuleShader();
 	editor         = new ModuleEditor();
@@ -75,6 +77,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(time_sliced, "Module TimeSliced");
 	AddModule(json, "Module JSON");
 	AddModule(window, "Module Window");
+	AddModule(physics, "Module Physics");
 	AddModule(camera, "Module Camera");
 	AddModule(input, "Module Input");
 	AddModule(audio, "Module Audio");

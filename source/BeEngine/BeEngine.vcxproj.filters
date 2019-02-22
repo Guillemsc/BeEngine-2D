@@ -588,6 +588,9 @@
     <ClInclude Include="ScriptingBridgeComponentTransform.h">
       <Filter>Sources\6. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModulePhysics.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -964,6 +967,9 @@
     </ClCompile>
     <ClCompile Include="ScriptingBridgeComponentTransform.cpp">
       <Filter>Sources\6. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePhysics.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

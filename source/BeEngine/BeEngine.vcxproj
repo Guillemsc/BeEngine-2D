@@ -64,9 +64,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Box2D\Box2D;..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -124,6 +124,7 @@
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="ModuleAssets.h" />
     <ClInclude Include="ModuleGuizmo.h" />
+    <ClInclude Include="ModulePhysics.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleSceneRenderer.h" />
     <ClInclude Include="ModuleScripting.h" />
@@ -285,6 +286,7 @@
     <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="ModuleGuizmo.cpp" />
+    <ClCompile Include="ModulePhysics.cpp" />
     <ClCompile Include="ModuleProject.cpp" />
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleSceneRenderer.cpp" />
