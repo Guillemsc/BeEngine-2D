@@ -22,6 +22,9 @@ class GameObject
 	friend class ResourcePrefab;
 	friend class Scene;
 
+private:
+	void operator delete(void *) {}
+
 public:
 	GameObject(const std::string& uid);
 	~GameObject() {};

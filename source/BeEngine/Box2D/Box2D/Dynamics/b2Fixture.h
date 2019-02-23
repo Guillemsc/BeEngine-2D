@@ -199,9 +199,6 @@ public:
 	/// Dump this fixture to the log file.
 	void Dump(int32 bodyIndex);
 
-	void SetFixtureType(fixture_type _type) { type = _type; };
-	fixture_type GetFixtureType() { return type; };
-
 protected:
 
 	friend class b2Body;
@@ -240,9 +237,6 @@ protected:
 	bool m_isSensor;
 
 	void* m_userData;
-
-public:
-	fixture_type type = fixture_type::f_t_null;
 };
 
 inline b2Shape::Type b2Fixture::GetType() const
