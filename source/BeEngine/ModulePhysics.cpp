@@ -1,5 +1,6 @@
 #include "ModulePhysics.h"
 #include "PhysicsBody.h"
+#include "PhysicsBodyPolygon.h"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -57,10 +58,32 @@ PhysicsBody * ModulePhysics::CreatePhysicsBody(PhysicsBodyType type)
 	b2body_def.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
 	b2body_def.gravityScale = 0;
 
+	b2Body* b2body = b2world->CreateBody(&b2body_def);
+
 	switch (type)
 	{
 		case PhysicsBodyType::PHYSICS_BODY_POLYGON:
 		{
+			ret = new PhysicsBodyPolygon();
+
+			std::vector<float2> vertices;
+
+			vertices.push_back(float2(-0.5f, 0.5f));
+			vertices.push_back(float2(-0.5f, -0.5f));
+			vertices.push_back(float2(0.5f, 0.5f));
+			vertices.push_back(float2(0.5f, 0.5f));
+
+			((PhysicsBodyPolygon*)ret)->SetVertices(vertices);
+
+			//b2FixtureDef b2fixture_def;
+			//b2fixture_def.shape = &b2_polygon;
+			//b2fixture_def.density = 1;
+			//b2fixture_def.restitution = 0;
+			//b2fixture_def.friction = 1;
+
+			//b2Fixture* b2fixture =  b2body->CreateFixture(&b2fixture_def);
+
+			//b2fixture->
 
 			break;
 		}
@@ -71,7 +94,6 @@ PhysicsBody * ModulePhysics::CreatePhysicsBody(PhysicsBodyType type)
 		}
 	}
 
-	b2Body* b2body = b2world->CreateBody(&b2body_def);
 	b2body->SetUserData(ret);
 
 	ret->b2body = b2body;
