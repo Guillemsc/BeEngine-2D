@@ -4,6 +4,14 @@ PhysicsBodyPolygon::PhysicsBodyPolygon() : PhysicsBody(PhysicsBodyType::PHYSICS_
 {
 }
 
+void PhysicsBodyPolygon::CreateFixture()
+{
+}
+
+void PhysicsBodyPolygon::DestroyFixture()
+{
+}
+
 void PhysicsBodyPolygon::SetVertices(const std::vector<float2> set)
 {
 	b2Vec2* p = new b2Vec2[set.size()];

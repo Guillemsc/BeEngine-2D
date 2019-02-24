@@ -49,9 +49,9 @@ void ModulePhysics::EndContact(b2Contact * contact)
 {
 }
 
-PhysicsBody * ModulePhysics::CreatePhysicsBody(PhysicsBodyType type)
+PhysicsBody * ModulePhysics::CreatePhysicsBody()
 {
-	PhysicsBody* ret = nullptr;
+	PhysicsBody* body = new PhysicsBody();
 
 	b2BodyDef b2body_def;
 	b2body_def.type = b2BodyType::b2_staticBody;
@@ -60,53 +60,39 @@ PhysicsBody * ModulePhysics::CreatePhysicsBody(PhysicsBodyType type)
 
 	b2Body* b2body = b2world->CreateBody(&b2body_def);
 
-	switch (type)
-	{
-		case PhysicsBodyType::PHYSICS_BODY_POLYGON:
-		{
-			ret = new PhysicsBodyPolygon();
+	body->b2body = b2body;
 
-			std::vector<float2> vertices;
+	b2body->SetUserData(body);
 
-			vertices.push_back(float2(-0.5f, 0.5f));
-			vertices.push_back(float2(-0.5f, -0.5f));
-			vertices.push_back(float2(0.5f, 0.5f));
-			vertices.push_back(float2(0.5f, 0.5f));
+	bodies.push_back(body);
 
-			((PhysicsBodyPolygon*)ret)->SetVertices(vertices);
-
-			//b2FixtureDef b2fixture_def;
-			//b2fixture_def.shape = &b2_polygon;
-			//b2fixture_def.density = 1;
-			//b2fixture_def.restitution = 0;
-			//b2fixture_def.friction = 1;
-
-			//b2Fixture* b2fixture =  b2body->CreateFixture(&b2fixture_def);
-
-			//b2fixture->
-
-			break;
-		}
-
-		case PhysicsBodyType::PHYSICS_BODY_CIRCLE:
-		{
-			break;
-		}
-	}
-
-	b2body->SetUserData(ret);
-
-	ret->b2body = b2body;
-
-	return ret;
+	return body;
 }
 
 void ModulePhysics::DestroyPhysicsBody(PhysicsBody * body)
 {
 	if (body != nullptr)
 	{
+		body->RemoveAllShapes();
+
 		b2world->DestroyBody(body->b2body);
 
 		RELEASE(body);
+	}
+}
+
+void ModulePhysics::CreateFixtures()
+{
+	for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
+	{
+		(*it)->CreateFixtures();
+	}
+}
+
+void ModulePhysics::DestroyFixtures()
+{
+	for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
+	{
+		(*it)->DestroyFixtures();
 	}
 }

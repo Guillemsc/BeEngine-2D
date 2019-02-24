@@ -14,6 +14,9 @@ private:
 public:
 	PhysicsBodyPolygon();
 
+	void CreateFixture();
+	void DestroyFixture();
+
 	void SetVertices(const std::vector<float2> set);
 	std::vector<float2> GetVertices() const;
 

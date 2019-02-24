@@ -603,6 +603,9 @@
     <ClInclude Include="PhysicsBodyPolygon.h">
       <Filter>Sources\5. Physics =============\Shapes</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsShape.h">
+      <Filter>Sources\5. Physics =============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -988,6 +991,9 @@
     </ClCompile>
     <ClCompile Include="PhysicsBodyPolygon.cpp">
       <Filter>Sources\5. Physics =============\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsShape.cpp">
+      <Filter>Sources\5. Physics =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

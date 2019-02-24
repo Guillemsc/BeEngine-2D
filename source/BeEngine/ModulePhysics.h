@@ -26,11 +26,14 @@ public:
 	void BeginContact(b2Contact* contact);
 	void EndContact(b2Contact* contact);
 
-	PhysicsBody* CreatePhysicsBody(PhysicsBodyType type);
+	PhysicsBody* CreatePhysicsBody();
 	void DestroyPhysicsBody(PhysicsBody* body);
 
-private:
+	void CreateFixtures();
+	void DestroyFixtures();
 
+private:
+	std::vector<PhysicsBody*> bodies;
 
 private:
 	b2World* b2world = nullptr;

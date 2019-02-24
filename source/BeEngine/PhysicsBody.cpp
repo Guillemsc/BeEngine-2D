@@ -1,13 +1,9 @@
 #include "PhysicsBody.h"
+#include "PhysicsShape.h"
 
-PhysicsBody::PhysicsBody(PhysicsBodyType body_shape)
+PhysicsBody::PhysicsBody()
 {
-	physics_body_shape = body_shape;
-}
-
-PhysicsBodyType PhysicsBody::GetBodyShape() const
-{
-	return physics_body_shape;
+	
 }
 
 float2 PhysicsBody::GetPosition() const
@@ -50,14 +46,14 @@ bool PhysicsBody::Contains(const float2 & point)
 	return ret;
 }
 
-void PhysicsBody::AddChildBody(PhysicsBody * body)
+void PhysicsBody::AddShape(PhysicsShape * shape)
 {
-	if (body != nullptr && body != this && body->parent_body == nullptr)
+	if (shape != nullptr && shape->attached_body == nullptr)
 	{
 		bool exists = false;
-		for (std::vector<PhysicsBody*>::iterator it = child_bodies.begin(); it != child_bodies.end(); ++it)
+		for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 		{
-			if ((*it) == body)
+			if ((*it) == shape)
 			{
 				exists = true;
 				break;
@@ -66,38 +62,53 @@ void PhysicsBody::AddChildBody(PhysicsBody * body)
 
 		if (!exists)
 		{
-			body->parent_body = this;
-			child_bodies.push_back(body);
+			shapes.push_back(shape);
+			shape->attached_body = this;
 		}
 	}
 }
 
-void PhysicsBody::RemoveChildBody(PhysicsBody * body)
+void PhysicsBody::RemoveShape(PhysicsShape * shape)
 {
-	if (body != nullptr && body->parent_body != nullptr)
+	if (shape != nullptr && shape->attached_body != nullptr)
 	{
-		for (std::vector<PhysicsBody*>::iterator it = child_bodies.begin(); it != child_bodies.end(); ++it)
+		for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 		{
-			if ((*it) == body)
+			if ((*it) == shape)
 			{
-				body->parent_body = nullptr;
-				child_bodies.erase(it);
+				shape->DestroyFixture();
+				shape->attached_body = nullptr;
+
+				shapes.erase(it);
 				break;
 			}
 		}
 	}
 }
 
-void PhysicsBody::DestroyAllFixtures()
+void PhysicsBody::RemoveAllShapes()
 {
-	b2Fixture* fixture = b2body->GetFixtureList();
+	for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end();)
+	{		
+		(*it)->DestroyFixture();
+		(*it)->attached_body = nullptr;
+	}
 
-	while (fixture != NULL)
+	shapes.clear()
+}
+
+void PhysicsBody::CreateFixtures()
+{
+	for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{
-		b2Fixture* to_destroy = fixture;
+		(*it)->CreateFixture();
+	}
+}
 
-		fixture = fixture->GetNext();
-
-		b2body->DestroyFixture(to_destroy);
+void PhysicsBody::DestroyFixtures()
+{
+	for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
+	{
+		(*it)->DestroyFixture();
 	}
 }

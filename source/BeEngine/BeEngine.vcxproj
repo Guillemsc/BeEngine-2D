@@ -133,6 +133,7 @@
     <ClInclude Include="ModuleState.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="PhysicsBodyPolygon.h" />
+    <ClInclude Include="PhysicsShape.h" />
     <ClInclude Include="PositionGuizmo.h" />
     <ClInclude Include="QuadRenderer.h" />
     <ClInclude Include="Renderer.h" />
@@ -298,6 +299,7 @@
     <ClCompile Include="ModuleState.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsBodyPolygon.cpp" />
+    <ClCompile Include="PhysicsShape.cpp" />
     <ClCompile Include="PositionGuizmo.cpp" />
     <ClCompile Include="ProfilerWindow.cpp" />
     <ClCompile Include="ProgressWindow.cpp" />
