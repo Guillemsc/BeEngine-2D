@@ -3,7 +3,7 @@
 
 PhysicsBody::PhysicsBody()
 {
-	
+
 }
 
 bool PhysicsBody::Contains(const float2 & point)
@@ -118,6 +118,34 @@ void PhysicsBody::SetType(PhysicsBodyType type)
 	b2body->SetType(b2type);
 }
 
+PhysicsBodyType PhysicsBody::GetType() const
+{
+	PhysicsBodyType ret = PhysicsBodyType::PHYSICS_BODY_STATIC;
+
+	b2BodyType b2type = b2body->GetType();
+
+	switch (b2type)
+	{
+	case b2BodyType::b2_kinematicBody:
+		ret = PhysicsBodyType::PHYSICS_BODY_KINEMATIC;
+		break;
+	case b2BodyType::b2_dynamicBody:
+		ret = PhysicsBodyType::PHYSICS_BODY_DYNAMIC;
+		break;
+	case b2BodyType::b2_staticBody:
+		ret = PhysicsBodyType::PHYSICS_BODY_STATIC;
+		break;	
+	}
+
+	return ret;
+}
+
+void PhysicsBody::ClearForces()
+{
+	SetVelocity(float2(0.0f, 0.0f));
+	SetAngularVelocity(0.0f);
+}
+
 void PhysicsBody::SetPosition(const float2 & pos)
 {
 	b2body->SetTransform(b2Vec2(pos.x, pos.y), b2body->GetAngle());
@@ -145,9 +173,30 @@ float PhysicsBody::GetRotationDegrees() const
 	return b2body->GetAngle() * RADTODEG;
 }
 
+void PhysicsBody::SetMass(float set)
+{
+	b2MassData mass;
+	mass.mass = set;
+
+	b2body->SetMassData(&mass);
+}
+
+float PhysicsBody::GetMass() const
+{
+	b2MassData mass;
+	b2body->GetMassData(&mass);
+
+	return mass.mass;
+}
+
 void PhysicsBody::SetFixedRotationDegrees(float angle)
 {
 	b2body->SetFixedRotation(angle * DEGTORAD);
+}
+
+bool PhysicsBody::GetIsFixedRotation() const
+{
+	return b2body->IsFixedRotation();
 }
 
 void PhysicsBody::AddForce(const float2 & force, const float2 & point)
@@ -180,14 +229,51 @@ void PhysicsBody::SetVelocity(const float2 & vel)
 	b2body->SetLinearVelocity(b2Vec2(vel.x, vel.y));
 }
 
+float2 PhysicsBody::GetVelocity() const
+{
+	b2Vec2 b2vel = b2body->GetLinearVelocity();
+
+	return float2(b2vel.x, b2vel.y);
+}
+
+void PhysicsBody::SetAngularVelocity(float set)
+{
+	b2body->SetAngularVelocity(set);
+}
+
+float PhysicsBody::GetAngularVelocity() const
+{
+	return b2body->GetAngularVelocity();
+}
+
+void PhysicsBody::SetLinearDamping(float set)
+{
+	b2body->SetLinearDamping(set);
+}
+
+float PhysicsBody::GetLinearDamping() const
+{
+	return b2body->GetLinearDamping();
+}
+
 void PhysicsBody::SetAnguladDamping(float set)
 {
 	b2body->SetAngularDamping(set);
 }
 
+float PhysicsBody::GetAngularDamping() const
+{
+	return b2body->GetAngularDamping();
+}
+
 void PhysicsBody::SetGravityScale(float scale)
 {
 	b2body->SetGravityScale(scale);
+}
+
+float PhysicsBody::GetGravityScale() const
+{
+	return b2body->GetGravityScale();
 }
 
 void PhysicsBody::SetBullet(bool set)
@@ -198,4 +284,14 @@ void PhysicsBody::SetBullet(bool set)
 void PhysicsBody::SetCanSleep(bool set)
 {
 	b2body->SetSleepingAllowed(set);
+}
+
+void PhysicsBody::SetComponentPhysicsBody(ComponentPhysicsBody * set)
+{
+	component_physics_body = set;
+}
+
+ComponentPhysicsBody * PhysicsBody::GetComponentPhysicsBody() const
+{
+	return component_physics_body;
 }

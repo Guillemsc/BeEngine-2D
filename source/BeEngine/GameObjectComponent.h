@@ -45,10 +45,11 @@ public:
 	virtual void Update() {};
 	virtual void CleanUp() {};
 
-
 	virtual void OnChildAdded(GameObject* child) {};
 	virtual void OnChildRemoved(GameObject* child) {};
 	virtual void OnParentChanged(GameObject* new_parent) {};
+
+	virtual void DrawGuizmos() {};
 
 	GameObject* GetOwner();
 
