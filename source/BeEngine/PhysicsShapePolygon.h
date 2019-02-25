@@ -1,10 +1,10 @@
-#ifndef __PHYSICS_BODY_POLYGON_H__
-#define __PHYSICS_BODY_POLYGON_H__
+#ifndef __PHYSICS_SHAPE_POLYGON_H__
+#define __PHYSICS_SHAPE_POLYGON_H__
 
 #include "ModulePhysics.h"
-#include "PhysicsBody.h"
+#include "PhysicsShape.h"
 
-class PhysicsBodyPolygon : public PhysicsBody
+class PhysicsShapePolygon : public PhysicsShape
 {
 	friend class ModulePhysics;
 
@@ -12,7 +12,7 @@ private:
 	void operator delete(void *) {}
 
 public:
-	PhysicsBodyPolygon();
+	PhysicsShapePolygon();
 
 	void CreateFixture();
 	void DestroyFixture();
@@ -21,8 +21,9 @@ public:
 	std::vector<float2> GetVertices() const;
 
 private:
-	b2PolygonShape polygon_shape;
+	b2Fixture* fixture = nullptr;
 
+	b2PolygonShape b2polygon_shape;
 	std::vector<float2> vertices;
 
 };

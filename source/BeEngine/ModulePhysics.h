@@ -12,7 +12,8 @@
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
 class PhysicsBody;
-enum PhysicsBodyType;
+class PhysicsShape;
+enum PhysicsShapeType;
 
 class ModulePhysics : public Module, public b2ContactListener
 {
@@ -29,11 +30,15 @@ public:
 	PhysicsBody* CreatePhysicsBody();
 	void DestroyPhysicsBody(PhysicsBody* body);
 
+	PhysicsShape* CreatePhysicsShape(PhysicsShapeType type);
+	void DestroyPhysicsShape(PhysicsShape* shape);
+
 	void CreateFixtures();
 	void DestroyFixtures();
 
 private:
 	std::vector<PhysicsBody*> bodies;
+	std::vector<PhysicsShape*> shapes;
 
 private:
 	b2World* b2world = nullptr;

@@ -94,7 +94,7 @@ void PhysicsBody::RemoveAllShapes()
 		(*it)->attached_body = nullptr;
 	}
 
-	shapes.clear()
+	shapes.clear();
 }
 
 void PhysicsBody::CreateFixtures()

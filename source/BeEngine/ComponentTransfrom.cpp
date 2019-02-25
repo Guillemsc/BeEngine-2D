@@ -6,7 +6,8 @@
 #include "ModuleScripting.h"
 #include "App.h"
 
-ComponentTransform::ComponentTransform() : GameObjectComponent("Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
+ComponentTransform::ComponentTransform() 
+	: GameObjectComponent("Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
 {
 }
 

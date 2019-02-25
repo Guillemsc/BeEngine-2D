@@ -104,6 +104,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="BottomBar.h" />
     <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentPhysicsBody.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="ComponentSpriteRenderer.h" />
     <ClInclude Include="ComponentTransfrom.h" />
@@ -132,7 +133,7 @@
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="ModuleState.h" />
     <ClInclude Include="PhysicsBody.h" />
-    <ClInclude Include="PhysicsBodyPolygon.h" />
+    <ClInclude Include="PhysicsShapePolygon.h" />
     <ClInclude Include="PhysicsShape.h" />
     <ClInclude Include="PositionGuizmo.h" />
     <ClInclude Include="QuadRenderer.h" />
@@ -269,6 +270,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="BottomBar.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentPhysicsBody.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="ComponentSpriteRenderer.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
@@ -298,7 +300,7 @@
     <ClCompile Include="ModuleScripting.cpp" />
     <ClCompile Include="ModuleState.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
-    <ClCompile Include="PhysicsBodyPolygon.cpp" />
+    <ClCompile Include="PhysicsShapePolygon.cpp" />
     <ClCompile Include="PhysicsShape.cpp" />
     <ClCompile Include="PositionGuizmo.cpp" />
     <ClCompile Include="ProfilerWindow.cpp" />

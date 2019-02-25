@@ -1,6 +1,7 @@
 #include "ModulePhysics.h"
 #include "PhysicsBody.h"
-#include "PhysicsBodyPolygon.h"
+#include "PhysicsShape.h"
+#include "PhysicsShapePolygon.h"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -78,6 +79,58 @@ void ModulePhysics::DestroyPhysicsBody(PhysicsBody * body)
 		b2world->DestroyBody(body->b2body);
 
 		RELEASE(body);
+	}
+}
+
+PhysicsShape * ModulePhysics::CreatePhysicsShape(PhysicsShapeType type)
+{
+	PhysicsShape* ret = nullptr;
+
+	switch (type)
+	{
+	case PHYSICS_SHAPE_POLYGON:
+	{
+		ret = new PhysicsShapePolygon();
+
+		std::vector<float2> vertices;
+		vertices.push_back(float2(-0.5f, 0.5f));
+		vertices.push_back(float2(-0.5f, -0.5f));
+		vertices.push_back(float2(0.5f, -0.5f));
+		vertices.push_back(float2(0.5f, 0.5f));
+
+		((PhysicsShapePolygon*)ret)->SetVertices(vertices);
+
+		break;
+	}
+
+	if (ret != nullptr)
+		shapes.push_back(ret);
+
+	}
+
+	return ret;
+}
+
+void ModulePhysics::DestroyPhysicsShape(PhysicsShape * shape)
+{
+	if (shape != nullptr)
+	{
+		for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
+		{
+			PhysicsShape* curr_shape = (*it);
+
+			if (curr_shape == shape)
+			{
+				if (curr_shape->attached_body != nullptr)
+				{
+					curr_shape->attached_body->RemoveShape(curr_shape);
+				}
+
+				RELEASE(curr_shape);
+				shapes.erase(it);
+				break;
+			}
+		}
 	}
 }
 

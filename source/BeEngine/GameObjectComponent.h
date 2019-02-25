@@ -14,6 +14,7 @@ enum ComponentType
 	COMPONENT_TYPE_SPRITE_RENDERER,
 	COMPONENT_TYPE_SCRIPT,
 	COMPONENT_TYPE_CAMERA,
+	COMPONENT_TYPE_PHYSICS_BODY,
 };
 
 enum ComponentGroup
@@ -22,6 +23,7 @@ enum ComponentGroup
 	RENDERING,
 	SCRIPTING,
 	CAMERA,
+	PHYSICS,
 };
 
 class GameObjectComponent
