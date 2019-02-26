@@ -98,10 +98,12 @@ void ComponentCamera::DrawGuizmos()
 {
 	std::vector<float2> points = camera->GetCorners();
 
-	App->scene_renderer->line_renderer->DrawLine(points[0], points[1], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
-	App->scene_renderer->line_renderer->DrawLine(points[1], points[2], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
-	App->scene_renderer->line_renderer->DrawLine(points[2], points[3], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
-	App->scene_renderer->line_renderer->DrawLine(points[3], points[0], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
+	float3 colour = float3(63.0f / 255.0f, 211.0f / 255.0f, 115.0f / 255.0f);
+
+	App->scene_renderer->line_renderer->DrawLine(points[0], points[1], colour, 1, 1.5f);
+	App->scene_renderer->line_renderer->DrawLine(points[1], points[2], colour, 1, 1.5f);
+	App->scene_renderer->line_renderer->DrawLine(points[2], points[3], colour, 1, 1.5f);
+	App->scene_renderer->line_renderer->DrawLine(points[3], points[0], colour, 1, 1.5f);
 }
 
 Camera2D * ComponentCamera::GetCamera()
