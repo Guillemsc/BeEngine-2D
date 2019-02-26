@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "ComponentTransfrom.h"
 #include "ModuleJson.h"
+#include "LineRenderer.h"
+#include "ModuleSceneRenderer.h"
 
 ComponentCamera::ComponentCamera() : GameObjectComponent("Camera", ComponentType::COMPONENT_TYPE_CAMERA, ComponentGroup::CAMERA, true)
 {
@@ -67,19 +69,13 @@ void ComponentCamera::CleanUp()
 }
 
 void ComponentCamera::OnSaveAbstraction(DataAbstraction & abs)
-{
-	if (camera != nullptr)
-	{
-		abs.AddFloat("size", camera->GetSize());
-	}
+{	
+	abs.AddFloat("size", camera->GetSize());
 }
 
 void ComponentCamera::OnLoadAbstraction(DataAbstraction & abs)
-{
-	if (camera != nullptr)
-	{
-		camera->SetSize(abs.GetFloat("size"));
-	}
+{	
+	camera->SetSize(abs.GetFloat("size"));
 }
 
 void ComponentCamera::OnEvent(Event * ev)
@@ -98,6 +94,16 @@ void ComponentCamera::OnParentChanged(GameObject * new_parent)
 {
 }
 
+void ComponentCamera::DrawGuizmos()
+{
+	std::vector<float2> points = camera->GetCorners();
+
+	App->scene_renderer->line_renderer->DrawLine(points[0], points[1], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
+	App->scene_renderer->line_renderer->DrawLine(points[1], points[2], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
+	App->scene_renderer->line_renderer->DrawLine(points[2], points[3], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
+	App->scene_renderer->line_renderer->DrawLine(points[3], points[0], float3(0.2f, 0.6f, 0.9f), 0.8f, 2);
+}
+
 Camera2D * ComponentCamera::GetCamera()
 {
 	return camera;
@@ -105,8 +111,5 @@ Camera2D * ComponentCamera::GetCamera()
 
 void ComponentCamera::UpdateCameraPos()
 {
-	if (camera != nullptr)
-	{
-		camera->SetPosition(owner->transform->GetPosition());
-	}
+	camera->SetPosition(owner->transform->GetPosition());
 }

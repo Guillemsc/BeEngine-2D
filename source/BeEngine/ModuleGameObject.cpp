@@ -29,6 +29,8 @@ bool ModuleGameObject::Awake()
 	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer");
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
 	AddComponentType(ComponentType::COMPONENT_TYPE_CAMERA, "Camera");
+	AddComponentType(ComponentType::COMPONENT_TYPE_PHYSICS_BODY, "Physics Body");
+	AddComponentType(ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, "Polygon Collider");
 
 	return ret;
 }

@@ -10,7 +10,7 @@ bool PhysicsBody::Contains(const float2 & point)
 {
 	bool ret = false;
 
-	b2Vec2 b2point(PIXEL_TO_METERS(point.x), PIXEL_TO_METERS(point.y));
+	b2Vec2 b2point(PIXELS_TO_METERS(point.x), PIXELS_TO_METERS(point.y));
 
 	const b2Fixture* fixture = b2body->GetFixtureList();
 
@@ -148,7 +148,7 @@ void PhysicsBody::ClearForces()
 
 void PhysicsBody::SetPosition(const float2 & pos)
 {
-	b2body->SetTransform(b2Vec2(pos.x, pos.y), b2body->GetAngle());
+	b2body->SetTransform(b2Vec2(PIXELS_TO_METERS(pos.x), PIXELS_TO_METERS(pos.y)), b2body->GetAngle());
 }
 
 float2 PhysicsBody::GetPosition() const

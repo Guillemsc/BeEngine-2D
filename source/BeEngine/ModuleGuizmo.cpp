@@ -9,6 +9,7 @@
 #include "SceneWindow.h"
 #include "ModuleGameObject.h"
 #include "ComponentTransfrom.h"
+#include "GridGuizmo.h"
 
 ModuleGuizmo::ModuleGuizmo() : Module()
 {
@@ -23,6 +24,7 @@ bool ModuleGuizmo::Awake()
 	bool ret = true;
 
 	position_guizmo = (PositionGuizmo*)AddGuizmo(new PositionGuizmo());
+	(GridGuizmo*)AddGuizmo(new GridGuizmo());
 
 	return ret;
 }
@@ -152,6 +154,21 @@ void ModuleGuizmo::RenderGuizmos()
 				relative_size = App->camera->GetEditorCamera()->GetSize();
 
 			(*it)->Render(relative_size);
+		}
+	}
+}
+
+void ModuleGuizmo::RenderSelectedGameObjectGuizmos()
+{
+	if (App->gameobject->GetSelectedGameObjectsCount() == 1)
+	{
+		GameObject* selected = App->gameobject->GetSelectedGameObjects()[0];
+
+		std::vector<GameObjectComponent*> components = selected->GetComponents();
+
+		for (std::vector<GameObjectComponent*>::iterator it = components.begin(); it != components.end(); ++it)
+		{
+			(*it)->DrawGuizmos();
 		}
 	}
 }

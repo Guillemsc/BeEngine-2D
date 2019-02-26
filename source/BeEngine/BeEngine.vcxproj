@@ -105,12 +105,14 @@
     <ClInclude Include="BottomBar.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentPhysicsBody.h" />
+    <ClInclude Include="ComponentPolygonCollider.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="ComponentSpriteRenderer.h" />
     <ClInclude Include="ComponentTransfrom.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DockingSpace.h" />
+    <ClInclude Include="DynamicGridRenderer.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="ExplorerWindow.h" />
     <ClInclude Include="FBO.h" />
@@ -122,6 +124,7 @@
     <ClInclude Include="GameObjectAbstraction.h" />
     <ClInclude Include="GameObjectComponent.h" />
     <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="GridGuizmo.h" />
     <ClInclude Include="Guizmo.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
@@ -255,7 +258,6 @@
     <ClInclude Include="ScriptingObjectCompiler.h" />
     <ClInclude Include="ScriptingObjectFileWatcher.h" />
     <ClInclude Include="ScriptingObjectSolutionManager.h" />
-    <ClInclude Include="StaticGridRenderer.h" />
     <ClInclude Include="StaticSpriteRenderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Time\Clock.h" />
@@ -271,11 +273,13 @@
     <ClCompile Include="BottomBar.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentPhysicsBody.cpp" />
+    <ClCompile Include="ComponentPolygonCollider.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="ComponentSpriteRenderer.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DockingSpace.cpp" />
+    <ClCompile Include="DynamicGridRenderer.cpp" />
     <ClCompile Include="ExplorerWindow.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="FileWatcher\FileWatcher.cpp" />
@@ -285,6 +289,7 @@
     <ClCompile Include="GameObjectAbstraction.cpp" />
     <ClCompile Include="GameObjectComponent.cpp" />
     <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="GridGuizmo.cpp" />
     <ClCompile Include="Guizmo.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="imgui_docking.cpp" />
@@ -386,7 +391,6 @@
     <ClCompile Include="ScriptingObjectCompiler.cpp" />
     <ClCompile Include="ScriptingObjectFileWatcher.cpp" />
     <ClCompile Include="ScriptingObjectSolutionManager.cpp" />
-    <ClCompile Include="StaticGridRenderer.cpp" />
     <ClCompile Include="StaticSpriteRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Time\Clock.cpp" />

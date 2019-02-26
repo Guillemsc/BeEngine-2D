@@ -63,9 +63,9 @@ void DinamicTriangleRenderer::CleanUp()
 
 void DinamicTriangleRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	App->renderer->BindArrayBuffer(vbo);
 	App->renderer->LoadArrayToVRAM(triangles_vb.GetSize(), triangles_vb.GetBuffer(), GL_DYNAMIC_DRAW);
@@ -106,6 +106,7 @@ void DinamicTriangleRenderer::Render(const float4x4 & view, const float4x4 & pro
 	triangles_count = 0;
 
 	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 }
 
 void DinamicTriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, float rotation_degrees, const float3 & colour, float alpha)

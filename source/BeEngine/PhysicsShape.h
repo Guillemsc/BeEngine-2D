@@ -22,10 +22,12 @@ public:
 	PhysicsShapeType GetBodyShape() const;
 
 	virtual void CreateFixture() {};
-	virtual void DestroyFixture() {};
+	void DestroyFixture();
 
-private:
+protected:
 	PhysicsShapeType shape_type;
+
+	std::vector<b2Fixture*> fixtures;
 
 	PhysicsBody* attached_body = nullptr;
 };

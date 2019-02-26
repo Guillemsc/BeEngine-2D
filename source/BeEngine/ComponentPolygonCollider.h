@@ -1,5 +1,5 @@
-#ifndef __COMPONENT_CAMERA_H__
-#define __COMPONENT_CAMERA_H__
+#ifndef __COMPONENT_POLYGON_COLLIDER_H__
+#define __COMPONENT_POLYGON_COLLIDER_H__
 
 #include "GameObjectComponent.h"
 
@@ -7,9 +7,10 @@
 
 class GameObject;
 class Event;
-class Camera2D;
+class PhysicsShape;
+class ComponentPhysicsBody;
 
-class ComponentCamera : public GameObjectComponent
+class ComponentPolygonCollider: public GameObjectComponent
 {
 	friend class GameObject;
 
@@ -17,8 +18,8 @@ private:
 	void operator delete(void *) {}
 
 public:
-	ComponentCamera();
-	~ComponentCamera();
+	ComponentPolygonCollider();
+	~ComponentPolygonCollider();
 
 	void EditorDraw();
 
@@ -35,15 +36,8 @@ public:
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
 
-	void DrawGuizmos();
-
-	Camera2D* GetCamera();
-
 private:
-	void UpdateCameraPos();
-
-private:
-	Camera2D* camera = nullptr;
+	PhysicsShape* physics_shape = nullptr;
 };
 
-#endif // !__COMPONENT_CAMERA_H__
+#endif // !__COMPONENT_POLYGON_COLLIDER_H__

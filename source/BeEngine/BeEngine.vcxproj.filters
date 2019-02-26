@@ -112,6 +112,9 @@
     <Filter Include="Sources\5. Physics =============\Shapes">
       <UniqueIdentifier>{9ce9c22a-eb2f-4c3f-ba18-a1a75cff0b62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\9. SceneObjects ==========\GameObject\Components\Physics">
+      <UniqueIdentifier>{31667f9e-5372-4bd5-9225-44ef9a13f489}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -576,9 +579,6 @@
     <ClInclude Include="Scene.h">
       <Filter>Sources\9. SceneObjects ==========\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="StaticGridRenderer.h">
-      <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptingBridgeObject.h">
       <Filter>Sources\7. Scripting ==============</Filter>
     </ClInclude>
@@ -607,7 +607,16 @@
       <Filter>Sources\5. Physics =============\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="ComponentPhysicsBody.h">
-      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentPolygonCollider.h">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicGridRenderer.h">
+      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GridGuizmo.h">
+      <Filter>Sources\8. Guizmos =============</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -968,9 +977,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Sources\9. SceneObjects ==========\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="StaticGridRenderer.cpp">
-      <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptingBridgeObject.cpp">
       <Filter>Sources\7. Scripting ==============</Filter>
     </ClCompile>
@@ -999,7 +1005,16 @@
       <Filter>Sources\5. Physics =============\Shapes</Filter>
     </ClCompile>
     <ClCompile Include="ComponentPhysicsBody.cpp">
-      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentPolygonCollider.cpp">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicGridRenderer.cpp">
+      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GridGuizmo.cpp">
+      <Filter>Sources\8. Guizmos =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

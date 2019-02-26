@@ -16,6 +16,8 @@ enum PhysicsBodyType
 class PhysicsBody
 {
 	friend class ModulePhysics;
+	friend class PhysicsShape;
+	friend class PhysicsShapePolygon;
 
 private:
 	void operator delete(void *) {}

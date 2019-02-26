@@ -1,17 +1,16 @@
-#include "StaticGridRenderer.h"
-#include "App.h"
+#include "DynamicGridRenderer.h"
 #include "ModuleShader.h"
+#include "App.h"
 
-
-StaticGridRenderer::StaticGridRenderer()
+DynamicGridRenderer::DynamicGridRenderer()
 {
 }
 
-StaticGridRenderer::~StaticGridRenderer()
+DynamicGridRenderer::~DynamicGridRenderer()
 {
 }
 
-void StaticGridRenderer::Start()
+void DynamicGridRenderer::Start()
 {
 	VertexBuffer quad_vertex_buffer;
 
@@ -72,7 +71,15 @@ void StaticGridRenderer::Start()
 			vec2 grid = abs(fract(coord - 0.5) - 0.5) / fwidth(coord);\
 			float line = min(grid.x, grid.y);\
 			\
-			finalColor = vec4(vec3(1.0 - min(line, 1.0)), 0.6); \
+			float alpha = 0.6;\
+			\
+			if(1.0 - min(line, 1.0) < 0.7)\
+			{\
+				alpha = 0;\
+			}\
+			\
+			vec3 col = vec3(0.4, 0.4, 0.4);\
+			finalColor = vec4(col.x, col.y, col.z, 1 - min(line, 1.0)); \
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
@@ -124,38 +131,49 @@ void StaticGridRenderer::Start()
 	quad_vertex_buffer.Clear();
 }
 
-void StaticGridRenderer::CleanUp()
+void DynamicGridRenderer::CleanUp()
 {
 }
 
-void StaticGridRenderer::Render(const float4x4 & view, const float4x4 & projection)
+void DynamicGridRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
-	glEnable(GL_DEPTH_TEST);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	program->UseProgram();
-
-	App->renderer->BindVertexArrayBuffer(vao);
-
-	App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
-	App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
-	
-	float4x4 world_transform = float4x4::FromTRS(float3::zero, Quat::identity, float3(99999, 99999, 1));
-
-	App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
-
-	App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
-
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
+	if (needs_to_render)
 	{
-		INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
-	}	
+		needs_to_render = false;
 
-	App->renderer->UnbindVertexArrayBuffer();
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+		program->UseProgram();
+
+		App->renderer->BindVertexArrayBuffer(vao);
+
+		App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
+		App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
+
+		float4x4 world_transform = float4x4::FromTRS(float3::zero, Quat::identity, float3(99999, 99999, 1));
+
+		App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
+
+		App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
+		}
+
+		App->renderer->UnbindVertexArrayBuffer();
+
+		glDisable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
+	}
+}
+
+void DynamicGridRenderer::DrawGrid()
+{
+	needs_to_render = true;
 }

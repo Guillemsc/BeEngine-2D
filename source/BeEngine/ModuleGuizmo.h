@@ -20,6 +20,7 @@ public:
 	bool CleanUp();
 
 	void RenderGuizmos();
+	void RenderSelectedGameObjectGuizmos();
 
 	void SetRenderHandlers(bool set);
 	bool GetRenderHandlers() const;

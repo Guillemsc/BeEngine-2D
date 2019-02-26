@@ -5,6 +5,7 @@
 #include "ScriptingBridgeComponentTransform.h"
 #include "ModuleScripting.h"
 #include "App.h"
+#include "PhysicsBody.h"
 
 ComponentTransform::ComponentTransform() 
 	: GameObjectComponent("Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
@@ -50,14 +51,24 @@ void ComponentTransform::Start()
 	scripting_bridge = new ScriptingBridgeComponentTransform(this);
 	App->scripting->AddScriptingBridgeObject(scripting_bridge);
 
+	base_physics_body = App->physics->CreatePhysicsBody();
+
 	local_transform = float4x4::identity;
 	world_transform = float4x4::identity;
 
 	UpdateLocalTransformFromValues();
 }
 
+void ComponentTransform::Update()
+{
+	SetPosition(base_physics_body->GetPosition());
+	SetRotationDegrees(base_physics_body->GetRotationDegrees());
+}
+
 void ComponentTransform::CleanUp()
 {
+	App->physics->DestroyPhysicsBody(base_physics_body);
+
 	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
 }
 
@@ -343,6 +354,8 @@ void ComponentTransform::UpdateWorldAndLocalValues()
 	world_pos = float2(pos.x, pos.y);
 	world_rotation = rot.ToEulerXYZ().z;
 	world_scale = float2(scal.x, scal.y);
+
+	base_physics_body->SetPosition(world_pos);
 }
 
 void ComponentTransform::UpdateLocalTransformFromValues()
@@ -359,6 +372,8 @@ void ComponentTransform::UpdateWorldTransformFromValues()
 	world_transform = float4x4::FromTRS(float3(world_pos.x, world_pos.y, 0),
 		Quat::FromEulerXYZ(0, 0, world_rotation),
 		float3(world_scale.x, world_scale.y, 1));
+
+	base_physics_body->SetPosition(world_pos);
 
 	UpdateLocalFromWorldTransform();
 }

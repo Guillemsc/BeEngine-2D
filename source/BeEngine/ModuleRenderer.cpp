@@ -539,7 +539,7 @@ void ModuleRenderer::UnbindRenderBuffer() const
 
 void ModuleRenderer::Set2DMultisample(uint samples, uint width, uint height)
 {
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, width, height, GL_TRUE);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA, width, height, GL_TRUE);
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
@@ -716,7 +716,7 @@ void ModuleRenderer::BindFrameBuffer(uint target, uint id) const
 
 void ModuleRenderer::BlitFrameBuffer(uint x, uint y, uint w, uint h) const
 {
-	glBlitFramebuffer(x, y, w, w,  // src rect
+	glBlitFramebuffer(x, y, w, h,  // src rect
 		x, y, w, h,  // dst rect
 		GL_COLOR_BUFFER_BIT, // buffer mask
 		GL_NEAREST); // scale filter

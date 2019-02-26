@@ -58,6 +58,7 @@ public:
 	void DestroyComponent(GameObjectComponent* component, bool check_can_destroy = true);
 	bool GetHasComponent(const ComponentType& type) const;
 	std::vector<GameObjectComponent*> GetComponents() const;
+	GameObjectComponent* GetComponent(ComponentType type) const;
 
 	bool GetSelected() const;
 
@@ -69,6 +70,10 @@ public:
 private:
 	void DestroyAllComponentsNow();
 	void ActuallyDestroyComponents();
+
+private:
+	void CallOnAddComponent(GameObjectComponent* comp);
+	void CallOnRemoveComponent(GameObjectComponent* comp);
 
 public:
 	ComponentTransform* transform = nullptr;

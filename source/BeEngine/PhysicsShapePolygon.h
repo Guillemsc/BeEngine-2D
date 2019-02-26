@@ -15,14 +15,11 @@ public:
 	PhysicsShapePolygon();
 
 	void CreateFixture();
-	void DestroyFixture();
 
 	void SetVertices(const std::vector<float2> set);
 	std::vector<float2> GetVertices() const;
 
 private:
-	b2Fixture* fixture = nullptr;
-
 	b2PolygonShape b2polygon_shape;
 	std::vector<float2> vertices;
 

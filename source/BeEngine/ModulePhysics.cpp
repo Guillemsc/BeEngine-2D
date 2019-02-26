@@ -56,7 +56,7 @@ PhysicsBody * ModulePhysics::CreatePhysicsBody()
 
 	b2BodyDef b2body_def;
 	b2body_def.type = b2BodyType::b2_staticBody;
-	b2body_def.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	b2body_def.position.Set(PIXELS_TO_METERS(0), PIXELS_TO_METERS(0));
 	b2body_def.gravityScale = 0;
 
 	b2Body* b2body = b2world->CreateBody(&b2body_def);

@@ -1,4 +1,5 @@
 #include "PhysicsShapePolygon.h"
+#include "PhysicsBody.h"
 
 PhysicsShapePolygon::PhysicsShapePolygon() : PhysicsShape(PhysicsShapeType::PHYSICS_SHAPE_POLYGON)
 {
@@ -6,10 +7,15 @@ PhysicsShapePolygon::PhysicsShapePolygon() : PhysicsShape(PhysicsShapeType::PHYS
 
 void PhysicsShapePolygon::CreateFixture()
 {
-}
+	if (attached_body != nullptr && fixtures.size() == 0)
+	{
+		b2FixtureDef b2fixture;
+		b2fixture.density = 0;
+		b2fixture.shape = &b2polygon_shape;
 
-void PhysicsShapePolygon::DestroyFixture()
-{
+		b2Fixture* polygon = attached_body->b2body->CreateFixture(&b2fixture);
+		fixtures.push_back(polygon);
+	}
 }
 
 void PhysicsShapePolygon::SetVertices(const std::vector<float2> set)
@@ -23,7 +29,7 @@ void PhysicsShapePolygon::SetVertices(const std::vector<float2> set)
 	{
 		float2 point = (*it);
 
-		p[counter] = b2Vec2(PIXEL_TO_METERS(point.x), PIXEL_TO_METERS(point.y));
+		p[counter] = b2Vec2(PIXELS_TO_METERS(point.x), PIXELS_TO_METERS(point.y));
 	}
 
 	b2polygon_shape.Set(p, set.size());

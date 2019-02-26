@@ -264,7 +264,7 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 	{
 		if (ret->unique_per_game_object)
 		{
-			if (GetHasComponent(type) )
+			if (GetHasComponent(type))
 			{
 				RELEASE(ret);
 				ret = nullptr;
@@ -277,6 +277,8 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 			ret->uid = App->resource->GetNewUID();
 			components.push_back(ret);
 			ret->Start();
+
+			CallOnAddComponent(ret);
 		}
 	}
 
@@ -310,6 +312,8 @@ void GameObject::DestroyComponent(GameObjectComponent * component, bool check_ca
 
 			if (!exists)
 			{
+				CallOnRemoveComponent(component);
+
 				components_to_destroy.push_back(component);
 			}
 		}
@@ -335,6 +339,22 @@ bool GameObject::GetHasComponent(const ComponentType & type) const
 std::vector<GameObjectComponent*> GameObject::GetComponents() const
 {
 	return components;
+}
+
+GameObjectComponent* GameObject::GetComponent(ComponentType type) const
+{
+	GameObjectComponent* ret = nullptr;
+
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		if ((*it)->GetType() == type)
+		{
+			ret = (*it);
+			break;
+		}
+	}
+
+	return ret;
 }
 
 bool GameObject::GetSelected() const
@@ -378,4 +398,20 @@ void GameObject::ActuallyDestroyComponents()
 	}
 
 	components_to_destroy.clear();
+}
+
+void GameObject::CallOnAddComponent(GameObjectComponent * comp)
+{
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		(*it)->OnAddComponent(comp);
+	}
+}
+
+void GameObject::CallOnRemoveComponent(GameObjectComponent * comp)
+{
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		(*it)->OnRemoveComponent(comp);
+	}
 }

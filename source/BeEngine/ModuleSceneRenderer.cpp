@@ -7,7 +7,7 @@
 #include "QuadRenderer.h"
 #include "DinamicTriangleRenderer.h"
 #include "StaticSpriteRenderer.h"
-#include "StaticGridRenderer.h"
+#include "DynamicGridRenderer.h"
 #include "ModuleWindow.h"
 #include "ModuleGuizmo.h"
 #include "ModuleEditor.h"
@@ -29,7 +29,8 @@ bool ModuleSceneRenderer::Awake()
 	triangle_renderer = (DinamicTriangleRenderer*)AddRenderer(new DinamicTriangleRenderer());
 
 	static_sprite_renderer = (StaticSpriteRenderer*)AddRenderer(new StaticSpriteRenderer());
-	static_grid_renderer = (StaticGridRenderer*)AddRenderer(new StaticGridRenderer());
+
+	grid_renderer = (DynamicGridRenderer*)AddRenderer(new DynamicGridRenderer());
 
 	return ret;
 }
@@ -39,12 +40,6 @@ bool ModuleSceneRenderer::PostUpdate()
 	bool ret = true;
 
 	// ---------------------------------------------------------------------
-
-	App->camera->GetEditorCamera()->Bind();
-
-	App->guizmo->RenderGuizmos();
-
-	App->camera->GetEditorCamera()->Unbind();
 
 	RenderOnCameras();
 
@@ -86,20 +81,13 @@ Renderer * ModuleSceneRenderer::AddRenderer(Renderer * gm)
 
 void ModuleSceneRenderer::RenderRenderers(Camera2D* camera)
 {
-	if (camera != nullptr)
+	float4x4 view_mat = camera->GetOpenGLViewMatrix();
+	float4x4 projection_mat = camera->GetOpenGLProjectionMatrix();
+
+	for (std::vector<Renderer*>::iterator it = renderers.begin(); it != renderers.end(); ++it)
 	{
-		camera->Bind();
-
-		float4x4 view_mat = camera->GetOpenGLViewMatrix();
-		float4x4 projection_mat = camera->GetOpenGLProjectionMatrix();
-
-		for (std::vector<Renderer*>::iterator it = renderers.begin(); it != renderers.end(); ++it)
-		{
-			(*it)->Render(view_mat, projection_mat);
-		}
-
-		camera->Unbind();
-	}
+		(*it)->Render(view_mat, projection_mat);
+	}	
 }
 
 void ModuleSceneRenderer::DestroyAllRenderers()
@@ -121,6 +109,16 @@ void ModuleSceneRenderer::RenderOnCameras()
 	{
 		Camera2D* curr_camera = (*it);
 
+		curr_camera->Bind();
+
+		if (curr_camera == App->camera->GetEditorCamera())
+		{
+			App->guizmo->RenderGuizmos();
+			App->guizmo->RenderSelectedGameObjectGuizmos();
+		}
+
 		RenderRenderers(curr_camera);
+
+		curr_camera->Unbind();
 	}
 }

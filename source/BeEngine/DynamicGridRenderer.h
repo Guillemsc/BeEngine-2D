@@ -1,5 +1,5 @@
-#ifndef __STATIC_GRID_RENDERER_H__
-#define __STATIC_GRID_RENDERER_H__
+#ifndef __DYNAMIC_GRID_RENDERER_H__
+#define __DYNAMIC_GRID_RENDERER_H__
 
 #include "Renderer.h"
 
@@ -7,20 +7,24 @@
 #include "ModuleShader.h"
 #include "VertexBuffer.h"
 
-class StaticGridRenderer : public Renderer
+class DynamicGridRenderer : public Renderer
 {
 public:
-	StaticGridRenderer();
-	~StaticGridRenderer();
+	DynamicGridRenderer();
+	~DynamicGridRenderer();
 
 	void Start();
 	void CleanUp();
 	void Render(const float4x4& view, const float4x4& projection);
 
+	void DrawGrid();
+
 private:
 	ShaderProgram* program = nullptr;
 
 	uint vao = 0;
+
+	bool needs_to_render = false;
 };
 
-#endif // !__STATIC_GRID_RENDERER_H__
+#endif // !__DYNAMIC_GRID_RENDERER_H__

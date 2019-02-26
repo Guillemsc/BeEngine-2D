@@ -9,7 +9,7 @@
 #define METER_PER_PIXEL 0.02f // this is 1 / PIXELS_PER_METER !
 
 #define METERS_TO_PIXELS(m) ((int) round(PIXELS_PER_METER * m))
-#define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
+#define PIXELS_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
 class PhysicsBody;
 class PhysicsShape;

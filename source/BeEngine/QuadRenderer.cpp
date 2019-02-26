@@ -63,9 +63,9 @@ void QuadRenderer::CleanUp()
 
 void QuadRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	App->renderer->BindArrayBuffer(vbo);
 	App->renderer->LoadArrayToVRAM(quads_vb.GetSize(), quads_vb.GetBuffer(), GL_DYNAMIC_DRAW);
@@ -106,6 +106,7 @@ void QuadRenderer::Render(const float4x4 & view, const float4x4 & projection)
 	quads_count = 0;
 
 	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 }
 
 

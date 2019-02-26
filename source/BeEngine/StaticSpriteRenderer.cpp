@@ -134,9 +134,8 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 	if (sprite_renderers.size() > 0)
 	{
 		glEnable(GL_DEPTH_TEST);
-
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 		program->UseProgram();
 
@@ -180,14 +179,15 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			{
 				INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
 			}
-			//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-			//App->renderer->UnbindTexture();
+			if (curr_sprite->GetHasTexture())
+				App->renderer->UnbindTexture();
 		}
 
 		App->renderer->UnbindVertexArrayBuffer();
 
-		//glDisable(GL_BLEND);
+		glDisable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
 	}
 }
 

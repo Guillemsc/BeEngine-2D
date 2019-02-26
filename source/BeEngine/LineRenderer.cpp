@@ -64,11 +64,9 @@ void LineRenderer::CleanUp()
 
 void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 {
-	//glEnable(GL_BLEND);
-	//glBlendEquation(GL_FUNC_ADD);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	program->UseProgram();
 
@@ -108,7 +106,8 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 	lines_vb.Clear();
 	lines_count = 0;
 
-	//glDisable(GL_BLEND);
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 }
 
 void LineRenderer::DrawLine(const float2& start, const float2& end, const float3& colour, float alpha, float tickness)

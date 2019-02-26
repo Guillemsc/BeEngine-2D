@@ -305,9 +305,20 @@ float3 Camera2D::GetYDir()
 	return frustum.Up();
 }
 
-void Camera2D::GetCorners(float3* corners)
+std::vector<float2> Camera2D::GetCorners()
 {
-	frustum.GetCornerPoints(corners);
+	std::vector<float2> ret;
+
+	float2 center = GetPosition();
+	float2 size = GetViewportSize();
+	float2 half_size = size * 0.5f;
+
+	ret.push_back(float2(center.x - half_size.x, center.y + half_size.y));
+	ret.push_back(float2(center.x - half_size.x, center.y - half_size.y));
+	ret.push_back(float2(center.x + half_size.x, center.y - half_size.y));
+	ret.push_back(float2(center.x + half_size.x, center.y + half_size.y));
+
+	return ret;
 }
 
 void Camera2D::SetNearPlaneDistance(const float & set)
@@ -338,6 +349,11 @@ void Camera2D::SetSize(float _size)
 		size = 0.0001f;
 
 	SetViewportSize(viewport_size.x, viewport_size.y);
+}
+
+float2 Camera2D::GetViewportSize() const
+{
+	return float2(frustum.OrthographicWidth(), frustum.OrthographicHeight());
 }
 
 const float Camera2D::GetSize() const
@@ -571,7 +587,7 @@ bool RenderTexture::Create(uint _width, uint _height)
 	App->renderer->BindTexture(texture_id);
 	
 	// Set Parameters
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -608,13 +624,8 @@ void RenderTexture::Unbind()
 {
 	App->renderer->BindFrameBuffer(GL_READ_FRAMEBUFFER, fbo_msaa_id);
 	App->renderer->BindFrameBuffer(GL_DRAW_FRAMEBUFFER, fbo_id);
-	//
-	//App->renderer3D->BlitFrameBuffer(0, 0, width, height);
 
-	glBlitFramebuffer(0, 0, width, height,  // src rect
-		0, 0, width, height,  // dst rect
-		GL_COLOR_BUFFER_BIT, // buffer mask
-		GL_NEAREST); // scale filter
+	App->renderer->BlitFrameBuffer(0, 0, width, height);
 
 	App->renderer->UnbindFrameBuffer();
 	App->renderer->SetViewport(last_x, last_y, last_width, last_height);

@@ -7,6 +7,7 @@
 
 class GameObject;
 class ScriptingBridgeComponentTransform;
+class PhysicsBody;
 
 class ComponentTransform : public GameObjectComponent
 {
@@ -22,6 +23,7 @@ public:
 	void EditorDraw();
 
 	void Start();
+	void Update();
 	void CleanUp();
 
 	void OnSaveAbstraction(DataAbstraction& abs);
@@ -76,6 +78,9 @@ private:
 	float2 world_scale = float2::zero;
 
 	bool keep_scale_ratio = false;
+
+	PhysicsBody* base_physics_body = nullptr;
+	PhysicsBody* using_physics_body = nullptr;
 
 private:
 	ScriptingBridgeComponentTransform* scripting_bridge = nullptr;

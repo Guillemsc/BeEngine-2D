@@ -7,8 +7,8 @@ class Renderer;
 class LineRenderer;
 class QuadRenderer;
 class DinamicTriangleRenderer;
+class DynamicGridRenderer;
 class StaticSpriteRenderer;
-class StaticGridRenderer;
 class Camera2D;
 
 class ModuleSceneRenderer : public Module
@@ -25,8 +25,8 @@ public:
 	LineRenderer*	         line_renderer = nullptr;
 	QuadRenderer*	         quad_renderer = nullptr;
 	DinamicTriangleRenderer* triangle_renderer = nullptr;
+	DynamicGridRenderer*	 grid_renderer = nullptr;
 
-	StaticGridRenderer*		 static_grid_renderer = nullptr;
 	StaticSpriteRenderer*    static_sprite_renderer = nullptr;
 
 private:

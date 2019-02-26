@@ -77,12 +77,14 @@ public:
 	float3 GetZDir();
 	float3 GetYDir();
 
-	void GetCorners(float3* corners);
+	std::vector<float2> GetCorners();
 
 	void SetNearPlaneDistance(const float& set);
 	void SetFarPlaneDistance(const float& set);
 	void SetViewportSize(float width, float height);
 	void SetSize(float size);
+
+	float2 GetViewportSize() const;
 
 	const float GetSize() const;
 	const float GetNearPlaneDistance() const;

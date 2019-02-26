@@ -15,6 +15,7 @@ enum ComponentType
 	COMPONENT_TYPE_SCRIPT,
 	COMPONENT_TYPE_CAMERA,
 	COMPONENT_TYPE_PHYSICS_BODY,
+	COMPONENT_TYPE_POLYGON_COLLIDER,
 };
 
 enum ComponentGroup
@@ -49,7 +50,11 @@ public:
 	virtual void OnChildRemoved(GameObject* child) {};
 	virtual void OnParentChanged(GameObject* new_parent) {};
 
+	virtual void OnAddComponent(GameObjectComponent* new_component) {};
+	virtual void OnRemoveComponent(GameObjectComponent* new_component) {};
+
 	virtual void DrawGuizmos() {};
+	virtual void DrawGuizmosSelected() {};
 
 	GameObject* GetOwner();
 
