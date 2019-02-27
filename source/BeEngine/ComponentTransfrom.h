@@ -12,6 +12,7 @@ class PhysicsBody;
 class ComponentTransform : public GameObjectComponent
 {
 	friend class GameObject;
+	friend class ComponentPolygonCollider;
 
 private:
 	void operator delete(void *) {}
@@ -32,6 +33,9 @@ public:
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
+
+	void OnAddComponent(GameObjectComponent* new_component);
+	void OnRemoveComponent(GameObjectComponent* new_component);
 
 	void SetLocalTransform(const float4x4& local);
 	void SetWorldTransform(const float4x4& world);
@@ -80,7 +84,6 @@ private:
 	bool keep_scale_ratio = false;
 
 	PhysicsBody* base_physics_body = nullptr;
-	PhysicsBody* using_physics_body = nullptr;
 
 private:
 	ScriptingBridgeComponentTransform* scripting_bridge = nullptr;

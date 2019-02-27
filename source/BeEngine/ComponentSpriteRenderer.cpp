@@ -30,6 +30,8 @@ void ComponentSpriteRenderer::EditorDraw()
 		resource_texture = (ResourceTexture*)res;
 	}
 
+	ImGui::DragInt("Layer", &layer, 1, 0, 9999);
+
 	if (resource_texture != nullptr)
 	{
 		ImGui::Text("Filp");
@@ -157,6 +159,11 @@ float2 ComponentSpriteRenderer::GetTextureSize() const
 bool ComponentSpriteRenderer::GetHasTexture() const
 {
 	return resource_texture != nullptr;
+}
+
+int ComponentSpriteRenderer::GetLayer() const
+{
+	return layer;
 }
 
 void ComponentSpriteRenderer::SetFilpX(bool set)

@@ -12,6 +12,10 @@ public:
 	virtual void Start() {};
 	virtual void CleanUp() {};
 	virtual void Render(const float4x4& view, const float4x4& projection) {};
+
+	void SetZPos(float set);
+
+	float z_pos = 0;
 };
 
 #endif // !__RENDERER_H__

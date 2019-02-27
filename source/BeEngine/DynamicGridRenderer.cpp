@@ -49,7 +49,7 @@ void DynamicGridRenderer::Start()
 		{\
 			oCol = col;\
 			oUvs = uvs; \
-			gl_Position = Projection * View * Model * vec4(position, 1);\
+			gl_Position = Projection * View * Model * vec4(vec3(position.x, position.y, 120000), 1);\
 		}";
 
 	const char* fragment_code =
@@ -144,6 +144,7 @@ void DynamicGridRenderer::Render(const float4x4 & view, const float4x4 & project
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glDepthFunc(GL_LESS);
 
 		program->UseProgram();
 

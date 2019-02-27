@@ -1016,6 +1016,7 @@
     <ClCompile Include="GridGuizmo.cpp">
       <Filter>Sources\8. Guizmos =============</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">

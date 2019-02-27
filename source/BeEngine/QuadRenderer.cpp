@@ -66,6 +66,7 @@ void QuadRenderer::Render(const float4x4 & view, const float4x4 & projection)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LESS);
 
 	App->renderer->BindArrayBuffer(vbo);
 	App->renderer->LoadArrayToVRAM(quads_vb.GetSize(), quads_vb.GetBuffer(), GL_DYNAMIC_DRAW);
@@ -114,10 +115,10 @@ void QuadRenderer::DrawQuad(const float2 & pos, const float2 & size, const float
 {
 	float2 half_size = float2(size.x * 0.5f, size.y * 0.5f);
 
-	float3 final_1 = float3(pos.x - half_size.x, pos.y - half_size.y, 0);
-	float3 final_2 = float3(pos.x + half_size.x, pos.y - half_size.y, 0);
-	float3 final_3 = float3(pos.x + half_size.x, pos.y + half_size.y, 0);
-	float3 final_4 = float3(pos.x - half_size.x, pos.y + half_size.y, 0);
+	float3 final_1 = float3(pos.x - half_size.x, pos.y - half_size.y, z_pos);
+	float3 final_2 = float3(pos.x + half_size.x, pos.y - half_size.y, z_pos);
+	float3 final_3 = float3(pos.x + half_size.x, pos.y + half_size.y, z_pos);
+	float3 final_4 = float3(pos.x - half_size.x, pos.y + half_size.y, z_pos);
 
 	quads_vb.AddSpace(42);
 

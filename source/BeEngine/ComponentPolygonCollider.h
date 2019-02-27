@@ -8,7 +8,7 @@
 class GameObject;
 class Event;
 class PhysicsShape;
-class ComponentPhysicsBody;
+class PhysicsShapePolygon;
 
 class ComponentPolygonCollider: public GameObjectComponent
 {
@@ -36,8 +36,10 @@ public:
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
 
+	void DrawGuizmos();
+
 private:
-	PhysicsShape* physics_shape = nullptr;
+	PhysicsShapePolygon* physics_shape = nullptr;
 };
 
 #endif // !__COMPONENT_POLYGON_COLLIDER_H__

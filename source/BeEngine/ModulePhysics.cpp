@@ -2,6 +2,7 @@
 #include "PhysicsBody.h"
 #include "PhysicsShape.h"
 #include "PhysicsShapePolygon.h"
+#include "ModuleEvent.h"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -23,6 +24,9 @@ bool ModulePhysics::Awake()
 
 	INTERNAL_LOG("Creating Physics World");
 
+	App->event->Suscribe(std::bind(&ModulePhysics::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
+	App->event->Suscribe(std::bind(&ModulePhysics::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
+
 	b2world = new b2World(b2Vec2(0, 0));
 
 	b2world = new b2World(b2Vec2(0, 0));
@@ -39,7 +43,39 @@ bool ModulePhysics::CleanUp()
 
 	RELEASE(b2world);
 
+	App->event->UnSuscribe(std::bind(&ModulePhysics::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
+	App->event->UnSuscribe(std::bind(&ModulePhysics::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
+
 	return ret;
+}
+
+bool ModulePhysics::PreUpdate()
+{
+	bool ret = true;
+
+	//b2world->Step(App->GetDT(), 30, 10);
+
+	return ret;
+}
+
+void ModulePhysics::OnEvent(Event * ev)
+{
+	switch (ev->GetType())
+	{
+	case EventType::EDITOR_GOES_TO_PLAY:
+	{
+		CreateFixtures();
+
+		break;
+	}
+
+	case EventType::EDITOR_GOES_TO_IDLE:
+	{
+		DestroyFixtures();
+
+		break;
+	}
+	}
 }
 
 void ModulePhysics::BeginContact(b2Contact * contact)
@@ -93,10 +129,10 @@ PhysicsShape * ModulePhysics::CreatePhysicsShape(PhysicsShapeType type)
 		ret = new PhysicsShapePolygon();
 
 		std::vector<float2> vertices;
-		vertices.push_back(float2(-0.5f, 0.5f));
-		vertices.push_back(float2(-0.5f, -0.5f));
-		vertices.push_back(float2(0.5f, -0.5f));
-		vertices.push_back(float2(0.5f, 0.5f));
+		vertices.push_back(float2(-5, -5));
+		vertices.push_back(float2(5, -5));
+		vertices.push_back(float2(5, 5));
+		vertices.push_back(float2(-5, 5));
 
 		((PhysicsShapePolygon*)ret)->SetVertices(vertices);
 

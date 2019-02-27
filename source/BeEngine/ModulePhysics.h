@@ -11,6 +11,7 @@
 #define METERS_TO_PIXELS(m) ((int) round(PIXELS_PER_METER * m))
 #define PIXELS_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
+class Event;
 class PhysicsBody;
 class PhysicsShape;
 enum PhysicsShapeType;
@@ -23,6 +24,8 @@ public:
 
 	bool Awake();
 	bool CleanUp();
+	bool PreUpdate();
+	void OnEvent(Event* ev);
 
 	void BeginContact(b2Contact* contact);
 	void EndContact(b2Contact* contact);

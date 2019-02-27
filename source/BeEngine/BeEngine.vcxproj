@@ -313,6 +313,7 @@
     <ClCompile Include="ProjectManager.cpp" />
     <ClCompile Include="ModuleResource.cpp" />
     <ClCompile Include="QuadRenderer.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourcePrefab.cpp" />
     <ClCompile Include="ResourceScene.cpp" />

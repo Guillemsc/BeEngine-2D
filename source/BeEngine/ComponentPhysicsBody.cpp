@@ -18,8 +18,7 @@ void ComponentPhysicsBody::EditorDraw()
 
 void ComponentPhysicsBody::Start()
 {
-	physics_body = App->physics->CreatePhysicsBody();
-	physics_body->SetComponentPhysicsBody(this);
+
 }
 
 void ComponentPhysicsBody::Update()
@@ -28,7 +27,7 @@ void ComponentPhysicsBody::Update()
 
 void ComponentPhysicsBody::CleanUp()
 {
-	App->physics->DestroyPhysicsBody(physics_body);
+	
 }
 
 void ComponentPhysicsBody::OnSaveAbstraction(DataAbstraction & abs)

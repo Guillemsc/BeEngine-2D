@@ -16,7 +16,9 @@ public:
 
 	void CreateFixture();
 
-	void SetVertices(const std::vector<float2> set);
+	void GuizmoDraw();
+
+	void SetVertices(const std::vector<float2>& set);
 	std::vector<float2> GetVertices() const;
 
 private:

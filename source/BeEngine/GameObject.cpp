@@ -8,6 +8,8 @@
 #include "ComponentCamera.h"
 #include "ModuleJson.h"
 #include "ResourcePrefab.h"
+#include "ComponentPhysicsBody.h"
+#include "ComponentPolygonCollider.h"
 #include "Event.h"
 #include "ModuleEvent.h"
 #include "Scene.h"
@@ -256,6 +258,14 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 		ret = new ComponentCamera();
 		break;
 
+	case ComponentType::COMPONENT_TYPE_PHYSICS_BODY:
+		ret = new ComponentPhysicsBody();
+		break;
+
+	case ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER:
+		ret = new ComponentPolygonCollider();
+		break;
+
 	default:
 		break;
 	}
@@ -394,6 +404,10 @@ void GameObject::ActuallyDestroyComponents()
 	for (std::vector<GameObjectComponent*>::iterator it = components_to_destroy.begin(); it != components_to_destroy.end(); ++it)
 	{
 		(*it)->CleanUp();
+	}
+
+	for (std::vector<GameObjectComponent*>::iterator it = components_to_destroy.begin(); it != components_to_destroy.end(); ++it)
+	{
 		RELEASE(*it);
 	}
 

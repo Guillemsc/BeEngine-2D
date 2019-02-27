@@ -36,10 +36,6 @@ public:
 	void OnParentChanged(GameObject* new_parent);
 
 private:
-	PhysicsBody* physics_body = nullptr;
-
-	float2 last_body_pos = float2::zero;
-	float last_body_rotation = 0.0f;
 
 };
 

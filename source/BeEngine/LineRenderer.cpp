@@ -24,7 +24,7 @@ void LineRenderer::Start()
 		void main()\
 		{\
 			oColour = col; \
-			gl_Position = Projection * View * Model * vec4(position, 1);\
+			gl_Position = Projection * View * Model * vec4(vec3(position.x, position.y, position.z), 1);\
 		}";
 
 	const char* fragment_code =
@@ -67,6 +67,7 @@ void LineRenderer::Render(const float4x4& view, const float4x4& projection)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LESS);
 
 	program->UseProgram();
 
@@ -132,13 +133,13 @@ void LineRenderer::DrawLine(const float2& start, const float2& end, const float3
 	float new_p2_2_x = end.x - (sin(angle2) * half_width);
 	float new_p2_2_y = end.y + (cos(angle2) * half_width);
 
-	float3 final_1 = float3(new_p1_2_x, new_p1_2_y, z_layer);
+	float3 final_1 = float3(new_p1_2_x, new_p1_2_y, z_pos);
 
-	float3 final_2 = float3(new_p2_2_x, new_p2_2_y, z_layer);
+	float3 final_2 = float3(new_p2_2_x, new_p2_2_y, z_pos);
 
-	float3 final_3 = float3(new_p2_1_x, new_p2_1_y, z_layer);
+	float3 final_3 = float3(new_p2_1_x, new_p2_1_y, z_pos);
 
-	float3 final_4 = float3(new_p1_1_x, new_p1_1_y, z_layer);
+	float3 final_4 = float3(new_p1_1_x, new_p1_1_y, z_pos);
 
 	lines_vb.AddSpace(42);
 
@@ -163,14 +164,4 @@ void LineRenderer::DrawLine(const float2& start, const float2& end, const float3
 
 void LineRenderer::DrawDashedLine(const float2 & start, const float2 & end, const float3 & colour, float alpha, float dash_lenght, float tickness)
 {
-}
-
-void LineRenderer::SetZLayer(uint set)
-{
-	z_layer = set;
-}
-
-void LineRenderer::ResetZLayer()
-{
-	z_layer = 0;
 }

@@ -42,6 +42,8 @@ public:
 	float2 GetTextureSize() const;
 	bool GetHasTexture() const;
 
+	int GetLayer() const;
+
 	void SetFilpX(bool set);
 	bool GetFlipX() const;
 
@@ -56,6 +58,7 @@ private:
 	bool flip_x = false;
 	bool flip_y = false;
 
+	int layer = 0;
 };
 
 #endif // !__COMPONENT_SPRITE_RENDERER_H__

@@ -66,14 +66,12 @@ void DinamicTriangleRenderer::Render(const float4x4 & view, const float4x4 & pro
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LESS);
 
 	App->renderer->BindArrayBuffer(vbo);
 	App->renderer->LoadArrayToVRAM(triangles_vb.GetSize(), triangles_vb.GetBuffer(), GL_DYNAMIC_DRAW);
 
 	float4x4 model = float4x4::identity;
-	model[0][3] = 0;
-	model[1][3] = 0;
-	model[2][3] = 0;
 
 	program->UseProgram();
 
@@ -128,9 +126,9 @@ void DinamicTriangleRenderer::DrawTriangle(const float2 & pos, const float2 & si
 	float new_pos_3_x = ((point3.x - pos.x) * cos(rotation)) - ((point3.y - pos.y) * sin(rotation)) + pos.x;
 	float new_pos_3_y = ((point3.x - pos.x) * sin(rotation)) + ((point3.y - pos.y) * cos(rotation)) + pos.y;
 
-	float3 final_1 = float3(new_pos_1_x, new_pos_1_y, 0);
-	float3 final_2 = float3(new_pos_2_x, new_pos_2_y, 0);
-	float3 final_3 = float3(new_pos_3_x, new_pos_3_y, 0);
+	float3 final_1 = float3(new_pos_1_x, new_pos_1_y, z_pos);
+	float3 final_2 = float3(new_pos_2_x, new_pos_2_y, z_pos);
+	float3 final_3 = float3(new_pos_3_x, new_pos_3_y, z_pos);
 
 	triangles_vb.AddSpace(21);
 

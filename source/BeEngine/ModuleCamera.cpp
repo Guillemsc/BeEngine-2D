@@ -1,3 +1,5 @@
+#include <limits>
+
 #include "Globals.h"
 #include "App.h"
 #include "ModuleInput.h"
@@ -240,8 +242,8 @@ Camera2D::Camera2D()
 	SetZDir(float3(0, 0, 1));
 	SetYDir(float3(0, 1, 0));
 
-	SetNearPlaneDistance(0.1f);
-	SetFarPlaneDistance(1000000.0f);
+	SetNearPlaneDistance(1.0f);
+	SetFarPlaneDistance(9999999);
 
 	render_tex = new RenderTexture();
 }

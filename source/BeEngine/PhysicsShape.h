@@ -24,6 +24,8 @@ public:
 	virtual void CreateFixture() {};
 	void DestroyFixture();
 
+	virtual void GuizmoDraw() {};
+
 protected:
 	PhysicsShapeType shape_type;
 

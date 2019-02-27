@@ -1,3 +1,5 @@
+#include <limits>
+
 #include "ModuleSceneRenderer.h"
 #include "App.h"
 #include "ModuleRenderer.h"
@@ -31,6 +33,10 @@ bool ModuleSceneRenderer::Awake()
 	static_sprite_renderer = (StaticSpriteRenderer*)AddRenderer(new StaticSpriteRenderer());
 
 	grid_renderer = (DynamicGridRenderer*)AddRenderer(new DynamicGridRenderer());
+
+	// Far plane 9999999
+	layer_space_guizmos = LayerSpace(110000, 100000, 10000);
+	layer_space_component_sprite = LayerSpace(5010000, 5000000, 10000);
 
 	return ret;
 }
@@ -121,4 +127,31 @@ void ModuleSceneRenderer::RenderOnCameras()
 
 		curr_camera->Unbind();
 	}
+}
+
+LayerSpace::LayerSpace()
+{
+}
+
+LayerSpace::LayerSpace(float from, float to, uint max_layer_level)
+{
+	this->from = from;
+	this->to = to;
+	this->max_layer_level = max_layer_level;
+}
+
+float LayerSpace::GetLayerValue(uint layer_level)
+{
+	if (layer_level < max_layer_level)
+	{
+		float difference = to - from;
+
+		double max_float = (float)max_layer_level;
+
+		double val = (difference * layer_level) / max_float;
+
+		return val + from;
+	}
+
+	return from;
 }

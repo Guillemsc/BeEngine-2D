@@ -61,8 +61,8 @@ void ComponentTransform::Start()
 
 void ComponentTransform::Update()
 {
-	SetPosition(base_physics_body->GetPosition());
-	SetRotationDegrees(base_physics_body->GetRotationDegrees());
+	/*SetPosition(base_physics_body->GetPosition());
+	SetRotationDegrees(base_physics_body->GetRotationDegrees());*/
 }
 
 void ComponentTransform::CleanUp()
@@ -98,6 +98,19 @@ void ComponentTransform::OnChildRemoved(GameObject * child)
 
 void ComponentTransform::OnParentChanged(GameObject * new_parent)
 {
+}
+
+void ComponentTransform::OnAddComponent(GameObjectComponent * new_component)
+{
+}
+
+void ComponentTransform::OnRemoveComponent(GameObjectComponent * deleted)
+{
+	if (deleted->GetType() == ComponentType::COMPONENT_TYPE_PHYSICS_BODY)
+	{
+		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_STATIC);
+		base_physics_body->ClearForces();
+	}
 }
 
 void ComponentTransform::SetLocalTransform(const float4x4 & local)

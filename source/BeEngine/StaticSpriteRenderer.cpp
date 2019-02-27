@@ -3,6 +3,7 @@
 #include "ModuleShader.h"
 #include "ComponentTransfrom.h"
 #include "GameObject.h"
+#include "ModuleSceneRenderer.h"
 
 StaticSpriteRenderer::StaticSpriteRenderer()
 {
@@ -42,6 +43,7 @@ void StaticSpriteRenderer::Start()
 		uniform mat4 Model; \
 		uniform mat4 View; \
 		uniform mat4 Projection; \
+		uniform float z_pos; \
 		\
 		uniform vec4 col; \
 		uniform int hasTexture; \
@@ -54,7 +56,7 @@ void StaticSpriteRenderer::Start()
 			oCol = col;\
 			oHasTexture = hasTexture;\
 			oUvs = uvs; \
-			gl_Position = Projection * View * Model * vec4(position, 1);\
+			gl_Position = Projection * View * Model * vec4(vec3(position.x, position.y, z_pos), 1);\
 		}";
 
 	const char* fragment_code =
@@ -135,7 +137,7 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 	{
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glDepthFunc(GL_LESS);
 
 		program->UseProgram();
 
@@ -153,7 +155,12 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 
 			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
 
-			float4x4 size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(texture_size.x * 0.1f, texture_size.y * 0.1f, 1));
+			float z_pos = App->scene_renderer->layer_space_component_sprite.GetLayerValue(curr_sprite->GetLayer());
+
+			float4x4 size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(10, 10, 1));
+			
+			if (curr_sprite->GetHasTexture())
+				size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(texture_size.x * 0.1f, texture_size.y * 0.1f, 1));
 
 			float4x4 world_transform = transform->GetWorldTransform() * size_mat;
 
@@ -163,6 +170,8 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			if (curr_sprite->GetFlipY())
 				world_transform[1][1] = -world_transform[1][1];
 
+
+			App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
 
 			App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
 			App->renderer->SetUniformInt(program->GetID(), "hasTexture", curr_sprite->GetHasTexture());
