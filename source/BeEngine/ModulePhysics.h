@@ -5,8 +5,8 @@
 #include "Box2D.h"
 #include "GeometryMath.h"
 
-#define PIXELS_PER_METER 200.0f // if touched change METER_PER_PIXEL too
-#define METER_PER_PIXEL 0.005f // this is 1 / PIXELS_PER_METER !
+#define PIXELS_PER_METER 100.0f // if touched change METER_PER_PIXEL too
+#define METER_PER_PIXEL 0.01f // this is 1 / PIXELS_PER_METER !
 
 #define METERS_TO_PIXELS(m) ((float) PIXELS_PER_METER * m)
 #define PIXELS_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
@@ -38,6 +38,8 @@ public:
 
 	void SetWorldGravity(const float2& gravity);
 	float2 GetWorldGravity() const;
+
+	std::vector<std::vector<float2>> TriangulateIfConcaveShape(const std::vector<float2>& shape);
 
 	void RenderGuizmos();
 	void SetRenderAllGuizmos(bool set);

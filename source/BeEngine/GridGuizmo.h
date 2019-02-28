@@ -12,7 +12,6 @@ public:
 
 	void Start();
 	void Render(float relative_size);
-	bool UpdateTransform(float4x4& transform);
 
 private:
 

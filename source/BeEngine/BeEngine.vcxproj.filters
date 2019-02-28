@@ -106,14 +106,14 @@
     <Filter Include="Sources\11. ThirdParties ============\tinyfile">
       <UniqueIdentifier>{f5f16706-eac0-4e6b-8184-32e70f3e036c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\11. ThirdParties ============\FileWatcher">
-      <UniqueIdentifier>{91e25aad-c55c-4c9a-a2d0-224cc5d19340}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\5. Physics =============\Shapes">
       <UniqueIdentifier>{9ce9c22a-eb2f-4c3f-ba18-a1a75cff0b62}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\9. SceneObjects ==========\GameObject\Components\Physics">
       <UniqueIdentifier>{31667f9e-5372-4bd5-9225-44ef9a13f489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\11. ThirdParties ============\MapboxTriangulation">
+      <UniqueIdentifier>{0abf4df1-6d1c-4814-b101-1f61d2cd5066}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -462,15 +462,6 @@
     <ClInclude Include="ResourcesWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="FileWatcher\FileWatcher.h">
-      <Filter>Sources\11. ThirdParties ============\FileWatcher</Filter>
-    </ClInclude>
-    <ClInclude Include="FileWatcher\FileWatcherImpl.h">
-      <Filter>Sources\11. ThirdParties ============\FileWatcher</Filter>
-    </ClInclude>
-    <ClInclude Include="FileWatcher\FileWatcherWin32.h">
-      <Filter>Sources\11. ThirdParties ============\FileWatcher</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleGameObject.h">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClInclude>
@@ -617,6 +608,12 @@
     </ClInclude>
     <ClInclude Include="GridGuizmo.h">
       <Filter>Sources\8. Guizmos =============</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsPolygonGuizmo.h">
+      <Filter>Sources\8. Guizmos =============</Filter>
+    </ClInclude>
+    <ClInclude Include="MapboxTriangulation\earcut.hpp">
+      <Filter>Sources\11. ThirdParties ============\MapboxTriangulation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -866,12 +863,6 @@
     <ClCompile Include="ResourcesWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="FileWatcher\FileWatcher.cpp">
-      <Filter>Sources\11. ThirdParties ============\FileWatcher</Filter>
-    </ClCompile>
-    <ClCompile Include="FileWatcher\FileWatcherWin32.cpp">
-      <Filter>Sources\11. ThirdParties ============\FileWatcher</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleGameObject.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
     </ClCompile>
@@ -1017,6 +1008,9 @@
       <Filter>Sources\8. Guizmos =============</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="PhysicsPolygonGuizmo.cpp">
+      <Filter>Sources\8. Guizmos =============</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">

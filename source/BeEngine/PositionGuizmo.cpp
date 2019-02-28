@@ -141,3 +141,51 @@ bool PositionGuizmo::UpdateTransform(float4x4& transform)
 
 	return ret;
 }
+
+
+void PositionGuizmo::SetMatPos(float4x4& transform, float2 new_pos)
+{
+	float3 pos;
+	Quat rot;
+	float3 scal;
+
+	transform.Decompose(pos, rot, scal);
+
+
+	transform = float4x4::FromTRS(float3(new_pos.x, new_pos.y, 0), rot, scal);
+}
+
+float2 PositionGuizmo::GetMatPos(const float4x4 & transform)
+{
+	float2 ret = float2::zero;
+
+	Quat rot;
+	float3 scale;
+	float3 pos;
+	transform.Decompose(pos, rot, scale);
+
+	ret = float2(pos.x, pos.y);
+
+	return ret;
+}
+
+float2 PositionGuizmo::GetInternalPos()
+{
+	return GetMatPos(internal_transform);
+}
+
+void PositionGuizmo::SetInternalPos(const float2 & pos)
+{
+	SetMatPos(internal_transform, pos);
+}
+
+void PositionGuizmo::AddInternalPos(const float2& to_add)
+{
+	Quat rot = Quat::identity;
+	float3 scale = float3::one;
+	float3 new_to_add = float3(to_add.x, to_add.y, 0);
+	float4x4 to_add_mat = float4x4::FromTRS(new_to_add, rot, scale);
+
+	internal_transform = internal_transform * to_add_mat;
+}
+

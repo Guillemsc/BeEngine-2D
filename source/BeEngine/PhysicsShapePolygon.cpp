@@ -28,9 +28,11 @@ void PhysicsShapePolygon::DestroyFixture()
 {
 	if (polygon != nullptr)
 	{
-		if (attached_body != nullptr && fixtures.size() == 0)
+		if (attached_body != nullptr && fixtures.size() > 0)
 		{
 			attached_body->b2body->DestroyFixture(polygon);
+
+			fixtures.clear();
 		}
 	}
 }

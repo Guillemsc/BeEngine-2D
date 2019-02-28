@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "ComponentTransfrom.h"
 #include "imgui.h"
+#include "ModuleJson.h"
 
 ComponentPhysicsBody::ComponentPhysicsBody() 
 	: GameObjectComponent("Physics Body", ComponentType::COMPONENT_TYPE_PHYSICS_BODY, ComponentGroup::PHYSICS, true, true)
@@ -60,10 +61,20 @@ void ComponentPhysicsBody::CleanUp()
 
 void ComponentPhysicsBody::OnSaveAbstraction(DataAbstraction & abs)
 {
+	PhysicsBody* pb = GetOwner()->transform->base_physics_body;
+
+	abs.AddInt("body_type", pb->GetType());
+	abs.AddFloat("gravity_scale", pb->GetGravityScale());
+	abs.AddBool("fixed_rotation", pb->GetFixedRotation());
 }
 
 void ComponentPhysicsBody::OnLoadAbstraction(DataAbstraction & abs)
 {
+	PhysicsBody* pb = GetOwner()->transform->base_physics_body;
+
+	pb->SetType(static_cast<PhysicsBodyType>(abs.GetInt("body_type")));
+	pb->SetGravityScale(abs.GetFloat("gravity_scale"));
+	pb->SetFixedRotation(abs.GetBool("fixed_rotation"));
 }
 
 void ComponentPhysicsBody::OnEvent(Event * ev)

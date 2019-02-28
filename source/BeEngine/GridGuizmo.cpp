@@ -11,8 +11,3 @@ void GridGuizmo::Render(float relative_size)
 {
 	App->scene_renderer->grid_renderer->DrawGrid();
 }
-
-bool GridGuizmo::UpdateTransform(float4x4 & transform)
-{
-	return false;
-}

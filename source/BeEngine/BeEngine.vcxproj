@@ -116,9 +116,6 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="ExplorerWindow.h" />
     <ClInclude Include="FBO.h" />
-    <ClInclude Include="FileWatcher\FileWatcher.h" />
-    <ClInclude Include="FileWatcher\FileWatcherImpl.h" />
-    <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectAbstraction.h" />
@@ -128,6 +125,7 @@
     <ClInclude Include="Guizmo.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="InspectorWindow.h" />
+    <ClInclude Include="MapboxTriangulation\earcut.hpp" />
     <ClInclude Include="ModuleAssets.h" />
     <ClInclude Include="ModuleGuizmo.h" />
     <ClInclude Include="ModulePhysics.h" />
@@ -136,6 +134,7 @@
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="ModuleState.h" />
     <ClInclude Include="PhysicsBody.h" />
+    <ClInclude Include="PhysicsPolygonGuizmo.h" />
     <ClInclude Include="PhysicsShapePolygon.h" />
     <ClInclude Include="PhysicsShape.h" />
     <ClInclude Include="PositionGuizmo.h" />
@@ -282,8 +281,6 @@
     <ClCompile Include="DynamicGridRenderer.cpp" />
     <ClCompile Include="ExplorerWindow.cpp" />
     <ClCompile Include="FBO.cpp" />
-    <ClCompile Include="FileWatcher\FileWatcher.cpp" />
-    <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectAbstraction.cpp" />
@@ -305,6 +302,7 @@
     <ClCompile Include="ModuleScripting.cpp" />
     <ClCompile Include="ModuleState.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
+    <ClCompile Include="PhysicsPolygonGuizmo.cpp" />
     <ClCompile Include="PhysicsShapePolygon.cpp" />
     <ClCompile Include="PhysicsShape.cpp" />
     <ClCompile Include="PositionGuizmo.cpp" />

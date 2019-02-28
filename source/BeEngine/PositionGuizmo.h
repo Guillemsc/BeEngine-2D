@@ -21,6 +21,13 @@ public:
 	void Render(float relative_size);
 	bool UpdateTransform(float4x4& transform);
 
+	void SetMatPos(float4x4& transform, float2 pos);
+	float2 GetMatPos(const float4x4& transform);
+
+	float2 GetInternalPos();
+	void SetInternalPos(const float2& pos);
+	void AddInternalPos(const float2& to_add);
+
 private:
 	float4x4 internal_transform = float4x4::identity;
 

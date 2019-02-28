@@ -7,6 +7,7 @@
 #include "ComponentTransfrom.h"
 #include "PhysicsBody.h"
 #include "imgui.h"
+#include "ModuleJson.h"
 
 ComponentPolygonCollider::ComponentPolygonCollider() 
 	: GameObjectComponent("Polygon Collider", ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, ComponentGroup::PHYSICS)
@@ -45,10 +46,12 @@ void ComponentPolygonCollider::CleanUp()
 
 void ComponentPolygonCollider::OnSaveAbstraction(DataAbstraction & abs)
 {
+	abs.AddBool("is_sensor", physics_shape->GetIsSensor());
 }
 
 void ComponentPolygonCollider::OnLoadAbstraction(DataAbstraction & abs)
 {
+	physics_shape->SetIsSensor(abs.GetBool("is_sensor"));
 }
 
 void ComponentPolygonCollider::OnEvent(Event * ev)

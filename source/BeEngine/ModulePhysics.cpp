@@ -1,9 +1,13 @@
+#include <limits>
+#include <array>
+
 #include "ModulePhysics.h"
 #include "PhysicsBody.h"
 #include "PhysicsShape.h"
 #include "PhysicsShapePolygon.h"
 #include "ModuleEvent.h"
 #include "ModuleState.h"
+#include "MapboxTriangulation/earcut.hpp"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -34,6 +38,18 @@ bool ModulePhysics::Awake()
 	b2world->SetContactListener(this);
 
 	SetWorldGravity(float2(0, -9.2f));
+
+	std::vector<float2> shape;
+
+	shape.push_back(float2(0.19, 0.3360424));
+	shape.push_back(float2(-0.87, 0.5122509));
+	shape.push_back(float2(-0.9422076, -0.3027));
+	shape.push_back(float2(0.6163714, -1.032665));
+	shape.push_back(float2(1.888243, -0.1798515));
+	shape.push_back(float2(1.606898, 1.400202));
+	shape.push_back(float2(1.037816, 0.6367712));
+
+	TriangulateIfConcaveShape(shape);
 
 	return ret;
 }
@@ -210,6 +226,85 @@ float2 ModulePhysics::GetWorldGravity() const
 	b2Vec2 b2_gravity = b2world->GetGravity();
 
 	return float2(b2_gravity.x, b2_gravity.y);
+}
+
+std::vector<std::vector<float2>> ModulePhysics::TriangulateIfConcaveShape(const std::vector<float2>& shape)
+{
+	std::vector<std::vector<float2>> ret;
+
+	std::vector<int> concave_points;
+
+	if (shape.size() > 3)
+	{
+		using Point = std::array<float, 2>;
+		std::vector<std::vector<Point>> polygon;
+		std::vector<Point> polygon_points;
+
+		int counter = 0;
+		for (std::vector<float2>::const_iterator it = shape.begin(); it != shape.end(); ++it, ++counter)
+		{
+			float2 last_point = float2::zero;
+			float2 next_point = float2::zero;
+			float2 curr_point = (*it);
+
+			polygon_points.push_back({ {curr_point.x, curr_point.y} });
+
+			if (counter == 0)
+				last_point = shape[shape.size() - 1];
+			else
+				last_point = shape[counter - 1];
+
+			if (counter == shape.size() - 1)
+				next_point = shape[0];
+			else
+				next_point = shape[counter + 1];
+
+			float2 left_dir = float2(last_point.y - curr_point.y, curr_point.x - last_point.x);
+
+			left_dir.Normalize();
+
+			float dx = next_point.x - curr_point.x;
+			float dy = next_point.y - curr_point.y;
+
+			float dot = (dx * left_dir.x) + (dy * left_dir.y);
+
+			if (dot < 0)
+			{
+				concave_points.push_back(counter);
+			}
+		}
+
+		if (concave_points.size() > 0)
+		{
+			std::vector<int> indices = mapbox::earcut<int>(polygon);
+
+			int indice_counter = 0;
+			std::vector<float2> curr_shape;
+			for (std::vector<int>::iterator it = indices.begin(); it != indices.end(); ++it)
+			{
+				if (indice_counter == 3)
+				{
+					indice_counter = 0;
+					ret.push_back(curr_shape);
+					curr_shape.clear();
+				}
+
+				curr_shape.push_back(shape[(*it)]);
+
+				++indice_counter;
+			}
+		}
+		else
+		{
+			ret.push_back(shape);
+		}
+	}
+	else
+	{
+		ret.push_back(shape);
+	}
+
+	return ret;
 }
 
 void ModulePhysics::RenderGuizmos()
