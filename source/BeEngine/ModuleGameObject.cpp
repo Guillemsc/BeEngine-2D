@@ -46,14 +46,14 @@ bool ModuleGameObject::PreUpdate()
 {
 	bool ret = true;
 
+	UpdateGameObjects();
+
 	return ret;
 }
 
 bool ModuleGameObject::Update()
 {
 	bool ret = true;
-
-	UpdateGameObjects();
 
 	UpdateGameObjectsLogic();
 
