@@ -61,11 +61,7 @@ void ComponentTransform::Start()
 
 void ComponentTransform::Update()
 {
-	if (used_physics_body_comp != nullptr)
-	{
-		SetPosition(base_physics_body->GetPosition());
-		SetRotationDegrees(base_physics_body->GetRotationDegrees());
-	}
+	UpdatePhysicsMovement();
 }
 
 void ComponentTransform::CleanUp()
@@ -389,6 +385,29 @@ void ComponentTransform::UpdateWorldTransformFromValues()
 		Quat::FromEulerXYZ(0, 0, world_rotation),
 		float3(world_scale.x, world_scale.y, 1));
 
+	last_pos = world_pos;
+	last_rotation = world_rotation;
+
 	UpdateLocalFromWorldTransform();
+}
+
+void ComponentTransform::UpdatePhysicsMovement()
+{
+	if (used_physics_body_comp != nullptr)
+	{
+		float2 curr_pos = base_physics_body->GetPosition();
+
+		if (last_pos.x != curr_pos.x || last_pos.y != curr_pos.y)
+		{
+			SetPosition(base_physics_body->GetPosition());
+		}
+
+		float curr_rotation = base_physics_body->GetRotationDegrees();
+
+		if (last_rotation != curr_rotation)
+		{
+			base_physics_body->SetRotationDegrees(curr_rotation);
+		}
+	}
 }
 

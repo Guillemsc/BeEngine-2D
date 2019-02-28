@@ -71,6 +71,8 @@ private:
 	void UpdateLocalTransformFromValues();
 	void UpdateWorldTransformFromValues();
 
+	void UpdatePhysicsMovement();
+
 private:
 	float4x4 local_transform;
 	float4x4 world_transform;
@@ -88,6 +90,9 @@ private:
 
 private:
 	ScriptingBridgeComponentTransform* scripting_bridge = nullptr;
+
+	float2 last_pos = float2::zero;
+	float last_rotation = 0;
 };
 
 #endif // !__COMPONENT_TRANSFORM_H__
