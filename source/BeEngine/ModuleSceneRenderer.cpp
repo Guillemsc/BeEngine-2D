@@ -13,6 +13,7 @@
 #include "ModuleWindow.h"
 #include "ModuleGuizmo.h"
 #include "ModuleEditor.h"
+#include "ModulePhysics.h"
 
 ModuleSceneRenderer::ModuleSceneRenderer() : Module()
 {
@@ -37,6 +38,7 @@ bool ModuleSceneRenderer::Awake()
 	// Far plane 9999999
 	layer_space_guizmos = LayerSpace(110000, 100000, 10000);
 	layer_space_component_sprite = LayerSpace(5010000, 5000000, 10000);
+	layer_space_grid = LayerSpace(4000001, 4000000, 1);
 
 	return ret;
 }
@@ -121,6 +123,7 @@ void ModuleSceneRenderer::RenderOnCameras()
 		{
 			App->guizmo->RenderGuizmos();
 			App->guizmo->RenderSelectedGameObjectGuizmos();
+			App->physics->RenderGuizmos();
 		}
 
 		RenderRenderers(curr_camera);

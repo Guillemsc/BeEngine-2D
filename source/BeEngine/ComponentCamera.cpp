@@ -94,7 +94,7 @@ void ComponentCamera::OnParentChanged(GameObject * new_parent)
 {
 }
 
-void ComponentCamera::DrawGuizmos()
+void ComponentCamera::RenderGuizmos()
 {
 	std::vector<float2> points = camera->GetCorners();
 

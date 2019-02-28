@@ -47,6 +47,7 @@ public:
 	StaticSpriteRenderer*    static_sprite_renderer = nullptr;
 
 public:
+	LayerSpace layer_space_grid;
 	LayerSpace layer_space_guizmos;
 	LayerSpace layer_space_component_sprite;
 
@@ -59,6 +60,8 @@ private:
 
 private:
 	std::vector<Renderer*> renderers;
+
+
 
 };
 

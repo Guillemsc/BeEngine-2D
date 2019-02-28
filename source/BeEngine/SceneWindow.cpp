@@ -5,6 +5,7 @@
 #include "ModuleEvent.h"
 #include "Event.h"
 #include "ModuleGuizmo.h"
+#include "ModulePhysics.h"
 
 SceneWindow::SceneWindow()
 {
@@ -46,11 +47,16 @@ void SceneWindow::DrawEditor()
 	if (ImGui::BeginMenuBar())
 	{
 		bool guizmos_handlers = App->guizmo->GetRenderHandlers();
-		if (ImGui::Checkbox("Guizmo Handlers", &guizmos_handlers))
+		if (ImGui::Checkbox("Handlers Guizmos", &guizmos_handlers))
 		{
 			App->guizmo->SetRenderHandlers(guizmos_handlers);
 		}
 
+		bool guizmos_physics = App->physics->GetRenderAllGuizmos();
+		if (ImGui::Checkbox("Physics Guizmos", &guizmos_physics))
+		{
+			App->physics->SetRenderAllGuizmos(guizmos_physics);
+		}
 
 		ImGui::MenuItem("Main menu bar", NULL);
 		ImGui::EndMenuBar();

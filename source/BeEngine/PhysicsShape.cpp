@@ -4,6 +4,8 @@
 PhysicsShape::PhysicsShape(PhysicsShapeType type)
 {
 	shape_type = type;
+
+	SetIsSensor(false);
 }
 
 PhysicsShapeType PhysicsShape::GetBodyShape() const
@@ -11,15 +13,17 @@ PhysicsShapeType PhysicsShape::GetBodyShape() const
 	return shape_type;
 }
 
-void PhysicsShape::DestroyFixture()
+void PhysicsShape::SetIsSensor(bool set)
 {
-	if (attached_body != nullptr)
-	{
-		for (std::vector<b2Fixture*>::iterator it = fixtures.begin(); it != fixtures.end(); ++it)
-		{
-			attached_body->b2body->DestroyFixture((*it));
-		}
+	is_sensor = set;
 
-		fixtures.clear();
+	for (std::vector<b2Fixture*>::iterator it = fixtures.begin(); it != fixtures.end(); ++it)
+	{
+		(*it)->SetSensor(is_sensor);
 	}
+}
+
+bool PhysicsShape::GetIsSensor() const
+{
+	return is_sensor;
 }

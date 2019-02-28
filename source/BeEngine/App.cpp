@@ -335,7 +335,7 @@ void Application::Quit()
 
 float Application::GetDT() const
 {
-	return profiler->GetFrameTime() / 1000;
+	return profiler->GetFrameTime() / (float)1000;
 }
 
 void Application::SetAppName(const char* name)

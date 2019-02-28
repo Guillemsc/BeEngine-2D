@@ -22,14 +22,20 @@ public:
 	PhysicsShapeType GetBodyShape() const;
 
 	virtual void CreateFixture() {};
-	void DestroyFixture();
+	virtual void DestroyFixture() {};
 
-	virtual void GuizmoDraw() {};
+	virtual void RenderGuizmo() {};
+
+	void SetIsSensor(bool set);
+	bool GetIsSensor() const;
+
 
 protected:
 	PhysicsShapeType shape_type;
 
 	std::vector<b2Fixture*> fixtures;
+
+	bool is_sensor = false;
 
 	PhysicsBody* attached_body = nullptr;
 };

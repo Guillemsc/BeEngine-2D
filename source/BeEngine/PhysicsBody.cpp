@@ -45,10 +45,15 @@ void PhysicsBody::AddShape(PhysicsShape * shape)
 
 		if (!exists)
 		{
-			shapes.push_back(shape);
 			shape->attached_body = this;
+
+			shape->CreateFixture();
+
+			shapes.push_back(shape);
 		}
 	}
+
+	SetCanSleep(false);
 }
 
 void PhysicsBody::RemoveShape(PhysicsShape * shape)
@@ -71,13 +76,18 @@ void PhysicsBody::RemoveShape(PhysicsShape * shape)
 
 void PhysicsBody::RemoveAllShapes()
 {
-	for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end();)
+	for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{		
 		(*it)->DestroyFixture();
 		(*it)->attached_body = nullptr;
 	}
 
 	shapes.clear();
+}
+
+std::vector<PhysicsShape*> PhysicsBody::GetShapes()
+{
+	return shapes;
 }
 
 void PhysicsBody::CreateFixtures()
@@ -189,12 +199,12 @@ float PhysicsBody::GetMass() const
 	return mass.mass;
 }
 
-void PhysicsBody::SetFixedRotationDegrees(float angle)
+void PhysicsBody::SetFixedRotation(bool set)
 {
-	b2body->SetFixedRotation(angle * DEGTORAD);
+	b2body->SetFixedRotation(set);
 }
 
-bool PhysicsBody::GetIsFixedRotation() const
+bool PhysicsBody::GetFixedRotation() const
 {
 	return b2body->IsFixedRotation();
 }

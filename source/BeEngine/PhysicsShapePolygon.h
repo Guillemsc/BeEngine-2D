@@ -15,8 +15,9 @@ public:
 	PhysicsShapePolygon();
 
 	void CreateFixture();
+	void DestroyFixture();
 
-	void GuizmoDraw();
+	void RenderGuizmo();
 
 	void SetVertices(const std::vector<float2>& set);
 	std::vector<float2> GetVertices() const;
@@ -24,6 +25,8 @@ public:
 private:
 	b2PolygonShape b2polygon_shape;
 	std::vector<float2> vertices;
+
+	b2Fixture* polygon = nullptr;
 
 };
 

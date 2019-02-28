@@ -3,6 +3,7 @@
 #include "PhysicsShape.h"
 #include "PhysicsShapePolygon.h"
 #include "ModuleEvent.h"
+#include "ModuleState.h"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -32,6 +33,8 @@ bool ModulePhysics::Awake()
 	b2world = new b2World(b2Vec2(0, 0));
 	b2world->SetContactListener(this);
 
+	SetWorldGravity(float2(0, -9.2f));
+
 	return ret;
 }
 
@@ -53,7 +56,19 @@ bool ModulePhysics::PreUpdate()
 {
 	bool ret = true;
 
-	//b2world->Step(App->GetDT(), 30, 10);
+	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
+	{
+		b2world->Step(App->GetDT(), 128, 128);
+
+		for (b2Contact* c = b2world->GetContactList(); c; c = c->GetNext())
+		{
+			if (c->IsTouching())
+			{
+				PhysicsBody* pb1 = (PhysicsBody*)c->GetFixtureA()->GetBody()->GetUserData();
+				PhysicsBody* pb2 = (PhysicsBody*)c->GetFixtureB()->GetBody()->GetUserData();
+			}
+		}
+	}
 
 	return ret;
 }
@@ -64,14 +79,12 @@ void ModulePhysics::OnEvent(Event * ev)
 	{
 	case EventType::EDITOR_GOES_TO_PLAY:
 	{
-		CreateFixtures();
 
 		break;
 	}
 
 	case EventType::EDITOR_GOES_TO_IDLE:
 	{
-		DestroyFixtures();
 
 		break;
 	}
@@ -80,10 +93,19 @@ void ModulePhysics::OnEvent(Event * ev)
 
 void ModulePhysics::BeginContact(b2Contact * contact)
 {
+	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
+	{
+		PhysicsBody* physA = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+		PhysicsBody* physB = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+	}
 }
 
 void ModulePhysics::EndContact(b2Contact * contact)
 {
+	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
+	{
+
+	}
 }
 
 PhysicsBody * ModulePhysics::CreatePhysicsBody()
@@ -91,9 +113,10 @@ PhysicsBody * ModulePhysics::CreatePhysicsBody()
 	PhysicsBody* body = new PhysicsBody();
 
 	b2BodyDef b2body_def;
-	b2body_def.type = b2BodyType::b2_staticBody;
+	b2body_def.type = b2BodyType::b2_dynamicBody;
 	b2body_def.position.Set(PIXELS_TO_METERS(0), PIXELS_TO_METERS(0));
 	b2body_def.gravityScale = 0;
+	b2body_def.allowSleep = false;
 
 	b2Body* b2body = b2world->CreateBody(&b2body_def);
 
@@ -129,10 +152,17 @@ PhysicsShape * ModulePhysics::CreatePhysicsShape(PhysicsShapeType type)
 		ret = new PhysicsShapePolygon();
 
 		std::vector<float2> vertices;
-		vertices.push_back(float2(-5, -5));
-		vertices.push_back(float2(5, -5));
-		vertices.push_back(float2(5, 5));
-		vertices.push_back(float2(-5, 5));
+		vertices.push_back(float2(-1, 2));
+		vertices.push_back(float2(-1, 0));
+		vertices.push_back(float2(0, -3));
+		vertices.push_back(float2(1, 0));
+		vertices.push_back(float2(1, 1));
+
+		//rtices[0].Set(-1, 2);
+		//vertices[1].Set(-1, 0);
+		//vertices[2].Set(0, -3);
+		//vertices[3].Set(1, 0);
+		//vertices[4].Set(1, 1);
 
 		((PhysicsShapePolygon*)ret)->SetVertices(vertices);
 
@@ -170,18 +200,40 @@ void ModulePhysics::DestroyPhysicsShape(PhysicsShape * shape)
 	}
 }
 
-void ModulePhysics::CreateFixtures()
+void ModulePhysics::SetWorldGravity(const float2 & gravity)
 {
-	for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
+	b2world->SetGravity(b2Vec2(gravity.x, gravity.y));
+}
+
+float2 ModulePhysics::GetWorldGravity() const
+{
+	b2Vec2 b2_gravity = b2world->GetGravity();
+
+	return float2(b2_gravity.x, b2_gravity.y);
+}
+
+void ModulePhysics::RenderGuizmos()
+{
+	if (render_all_guizmos)
 	{
-		(*it)->CreateFixtures();
+		for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
+		{
+			std::vector<PhysicsShape*> shapes = (*it)->GetShapes();
+
+			for (std::vector<PhysicsShape*>::iterator sh = shapes.begin(); sh != shapes.end(); ++sh)
+			{
+				(*sh)->RenderGuizmo();
+			}
+		}
 	}
 }
 
-void ModulePhysics::DestroyFixtures()
+void ModulePhysics::SetRenderAllGuizmos(bool set)
 {
-	for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
-	{
-		(*it)->DestroyFixtures();
-	}
+	render_all_guizmos = set;
+}
+
+bool ModulePhysics::GetRenderAllGuizmos() const
+{
+	return render_all_guizmos;
 }

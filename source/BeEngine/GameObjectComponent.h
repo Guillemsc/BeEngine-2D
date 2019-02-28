@@ -53,8 +53,8 @@ public:
 	virtual void OnAddComponent(GameObjectComponent* new_component) {};
 	virtual void OnRemoveComponent(GameObjectComponent* new_component) {};
 
-	virtual void DrawGuizmos() {};
-	virtual void DrawGuizmosSelected() {};
+	virtual void RenderGuizmos() {};
+	virtual void RenderGuizmosSelected() {};
 
 	GameObject* GetOwner();
 

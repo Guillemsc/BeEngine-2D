@@ -1,6 +1,7 @@
 #include "DynamicGridRenderer.h"
 #include "ModuleShader.h"
 #include "App.h"
+#include "ModuleSceneRenderer.h"
 
 DynamicGridRenderer::DynamicGridRenderer()
 {
@@ -40,6 +41,7 @@ void DynamicGridRenderer::Start()
 		uniform mat4 Model; \
 		uniform mat4 View; \
 		uniform mat4 Projection; \
+		uniform float z_pos; \
 		\
 		uniform vec4 col; \
 		out vec4 oCol; \
@@ -49,7 +51,7 @@ void DynamicGridRenderer::Start()
 		{\
 			oCol = col;\
 			oUvs = uvs; \
-			gl_Position = Projection * View * Model * vec4(vec3(position.x, position.y, 120000), 1);\
+			gl_Position = Projection * View * Model * vec4(vec3(position.x, position.y, z_pos), 1);\
 		}";
 
 	const char* fragment_code =
@@ -78,7 +80,7 @@ void DynamicGridRenderer::Start()
 				alpha = 0;\
 			}\
 			\
-			vec3 col = vec3(0.4, 0.4, 0.4);\
+			vec3 col = vec3(0.8, 0.8, 0.8);\
 			finalColor = vec4(col.x, col.y, col.z, 1 - min(line, 1.0)); \
 		}";
 
@@ -154,6 +156,10 @@ void DynamicGridRenderer::Render(const float4x4 & view, const float4x4 & project
 		App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
 		float4x4 world_transform = float4x4::FromTRS(float3::zero, Quat::identity, float3(99999, 99999, 1));
+
+		float z_pos = App->scene_renderer->layer_space_grid.GetLayerValue(0);
+
+		App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
 
 		App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
 

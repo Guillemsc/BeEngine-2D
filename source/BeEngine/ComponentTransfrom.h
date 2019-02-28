@@ -8,10 +8,12 @@
 class GameObject;
 class ScriptingBridgeComponentTransform;
 class PhysicsBody;
+class ComponenPhysicsBody;
 
 class ComponentTransform : public GameObjectComponent
 {
 	friend class GameObject;
+	friend class ComponentPhysicsBody;
 	friend class ComponentPolygonCollider;
 
 private:
@@ -77,13 +79,12 @@ private:
 	float  local_rotation = 0;
 	float2 local_scale = float2::one;
 
-	float2 world_pos = float2::zero;
-	float  world_rotation = 0;
 	float2 world_scale = float2::zero;
 
 	bool keep_scale_ratio = false;
 
 	PhysicsBody* base_physics_body = nullptr;
+	ComponentPhysicsBody* used_physics_body_comp = nullptr;
 
 private:
 	ScriptingBridgeComponentTransform* scripting_bridge = nullptr;

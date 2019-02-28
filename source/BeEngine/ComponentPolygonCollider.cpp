@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "ComponentTransfrom.h"
 #include "PhysicsBody.h"
+#include "imgui.h"
 
 ComponentPolygonCollider::ComponentPolygonCollider() 
 	: GameObjectComponent("Polygon Collider", ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, ComponentGroup::PHYSICS)
@@ -18,6 +19,12 @@ ComponentPolygonCollider::~ComponentPolygonCollider()
 
 void ComponentPolygonCollider::EditorDraw()
 {
+	bool is_sensor = physics_shape->GetIsSensor();
+
+	if (ImGui::Checkbox("Is sensor", &is_sensor))
+	{
+		physics_shape->SetIsSensor(is_sensor);
+	}
 }
 
 void ComponentPolygonCollider::Start()
@@ -60,8 +67,8 @@ void ComponentPolygonCollider::OnParentChanged(GameObject * new_parent)
 {
 }
 
-void ComponentPolygonCollider::DrawGuizmos()
+void ComponentPolygonCollider::RenderGuizmos()
 {
-	physics_shape->GuizmoDraw();
+	physics_shape->RenderGuizmo();
 }
 

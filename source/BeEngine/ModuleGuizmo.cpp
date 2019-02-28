@@ -168,7 +168,7 @@ void ModuleGuizmo::RenderSelectedGameObjectGuizmos()
 
 		for (std::vector<GameObjectComponent*>::iterator it = components.begin(); it != components.end(); ++it)
 		{
-			(*it)->DrawGuizmos();
+			(*it)->RenderGuizmos();
 		}
 	}
 }

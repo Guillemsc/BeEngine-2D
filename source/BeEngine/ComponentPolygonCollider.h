@@ -36,7 +36,7 @@ public:
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
 
-	void DrawGuizmos();
+	void RenderGuizmos();
 
 private:
 	PhysicsShapePolygon* physics_shape = nullptr;

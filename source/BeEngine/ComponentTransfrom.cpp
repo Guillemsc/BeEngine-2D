@@ -61,8 +61,11 @@ void ComponentTransform::Start()
 
 void ComponentTransform::Update()
 {
-	/*SetPosition(base_physics_body->GetPosition());
-	SetRotationDegrees(base_physics_body->GetRotationDegrees());*/
+	if (used_physics_body_comp != nullptr)
+	{
+		SetPosition(base_physics_body->GetPosition());
+		SetRotationDegrees(base_physics_body->GetRotationDegrees());
+	}
 }
 
 void ComponentTransform::CleanUp()
@@ -108,7 +111,7 @@ void ComponentTransform::OnRemoveComponent(GameObjectComponent * deleted)
 {
 	if (deleted->GetType() == ComponentType::COMPONENT_TYPE_PHYSICS_BODY)
 	{
-		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_STATIC);
+		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_DYNAMIC);
 		base_physics_body->ClearForces();
 	}
 }
@@ -186,22 +189,21 @@ void ComponentTransform::SetLocalScale(const float2 & scale)
 }
 
 void ComponentTransform::SetPosition(const float2 & pos)
-{
-	if (pos.x != world_pos.x || pos.y != world_pos.y)
-	{
-		world_pos = pos;
+{	
+	base_physics_body->SetPosition(pos);
 
-		UpdateWorldTransformFromValues();
-	}
+	UpdateWorldTransformFromValues();
 }
 
 void ComponentTransform::SetRotationDegrees(float rotation)
 {
 	rotation *= DEGTORAD;
 
+	float world_rotation = base_physics_body->GetRotationDegrees();
+
 	if (rotation != world_rotation)
 	{
-		world_rotation = rotation;
+		base_physics_body->SetRotationDegrees(rotation);
 
 		UpdateWorldTransformFromValues();
 	}
@@ -260,12 +262,12 @@ float2 ComponentTransform::GetLocalScale()
 
 float2 ComponentTransform::GetPosition()
 {
-	return world_pos;
+	return base_physics_body->GetPosition();
 }
 
 float ComponentTransform::GetRotationDegrees()
 {
-	return world_rotation * RADTODEG;
+	return base_physics_body->GetRotationDegrees();
 }
 
 float2 ComponentTransform::GetScale()
@@ -364,11 +366,9 @@ void ComponentTransform::UpdateWorldAndLocalValues()
 
 	world_transform.Decompose(pos, rot, scal);
 
-	world_pos = float2(pos.x, pos.y);
-	world_rotation = rot.ToEulerXYZ().z;
+	base_physics_body->SetPosition(float2(pos.x, pos.y));
+	base_physics_body->SetRotationDegrees(rot.ToEulerXYZ().z * RADTODEG);
 	world_scale = float2(scal.x, scal.y);
-
-	base_physics_body->SetPosition(world_pos);
 }
 
 void ComponentTransform::UpdateLocalTransformFromValues()
@@ -382,11 +382,12 @@ void ComponentTransform::UpdateLocalTransformFromValues()
 
 void ComponentTransform::UpdateWorldTransformFromValues()
 {
+	float2 world_pos = base_physics_body->GetPosition();
+	float world_rotation = base_physics_body->GetRotationDegrees();
+
 	world_transform = float4x4::FromTRS(float3(world_pos.x, world_pos.y, 0),
 		Quat::FromEulerXYZ(0, 0, world_rotation),
 		float3(world_scale.x, world_scale.y, 1));
-
-	base_physics_body->SetPosition(world_pos);
 
 	UpdateLocalFromWorldTransform();
 }

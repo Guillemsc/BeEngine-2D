@@ -30,6 +30,7 @@ public:
 	void AddShape(PhysicsShape* shape);
 	void RemoveShape(PhysicsShape* shape);
 	void RemoveAllShapes();
+	std::vector<PhysicsShape*> GetShapes();
 
 	void CreateFixtures();
 	void DestroyFixtures();
@@ -48,8 +49,8 @@ public:
 	void SetMass(float set);
 	float GetMass() const;
 
-	void SetFixedRotationDegrees(float angle);
-	bool GetIsFixedRotation() const;
+	void SetFixedRotation(bool set);
+	bool GetFixedRotation() const;
 
 	// Applies gradual force on a point of the body
 	void AddForce(const float2& force, const float2& point);
