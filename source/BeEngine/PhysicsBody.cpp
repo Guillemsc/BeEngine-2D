@@ -296,6 +296,13 @@ void PhysicsBody::SetCanSleep(bool set)
 	b2body->SetSleepingAllowed(set);
 }
 
+float2 PhysicsBody::LocalPointToWorldPoint(const float2& local_point) const
+{
+	b2Vec2 world_point = b2body->GetWorldPoint(b2Vec2(PIXELS_TO_METERS(local_point.x), PIXELS_TO_METERS(local_point.y)));
+
+	return float2(METERS_TO_PIXELS(world_point.x), METERS_TO_PIXELS(world_point.y));
+}
+
 void PhysicsBody::SetComponentPhysicsBody(ComponentPhysicsBody * set)
 {
 	component_physics_body = set;

@@ -5,6 +5,7 @@
 #include "Guizmo.h"
 
 class PositionGuizmo;
+class PhysicsPolygonGuizmo;
 
 class ModuleGuizmo : public Module
 {
@@ -29,10 +30,12 @@ private:
 	Guizmo* AddGuizmo(Guizmo* add);
 	void DestroyAllGuizmos();
 
+public:
+	PositionGuizmo* position_guizmo = nullptr;
+	PhysicsPolygonGuizmo* physics_polygon_guizmo = nullptr;
+
 private:
 	std::vector<Guizmo*> guizmos;
-
-	PositionGuizmo* position_guizmo = nullptr;
 
 	bool render_handlers = false;
 };

@@ -4,7 +4,7 @@
 #include "GeometryMath.h"
 #include "Guizmo.h"
 
-class PhysicsShapePolygon;
+class ComponentPolygonCollider;
 
 class PhysicsPolygonGuizmo : public Guizmo
 {
@@ -15,8 +15,13 @@ public:
 	void Start();
 	void Render(float relative_size);
 
+	void StartEditing(ComponentPolygonCollider* polygon_editing);
+	std::vector<float2> FinishEditing(ComponentPolygonCollider* polygon_editing);
+	void StopEditing(ComponentPolygonCollider* polygon_editing);
+	ComponentPolygonCollider* GetEditingComponent() const;
+
 private:
-	PhysicsShapePolygon* polygon_editing = nullptr;
+	ComponentPolygonCollider* polygon_editing = nullptr;
 	std::vector<float2> polygon_points;
 	
 };

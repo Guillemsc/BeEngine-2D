@@ -33,8 +33,6 @@ bool ModulePhysics::Awake()
 	App->event->Suscribe(std::bind(&ModulePhysics::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
 
 	b2world = new b2World(b2Vec2(0, 0));
-
-	b2world = new b2World(b2Vec2(0, 0));
 	b2world->SetContactListener(this);
 
 	SetWorldGravity(float2(0, -9.2f));
@@ -168,11 +166,10 @@ PhysicsShape * ModulePhysics::CreatePhysicsShape(PhysicsShapeType type)
 		ret = new PhysicsShapePolygon();
 
 		std::vector<float2> vertices;
-		vertices.push_back(float2(-1, 2));
-		vertices.push_back(float2(-1, 0));
-		vertices.push_back(float2(0, -3));
-		vertices.push_back(float2(1, 0));
-		vertices.push_back(float2(1, 1));
+		vertices.push_back(float2(-10, 10));
+		vertices.push_back(float2(-10, -10));
+		vertices.push_back(float2(10, -10));
+		vertices.push_back(float2(10, 10));
 
 		//rtices[0].Set(-1, 2);
 		//vertices[1].Set(-1, 0);
@@ -309,8 +306,10 @@ std::vector<std::vector<float2>> ModulePhysics::TriangulateIfConcaveShape(const 
 
 void ModulePhysics::RenderGuizmos()
 {
-	if (render_all_guizmos)
+	/*if (render_all_guizmos)
 	{
+		std::vector<Game>
+
 		for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
 		{
 			std::vector<PhysicsShape*> shapes = (*it)->GetShapes();
@@ -320,7 +319,7 @@ void ModulePhysics::RenderGuizmos()
 				(*sh)->RenderGuizmo();
 			}
 		}
-	}
+	}*/
 }
 
 void ModulePhysics::SetRenderAllGuizmos(bool set)

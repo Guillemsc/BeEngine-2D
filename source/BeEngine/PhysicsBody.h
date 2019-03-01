@@ -87,6 +87,8 @@ public:
 	void SetBullet(bool set);
 	void SetCanSleep(bool set);
 
+	float2 LocalPointToWorldPoint(const float2& local_point) const;
+
 	void SetComponentPhysicsBody(ComponentPhysicsBody* set);
 	ComponentPhysicsBody* GetComponentPhysicsBody() const;
 

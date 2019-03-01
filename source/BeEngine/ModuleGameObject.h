@@ -40,6 +40,7 @@ public:
 	GameObject* GetGameObjectByUID(const char* uid);
 
 	void AddGameObjectToSelected(GameObject* go);
+	void AddGameObjectAsOnlySelected(GameObject* go);
 	void RemoveGameObjectFromSelected(GameObject* go);
 	void RemoveAllGameObjectsFromSelected();
 	std::vector<GameObject*> GetSelectedGameObjects() const;

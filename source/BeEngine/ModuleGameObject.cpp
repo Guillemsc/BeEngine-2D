@@ -240,6 +240,15 @@ void ModuleGameObject::AddGameObjectToSelected(GameObject * go)
 	}
 }
 
+void ModuleGameObject::AddGameObjectAsOnlySelected(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		RemoveAllGameObjectsFromSelected();
+		AddGameObjectToSelected(go);
+	}
+}
+
 void ModuleGameObject::RemoveGameObjectFromSelected(GameObject * go)
 {
 	if (go != nullptr)

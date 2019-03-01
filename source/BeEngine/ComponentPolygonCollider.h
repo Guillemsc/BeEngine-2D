@@ -38,6 +38,8 @@ public:
 
 	void RenderGuizmos();
 
+	PhysicsShapePolygon* GetPhysicsShapePolygon() const;
+
 private:
 	PhysicsShapePolygon* physics_shape = nullptr;
 };

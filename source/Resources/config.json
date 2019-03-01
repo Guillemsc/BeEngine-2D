@@ -6,8 +6,8 @@
         "max_fps": 999
     },
     "window": {
-        "width": 1680,
-        "height": 987,
+        "width": 1920,
+        "height": 1017,
         "fullscreen": false,
         "resizable": true,
         "borderless": false,
@@ -25,9 +25,9 @@
         "wheel_speed": 10,
         "camera_speed": 1000,
         "position": [
-            16.213468551635742,
-            -7.36102294921875
+            13.444150924682617,
+            83.080047607421875
         ],
-        "size": 0.3711446225643158
+        "size": 0.3970913290977478
     }
 }

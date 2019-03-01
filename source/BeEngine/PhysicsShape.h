@@ -24,11 +24,10 @@ public:
 	virtual void CreateFixture() {};
 	virtual void DestroyFixture() {};
 
-	virtual void RenderGuizmo() {};
-
 	void SetIsSensor(bool set);
 	bool GetIsSensor() const;
 
+	PhysicsBody* GetAttachedBody() const;
 
 protected:
 	PhysicsShapeType shape_type;

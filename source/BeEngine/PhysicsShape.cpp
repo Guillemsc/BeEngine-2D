@@ -27,3 +27,8 @@ bool PhysicsShape::GetIsSensor() const
 {
 	return is_sensor;
 }
+
+PhysicsBody * PhysicsShape::GetAttachedBody() const
+{
+	return attached_body;
+}

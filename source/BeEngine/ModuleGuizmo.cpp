@@ -10,6 +10,7 @@
 #include "ModuleGameObject.h"
 #include "ComponentTransfrom.h"
 #include "GridGuizmo.h"
+#include "PhysicsPolygonGuizmo.h"
 
 ModuleGuizmo::ModuleGuizmo() : Module()
 {
@@ -23,8 +24,9 @@ bool ModuleGuizmo::Awake()
 {
 	bool ret = true;
 
-	position_guizmo = (PositionGuizmo*)AddGuizmo(new PositionGuizmo());
 	(GridGuizmo*)AddGuizmo(new GridGuizmo());
+	position_guizmo = (PositionGuizmo*)AddGuizmo(new PositionGuizmo());
+	physics_polygon_guizmo = (PhysicsPolygonGuizmo*)AddGuizmo(new PhysicsPolygonGuizmo());
 
 	return ret;
 }
