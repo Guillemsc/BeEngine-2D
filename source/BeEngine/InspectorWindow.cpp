@@ -30,10 +30,14 @@ void InspectorWindow::DrawEditor()
 	{
 		GameObject* selected_go = *selected_gos.begin();
 
-		char name[99];
-		strcpy_s(name, 99, selected_go->GetName().c_str());
-		if (ImGui::InputText("", name, 50, ImGuiInputTextFlags_AutoSelectAll))
-			selected_go->SetName(name);
+		std::string name = selected_go->GetName();
+		if (name.size() > 99)
+			name = name.substr(0, 98);
+		
+		char name_arr[99];
+		strcpy_s(name_arr, 99, name.c_str());
+		if (ImGui::InputText("", name_arr, 50, ImGuiInputTextFlags_AutoSelectAll))
+			selected_go->SetName(name_arr);
 
 		ImGui::SameLine();
 

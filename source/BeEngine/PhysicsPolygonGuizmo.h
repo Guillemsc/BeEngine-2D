@@ -17,8 +17,8 @@ public:
 
 private:
 	PhysicsShapePolygon* polygon_editing = nullptr;
-
-	bool edited = false;
+	std::vector<float2> polygon_points;
+	
 };
 
 #endif // !__POSITION_GUIZMO_H__

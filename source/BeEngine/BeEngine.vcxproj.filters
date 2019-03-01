@@ -25,9 +25,6 @@
     <Filter Include="Sources\4. Rendering =============\StaticRenderers">
       <UniqueIdentifier>{77df891f-f825-4443-89c2-c1f4bdcc30ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\4. Rendering =============\DinamicRenderers">
-      <UniqueIdentifier>{0f41f913-277f-41fc-9620-72d6b21f30cb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\5. Physics =============">
       <UniqueIdentifier>{5f286e1d-2029-4713-9525-eca16a80d2e1}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,9 @@
     </Filter>
     <Filter Include="Sources\11. ThirdParties ============\MapboxTriangulation">
       <UniqueIdentifier>{0abf4df1-6d1c-4814-b101-1f61d2cd5066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\4. Rendering =============\DynamicRenderers">
+      <UniqueIdentifier>{0f41f913-277f-41fc-9620-72d6b21f30cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -469,13 +469,13 @@
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
     <ClInclude Include="LineRenderer.h">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Sources\4. Rendering =============</Filter>
     </ClInclude>
     <ClInclude Include="QuadRenderer.h">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClInclude>
     <ClInclude Include="Guizmo.h">
       <Filter>Sources\8. Guizmos =============</Filter>
@@ -514,7 +514,7 @@
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="DinamicTriangleRenderer.h">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClInclude>
     <ClInclude Include="StaticSpriteRenderer.h">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
@@ -604,7 +604,7 @@
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="DynamicGridRenderer.h">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClInclude>
     <ClInclude Include="GridGuizmo.h">
       <Filter>Sources\8. Guizmos =============</Filter>
@@ -870,10 +870,10 @@
       <Filter>Sources\4. Rendering =============</Filter>
     </ClCompile>
     <ClCompile Include="LineRenderer.cpp">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClCompile>
     <ClCompile Include="QuadRenderer.cpp">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleGuizmo.cpp">
       <Filter>Sources\2. Modules ==============</Filter>
@@ -909,7 +909,7 @@
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="DinamicTriangleRenderer.cpp">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClCompile>
     <ClCompile Include="HierarchyWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
@@ -1002,14 +1002,16 @@
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="DynamicGridRenderer.cpp">
-      <Filter>Sources\4. Rendering =============\DinamicRenderers</Filter>
+      <Filter>Sources\4. Rendering =============\DynamicRenderers</Filter>
     </ClCompile>
     <ClCompile Include="GridGuizmo.cpp">
       <Filter>Sources\8. Guizmos =============</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="PhysicsPolygonGuizmo.cpp">
       <Filter>Sources\8. Guizmos =============</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Sources\4. Rendering =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

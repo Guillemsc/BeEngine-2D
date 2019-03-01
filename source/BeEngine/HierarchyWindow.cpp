@@ -432,10 +432,10 @@ void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked
 
 			int size = sel_go->GetName().size();
 
-			if (size > 50)
-				size = 50;
+			if (size > 98)
+				size = 98;
 
-			memset(change_name_tmp, 0, sizeof(char) * 50);
+			memset(change_name_tmp, 0, sizeof(char) * 99);
 
 			strcpy_s(change_name_tmp, sizeof(char) * size + 1, sel_go->GetName().c_str());
 		}
