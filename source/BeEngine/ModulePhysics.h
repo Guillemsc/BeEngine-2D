@@ -41,18 +41,12 @@ public:
 
 	std::vector<std::vector<float2>> TriangulateIfConcaveShape(const std::vector<float2>& shape);
 
-	void RenderGuizmos();
-	void SetRenderAllGuizmos(bool set);
-	bool GetRenderAllGuizmos() const;
-
 private:
 	std::vector<PhysicsBody*> bodies;
 	std::vector<PhysicsShape*> shapes;
 
 private:
 	b2World* b2world = nullptr;
-
-	bool render_all_guizmos = false;
 };
 
 #endif // !__MODULE_PHYSICS_H__

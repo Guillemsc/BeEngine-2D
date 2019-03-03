@@ -94,16 +94,20 @@ void ComponentCamera::OnParentChanged(GameObject * new_parent)
 {
 }
 
-void ComponentCamera::RenderGuizmos()
+void ComponentCamera::RenderGuizmos(float relative_size)
 {
 	std::vector<float2> points = camera->GetCorners();
 
 	float3 colour = float3(63.0f / 255.0f, 211.0f / 255.0f, 115.0f / 255.0f);
 
-	App->scene_renderer->line_renderer->DrawLine(points[0], points[1], colour, 1, 1.5f);
-	App->scene_renderer->line_renderer->DrawLine(points[1], points[2], colour, 1, 1.5f);
-	App->scene_renderer->line_renderer->DrawLine(points[2], points[3], colour, 1, 1.5f);
-	App->scene_renderer->line_renderer->DrawLine(points[3], points[0], colour, 1, 1.5f);
+	float thickness = 1.5f * relative_size;
+
+	App->scene_renderer->line_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(99));
+
+	App->scene_renderer->line_renderer->DrawLine(points[0], points[1], colour, 1, thickness);
+	App->scene_renderer->line_renderer->DrawLine(points[1], points[2], colour, 1, thickness);
+	App->scene_renderer->line_renderer->DrawLine(points[2], points[3], colour, 1, thickness);
+	App->scene_renderer->line_renderer->DrawLine(points[3], points[0], colour, 1, thickness);
 }
 
 Camera2D * ComponentCamera::GetCamera()

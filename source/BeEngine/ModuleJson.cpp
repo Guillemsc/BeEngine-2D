@@ -15,6 +15,17 @@ bool ModuleJson::Awake()
 {
 	bool ret = true;
 
+	JSON_Doc* doc = CreateJSON("C://Users//Guillem//Desktop//test.json");
+
+	if (doc != nullptr)
+	{
+		doc->SetArray("array");
+
+		doc->AddNumber2ToArray("array", float2(3, 4));
+
+		doc->Save();
+	}
+
 	return ret;
 }
 
@@ -247,7 +258,7 @@ void JSON_Doc::RemoveArrayIndex(const std::string & arr, int index)
 	}
 }
 
-const int JSON_Doc::GetArrayCount(const std::string& set) const
+int JSON_Doc::GetArrayCount(const std::string& set) const
 {
 	int ret = 0;
 
@@ -278,7 +289,7 @@ const char * JSON_Doc::GetStringFromArray(const std::string& arr, int index)
 	return ret;
 }
 
-const bool JSON_Doc::GetBoolFromArray(const std::string& arr, int index)
+bool JSON_Doc::GetBoolFromArray(const std::string& arr, int index)
 {
 	bool ret = false;
 
@@ -295,7 +306,7 @@ const bool JSON_Doc::GetBoolFromArray(const std::string& arr, int index)
 	return ret;
 }
 
-const double JSON_Doc::GetNumberFromArray(const std::string& arr, int index)
+double JSON_Doc::GetNumberFromArray(const std::string& arr, int index)
 {
 	double ret = 0;
 
@@ -307,6 +318,20 @@ const double JSON_Doc::GetNumberFromArray(const std::string& arr, int index)
 		{
 			ret = json_array_get_number(array, index);
 		}
+	}
+
+	return ret;
+}
+
+float2 JSON_Doc::GetNumber2FromArray(const std::string & arr, int index)
+{
+	float2 ret = float2::zero;
+
+	JSON_Doc section_doc = this->GetNode();
+
+	if (section_doc.MoveToSectionFromArray(arr, index))
+	{
+		ret = section_doc.GetNumber2("number2");
 	}
 
 	return ret;
@@ -339,6 +364,23 @@ void JSON_Doc::AddNumberToArray(const std::string& arr, double set)
 	if (array != nullptr)
 	{
 		json_array_append_number(array, set);
+	}
+}
+
+void JSON_Doc::AddNumber2ToArray(const std::string & arr, float2 set)
+{
+	AddSectionToArray(arr);
+
+	int section = GetArrayCount(arr);
+	
+	if (section > 0)
+	{
+		JSON_Doc section_doc = this->GetNode();
+
+		if (section_doc.MoveToSectionFromArray(arr, section - 1))
+		{
+			section_doc.SetNumber2("number2", set);
+		}
 	}
 }
 
@@ -590,6 +632,11 @@ void DataAbstraction::AddFloat4(const std::string & name, float4 val)
 	floats4[name] = val;
 }
 
+void DataAbstraction::AddFloat2Vector(const std::string & name, const std::vector<float2> val)
+{
+	floats2_vector[name] = val;
+}
+
 int DataAbstraction::GetInt(const std::string & name, int def)
 {
 	std::map<std::string, int>::iterator it = ints.find(name);
@@ -658,6 +705,16 @@ float4 DataAbstraction::GetFloat4(const std::string & name, float4 def)
 		return it->second;
 
 	return def;
+}
+
+std::vector<float2> DataAbstraction::GetFloat2Vector(const std::string & name)
+{
+	std::map<std::string, std::vector<float2>>::iterator it = floats2_vector.find(name);
+
+	if (it != floats2_vector.end())
+		return it->second;
+
+	return std::vector<float2>();
 }
 
 void DataAbstraction::Serialize(JSON_Doc & doc)
@@ -779,6 +836,31 @@ void DataAbstraction::Serialize(JSON_Doc & doc)
 			++counter;
 		}
 	}
+
+	counter = 0;
+	if (floats2_vector.size() > 0)
+	{
+		doc.SetNumber("floats2_vector_count", floats2_vector.size());
+
+		for (std::map<std::string, std::vector<float2>>::iterator it = floats2_vector.begin(); it != floats2_vector.end(); ++it)
+		{
+			std::string float2_vector_name = "floats2_vector_name_" + std::to_string(counter);
+			std::string float2_vector_value = "floats2_vector_value_" + std::to_string(counter);
+
+			doc.SetString(float2_vector_name, (*it).first.c_str());
+
+			doc.SetArray(float2_vector_value);
+
+			std::vector<float2> floats2 = (*it).second;
+
+			for (std::vector<float2>::iterator fl = floats2.begin(); fl != floats2.end(); ++fl)
+			{
+				doc.AddNumber2ToArray(float2_vector_value, (*fl));
+			}
+
+			++counter;
+		}
+	}
 }
 
 void DataAbstraction::DeSerialize(JSON_Doc & doc)
@@ -790,6 +872,7 @@ void DataAbstraction::DeSerialize(JSON_Doc & doc)
 	int floats2_count = doc.GetNumber("floats2_count", 0);
 	int floats3_count = doc.GetNumber("floats3_count", 0);
 	int floats4_count = doc.GetNumber("floats4_count", 0);
+	int floats2_vector_count = doc.GetNumber("floats2_vector_count", 0);
 
 	for (int i = 0; i < ints_count; ++i)
 	{
@@ -866,5 +949,26 @@ void DataAbstraction::DeSerialize(JSON_Doc & doc)
 		float4 val = doc.GetNumber4(float4_value.c_str());
 
 		AddFloat4(name, val);
+	}
+
+	for (int i = 0; i < floats2_vector_count; ++i)
+	{
+		std::string floats2_vector_name = "floats2_vector_name_" + std::to_string(i);
+		std::string floats2_vector_value = "floats2_vector_value_" + std::to_string(i);
+
+		int array_count = doc.GetArrayCount(floats2_vector_value);
+
+		std::string name = doc.GetString(floats2_vector_name.c_str());
+
+		std::vector<float2> values;
+
+		for (int y = 0; y < array_count; ++y)
+		{
+			float2 val = doc.GetNumber2FromArray(floats2_vector_value, y);
+
+			values.push_back(val);
+		}
+
+		AddFloat2Vector(name, values);
 	}
 }

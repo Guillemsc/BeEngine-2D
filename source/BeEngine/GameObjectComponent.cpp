@@ -20,6 +20,11 @@ ComponentType GameObjectComponent::GetType() const
 	return type;
 }
 
+ComponentGroup GameObjectComponent::GetGroup() const
+{
+	return group;
+}
+
 std::string GameObjectComponent::GetName() const
 {
 	return name;

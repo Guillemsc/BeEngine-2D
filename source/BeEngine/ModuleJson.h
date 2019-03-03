@@ -22,6 +22,7 @@ public:
 	void AddFloat2(const std::string& name, float2 val);
 	void AddFloat3(const std::string& name, float3 val);
 	void AddFloat4(const std::string& name, float4 val);
+	void AddFloat2Vector(const std::string& name, const std::vector<float2> val);
 
 	int GetInt(const std::string& name, int def = 0);
 	bool GetBool(const std::string& name, bool def = false);
@@ -30,18 +31,20 @@ public:
 	float2 GetFloat2(const std::string& name, float2 def = float2::zero);
 	float3 GetFloat3(const std::string& name, float3 def = float3::zero);
 	float4 GetFloat4(const std::string& name, float4 def = float4::zero);
+	std::vector<float2> GetFloat2Vector(const std::string& name);
 
 	void Serialize(JSON_Doc& doc);
 	void DeSerialize(JSON_Doc& doc);
 
 private:
-	std::map<std::string, int>		   ints;
-	std::map<std::string, bool>		   bools;
-	std::map<std::string, float>       floats;
-	std::map<std::string, std::string> strings;
-	std::map<std::string, float2>      floats2;
-	std::map<std::string, float3>      floats3;
-	std::map<std::string, float4>      floats4;
+	std::map<std::string, int>		           ints;
+	std::map<std::string, bool>		           bools;
+	std::map<std::string, float>               floats;
+	std::map<std::string, std::string>         strings;
+	std::map<std::string, float2>              floats2;
+	std::map<std::string, float3>              floats3;
+	std::map<std::string, float4>              floats4;
+	std::map<std::string, std::vector<float2>> floats2_vector;
 };
 
 class JSON_Doc
@@ -72,12 +75,15 @@ public:
 	void AddStringToArray(const std::string& arr, const char* str);
 	void AddBoolToArray(const std::string& arr, bool bo);
 	void AddNumberToArray(const std::string& arr, double set);
+	void AddNumber2ToArray(const std::string& arr, float2 set);
 	void AddSectionToArray(const std::string& arr);
 	bool MoveToSectionFromArray(const std::string& arr, int index);
-	const int GetArrayCount(const std::string& set) const;
+	int GetArrayCount(const std::string& set) const;
 	const char* GetStringFromArray(const std::string& arr, int index);
-	const bool GetBoolFromArray(const std::string& arr, int index);
-	const double GetNumberFromArray(const std::string& arr, int index);
+	bool GetBoolFromArray(const std::string& arr, int index);
+	double GetNumberFromArray(const std::string& arr, int index);
+	float2 GetNumber2FromArray(const std::string& arr, int index);
+
 
 	bool MoveToSection(const std::string& set);
 	void RemoveSection(const std::string& set);

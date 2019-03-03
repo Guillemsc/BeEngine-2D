@@ -113,6 +113,8 @@ void ModuleGuizmo::DestroyAllGuizmos()
 
 void ModuleGuizmo::RenderGuizmos()
 {
+	float relative_size = App->camera->GetEditorCamera()->GetSize();
+
 	for (std::vector<Guizmo*>::iterator it = guizmos.begin(); it != guizmos.end(); ++it)
 	{
 		if ((*it)->visible)
@@ -150,17 +152,15 @@ void ModuleGuizmo::RenderGuizmos()
 				}
 			}
 			
-			float relative_size = 1;
-
-			if ((*it)->keep_size)
-				relative_size = App->camera->GetEditorCamera()->GetSize();
-
 			(*it)->Render(relative_size);
 		}
 	}
+
+	RenderSelectedGameObjectGuizmos(relative_size);
+	RenderAllPhysicsGuizmos(relative_size);
 }
 
-void ModuleGuizmo::RenderSelectedGameObjectGuizmos()
+void ModuleGuizmo::RenderSelectedGameObjectGuizmos(float relative_size)
 {
 	if (App->gameobject->GetSelectedGameObjectsCount() == 1)
 	{
@@ -170,7 +170,28 @@ void ModuleGuizmo::RenderSelectedGameObjectGuizmos()
 
 		for (std::vector<GameObjectComponent*>::iterator it = components.begin(); it != components.end(); ++it)
 		{
-			(*it)->RenderGuizmos();
+			(*it)->RenderGuizmos(relative_size);
+		}
+	}
+}
+
+void ModuleGuizmo::RenderAllPhysicsGuizmos(float relative_size)
+{
+	if (render_all_physics_guizmos)
+	{
+		std::vector<GameObject*> game_objects = App->gameobject->GetGameObjects();
+
+		for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+		{
+			std::vector<GameObjectComponent*> components = (*it)->GetComponents();
+
+			for (std::vector<GameObjectComponent*>::iterator com = components.begin(); com != components.end(); ++com)
+			{
+				if ((*com)->GetGroup() == ComponentGroup::PHYSICS)
+				{
+					(*com)->RenderGuizmos(relative_size);
+				}
+			}
 		}
 	}
 }
@@ -183,4 +204,14 @@ void ModuleGuizmo::SetRenderHandlers(bool set)
 bool ModuleGuizmo::GetRenderHandlers() const
 {
 	return render_handlers;
+}
+
+void ModuleGuizmo::SetRenderAllPhysicsGuizmos(bool set)
+{
+	render_all_physics_guizmos = set;
+}
+
+bool ModuleGuizmo::GetRenderAllPhysicsGuizmos() const
+{
+	return render_all_physics_guizmos;
 }

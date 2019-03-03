@@ -74,6 +74,8 @@ private:
 private:
 	void CallOnAddComponent(GameObjectComponent* comp);
 	void CallOnRemoveComponent(GameObjectComponent* comp);
+	void CallOnGameObjectSelected();
+	void CallOnGameObjectDeSelected();
 
 public:
 	ComponentTransform* transform = nullptr;

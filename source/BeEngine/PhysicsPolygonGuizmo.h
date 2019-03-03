@@ -20,6 +20,9 @@ public:
 	void StopEditing(ComponentPolygonCollider* polygon_editing);
 	ComponentPolygonCollider* GetEditingComponent() const;
 
+private: 
+	void RebuildHandlers();
+
 private:
 	ComponentPolygonCollider* polygon_editing = nullptr;
 	std::vector<float2> polygon_points;

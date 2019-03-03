@@ -25,7 +25,6 @@ public:
 protected:
 	void AddHandler();
 
-private:
 	void DestroyAllHandlers();
 
 protected:

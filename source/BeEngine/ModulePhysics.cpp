@@ -303,31 +303,3 @@ std::vector<std::vector<float2>> ModulePhysics::TriangulateIfConcaveShape(const 
 
 	return ret;
 }
-
-void ModulePhysics::RenderGuizmos()
-{
-	/*if (render_all_guizmos)
-	{
-		std::vector<Game>
-
-		for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
-		{
-			std::vector<PhysicsShape*> shapes = (*it)->GetShapes();
-
-			for (std::vector<PhysicsShape*>::iterator sh = shapes.begin(); sh != shapes.end(); ++sh)
-			{
-				(*sh)->RenderGuizmo();
-			}
-		}
-	}*/
-}
-
-void ModulePhysics::SetRenderAllGuizmos(bool set)
-{
-	render_all_guizmos = set;
-}
-
-bool ModulePhysics::GetRenderAllGuizmos() const
-{
-	return render_all_guizmos;
-}

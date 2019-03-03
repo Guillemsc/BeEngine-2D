@@ -52,10 +52,10 @@ void SceneWindow::DrawEditor()
 			App->guizmo->SetRenderHandlers(guizmos_handlers);
 		}
 
-		bool guizmos_physics = App->physics->GetRenderAllGuizmos();
+		bool guizmos_physics = App->guizmo->GetRenderAllPhysicsGuizmos();
 		if (ImGui::Checkbox("Physics Guizmos", &guizmos_physics))
 		{
-			App->physics->SetRenderAllGuizmos(guizmos_physics);
+			App->guizmo->SetRenderAllPhysicsGuizmos(guizmos_physics);
 		}
 
 		ImGui::MenuItem("Main menu bar", NULL);

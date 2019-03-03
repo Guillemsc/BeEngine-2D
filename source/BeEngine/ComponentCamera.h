@@ -35,7 +35,7 @@ public:
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
 
-	void RenderGuizmos();
+	void RenderGuizmos(float relative_size);
 
 	Camera2D* GetCamera();
 

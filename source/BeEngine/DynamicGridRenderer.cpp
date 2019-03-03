@@ -2,6 +2,7 @@
 #include "ModuleShader.h"
 #include "App.h"
 #include "ModuleSceneRenderer.h"
+#include "ModuleCamera.h"
 
 DynamicGridRenderer::DynamicGridRenderer()
 {
@@ -42,15 +43,18 @@ void DynamicGridRenderer::Start()
 		uniform mat4 View; \
 		uniform mat4 Projection; \
 		uniform float z_pos; \
+		uniform float camera_size; \
 		\
 		uniform vec4 col; \
 		out vec4 oCol; \
 		out vec2 oUvs; \
+		out float oCameraSize; \
 		\
 		void main()\
 		{\
 			oCol = col;\
 			oUvs = uvs; \
+			oCameraSize = camera_size;\
 			gl_Position = Projection * View * Model * vec4(vec3(position.x, position.y, z_pos), 1);\
 		}";
 
@@ -58,6 +62,7 @@ void DynamicGridRenderer::Start()
 		"#version 330 core\n \
 		in vec4 oCol; \
 		in vec2 oUvs; \
+		in float oCameraSize; \
 		out vec4 finalColor; \
 		\
 		float grid(vec2 st, float res) \
@@ -73,15 +78,11 @@ void DynamicGridRenderer::Start()
 			vec2 grid = abs(fract(coord - 0.5) - 0.5) / fwidth(coord);\
 			float line = min(grid.x, grid.y);\
 			\
-			float alpha = 0.6;\
+			float alpha = 1 - min(line, 1); \
 			\
-			if(1.0 - min(line, 1.0) < 0.7)\
-			{\
-				alpha = 0;\
-			}\
 			\
 			vec3 col = vec3(0.8, 0.8, 0.8);\
-			finalColor = vec4(col.x, col.y, col.z, 1 - min(line, 1.0)); \
+			finalColor = vec4(col.x, col.y, col.z, alpha); \
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
@@ -159,7 +160,11 @@ void DynamicGridRenderer::Render(const float4x4 & view, const float4x4 & project
 
 		float z_pos = App->scene_renderer->layer_space_grid.GetLayerValue(0);
 
+		float camera_size = App->camera->GetEditorCamera()->GetSize();
+
 		App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
+
+		App->renderer->SetUniformFloat(program->GetID(), "camera_size", camera_size);
 
 		App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
 

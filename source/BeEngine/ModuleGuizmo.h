@@ -21,10 +21,14 @@ public:
 	bool CleanUp();
 
 	void RenderGuizmos();
-	void RenderSelectedGameObjectGuizmos();
+	void RenderSelectedGameObjectGuizmos(float relative_size);
+	void RenderAllPhysicsGuizmos(float relative_size);
 
 	void SetRenderHandlers(bool set);
 	bool GetRenderHandlers() const;
+
+	void SetRenderAllPhysicsGuizmos(bool set);
+	bool GetRenderAllPhysicsGuizmos() const;
 
 private:
 	Guizmo* AddGuizmo(Guizmo* add);
@@ -38,6 +42,8 @@ private:
 	std::vector<Guizmo*> guizmos;
 
 	bool render_handlers = false;
+
+	bool render_all_physics_guizmos = false;
 };
 
 #endif // !__MODULE_GUIZMO_H__

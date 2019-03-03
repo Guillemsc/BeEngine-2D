@@ -35,8 +35,10 @@ public:
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
+	void OnOwnerSelected();
+	void OnOwnerDeSelected();
 
-	void RenderGuizmos();
+	void RenderGuizmos(float relative_size);
 
 	PhysicsShapePolygon* GetPhysicsShapePolygon() const;
 

@@ -53,12 +53,15 @@ public:
 	virtual void OnAddComponent(GameObjectComponent* new_component) {};
 	virtual void OnRemoveComponent(GameObjectComponent* new_component) {};
 
-	virtual void RenderGuizmos() {};
-	virtual void RenderGuizmosSelected() {};
+	virtual void OnOwnerSelected() {};
+	virtual void OnOwnerDeSelected() {};
+
+	virtual void RenderGuizmos(float relative_size) {};
 
 	GameObject* GetOwner();
 
 	ComponentType GetType() const;
+	ComponentGroup GetGroup() const;
 	std::string GetName() const;
 	std::string GetUID() const;
 

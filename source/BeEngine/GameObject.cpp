@@ -429,3 +429,19 @@ void GameObject::CallOnRemoveComponent(GameObjectComponent * comp)
 		(*it)->OnRemoveComponent(comp);
 	}
 }
+
+void GameObject::CallOnGameObjectSelected()
+{
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		(*it)->OnOwnerSelected();
+	}
+}
+
+void GameObject::CallOnGameObjectDeSelected()
+{
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		(*it)->OnOwnerDeSelected();
+	}
+}

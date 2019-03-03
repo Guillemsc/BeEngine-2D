@@ -234,6 +234,7 @@ void ModuleGameObject::AddGameObjectToSelected(GameObject * go)
 		if (!found)
 		{
 			go->selected = true;
+			go->CallOnGameObjectSelected();
 
 			game_objects_selected.push_back(go);
 		}
@@ -258,6 +259,7 @@ void ModuleGameObject::RemoveGameObjectFromSelected(GameObject * go)
 			if (go == (*it))
 			{
 				go->selected = false;
+				go->CallOnGameObjectDeSelected();
 
 				game_objects_selected.erase(it);
 				break;
@@ -271,6 +273,7 @@ void ModuleGameObject::RemoveAllGameObjectsFromSelected()
 	for (std::vector<GameObject*>::iterator it = game_objects_selected.begin(); it != game_objects_selected.end(); ++it)
 	{
 		(*it)->selected = false;
+		(*it)->CallOnGameObjectDeSelected();
 	}
 
 	game_objects_selected.clear();

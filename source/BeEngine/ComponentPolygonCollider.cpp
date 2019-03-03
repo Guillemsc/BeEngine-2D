@@ -11,6 +11,9 @@
 #include "ModuleGuizmo.h"
 #include "PhysicsPolygonGuizmo.h"
 #include "ModuleGameObject.h"
+#include "ModuleSceneRenderer.h"
+#include "LineRenderer.h"
+
 
 ComponentPolygonCollider::ComponentPolygonCollider() 
 	: GameObjectComponent("Polygon Collider", ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, ComponentGroup::PHYSICS)
@@ -69,11 +72,13 @@ void ComponentPolygonCollider::CleanUp()
 void ComponentPolygonCollider::OnSaveAbstraction(DataAbstraction & abs)
 {
 	abs.AddBool("is_sensor", physics_shape->GetIsSensor());
+	abs.AddFloat2Vector("vertices", physics_shape->GetVertices());
 }
 
 void ComponentPolygonCollider::OnLoadAbstraction(DataAbstraction & abs)
 {
 	physics_shape->SetIsSensor(abs.GetBool("is_sensor"));
+	physics_shape->SetVertices(abs.GetFloat2Vector("vertices"));
 }
 
 void ComponentPolygonCollider::OnEvent(Event * ev)
@@ -92,9 +97,42 @@ void ComponentPolygonCollider::OnParentChanged(GameObject * new_parent)
 {
 }
 
-void ComponentPolygonCollider::RenderGuizmos()
+void ComponentPolygonCollider::OnOwnerSelected()
 {
+}
 
+void ComponentPolygonCollider::OnOwnerDeSelected()
+{
+	App->guizmo->physics_polygon_guizmo->StopEditing(this);
+}
+
+void ComponentPolygonCollider::RenderGuizmos(float relative_size)
+{
+	if (App->guizmo->physics_polygon_guizmo->GetEditingComponent() != this)
+	{
+		std::vector<float2> vertices = physics_shape->GetVertices();
+
+		PhysicsBody* body = physics_shape->GetAttachedBody();
+
+		App->scene_renderer->line_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(100));
+
+		float thickness = 2 * relative_size;
+
+		int counter = 0;
+		for (std::vector<float2>::iterator it = vertices.begin(); it != vertices.end(); ++it, ++counter)
+		{
+			float2 curr_pos = body->LocalPointToWorldPoint((*it));
+
+			float2 next_pos = float2::zero;
+
+			if (counter >= vertices.size() - 1)
+				next_pos = body->LocalPointToWorldPoint(vertices[0]);
+			else
+				next_pos = body->LocalPointToWorldPoint(vertices[counter + 1]);
+
+			App->scene_renderer->line_renderer->DrawLine(curr_pos, next_pos, float3(0, 1, 0), 1, thickness);
+		}
+	}
 }
 
 PhysicsShapePolygon * ComponentPolygonCollider::GetPhysicsShapePolygon() const

@@ -122,8 +122,6 @@ void ModuleSceneRenderer::RenderOnCameras()
 		if (curr_camera == App->camera->GetEditorCamera())
 		{
 			App->guizmo->RenderGuizmos();
-			App->guizmo->RenderSelectedGameObjectGuizmos();
-			App->physics->RenderGuizmos();
 		}
 
 		RenderRenderers(curr_camera);

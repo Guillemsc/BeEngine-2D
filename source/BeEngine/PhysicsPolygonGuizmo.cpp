@@ -6,6 +6,7 @@
 #include "ComponentPolygonCollider.h"
 #include "PhysicsShapePolygon.h"
 #include "PhysicsBody.h"
+#include "ModuleInput.h"
 
 void PhysicsPolygonGuizmo::Start()
 {
@@ -15,7 +16,7 @@ void PhysicsPolygonGuizmo::Render(float relative_size)
 {
 	if (polygon_editing != nullptr)
 	{
-		PhysicsShape* shape = polygon_editing->GetPhysicsShapePolygon();
+		PhysicsShapePolygon* shape = polygon_editing->GetPhysicsShapePolygon();
 
 		if (shape != nullptr)
 		{
@@ -23,19 +24,31 @@ void PhysicsPolygonGuizmo::Render(float relative_size)
 
 			if (body != nullptr)
 			{
-				App->scene_renderer->line_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(100));
+				float2 size = float2(10 * relative_size, 10 * relative_size);
+
 				App->scene_renderer->quad_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(101));
 
 				float2 quad_size = float2(10 * relative_size, 10 * relative_size);
-				float thickness = 2 * relative_size;
 
 				int counter = 0;
 				for (std::vector<float2>::iterator it = polygon_points.begin(); it != polygon_points.end(); ++it, ++counter)
 				{
+					GuizmoHandler* handler = GetHandler(counter);
+
 					float2 curr_pos = body->LocalPointToWorldPoint((*it));
 					float2 size = float2(10 * relative_size, 10 * relative_size);
 
-					App->scene_renderer->quad_renderer->DrawQuad(curr_pos, size, float3(1, 1, 0), 1);
+					float3 colour = float3(0, 1, 0.5);
+
+					if (handler->GetPressed())
+						(*it) += float2(App->input->GetMouseXMotion() * relative_size, -App->input->GetMouseYMotion() * relative_size);
+
+					if (handler->GetHovered())
+						colour = float3(247.0f / 255.0f, 188.0f / 255.0f, 43.0f / 255.0f);
+
+					handler->SetTransfroms(curr_pos, size);
+
+					App->scene_renderer->quad_renderer->DrawQuad(curr_pos, size, colour, 1);
 
 					float2 next_pos = float2::zero;
 
@@ -43,8 +56,10 @@ void PhysicsPolygonGuizmo::Render(float relative_size)
 						next_pos = body->LocalPointToWorldPoint(polygon_points[0]);
 					else
 						next_pos = body->LocalPointToWorldPoint(polygon_points[counter + 1]);
-					
-					App->scene_renderer->line_renderer->DrawLine(curr_pos, next_pos, float3(0, 1, 0), 1, thickness);
+
+					float thickness = 2.5f * relative_size;
+
+					App->scene_renderer->line_renderer->DrawLine(curr_pos, next_pos, float3(0.8f, 1, 0), 1, thickness);
 				}
 			}
 		}
@@ -58,6 +73,8 @@ void PhysicsPolygonGuizmo::StartEditing(ComponentPolygonCollider * editing)
 		polygon_editing = editing;
 
 		polygon_points = polygon_editing->GetPhysicsShapePolygon()->GetVertices();
+
+		RebuildHandlers();
 	}
 }
 
@@ -65,6 +82,10 @@ std::vector<float2> PhysicsPolygonGuizmo::FinishEditing(ComponentPolygonCollider
 {
 	if (polygon_editing == editing)
 	{
+		PhysicsShapePolygon* shape = polygon_editing->GetPhysicsShapePolygon();
+
+		shape->SetVertices(polygon_points);
+
 		polygon_editing = nullptr;
 	}
 
@@ -83,4 +104,14 @@ void PhysicsPolygonGuizmo::StopEditing(ComponentPolygonCollider * editing)
 ComponentPolygonCollider * PhysicsPolygonGuizmo::GetEditingComponent() const
 {
 	return polygon_editing;
+}
+
+void PhysicsPolygonGuizmo::RebuildHandlers()
+{
+	DestroyAllHandlers();
+
+	for (std::vector<float2>::iterator it = polygon_points.begin(); it != polygon_points.end(); ++it)
+	{
+		AddHandler();
+	}
 }

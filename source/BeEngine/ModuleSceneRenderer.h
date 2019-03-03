@@ -61,8 +61,6 @@ private:
 private:
 	std::vector<Renderer*> renderers;
 
-
-
 };
 
 #endif // !__MODULE_SCENE_RENDERER_H__
