@@ -20,6 +20,9 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
+	void OnLoadConfig(JSON_Doc* config);
+	void OnSaveConfig(JSON_Doc* config);
+
 	void RenderGuizmos();
 	void RenderSelectedGameObjectGuizmos(float relative_size);
 	void RenderAllPhysicsGuizmos(float relative_size);

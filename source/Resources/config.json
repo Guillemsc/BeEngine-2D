@@ -2,7 +2,7 @@
     "app": {
         "title": "BeEngine",
         "organization": "BeEngine",
-        "version": "v0.0.1",
+        "version": "v0.1",
         "max_fps": 999
     },
     "window": {
@@ -25,9 +25,12 @@
         "wheel_speed": 10,
         "camera_speed": 1000,
         "position": [
-            10.213958740234375,
-            13.744268417358398
+            15.234302520751953,
+            -0.27086615562438965
         ],
-        "size": 0.20918111503124237
+        "size": 0.34907671809196472
+    },
+    "guizmos": {
+        "render_all_physics_guizmos": true
     }
 }

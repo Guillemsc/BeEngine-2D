@@ -21,11 +21,8 @@ public:
 	std::vector<float2> GetVertices() const;
 
 private:
-	b2PolygonShape b2polygon_shape;
 	std::vector<float2> vertices;
-
-	b2Fixture* polygon = nullptr;
-
+	std::vector<b2PolygonShape> b2polygon_shapes;
 };
 
 #endif // !__PHYSICS_BODY_POLYGON_H__

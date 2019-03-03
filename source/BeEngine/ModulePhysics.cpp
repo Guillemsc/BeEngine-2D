@@ -273,20 +273,22 @@ std::vector<std::vector<float2>> ModulePhysics::TriangulateIfConcaveShape(const 
 
 		if (concave_points.size() > 0)
 		{
+			polygon.push_back(polygon_points);
+
 			std::vector<int> indices = mapbox::earcut<int>(polygon);
 
 			int indice_counter = 0;
 			std::vector<float2> curr_shape;
 			for (std::vector<int>::iterator it = indices.begin(); it != indices.end(); ++it)
 			{
-				if (indice_counter == 3)
+				curr_shape.push_back(shape[(*it)]);
+
+				if (indice_counter == 2)
 				{
-					indice_counter = 0;
+					indice_counter = -1;
 					ret.push_back(curr_shape);
 					curr_shape.clear();
 				}
-
-				curr_shape.push_back(shape[(*it)]);
 
 				++indice_counter;
 			}

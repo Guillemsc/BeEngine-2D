@@ -85,6 +85,16 @@ bool ModuleGuizmo::CleanUp()
 	return ret;
 }
 
+void ModuleGuizmo::OnLoadConfig(JSON_Doc * config)
+{
+	render_all_physics_guizmos = config->GetBool("guizmos.render_all_physics_guizmos");
+}
+
+void ModuleGuizmo::OnSaveConfig(JSON_Doc * config)
+{
+	config->SetBool("guizmos.render_all_physics_guizmos", render_all_physics_guizmos);
+}
+
 Guizmo* ModuleGuizmo::AddGuizmo(Guizmo * add)
 {
 	Guizmo* ret = nullptr;
