@@ -73,9 +73,6 @@
     <Filter Include="Sources\11. ThirdParties ============\ImGui">
       <UniqueIdentifier>{697357ba-97c7-403e-84fc-a6e79c30cb00}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\11. ThirdParties ============\ImGuizmo">
-      <UniqueIdentifier>{e11c78d5-4f22-4e2c-9963-5e6d4363aa16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\11. ThirdParties ============\MathGeoLib">
       <UniqueIdentifier>{a685dcba-0427-4e0c-b3fa-1911cc4200b9}</UniqueIdentifier>
     </Filter>
@@ -351,9 +348,6 @@
     <ClInclude Include="Time\Clock.h">
       <Filter>Sources\11. ThirdParties ============\MathGeoLib\Time</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuizmo.h">
-      <Filter>Sources\11. ThirdParties ============\ImGuizmo</Filter>
-    </ClInclude>
     <ClInclude Include="App.h">
       <Filter>Sources\1. App =================</Filter>
     </ClInclude>
@@ -492,9 +486,6 @@
     <ClInclude Include="HierarchyWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentTransfrom.h">
-      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="InspectorWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
@@ -614,6 +605,9 @@
     </ClInclude>
     <ClInclude Include="MapboxTriangulation\earcut.hpp">
       <Filter>Sources\11. ThirdParties ============\MapboxTriangulation</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTransfrom.h">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -760,9 +754,6 @@
     </ClCompile>
     <ClCompile Include="Time\Clock.cpp">
       <Filter>Sources\11. ThirdParties ============\MathGeoLib\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGuizmo.cpp">
-      <Filter>Sources\11. ThirdParties ============\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="App.cpp">
       <Filter>Sources\1. App =================</Filter>
