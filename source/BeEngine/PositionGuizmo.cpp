@@ -116,7 +116,6 @@ void PositionGuizmo::Render(float relative_size)
 
 		edited = true;
 	}
-
 }
 
 bool PositionGuizmo::UpdateTransform(float4x4& transform)

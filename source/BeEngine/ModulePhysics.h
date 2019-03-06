@@ -5,11 +5,13 @@
 #include "Box2D.h"
 #include "GeometryMath.h"
 
-#define PIXELS_PER_METER 100.0f // if touched change METER_PER_PIXEL too
-#define METER_PER_PIXEL 0.01f // this is 1 / PIXELS_PER_METER !
+#define PIXELS_PER_METER 25.0f // if touched change METER_PER_PIXEL too
+#define METER_PER_PIXEL 0.04f // this is 1 / PIXELS_PER_METER !
 
 #define METERS_TO_PIXELS(m) ((float) PIXELS_PER_METER * m)
 #define PIXELS_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
+
+#define MIN_TRIANGLE_PIXELS_AREA 14.0f
 
 class Event;
 class PhysicsBody;
@@ -39,7 +41,8 @@ public:
 	void SetWorldGravity(const float2& gravity);
 	float2 GetWorldGravity() const;
 
-	std::vector<std::vector<float2>> TriangulateIfConcaveShape(const std::vector<float2>& shape);
+	std::vector<std::vector<float2>> TriangulateShape(const std::vector<float2>& shape);
+	bool GetTriangleIsTooSmall(const std::vector<float2>& triangle);
 
 private:
 	std::vector<PhysicsBody*> bodies;

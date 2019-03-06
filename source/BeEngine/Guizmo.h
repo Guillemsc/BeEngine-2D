@@ -22,6 +22,8 @@ public:
 	uint GetHandlersCount() const;
 	GuizmoHandler* GetHandler(uint index) const;
 
+	void SetEnabled(bool set);
+
 protected:
 	void AddHandler();
 
@@ -31,8 +33,9 @@ protected:
 	std::vector<GuizmoHandler*> handlers;
 
 private:
-	bool	 visible = true;
 	bool	 keep_size = true; 
+	bool     visible = true;
+	bool     enabled = true;
 };
 
 class GuizmoHandler

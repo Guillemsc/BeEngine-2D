@@ -59,6 +59,11 @@ GuizmoHandler* Guizmo::GetHandler(uint index) const
 	return handlers[index];
 }
 
+void Guizmo::SetEnabled(bool set)
+{
+	enabled = set;
+}
+
 void Guizmo::AddHandler()
 {
 	handlers.push_back(new GuizmoHandler());

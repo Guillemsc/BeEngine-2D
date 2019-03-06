@@ -45,6 +45,15 @@ void ComponentPolygonCollider::EditorDraw()
 		}
 	}
 
+	if (physics_shape->GetShapeTooSmall())
+	{
+		ImGui::Separator();
+		ImGui::Text("The collider did not create any collision shapes as they");
+		ImGui::Text("failed verification. This could be because they were deemed");
+		ImGui::Text("too small or the vertices were too close.");
+		ImGui::Separator();
+	}
+
 	if (ImGui::Checkbox("Is sensor", &is_sensor))
 	{
 		physics_shape->SetIsSensor(is_sensor);
@@ -110,27 +119,35 @@ void ComponentPolygonCollider::RenderGuizmos(float relative_size)
 {
 	if (App->guizmo->physics_polygon_guizmo->GetEditingComponent() != this)
 	{
-		std::vector<float2> vertices = physics_shape->GetVertices();
+		float thickness = 2 * relative_size;
+
+		float3 colour = float3(0, 1, 0);
+
+		if (physics_shape->GetShapeTooSmall())
+			colour = float3(1, 0, 0);
 
 		PhysicsBody* body = physics_shape->GetAttachedBody();
 
-		App->scene_renderer->line_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(100));
+		std::vector<std::vector<float2>> triangles = physics_shape->GetTriangles();
 
-		float thickness = 2 * relative_size;
-
-		int counter = 0;
-		for (std::vector<float2>::iterator it = vertices.begin(); it != vertices.end(); ++it, ++counter)
+		for (std::vector<std::vector<float2>>::iterator it = triangles.begin(); it != triangles.end(); ++it)
 		{
-			float2 curr_pos = body->LocalPointToWorldPoint((*it));
+			std::vector<float2> triangle = (*it);
 
-			float2 next_pos = float2::zero;
+			int counter = 0;
+			for (std::vector<float2>::iterator tr = triangle.begin(); tr != triangle.end(); ++tr, ++counter)
+			{
+				float2 curr_pos = body->LocalPointToWorldPoint((*tr));
 
-			if (counter >= vertices.size() - 1)
-				next_pos = body->LocalPointToWorldPoint(vertices[0]);
-			else
-				next_pos = body->LocalPointToWorldPoint(vertices[counter + 1]);
+				float2 next_pos = float2::zero;
 
-			App->scene_renderer->line_renderer->DrawLine(curr_pos, next_pos, float3(0, 1, 0), 1, thickness);
+				if (counter >= triangle.size() - 1)
+					next_pos = body->LocalPointToWorldPoint(triangle[0]);
+				else
+					next_pos = body->LocalPointToWorldPoint(triangle[counter + 1]);
+
+				App->scene_renderer->line_renderer->DrawLine(curr_pos, next_pos, colour, 1, thickness);
+			}
 		}
 	}
 }

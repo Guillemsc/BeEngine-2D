@@ -19,7 +19,7 @@ private:
 public:
 	PhysicsShape(PhysicsShapeType type);
 
-	PhysicsShapeType GetBodyShape() const;
+	PhysicsShapeType GetBodyShapeType() const;
 
 	virtual void CreateFixture() {};
 	virtual void DestroyFixture() {};
@@ -29,10 +29,14 @@ public:
 
 	PhysicsBody* GetAttachedBody() const;
 
+	std::vector<std::vector<float2>> GetTriangles() const;
+
 protected:
 	PhysicsShapeType shape_type;
 
 	std::vector<b2Fixture*> fixtures;
+
+	std::vector<std::vector<float2>> triangles;
 
 	bool is_sensor = false;
 

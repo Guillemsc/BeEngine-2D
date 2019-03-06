@@ -44,36 +44,72 @@ void PhysicsShapePolygon::SetVertices(const std::vector<float2>& set)
 
 	vertices = set;
 
-	std::vector<std::vector<float2>> shapes = App->physics->TriangulateIfConcaveShape(set);
+	std::vector<std::vector<float2>> shapes = App->physics->TriangulateShape(set);
  
+	bool can_create_shape = true;
+
+	triangles.clear();
+
 	for (std::vector<std::vector<float2>>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{
 		std::vector<float2> shape = (*it);
 
-		b2Vec2* p = new b2Vec2[shape.size()];
+		triangles.push_back(shape);
 
-		int counter = 0;
-		for (std::vector<float2>::const_iterator sh = shape.begin(); sh != shape.end(); ++sh)
+		too_small = App->physics->GetTriangleIsTooSmall(shape);
+
+		if (too_small)
 		{
-			float2 point = (*sh);
-
-			p[counter] = b2Vec2(PIXELS_TO_METERS(point.x), PIXELS_TO_METERS(point.y));
-
-			++counter;
+			can_create_shape = false;
+			break;
 		}
-
-		b2PolygonShape b2polygon_shape;
-		b2polygon_shape.Set(p, shape.size());
-
-		b2polygon_shapes.push_back(b2polygon_shape);
-
-		RELEASE_ARRAY(p);
 	}
 
-	CreateFixture();
+	if (can_create_shape)
+	{
+		for (std::vector<std::vector<float2>>::iterator it = shapes.begin(); it != shapes.end(); ++it)
+		{
+			std::vector<float2> shape = (*it);
+
+			b2Vec2* p = new b2Vec2[shape.size()];
+
+			int counter = 0;
+			for (std::vector<float2>::const_iterator sh = shape.begin(); sh != shape.end(); ++sh)
+			{
+				float2 point = (*sh);
+
+				p[counter] = b2Vec2(PIXELS_TO_METERS(point.x), PIXELS_TO_METERS(point.y));
+
+				++counter;
+			}
+
+			bool too_small = App->physics->GetTriangleIsTooSmall(shape);
+
+			if (!too_small)
+			{
+				b2PolygonShape b2polygon_shape;
+				b2polygon_shape.Set(p, shape.size());
+
+				b2polygon_shapes.push_back(b2polygon_shape);
+			}
+
+			RELEASE_ARRAY(p);
+		}
+
+		CreateFixture();
+	}
+	else
+	{
+		DestroyFixture();
+	}
 }
 
 std::vector<float2> PhysicsShapePolygon::GetVertices() const
 {
 	return vertices;
+}
+
+bool PhysicsShapePolygon::GetShapeTooSmall() const
+{
+	return too_small;
 }

@@ -5,6 +5,7 @@
 #include "Guizmo.h"
 
 class ComponentPolygonCollider;
+class GameObject;
 
 class PhysicsPolygonGuizmo : public Guizmo
 {
@@ -20,13 +21,14 @@ public:
 	void StopEditing(ComponentPolygonCollider* polygon_editing);
 	ComponentPolygonCollider* GetEditingComponent() const;
 
+	GameObject* GetEditingGameObject() const;
+
 private: 
 	void RebuildHandlers();
 
 private:
 	ComponentPolygonCollider* polygon_editing = nullptr;
-	std::vector<float2> polygon_points;
-	
+	std::vector<float2> polygon_points;	
 };
 
 #endif // !__POSITION_GUIZMO_H__
