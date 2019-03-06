@@ -200,8 +200,6 @@ void ComponentTransform::SetPosition(const float2 & pos)
 
 void ComponentTransform::SetRotationDegrees(float rotation)
 {
-	rotation *= DEGTORAD;
-
 	float world_rotation = base_physics_body->GetRotationDegrees();
 
 	if (rotation != world_rotation)
@@ -389,7 +387,7 @@ void ComponentTransform::UpdateWorldTransformFromValues()
 	float world_rotation = base_physics_body->GetRotationDegrees();
 
 	world_transform = float4x4::FromTRS(float3(world_pos.x, world_pos.y, 0),
-		Quat::FromEulerXYZ(0, 0, world_rotation),
+		Quat::FromEulerXYZ(0, 0, world_rotation * DEGTORAD),
 		float3(world_scale.x, world_scale.y, 1));
 
 	last_pos = world_pos;

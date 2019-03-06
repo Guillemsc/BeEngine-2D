@@ -68,6 +68,7 @@ void ComponentPhysicsBody::EditorDraw()
 void ComponentPhysicsBody::Start()
 {
 	GetOwner()->transform->used_physics_body_comp = this;
+	GetOwner()->transform->base_physics_body->SetGravityScale(0.1f);
 	GetOwner()->transform->base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_DYNAMIC);
 }
 
