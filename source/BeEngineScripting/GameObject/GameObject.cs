@@ -6,6 +6,8 @@ using System.Text;
 
 namespace BeEngine
 {
+    public delegate void CollisionDelegate(Collision coll);
+
     public class GameObject : BeEngineObject
     {
         /// <summary>
@@ -37,19 +39,73 @@ namespace BeEngine
             return ret;
         }
 
-        public ComponentTransform transform
+        public ComponentTransform Transform
         {
             get; private set;
         }
 
-        // -----------------------------------------------------
+        public void SuscribeToOnCollisionEnter(CollisionDelegate callback)
+        {
+            on_collision_enter += callback;
+        }
+
+        public void UnSuscribeFromOnCollisionEnter(CollisionDelegate callback)
+        {
+            on_collision_enter -= callback;
+        }
+
+        public void SuscribeToOnCollisionStay(CollisionDelegate callback)
+        {
+            on_collision_stay += callback;
+        }
+
+        public void UnSuscribeFromOnCollisionStay(CollisionDelegate callback)
+        {
+            on_collision_stay -= callback;
+        }
+
+        public void SuscribeToOnCollisionExit(CollisionDelegate callback)
+        {
+            on_collision_exit += callback;
+        }
+
+        public void UnSuscribeFromOnCollisionExit(CollisionDelegate callback)
+        {
+            on_collision_exit -= callback;
+        }
+
+        private CollisionDelegate on_collision_enter;
+        private CollisionDelegate on_collision_stay;
+        private CollisionDelegate on_collision_exit;
+
+        // Internal functions ----------------------------------
 
         private void SetComponentTransform(ComponentTransform transform)
         {
-            this.transform = transform;
+            this.Transform = transform;
+        }
+
+        private void CallOnCollisionEnter(Collision coll)
+        {
+            if (on_collision_enter != null)
+                on_collision_enter(coll);
+        }
+
+        private void CallOnCollisionStay(Collision coll)
+        {
+            if (on_collision_stay != null)
+                on_collision_stay(coll);
+        }
+
+        private void CallOnCollisionExit(Collision coll)
+        {
+            if (on_collision_exit != null)
+                on_collision_exit(coll);
         }
 
         // Internal Calls --------------------------------------
+
+        // -----------------------------------------------------
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void SetName(string value);

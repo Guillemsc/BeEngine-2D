@@ -92,7 +92,7 @@ void GameWindow::DrawEditor()
 
 ImGuiWindowFlags GameWindow::GetWindowFlags()
 {
-	return ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoScrollbar;
+	return ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 }
 
 Rect GameWindow::GetGameRect() const
