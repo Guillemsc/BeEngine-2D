@@ -52,6 +52,7 @@ void ComponentTransform::Start()
 	App->scripting->AddScriptingBridgeObject(scripting_bridge);
 
 	base_physics_body = App->physics->CreatePhysicsBody();
+	base_physics_body->SetComponentTransform(this);
 
 	local_transform = float4x4::identity;
 	world_transform = float4x4::identity;

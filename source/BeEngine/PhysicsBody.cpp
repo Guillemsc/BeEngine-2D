@@ -303,12 +303,12 @@ float2 PhysicsBody::LocalPointToWorldPoint(const float2& local_point) const
 	return float2(METERS_TO_PIXELS(world_point.x), METERS_TO_PIXELS(world_point.y));
 }
 
-void PhysicsBody::SetComponentPhysicsBody(ComponentPhysicsBody * set)
+void PhysicsBody::SetComponentTransform(ComponentTransform * set)
 {
-	component_physics_body = set;
+	component_transform = set;
 }
 
-ComponentPhysicsBody * PhysicsBody::GetComponentPhysicsBody() const
+ComponentTransform * PhysicsBody::GetComponentTransform() const
 {
-	return component_physics_body;
+	return component_transform;
 }

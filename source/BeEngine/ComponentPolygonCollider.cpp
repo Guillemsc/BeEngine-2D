@@ -38,10 +38,17 @@ void ComponentPolygonCollider::EditorDraw()
 	}
 	else
 	{
-		if (ImGui::Button("Stop Editing"))
+		if (ImGui::Button("Save Editing"))
 		{
 			std::vector<float2> vertices = App->guizmo->physics_polygon_guizmo->FinishEditing(this);
 			physics_shape->SetVertices(vertices);
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel Editing"))
+		{
+			App->guizmo->physics_polygon_guizmo->StopEditing(this);
 		}
 	}
 

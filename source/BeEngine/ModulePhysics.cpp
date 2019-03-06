@@ -7,6 +7,9 @@
 #include "PhysicsShapePolygon.h"
 #include "ModuleEvent.h"
 #include "ModuleState.h"
+#include "ComponentTransfrom.h"
+#include "GameObject.h"
+#include "ScriptingBridgeGameObject.h"
 #include "MapboxTriangulation/earcut.hpp"
 
 #ifdef _DEBUG
@@ -37,18 +40,6 @@ bool ModulePhysics::Awake()
 
 	SetWorldGravity(float2(0, -9.2f));
 
-	std::vector<float2> shape;
-
-	shape.push_back(float2(0.19, 0.3360424));
-	shape.push_back(float2(-0.87, 0.5122509));
-	shape.push_back(float2(-0.9422076, -0.3027));
-	shape.push_back(float2(0.6163714, -1.032665));
-	shape.push_back(float2(1.888243, -0.1798515));
-	shape.push_back(float2(1.606898, 1.400202));
-	shape.push_back(float2(1.037816, 0.6367712));
-
-	TriangulateShape(shape);
-
 	return ret;
 }
 
@@ -70,19 +61,7 @@ bool ModulePhysics::PreUpdate()
 {
 	bool ret = true;
 
-	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
-	{
-		b2world->Step(App->GetDT(), 128, 128);
-
-		for (b2Contact* c = b2world->GetContactList(); c; c = c->GetNext())
-		{
-			if (c->IsTouching())
-			{
-				PhysicsBody* pb1 = (PhysicsBody*)c->GetFixtureA()->GetBody()->GetUserData();
-				PhysicsBody* pb2 = (PhysicsBody*)c->GetFixtureB()->GetBody()->GetUserData();
-			}
-		}
-	}
+	UpdateContacts();
 
 	return ret;
 }
@@ -109,8 +88,14 @@ void ModulePhysics::BeginContact(b2Contact * contact)
 {
 	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 	{
-		PhysicsBody* physA = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
-		PhysicsBody* physB = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+		PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+		PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+		ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
+		ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
+
+		trans_pb1->GetOwner()->GetScriptingBridge()->CallOnCollisionEnter(pb2);
+		trans_pb2->GetOwner()->GetScriptingBridge()->CallOnCollisionEnter(pb1);
 	}
 }
 
@@ -118,7 +103,37 @@ void ModulePhysics::EndContact(b2Contact * contact)
 {
 	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 	{
+		PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+		PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 
+		ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
+		ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
+
+		trans_pb1->GetOwner()->GetScriptingBridge()->CallOnCollisionExit(pb2);
+		trans_pb2->GetOwner()->GetScriptingBridge()->CallOnCollisionExit(pb1);
+	}
+}
+
+void ModulePhysics::UpdateContacts()
+{
+	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
+	{
+		b2world->Step(App->GetDT(), 128, 128);
+
+		for (b2Contact* c = b2world->GetContactList(); c; c = c->GetNext())
+		{
+			if (c->IsTouching())
+			{
+				PhysicsBody* pb1 = (PhysicsBody*)c->GetFixtureA()->GetBody()->GetUserData();
+				PhysicsBody* pb2 = (PhysicsBody*)c->GetFixtureB()->GetBody()->GetUserData();
+
+				ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
+				ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
+
+				trans_pb1->GetOwner()->GetScriptingBridge()->CallOnCollisionStay(pb2);
+				trans_pb2->GetOwner()->GetScriptingBridge()->CallOnCollisionStay(pb1);
+			}
+		}
 	}
 }
 

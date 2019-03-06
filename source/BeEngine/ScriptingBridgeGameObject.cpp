@@ -86,6 +86,45 @@ void ScriptingBridgeGameObject::SetComponentTransform(ComponentTransform * trans
 	}
 }
 
+void ScriptingBridgeGameObject::CallOnCollisionEnter(PhysicsBody * pb)
+{
+	if (pb != nullptr)
+	{
+		MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
+
+		void* args[1] = { collision_mono_obj };
+
+		MonoObject* ret_obj = nullptr;
+		go_scripting_instance->InvokeMonoMethod("CallOnCollisionEnter", args, 1, ret_obj);
+	}
+}
+
+void ScriptingBridgeGameObject::CallOnCollisionStay(PhysicsBody * pb)
+{
+	if (pb != nullptr)
+	{
+		MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
+
+		void* args[1] = { collision_mono_obj };
+
+		MonoObject* ret_obj = nullptr;
+		go_scripting_instance->InvokeMonoMethod("CallOnCollisionStay", args, 1, ret_obj);
+	}
+}
+
+void ScriptingBridgeGameObject::CallOnCollisionExit(PhysicsBody * pb)
+{
+	if (pb != nullptr)
+	{
+		MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
+
+		void* args[1] = { collision_mono_obj };
+
+		MonoObject* ret_obj = nullptr;
+		go_scripting_instance->InvokeMonoMethod("CallOnCollisionExit", args, 1, ret_obj);
+	}
+}
+
 GameObject* ScriptingBridgeGameObject::GetGameObjectFromMonoObject(MonoObject * mono_object)
 {
 	GameObject* ret = nullptr;

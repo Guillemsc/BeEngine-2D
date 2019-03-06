@@ -609,6 +609,9 @@
     <ClInclude Include="ComponentTransfrom.h">
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsWindow.h">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1003,6 +1006,9 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Sources\4. Rendering =============</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsWindow.cpp">
+      <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

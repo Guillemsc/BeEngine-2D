@@ -137,6 +137,7 @@
     <ClInclude Include="PhysicsPolygonGuizmo.h" />
     <ClInclude Include="PhysicsShapePolygon.h" />
     <ClInclude Include="PhysicsShape.h" />
+    <ClInclude Include="PhysicsWindow.h" />
     <ClInclude Include="PositionGuizmo.h" />
     <ClInclude Include="QuadRenderer.h" />
     <ClInclude Include="Renderer.h" />
@@ -304,6 +305,7 @@
     <ClCompile Include="PhysicsPolygonGuizmo.cpp" />
     <ClCompile Include="PhysicsShapePolygon.cpp" />
     <ClCompile Include="PhysicsShape.cpp" />
+    <ClCompile Include="PhysicsWindow.cpp" />
     <ClCompile Include="PositionGuizmo.cpp" />
     <ClCompile Include="ProfilerWindow.cpp" />
     <ClCompile Include="ProgressWindow.cpp" />

@@ -7,18 +7,14 @@ namespace BeEngine
 {
     public class Collision
     {
-        public GameObject go_collided
+        private GameObject _go_collided = null;
+
+        public GameObject GoCollided
         {
-            get; private set;
+            get
+            {
+                return _go_collided;
+            }
         }
-
-        // Internal functions ----------------------------------
-
-        private void SetCollisionData(GameObject go_collided)
-        {
-            this.go_collided = go_collided;
-        }
-
-        // -----------------------------------------------------
     }
 }

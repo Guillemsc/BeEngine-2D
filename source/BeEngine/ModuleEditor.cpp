@@ -18,6 +18,7 @@
 #include "InspectorWindow.h"
 #include "ExplorerWindow.h"
 #include "ConsoleWindow.h"
+#include "PhysicsWindow.h"
 #include "BottomBar.h"
 #include "imgui_docking.h"
 #include "GameWindow.h"
@@ -58,6 +59,7 @@ bool ModuleEditor::Awake()
 	inspector_window = (InspectorWindow*)AddEditorWindow("Inspector", new InspectorWindow());
 	explorer_window = (ExplorerWindow*)AddEditorWindow("Explorer", new ExplorerWindow());
 	console_window = (ConsoleWindow*)AddEditorWindow("Console", new ConsoleWindow());
+	AddEditorWindow("Physics", new PhysicsWindow());
 
 	LoadDockingProfiles();
 

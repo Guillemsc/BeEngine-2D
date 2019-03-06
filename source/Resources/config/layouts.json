@@ -200,7 +200,7 @@
     },
     "curr_layout": "Test1",
     "Test1": {
-        "Docks_Size": 13,
+        "Docks_Size": 14,
         "Dock0": {
             "Label": "Scene",
             "pos_X": 444,
@@ -224,7 +224,7 @@
             "size_X": 446,
             "size_Y": 308,
             "status": 0,
-            "active": false,
+            "active": true,
             "opened": true,
             "location": "311",
             "child0": -1,
@@ -237,7 +237,7 @@
             "Label": "Resources",
             "pos_X": -2,
             "pos_Y": 53,
-            "size_X": 142,
+            "size_X": 188,
             "size_Y": 623,
             "status": 0,
             "active": true,
@@ -246,7 +246,7 @@
             "child0": -1,
             "child1": -1,
             "prev_tab": -1,
-            "next_tab": -1,
+            "next_tab": 13,
             "parent": 6
         },
         "Dock3": {
@@ -283,9 +283,9 @@
         },
         "Dock5": {
             "Label": "Hierarchy",
-            "pos_X": 140,
+            "pos_X": 186,
             "pos_Y": 53,
-            "size_X": 304,
+            "size_X": 258,
             "size_Y": 623,
             "status": 0,
             "active": true,
@@ -336,7 +336,7 @@
             "size_X": 446,
             "size_Y": 308,
             "status": 0,
-            "active": true,
+            "active": false,
             "opened": true,
             "location": "311",
             "child0": -1,
@@ -408,6 +408,22 @@
             "prev_tab": -1,
             "next_tab": -1,
             "parent": 3
+        },
+        "Dock13": {
+            "Label": "Physics",
+            "pos_X": -2,
+            "pos_Y": 53,
+            "size_X": 188,
+            "size_Y": 623,
+            "status": 0,
+            "active": false,
+            "opened": true,
+            "location": "1211",
+            "child0": -1,
+            "child1": -1,
+            "prev_tab": 2,
+            "next_tab": -1,
+            "parent": 6
         }
     }
 }

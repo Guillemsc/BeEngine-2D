@@ -3,6 +3,9 @@
 #include "ModuleScripting.h"
 #include "ScriptingBridgeGameObject.h"
 #include "ScriptingBridgeComponentTransform.h"
+#include "PhysicsBody.h"
+#include "ComponentTransfrom.h"
+#include "GameObject.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -41,6 +44,9 @@ void ScriptingCluster::RebuildClasses()
 
 		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentScript", component_script_class);
 		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentTransform", component_transform_class);
+
+		// Physics
+		App->scripting->scripting_assembly->GetClass("BeEngine", "Collision", collision_class);
 	}
 }
 
@@ -68,6 +74,34 @@ MonoObject * ScriptingCluster::BoxFloat2(const float2 & val)
 	MonoObject* ret = nullptr;
 
 
+
+	return ret;
+}
+
+MonoObject* ScriptingCluster::BoxCollision(PhysicsBody * pb)
+{
+	MonoObject* ret = nullptr;
+
+	if (pb != nullptr)
+	{
+		ComponentTransform* component = pb->GetComponentTransform();
+
+		if (component != nullptr)
+		{
+			GameObject* collided_go = component->GetOwner();
+
+			ScriptingClassInstance* collided_go_instance = collided_go->GetScriptingBridge()->GetGoScriptingInstance();
+
+			ScriptingClassInstance instance = collision_class.CreateWeakInstance();
+
+			if (App->scripting->SetFieldValue(instance.GetMonoObject(), collision_class.GetMonoClass(),
+				"_go_collided", collided_go_instance->GetMonoObject()))
+			{
+				ret = instance.GetMonoObject();
+			}
+
+		}
+	}
 
 	return ret;
 }

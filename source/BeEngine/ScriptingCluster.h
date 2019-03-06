@@ -3,6 +3,8 @@
 
 #include "ModuleScripting.h"
 
+class PhysicsBody;
+
 class ScriptingCluster 
 {
 	friend class ModuleScripting;
@@ -15,11 +17,13 @@ private:
 	void RebuildClasses();
 
 public:
-	// Boxing
+	// Unboxing
 	float2 UnboxFloat2(MonoObject* obj);
 
-	// Unboxing
+	// Boxing
 	MonoObject* BoxFloat2(const float2& val);
+
+	MonoObject* BoxCollision(PhysicsBody* pb);
 
 public:
 	ScriptingClass beengine_object_class;
@@ -31,6 +35,8 @@ public:
 	ScriptingClass component_class;
 	ScriptingClass component_script_class;
 	ScriptingClass component_transform_class;
+
+	ScriptingClass collision_class;
 
 private:
 	bool rebuild_internal_calls = true;

@@ -4,7 +4,7 @@
 #include "ModulePhysics.h"
 
 class PhysicsShape;
-class ComponentPhysicsBody;
+class ComponentTransform;
 
 enum PhysicsBodyType
 {
@@ -89,15 +89,15 @@ public:
 
 	float2 LocalPointToWorldPoint(const float2& local_point) const;
 
-	void SetComponentPhysicsBody(ComponentPhysicsBody* set);
-	ComponentPhysicsBody* GetComponentPhysicsBody() const;
+	void SetComponentTransform(ComponentTransform* set);
+	ComponentTransform* GetComponentTransform() const;
 
 private:
 	b2Body* b2body = nullptr;
 
 	std::vector<PhysicsShape*> shapes;
 
-	ComponentPhysicsBody* component_physics_body = nullptr;
+	ComponentTransform* component_transform = nullptr;
 };
 
 #endif // !__PHYSICS_BODY_H__

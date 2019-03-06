@@ -18,6 +18,7 @@ class InspectorWindow;
 class ConsoleWindow;
 class BottomBar;
 class GameWindow;
+class PhysicsWindow;
 
 class EditorWindow
 {
@@ -149,6 +150,7 @@ public:
 	InspectorWindow* inspector_window = nullptr;
 	ExplorerWindow*  explorer_window = nullptr;
 	ConsoleWindow*	 console_window = nullptr;
+	PhysicsWindow*   physics_window = nullptr;
 
 private:
 	EditorState editor_state;

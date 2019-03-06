@@ -8,6 +8,7 @@ class GameObject;
 class GameObjectComponent;
 class ComponentTransform;
 class Event;
+class PhysicsBody;
 
 class ScriptingBridgeGameObject : public ScriptingBridgeObject
 {
@@ -30,6 +31,10 @@ public:
 	ScriptingClassInstance* GetGoScriptingInstance() const;
 
 	void SetComponentTransform(ComponentTransform* trans);
+
+	void CallOnCollisionEnter(PhysicsBody* pb);
+	void CallOnCollisionStay(PhysicsBody* pb);
+	void CallOnCollisionExit(PhysicsBody* pb);
 
 private:
 	static GameObject* GetGameObjectFromMonoObject(MonoObject* mono_object);
