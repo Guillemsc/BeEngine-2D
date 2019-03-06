@@ -279,7 +279,7 @@ std::vector<std::vector<float2>> ModulePhysics::TriangulateIfConcaveShape(const 
 
 			int indice_counter = 0;
 			std::vector<float2> curr_shape;
-			for (std::vector<int>::iterator it = indices.begin(); it != indices.end(); ++it)
+			for (std::vector<int>::reverse_iterator it = indices.rbegin(); it != indices.rend(); ++it)
 			{
 				curr_shape.push_back(shape[(*it)]);
 
