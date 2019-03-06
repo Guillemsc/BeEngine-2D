@@ -30,7 +30,6 @@ private:
 	void SceneInput(Scene* scene, bool left_clicked, bool right_clicked);
 
 	void DrawScene(Scene* scene, uint scene_count, uint& go_count, uint& height_count);
-	void DrawSceneDragAndDrop(Scene* scene, uint scene_count);
 
 	void DrawGameObjectsPopup(bool left_clicked, bool right_clicked);
 	void GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked);

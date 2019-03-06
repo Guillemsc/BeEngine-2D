@@ -44,9 +44,17 @@ void PhysicsShapePolygon::SetVertices(const std::vector<float2>& set)
 
 	vertices = set;
 
-	std::vector<std::vector<float2>> shapes = App->physics->TriangulateShape(set);
- 
 	bool can_create_shape = true;
+
+	if (set.size() < 3)
+	{
+		not_enough_vertices = true;
+		can_create_shape = false;
+	}
+	else
+		not_enough_vertices = false;
+
+	std::vector<std::vector<float2>> shapes = App->physics->TriangulateShape(set);
 
 	triangles.clear();
 
@@ -82,8 +90,6 @@ void PhysicsShapePolygon::SetVertices(const std::vector<float2>& set)
 				++counter;
 			}
 
-			bool too_small = App->physics->GetTriangleIsTooSmall(shape);
-
 			if (!too_small)
 			{
 				b2PolygonShape b2polygon_shape;
@@ -108,7 +114,55 @@ std::vector<float2> PhysicsShapePolygon::GetVertices() const
 	return vertices;
 }
 
+void PhysicsShapePolygon::SetAmoutVertices(int set)
+{
+	if (set > vertices.size())
+	{
+		std::vector<float2> new_vertices = vertices;
+
+		int to_add = set - vertices.size();
+
+		while (to_add <= 0)
+		{
+			if (vertices.size() == 0)
+			{
+				new_vertices.push_back(float2(0, 0));
+			}
+			else
+			{
+				new_vertices.push_back(new_vertices[new_vertices.size() - 1]);
+			}
+
+			--to_add;
+		}
+
+		SetVertices(new_vertices);
+	}
+	else if (set < vertices.size())
+	{
+		std::vector<float2> new_vertices;
+
+		int counter = 0;
+		for (std::vector<float2>::iterator it = vertices.begin(); it != vertices.end(); ++it, ++counter)
+		{
+			new_vertices.push_back((*it));
+
+			if (counter >= set - 1)
+			{
+				break;
+			}
+		}
+
+		SetVertices(new_vertices);
+	}
+}
+
 bool PhysicsShapePolygon::GetShapeTooSmall() const
 {
 	return too_small;
+}
+
+bool PhysicsShapePolygon::GetNotEnoughVertices() const
+{
+	return not_enough_vertices;
 }

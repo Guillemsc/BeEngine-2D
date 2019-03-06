@@ -88,8 +88,7 @@ void GameObjectAbstraction::Abstract(const std::vector<GameObject*>& to_abstract
 		relations.push_back(curr_relation);
 	}
 
-	if(id_counter > 0)
-		abstracted = true;
+	abstracted = true;
 }
 
 std::vector<GameObject*> GameObjectAbstraction::DeAbstract()

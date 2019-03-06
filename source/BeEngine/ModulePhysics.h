@@ -45,6 +45,9 @@ public:
 	std::vector<std::vector<float2>> TriangulateShape(const std::vector<float2>& shape);
 	bool GetTriangleIsTooSmall(const std::vector<float2>& triangle);
 
+	int GetPhysicsBodiesCount() const;
+	int GetPhysicsShapesCount() const;
+
 private:
 	std::vector<PhysicsBody*> bodies;
 	std::vector<PhysicsShape*> shapes;

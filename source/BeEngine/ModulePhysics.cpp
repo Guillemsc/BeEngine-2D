@@ -312,3 +312,13 @@ bool ModulePhysics::GetTriangleIsTooSmall(const std::vector<float2>& triangle)
 
 	return ret;
 }
+
+int ModulePhysics::GetPhysicsBodiesCount() const
+{
+	return bodies.size();
+}
+
+int ModulePhysics::GetPhysicsShapesCount() const
+{
+	return shapes.size();
+}

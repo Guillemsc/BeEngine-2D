@@ -9,7 +9,7 @@ namespace BeEngine
     {
         private GameObject _go_collided = null;
 
-        public GameObject GoCollided
+        public GameObject GameObjectCollidedWith
         {
             get
             {

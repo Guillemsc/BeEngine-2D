@@ -20,13 +20,17 @@ public:
 	void SetVertices(const std::vector<float2>& set);
 	std::vector<float2> GetVertices() const;
 
+	void SetAmoutVertices(int set);
+
 	bool GetShapeTooSmall() const;
+	bool GetNotEnoughVertices() const;
 
 private:
 	std::vector<float2> vertices;
 	std::vector<b2PolygonShape> b2polygon_shapes;
 
 	bool too_small = false;
+	bool not_enough_vertices = false;
 };
 
 #endif // !__PHYSICS_BODY_POLYGON_H__

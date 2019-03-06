@@ -52,6 +52,7 @@ void ComponentTransform::Start()
 	App->scripting->AddScriptingBridgeObject(scripting_bridge);
 
 	base_physics_body = App->physics->CreatePhysicsBody();
+	base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_KINEMATIC);
 	base_physics_body->SetComponentTransform(this);
 
 	local_transform = float4x4::identity;
@@ -102,13 +103,18 @@ void ComponentTransform::OnParentChanged(GameObject * new_parent)
 
 void ComponentTransform::OnAddComponent(GameObjectComponent * new_component)
 {
+	if (new_component->GetType() == ComponentType::COMPONENT_TYPE_PHYSICS_BODY)
+	{
+		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_DYNAMIC);
+		base_physics_body->ClearForces();
+	}
 }
 
 void ComponentTransform::OnRemoveComponent(GameObjectComponent * deleted)
 {
 	if (deleted->GetType() == ComponentType::COMPONENT_TYPE_PHYSICS_BODY)
 	{
-		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_DYNAMIC);
+		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_KINEMATIC);
 		base_physics_body->ClearForces();
 	}
 }

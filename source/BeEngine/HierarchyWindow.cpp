@@ -39,7 +39,7 @@ void HierarchyWindow::DrawEditor()
 	uint go_count = 0;
 	uint height_count = 0;
 
-	height_count = ImGui::GetCursorPosY() + 30;
+	height_count = ImGui::GetCursorPosY() + 60;
 
 	DrawScene(root_scene, scene_count, go_count, height_count);
 
@@ -262,11 +262,58 @@ void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count,
 			std::string curr_scene_text = "Current scene: " + scene->GetName();
 			ImGui::Text(curr_scene_text.c_str());
 
-			ImGui::SameLine();
-
 			if (ImGui::SmallButton("Save"))
 			{
 				App->assets->CreateScene();
+			}
+
+			bool open_scene_rename = false;
+
+			ImGui::SameLine();
+
+			if (ImGui::SmallButton("Rename"))
+			{				
+				open_scene_rename = true;
+			}
+
+			if (open_scene_rename)
+			{
+				ImGui::OpenPopup("RenameScenePopup");
+				
+				int size = scene->GetName().size();
+
+				if (size > 98)
+					size = 98;
+
+				memset(change_name_tmp, 0, sizeof(char) * 99);
+
+				strcpy_s(change_name_tmp, sizeof(char) * size + 1, scene->GetName().c_str());
+				
+			}
+
+			if (ImGui::BeginPopup("RenameScenePopup"))
+			{
+				ImGui::Text("Name: ");
+
+				ImGui::SameLine();
+
+				ImGui::InputText("", change_name_tmp, sizeof(char) * 50, ImGuiInputTextFlags_AutoSelectAll);
+
+				if (ImGui::Button("Accept"))
+				{
+					scene->SetName(change_name_tmp);
+					
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::Button("Cancel"))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
 			}
 
 			ImGui::PopFont();
@@ -331,29 +378,6 @@ void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count,
 
 		ImGui::PopID();
 	}
-}
-
-void HierarchyWindow::DrawSceneDragAndDrop(Scene * scene, uint scene_count)
-{
-	//// GO slot become drag target
-	//uint drag_drop_flags = ImGuiDragDropFlags_SourceNoDisableHover;
-
-	//if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-	//{
-	//	int size = sizeof(go);
-	//	ImGui::SetDragDropPayload("GameObjects", go, size);
-
-	//	std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
-
-	//	for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
-	//	{
-	//		ImGui::Text((*it)->GetName().c_str());
-	//	}
-
-	//	dragging = true;
-
-	//	ImGui::EndDragDropSource();
-	//}
 }
 
 void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked)

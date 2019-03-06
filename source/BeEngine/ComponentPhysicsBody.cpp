@@ -29,19 +29,40 @@ void ComponentPhysicsBody::EditorDraw()
 		pb->SetType(static_cast<PhysicsBodyType>(curr_body_type));
 	}
 
-	float gravity_scale = pb->GetGravityScale();
-
-	if (ImGui::DragFloat("Gravity scale", &gravity_scale, 0.1f))
+	switch (pb->GetType())
 	{
-		pb->SetGravityScale(gravity_scale);
+	case PhysicsBodyType::PHYSICS_BODY_DYNAMIC:
+	{
+		float gravity_scale = pb->GetGravityScale();
+
+		if (ImGui::DragFloat("Gravity scale", &gravity_scale, 0.1f))
+		{
+			pb->SetGravityScale(gravity_scale);
+		}
+
+		bool fixed_rotaton = pb->GetFixedRotation();
+
+		if (ImGui::Checkbox("Fix rotation", &fixed_rotaton))
+		{
+			pb->SetFixedRotation(fixed_rotaton);
+		}
+
+		break;
 	}
 
-	bool fixed_rotaton = pb->GetFixedRotation();
-
-	if (ImGui::Checkbox("Fix rotation", &fixed_rotaton))
+	case PhysicsBodyType::PHYSICS_BODY_KINEMATIC:
 	{
-		pb->SetFixedRotation(fixed_rotaton);
+		bool fixed_rotaton = pb->GetFixedRotation();
+
+		if (ImGui::Checkbox("Fix rotation", &fixed_rotaton))
+		{
+			pb->SetFixedRotation(fixed_rotaton);
+		}
+
+		break;
 	}
+	}
+
 }
 
 void ComponentPhysicsBody::Start()
