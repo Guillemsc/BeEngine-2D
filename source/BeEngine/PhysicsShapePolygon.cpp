@@ -61,7 +61,6 @@ void PhysicsShapePolygon::SetVertices(const std::vector<float2>& set)
 		if (too_small)
 		{
 			can_create_shape = false;
-			break;
 		}
 	}
 

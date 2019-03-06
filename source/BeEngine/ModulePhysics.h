@@ -11,7 +11,7 @@
 #define METERS_TO_PIXELS(m) ((float) PIXELS_PER_METER * m)
 #define PIXELS_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
-#define MIN_TRIANGLE_PIXELS_AREA 14.0f
+#define MIN_TRIANGLE_PIXELS_AREA 10.0f
 
 class Event;
 class PhysicsBody;
