@@ -57,7 +57,7 @@ bool ModuleGuizmo::Update()
 		GameObject* selected = App->gameobject->GetSelectedGameObjects()[0];
 
 		float4x4 world_trans = selected->transform->GetWorldTransform();
-
+		
 		if (position_guizmo->UpdateTransform(world_trans))
 		{
 			selected->transform->SetWorldTransform(world_trans);
@@ -127,7 +127,7 @@ void ModuleGuizmo::RenderGuizmos()
 
 	for (std::vector<Guizmo*>::iterator it = guizmos.begin(); it != guizmos.end(); ++it)
 	{
-		if ((*it)->visible)
+		if ((*it)->enabled && (*it)->visible)
 		{			
 			int handlers_count = (*it)->GetHandlersCount();
 

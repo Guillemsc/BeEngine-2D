@@ -8,7 +8,7 @@ PhysicsShape::PhysicsShape(PhysicsShapeType type)
 	SetIsSensor(false);
 }
 
-PhysicsShapeType PhysicsShape::GetBodyShape() const
+PhysicsShapeType PhysicsShape::GetBodyShapeType() const
 {
 	return shape_type;
 }
@@ -31,4 +31,9 @@ bool PhysicsShape::GetIsSensor() const
 PhysicsBody * PhysicsShape::GetAttachedBody() const
 {
 	return attached_body;
+}
+
+std::vector<std::vector<float2>> PhysicsShape::GetTriangles() const
+{
+	return triangles;
 }

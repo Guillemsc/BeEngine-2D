@@ -7,6 +7,8 @@
 #include "PhysicsShapePolygon.h"
 #include "PhysicsBody.h"
 #include "ModuleInput.h"
+#include "ModuleGuizmo.h"
+#include "PositionGuizmo.h"
 
 void PhysicsPolygonGuizmo::Start()
 {
@@ -74,6 +76,8 @@ void PhysicsPolygonGuizmo::StartEditing(ComponentPolygonCollider * editing)
 
 		polygon_points = polygon_editing->GetPhysicsShapePolygon()->GetVertices();
 
+		App->guizmo->position_guizmo->SetEnabled(false);
+
 		RebuildHandlers();
 	}
 }
@@ -86,6 +90,8 @@ std::vector<float2> PhysicsPolygonGuizmo::FinishEditing(ComponentPolygonCollider
 
 		shape->SetVertices(polygon_points);
 
+		App->guizmo->position_guizmo->SetEnabled(true);
+
 		polygon_editing = nullptr;
 	}
 
@@ -96,6 +102,8 @@ void PhysicsPolygonGuizmo::StopEditing(ComponentPolygonCollider * editing)
 {
 	if (polygon_editing == editing)
 	{
+		App->guizmo->position_guizmo->SetEnabled(true);
+
 		polygon_editing = nullptr;
 		polygon_points.clear();
 	}
@@ -104,6 +112,18 @@ void PhysicsPolygonGuizmo::StopEditing(ComponentPolygonCollider * editing)
 ComponentPolygonCollider * PhysicsPolygonGuizmo::GetEditingComponent() const
 {
 	return polygon_editing;
+}
+
+GameObject* PhysicsPolygonGuizmo::GetEditingGameObject() const
+{
+	GameObject* ret = nullptr;
+
+	if (polygon_editing != nullptr)
+	{
+		ret = polygon_editing->GetOwner();
+	}
+
+	return ret;
 }
 
 void PhysicsPolygonGuizmo::RebuildHandlers()

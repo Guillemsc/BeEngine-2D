@@ -50,6 +50,7 @@
     <Compile Include="GameObject\Components\ComponentTransform.cs" />
     <Compile Include="GameObject\GameObject.cs" />
     <Compile Include="Math\float2.cs" />
+    <Compile Include="Physics\Collision.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
