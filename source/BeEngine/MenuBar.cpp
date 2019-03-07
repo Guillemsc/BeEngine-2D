@@ -3,6 +3,9 @@
 #include "ModuleEditor.h"
 #include "imgui.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 MenuBar::MenuBar()
 {
 }

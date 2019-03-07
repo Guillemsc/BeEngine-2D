@@ -141,7 +141,6 @@ public:
 
 	Camera2D* CreateCamera();
 	void DestroyCamera(Camera2D* cam);
-	void DestroyAllCameras();
 	std::vector<Camera2D*> GetCameras();
 
 	Camera2D* GetEditorCamera() const;
@@ -154,6 +153,9 @@ public:
 
 	const float GetWheelSpeed() const;
 	const float GetCameraSpeed() const;
+
+private:
+	void DestroyAllCameras();
 
 private:
 	Camera2D* editor_camera = nullptr;

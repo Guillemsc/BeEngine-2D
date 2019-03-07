@@ -6,6 +6,9 @@
 #include "Scene.h"
 #include "ModuleAssets.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ResourceScene::ResourceScene() : Resource(ResourceType::RESOURCE_TYPE_SCENE)
 {
 }

@@ -124,6 +124,9 @@ public:
 	void UnloadJSON(JSON_Doc* path);
 
 private:
+	void UnloadAllJSONs();
+
+private:
 	std::list<JSON_Doc*> jsons;
 };
 

@@ -5,6 +5,9 @@
 #include "ModuleInput.h"
 #include "ModuleEditor.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 // SDL_GetScancode: https://wiki.libsdl.org/SDL_Keycode
 // To use PS3 Controller install this driver https://github.com/nefarius/ScpToolkit/releases/tag/v1.6.238.16010
 

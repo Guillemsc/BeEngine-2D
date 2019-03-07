@@ -4,6 +4,9 @@
 #include "ModuleScripting.h"
 #include "ModuleAssets.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleState::ModuleState() : Module()
 {
 }

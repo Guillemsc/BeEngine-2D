@@ -1,5 +1,8 @@
 #include "GameObjectComponent.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 GameObjectComponent::GameObjectComponent(std::string _name, const ComponentType& _type, const ComponentGroup& _group, 
 	bool _unique_per_game_object, bool _can_destroy)
 {

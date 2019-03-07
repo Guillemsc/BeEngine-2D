@@ -2,6 +2,9 @@
 #include "Globals.h"
 #include "Functions.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleJson::ModuleJson() : Module()
 {
 
@@ -140,10 +143,8 @@ void ModuleJson::UnloadJSON(JSON_Doc * son)
 	}
 }
 
-bool ModuleJson::CleanUp()
+void ModuleJson::UnloadAllJSONs()
 {
-	bool ret = true;
-
 	for (std::list<JSON_Doc*>::iterator it = jsons.begin(); it != jsons.end(); ++it)
 	{
 		(*it)->CleanUp();
@@ -151,6 +152,13 @@ bool ModuleJson::CleanUp()
 	}
 
 	jsons.clear();
+}
+
+bool ModuleJson::CleanUp()
+{
+	bool ret = true;
+
+	UnloadAllJSONs();
 
 	return ret;
 }

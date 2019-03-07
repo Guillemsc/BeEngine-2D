@@ -2,6 +2,9 @@
 #include "App.h"
 #include "ModuleAudio.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
 ModuleAudio::ModuleAudio() : Module()

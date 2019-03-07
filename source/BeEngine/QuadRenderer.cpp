@@ -2,6 +2,9 @@
 #include "App.h"
 #include "ModuleShader.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 QuadRenderer::QuadRenderer()
 {
 }

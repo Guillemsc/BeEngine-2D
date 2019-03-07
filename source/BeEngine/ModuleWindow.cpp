@@ -5,6 +5,9 @@
 #include "Cursor.h"
 #include "ModuleJson.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleWindow::ModuleWindow() : Module()
 {
 	window = NULL;

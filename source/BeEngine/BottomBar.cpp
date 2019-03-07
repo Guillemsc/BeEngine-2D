@@ -3,6 +3,9 @@
 #include "ModuleWindow.h"
 #include "ConsoleWindow.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 BottomBar::BottomBar(float _height)
 {
 	height = _height;

@@ -12,6 +12,9 @@
 #include "ModuleJson.h"
 #include "ScriptingBridgeComponentScript.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
 	

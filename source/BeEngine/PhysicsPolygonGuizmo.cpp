@@ -10,6 +10,9 @@
 #include "ModuleGuizmo.h"
 #include "PositionGuizmo.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 void PhysicsPolygonGuizmo::Start()
 {
 }

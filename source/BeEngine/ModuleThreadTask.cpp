@@ -3,6 +3,9 @@
 #include "Event.h"
 #include "ModuleEvent.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleThreadTask::ModuleThreadTask() : Module()
 {
 }

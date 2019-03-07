@@ -15,6 +15,9 @@
 #include "ModuleEditor.h"
 #include "ModulePhysics.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleSceneRenderer::ModuleSceneRenderer() : Module()
 {
 }
@@ -67,6 +70,8 @@ bool ModuleSceneRenderer::PostUpdate()
 bool ModuleSceneRenderer::CleanUp()
 {
 	bool ret = true;
+
+	DestroyAllRenderers();
 
 	return ret;
 }

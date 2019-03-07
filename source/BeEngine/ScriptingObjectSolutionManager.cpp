@@ -3,6 +3,9 @@
 #include "ModuleProject.h"
 #include "ModuleFileSystem.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ScriptingObjectSolutionManager::ScriptingObjectSolutionManager()
 {
 }

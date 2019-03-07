@@ -8,6 +8,9 @@
 #include "LineRenderer.h"
 #include "ModuleSceneRenderer.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ComponentCamera::ComponentCamera() : GameObjectComponent("Camera", ComponentType::COMPONENT_TYPE_CAMERA, ComponentGroup::CAMERA, true)
 {
 }

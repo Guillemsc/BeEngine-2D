@@ -8,6 +8,9 @@
 #include "ModuleState.h"
 #include "Scene.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleGameObject::ModuleGameObject() : Module()
 {
 	

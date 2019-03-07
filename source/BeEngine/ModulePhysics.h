@@ -49,6 +49,10 @@ public:
 	int GetPhysicsShapesCount() const;
 
 private:
+	void DestroyAllPhysicsBodies();
+	void DestroyAllPhysicsShapes();
+
+private:
 	std::vector<PhysicsBody*> bodies;
 	std::vector<PhysicsShape*> shapes;
 

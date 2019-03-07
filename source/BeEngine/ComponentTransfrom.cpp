@@ -7,6 +7,9 @@
 #include "App.h"
 #include "PhysicsBody.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ComponentTransform::ComponentTransform() 
 	: GameObjectComponent("Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
 {

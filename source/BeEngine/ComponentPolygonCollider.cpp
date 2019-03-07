@@ -14,6 +14,8 @@
 #include "ModuleSceneRenderer.h"
 #include "LineRenderer.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
 
 ComponentPolygonCollider::ComponentPolygonCollider() 
 	: GameObjectComponent("Polygon Collider", ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, ComponentGroup::PHYSICS)

@@ -1,6 +1,9 @@
 #include "PhysicsShape.h"
 #include "PhysicsBody.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 PhysicsShape::PhysicsShape(PhysicsShapeType type)
 {
 	shape_type = type;

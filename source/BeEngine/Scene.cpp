@@ -4,6 +4,9 @@
 #include "Event.h"
 #include "ResourceScene.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 Scene::Scene(const std::string& set_uid)
 {
 	uid = set_uid;

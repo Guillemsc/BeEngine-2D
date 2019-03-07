@@ -2,6 +2,9 @@
 #include "App.h"
 #include "Profiler.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ProfilerWindow::ProfilerWindow()
 {
 }

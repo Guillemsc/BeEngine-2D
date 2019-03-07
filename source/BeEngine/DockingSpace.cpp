@@ -5,6 +5,9 @@
 #include "imgui_docking.h"
 #include "imgui.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 DockingSpace::DockingSpace(float2 _margins_left_up, float2 _margins_right_down)
 {
 	margins_left_up = _margins_left_up;

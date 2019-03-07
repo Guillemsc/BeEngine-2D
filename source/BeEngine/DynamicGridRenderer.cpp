@@ -4,6 +4,9 @@
 #include "ModuleSceneRenderer.h"
 #include "ModuleCamera.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 DynamicGridRenderer::DynamicGridRenderer()
 {
 }

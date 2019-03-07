@@ -6,6 +6,9 @@
 #include "QuadRenderer.h"
 #include "ModuleInput.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 void PositionGuizmo::Start()
 {
 	internal_transform = float4x4::identity;

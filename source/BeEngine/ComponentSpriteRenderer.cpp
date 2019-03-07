@@ -9,6 +9,9 @@
 #include "ModuleSceneRenderer.h"
 #include "ModuleJson.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::COMPONENT_TYPE_SPRITE_RENDERER,
 	ComponentGroup::RENDERING, true)
 {

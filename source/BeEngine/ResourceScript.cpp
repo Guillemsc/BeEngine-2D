@@ -8,6 +8,9 @@
 #include "ModuleJson.h"
 #include "imgui.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ResourceScript::ResourceScript() : Resource(ResourceType::RESOURCE_TYPE_SCRIPT)
 {
 }

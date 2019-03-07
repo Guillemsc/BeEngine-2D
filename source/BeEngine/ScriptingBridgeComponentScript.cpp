@@ -6,6 +6,9 @@
 #include "GameObject.h"
 #include "ScriptingBridgeGameObject.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ScriptingBridgeComponentScript::ScriptingBridgeComponentScript(ComponentScript * component_script)
 {
 	component_script_ref = component_script;

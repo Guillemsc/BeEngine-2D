@@ -5,6 +5,9 @@
 #include "imgui.h"
 #include "GameObject.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ResourcePrefab::ResourcePrefab() : Resource(ResourceType::RESOURCE_TYPE_PREFAB)
 {
 }

@@ -3,6 +3,9 @@
 #include "App.h"
 #include "ModuleWindow.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ProgressWindow::ProgressWindow()
 {
 }

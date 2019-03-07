@@ -5,6 +5,9 @@
 #include "ModuleInput.h"
 #include "ModuleResource.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ScriptingObjectCompiler::ScriptingObjectCompiler() : ScriptingObject()
 {
 

@@ -10,6 +10,9 @@
 #include "ModuleGameObject.h"
 #include "Scene.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleScene::ModuleScene() : Module()
 {
 }

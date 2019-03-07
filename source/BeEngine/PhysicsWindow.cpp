@@ -2,6 +2,9 @@
 #include "App.h"
 #include "ModulePhysics.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 PhysicsWindow::PhysicsWindow()
 {
 }

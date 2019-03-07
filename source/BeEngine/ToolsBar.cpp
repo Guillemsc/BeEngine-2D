@@ -4,6 +4,9 @@
 #include "ModuleWindow.h"
 #include "ModuleState.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ToolsBar::ToolsBar(float2 _margins_left_up)
 {
 	margins_left_up = _margins_left_up;

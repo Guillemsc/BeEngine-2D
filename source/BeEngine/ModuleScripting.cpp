@@ -23,6 +23,9 @@
 #include <mono/metadata/mono-gc.h>
 #include <mono/metadata/environment.h>
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 #pragma comment (lib, "../Resources/mono/lib/mono-2.0-sgen.lib")
 
 ModuleScripting::ModuleScripting() : Module()

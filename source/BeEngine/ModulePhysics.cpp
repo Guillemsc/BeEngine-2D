@@ -12,6 +12,9 @@
 #include "ScriptingBridgeGameObject.h"
 #include "MapboxTriangulation/earcut.hpp"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
 #else
@@ -50,6 +53,9 @@ bool ModulePhysics::CleanUp()
 	INTERNAL_LOG("Destroying Physics World");
 
 	RELEASE(b2world);
+
+	DestroyAllPhysicsBodies();
+	DestroyAllPhysicsShapes();
 
 	App->event->UnSuscribe(std::bind(&ModulePhysics::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
 	App->event->UnSuscribe(std::bind(&ModulePhysics::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
@@ -186,12 +192,6 @@ PhysicsShape * ModulePhysics::CreatePhysicsShape(PhysicsShapeType type)
 		vertices.push_back(float2(10, -10));
 		vertices.push_back(float2(10, 10));
 
-		//rtices[0].Set(-1, 2);
-		//vertices[1].Set(-1, 0);
-		//vertices[2].Set(0, -3);
-		//vertices[3].Set(1, 0);
-		//vertices[4].Set(1, 1);
-
 		((PhysicsShapePolygon*)ret)->SetVertices(vertices);
 
 		break;
@@ -321,4 +321,24 @@ int ModulePhysics::GetPhysicsBodiesCount() const
 int ModulePhysics::GetPhysicsShapesCount() const
 {
 	return shapes.size();
+}
+
+void ModulePhysics::DestroyAllPhysicsBodies()
+{
+	for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
+	{
+		RELEASE(*it);
+	}
+
+	bodies.clear();
+}
+
+void ModulePhysics::DestroyAllPhysicsShapes()
+{
+	for (std::vector<PhysicsShape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
+	{
+		RELEASE(*it);
+	}
+
+	shapes.clear();
 }

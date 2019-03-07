@@ -3,6 +3,9 @@
 #include "App.h"
 #include "DynamicGridRenderer.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 void GridGuizmo::Start()
 {
 }

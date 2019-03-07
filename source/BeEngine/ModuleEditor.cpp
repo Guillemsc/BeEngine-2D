@@ -23,6 +23,9 @@
 #include "imgui_docking.h"
 #include "GameWindow.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleEditor::ModuleEditor() : Module()
 {
 	docking_layouts_json_filepath = App->GetConfigurationPath() + std::string("layouts.json");

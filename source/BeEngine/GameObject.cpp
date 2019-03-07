@@ -15,6 +15,9 @@
 #include "Scene.h"
 #include "ScriptingBridgeGameObject.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 GameObject::GameObject(const std::string& set_uid)
 {
 	uid = set_uid;

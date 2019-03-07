@@ -6,6 +6,9 @@
 #include "ModuleEvent.h"
 #include "Event.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleProject::ModuleProject() : Module()
 {
 	projects_json_filepath = App->GetConfigurationPath() + std::string("projects.json");
@@ -61,6 +64,8 @@ bool ModuleProject::PostUpdate()
 bool ModuleProject::CleanUp()
 {
 	bool ret = true;
+
+	DestoyAllProjects();
 
 	App->event->UnSuscribe(std::bind(&ModuleProject::OnEvent, this, std::placeholders::_1), EventType::THREAD_TASK_FINISHED);
 	App->event->UnSuscribe(std::bind(&ModuleProject::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
@@ -161,6 +166,8 @@ bool ModuleProject::RemoveProject(const char * project_folder)
 		if ((*it)->GetPath().compare(path) == 0)
 		{
 			ret = true;
+
+			RELEASE(*it);
 			projects.erase(it);
 			break;
 		}
@@ -289,6 +296,16 @@ bool ModuleProject::ProjectExists(const char* project_path)
 	}
 
 	return ret;
+}
+
+void ModuleProject::DestoyAllProjects()
+{
+	for (std::vector<Project*>::iterator it = projects.begin(); it != projects.end(); ++it)
+	{
+		RELEASE(*it);
+	}
+
+	projects.clear();
 }
 
 void ModuleProject::OnEvent(Event* ev)

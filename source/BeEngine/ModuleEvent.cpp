@@ -1,5 +1,8 @@
 #include "ModuleEvent.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 EventDelegate::EventDelegate(EventType e_type)
 {
 	event_type = e_type;

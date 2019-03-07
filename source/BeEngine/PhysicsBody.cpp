@@ -1,6 +1,9 @@
 #include "PhysicsBody.h"
 #include "PhysicsShape.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 PhysicsBody::PhysicsBody()
 {
 

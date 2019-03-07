@@ -5,6 +5,9 @@
 #include "ScriptingBridgeGameObject.h"
 #include "ComponentTransfrom.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ScriptingBridgeComponentTransform::ScriptingBridgeComponentTransform(ComponentTransform * component_transform)
 {
 	component_transform_ref = component_transform;

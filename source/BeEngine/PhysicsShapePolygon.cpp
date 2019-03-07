@@ -4,6 +4,9 @@
 #include "ModuleSceneRenderer.h"
 #include "App.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 PhysicsShapePolygon::PhysicsShapePolygon() : PhysicsShape(PhysicsShapeType::PHYSICS_SHAPE_POLYGON)
 {
 }

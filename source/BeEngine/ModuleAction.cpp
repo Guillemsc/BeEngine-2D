@@ -1,5 +1,8 @@
 #include "ModuleAction.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleAction::ModuleAction() : Module()
 {
 }

@@ -3,6 +3,9 @@
 #include "ModuleCamera.h"
 #include "ModuleEvent.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 GameWindow::GameWindow()
 {
 }

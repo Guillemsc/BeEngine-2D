@@ -9,6 +9,9 @@
 #include "ComponentTransfrom.h"
 #include "ScriptingBridgeComponentTransform.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ScriptingBridgeGameObject::ScriptingBridgeGameObject(GameObject* go) : ScriptingBridgeObject()
 {
 	go_ref = go;

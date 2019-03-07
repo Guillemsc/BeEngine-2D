@@ -2,6 +2,9 @@
 #include "App.h"
 #include "ModuleRenderer.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleShader::ModuleShader() : Module()
 {
 }
@@ -113,6 +116,7 @@ void ModuleShader::DestroyAllShaders()
 		(*it)->CleanUp();
 		RELEASE(*it);
 	}
+
 	shaders.clear();
 }
 
@@ -123,6 +127,7 @@ void ModuleShader::DestroyAllShaderPrograms()
 		(*it)->CleanUp();
 		RELEASE(*it);
 	}
+
 	programs.clear();
 }
 

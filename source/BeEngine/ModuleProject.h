@@ -65,6 +65,8 @@ private:
 	void SerializeProjects();
 	bool ProjectExists(const char* project_path);
 
+	void DestoyAllProjects();
+
 	void OnEvent(Event* ev);
 
 private:

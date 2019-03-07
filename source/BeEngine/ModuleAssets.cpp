@@ -26,6 +26,9 @@
 #include "ScriptingCluster.h"
 #include "Scene.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleAssets::ModuleAssets() : Module()
 {
 	ilInit();

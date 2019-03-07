@@ -2,6 +2,9 @@
 #include "App.h"
 #include "ModuleResource.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ResourcesWindow::ResourcesWindow()
 {
 }

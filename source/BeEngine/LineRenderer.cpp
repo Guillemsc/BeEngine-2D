@@ -3,6 +3,9 @@
 #include "VertexBuffer.h"
 #include "Functions.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 LineRenderer::LineRenderer()
 {
 }

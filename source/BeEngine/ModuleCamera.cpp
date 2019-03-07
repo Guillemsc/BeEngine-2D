@@ -14,6 +14,9 @@
 #include "SceneWindow.h"
 #include "imgui.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ModuleCamera::ModuleCamera() : Module()
 {
 	editor_camera = CreateCamera();
@@ -30,14 +33,12 @@ bool ModuleCamera::Awake()
 	return ret;
 }
 
-// -----------------------------------------------------------------
 bool ModuleCamera::Start()
 {
 	bool ret = true;
 	return ret;
 }
 
-// -----------------------------------------------------------------
 bool ModuleCamera::CleanUp()
 {
 	bool ret = true;

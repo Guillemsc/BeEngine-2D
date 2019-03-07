@@ -7,6 +7,9 @@
 #include "imgui.h"
 #include "ModuleJson.h"
 
+#include "mmgr\nommgr.h"
+#include "mmgr\mmgr.h"
+
 ComponentPhysicsBody::ComponentPhysicsBody() 
 	: GameObjectComponent("Physics Body", ComponentType::COMPONENT_TYPE_PHYSICS_BODY, ComponentGroup::PHYSICS, true, true)
 {
