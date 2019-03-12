@@ -1,4 +1,4 @@
-![BeEngine](misc/BeEngineBanner.png)
+
 ## BeEngine 2D
 
 ## License
