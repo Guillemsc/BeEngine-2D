@@ -1,5 +1,6 @@
 ![BeEngine](misc/BeEngineBanner.png)
 ## BeEngine 2D
+BeEngine comes with all the tools necessary to create 2D games from a intuitive interface. Games can be exported in one click to the Windows platform.
 
 ## License
 MIT License
