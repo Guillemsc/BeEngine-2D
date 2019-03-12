@@ -168,6 +168,15 @@ void ModulePhysics::DestroyPhysicsBody(PhysicsBody * body)
 {
 	if (body != nullptr)
 	{
+		for (std::vector<PhysicsBody*>::iterator it = bodies.begin(); it != bodies.end(); ++it)
+		{
+			if ((*it) == body)
+			{
+				bodies.erase(it);
+				break;
+			}
+		}
+
 		body->RemoveAllShapes();
 
 		b2world->DestroyBody(body->b2body);
@@ -197,10 +206,10 @@ PhysicsShape * ModulePhysics::CreatePhysicsShape(PhysicsShapeType type)
 		break;
 	}
 
+	}
+
 	if (ret != nullptr)
 		shapes.push_back(ret);
-
-	}
 
 	return ret;
 }

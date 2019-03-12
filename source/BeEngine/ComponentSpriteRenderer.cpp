@@ -50,6 +50,8 @@ void ComponentSpriteRenderer::EditorDraw()
 		std::string size_text = "Size: x: " + std::to_string((int)image_size.x) + "  y: " + std::to_string((int)image_size.y);
 		ImGui::Text(size_text.c_str());
 
+		ImGui::Spacing();
+
 		float ratio = resource_texture->GetHeightWidthRatio();
 		ImGui::Image((ImTextureID)resource_texture->GetTextureId(), ImVec2(100, 100 * ratio));
 	}
