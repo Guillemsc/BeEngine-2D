@@ -10,7 +10,7 @@ void GridGuizmo::Start()
 {
 }
 
-void GridGuizmo::Render(float relative_size)
+void GridGuizmo::Render(float relative_size, const float2& mouse_pos)
 {
 	App->scene_renderer->grid_renderer->DrawGrid();
 }

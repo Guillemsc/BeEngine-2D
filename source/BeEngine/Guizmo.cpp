@@ -44,6 +44,11 @@ bool GuizmoHandler::GetPressed() const
 	return pressed;
 }
 
+void GuizmoHandler::SetActive(bool set)
+{
+	active = set;
+}
+
 void Guizmo::CleanUp()
 {
 	DestroyAllHandlers();
@@ -64,9 +69,13 @@ void Guizmo::SetEnabled(bool set)
 	enabled = set;
 }
 
-void Guizmo::AddHandler()
+GuizmoHandler* Guizmo::AddHandler()
 {
-	handlers.push_back(new GuizmoHandler());
+	GuizmoHandler* ret = new GuizmoHandler();
+
+	handlers.push_back(ret);
+
+	return ret;
 }
 
 void Guizmo::DestroyAllHandlers()

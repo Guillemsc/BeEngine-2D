@@ -19,7 +19,7 @@ void PositionGuizmo::Start()
 }
 
 
-void PositionGuizmo::Render(float relative_size)
+void PositionGuizmo::Render(float relative_size, const float2& mouse_pos)
 {
 	GuizmoHandler* han_up_arrow = GetHandler(PositionGuizmoHandlers::UP_ARROW);
 	GuizmoHandler* han_right_arrow = GetHandler(PositionGuizmoHandlers::RIGHT_ARROW);

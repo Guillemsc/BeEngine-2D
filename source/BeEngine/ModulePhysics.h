@@ -11,7 +11,7 @@
 #define METERS_TO_PIXELS(m) ((float) PIXELS_PER_METER * m)
 #define PIXELS_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
-#define MIN_TRIANGLE_PIXELS_AREA 10.0f
+#define MIN_METERS_SIZE 0.1f
 
 class Event;
 class PhysicsBody;
@@ -43,7 +43,8 @@ public:
 	float2 GetWorldGravity() const;
 
 	std::vector<std::vector<float2>> TriangulateShape(const std::vector<float2>& shape);
-	bool GetTriangleIsTooSmall(const std::vector<float2>& triangle);
+	bool GetTriangleIsValid(const std::vector<float2>& triangle);
+	float2 GetLineClosestPointToPoint(const float2& line_p1, const float2& line_p2, const float2& point);
 
 	int GetPhysicsBodiesCount() const;
 	int GetPhysicsShapesCount() const;

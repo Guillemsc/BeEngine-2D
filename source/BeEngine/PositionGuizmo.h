@@ -18,7 +18,7 @@ public:
 	~PositionGuizmo() {};
 
 	void Start();
-	void Render(float relative_size);
+	void Render(float relative_size, const float2& mouse_pos);
 	bool UpdateTransform(float4x4& transform);
 
 	void SetMatPos(float4x4& transform, float2 pos);

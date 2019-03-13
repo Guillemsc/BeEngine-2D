@@ -301,7 +301,7 @@ std::vector<std::vector<float2>> ModulePhysics::TriangulateShape(const std::vect
 	return ret;
 }
 
-bool ModulePhysics::GetTriangleIsTooSmall(const std::vector<float2>& triangle)
+bool ModulePhysics::GetTriangleIsValid(const std::vector<float2>& triangle)
 {
 	bool ret = true;
 
@@ -311,13 +311,47 @@ bool ModulePhysics::GetTriangleIsTooSmall(const std::vector<float2>& triangle)
 		float length_2 = std::abs(triangle[1].Distance(triangle[2]));
 		float length_3 = std::abs(triangle[2].Distance(triangle[0]));
 
+		length_1 = PIXELS_TO_METERS(length_1);
+		length_2 = PIXELS_TO_METERS(length_2);
+		length_3 = PIXELS_TO_METERS(length_3);
+
 		float s = (length_1 + length_2 + length_3) * 0.5f;
 
 		float area = std::sqrtf(s * (s - length_1) * (s - length_2) * (s - length_3));
 
-		if (area > MIN_TRIANGLE_PIXELS_AREA)
+		if (area < MIN_METERS_SIZE * MIN_METERS_SIZE)
+			ret = false;
+
+		if (length_1 < MIN_METERS_SIZE)
+			ret = false;
+
+		if (length_2 < MIN_METERS_SIZE)
+			ret = false;
+
+		if (length_3 < MIN_METERS_SIZE)
 			ret = false;
 	}
+
+	return ret;
+}
+
+float2 ModulePhysics::GetLineClosestPointToPoint(const float2 & line_p1, const float2 & line_p2, const float2 & point)
+{
+	float2 ret = float2::zero;
+
+	float2 ab = line_p2 - line_p1;
+	float2 ap = point - line_p1;
+
+	float lengthSqrAB = (ab.x * ab.x) + (ab.y * ab.y);
+	float t = ((ap.x * ab.x) + (ap.y * ab.y)) / lengthSqrAB;
+
+	if (t < 0)
+		t = 0;
+
+	if (t > 1)
+		t = 1;
+
+	ret = line_p1 + t * ab;
 
 	return ret;
 }

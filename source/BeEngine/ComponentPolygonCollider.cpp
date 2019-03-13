@@ -54,7 +54,7 @@ void ComponentPolygonCollider::EditorDraw()
 		}
 	}
 
-	if (physics_shape->GetShapeTooSmall())
+	if (!physics_shape->GetShapeValid())
 	{
 		ImGui::Separator();
 		ImGui::Text("The collider did not create any collision shapes as they");
@@ -132,7 +132,7 @@ void ComponentPolygonCollider::RenderGuizmos(float relative_size)
 
 		float3 colour = float3(0, 1, 0);
 
-		if (physics_shape->GetShapeTooSmall())
+		if (!physics_shape->GetShapeValid())
 			colour = float3(1, 0, 0);
 
 		PhysicsBody* body = physics_shape->GetAttachedBody();

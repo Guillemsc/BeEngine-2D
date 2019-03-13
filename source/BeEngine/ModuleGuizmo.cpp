@@ -128,6 +128,10 @@ void ModuleGuizmo::RenderGuizmos()
 {
 	float relative_size = App->camera->GetEditorCamera()->GetSize();
 
+	LineSegment ls = App->camera->GetEditorCamera()->ShootRay(App->editor->scene_window->GetSceneRect(), App->input->GetMouse());
+
+	float2 segment_pos = float2(ls.CenterPoint().x, ls.CenterPoint().y);
+
 	for (std::vector<Guizmo*>::iterator it = guizmos.begin(); it != guizmos.end(); ++it)
 	{
 		if ((*it)->enabled && (*it)->visible)
@@ -140,32 +144,38 @@ void ModuleGuizmo::RenderGuizmos()
 
 				GuizmoHandler* handler = (*it)->GetHandler(i);
 
-				if (render_handlers)
-					App->scene_renderer->quad_renderer->DrawQuad(handler->GetPos(), handler->GetSize(), float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
-
-				LineSegment ls = App->camera->GetEditorCamera()->ShootRay(App->editor->scene_window->GetSceneRect(), App->input->GetMouse());
-
-				if (handler->CheckRay(ls))
+				if (handler->active)
 				{
-					if(inside_window)
-						handler->hovered = true;
+					if (render_handlers)
+						App->scene_renderer->quad_renderer->DrawQuad(handler->GetPos(), handler->GetSize(), float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
 
-					if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && inside_window)
-						handler->pressed = true;
+					if (handler->CheckRay(ls))
+					{
+						if (inside_window)
+							handler->hovered = true;
+
+						if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && inside_window)
+							handler->pressed = true;
+					}
+					else
+						handler->hovered = false;
+
+					if (handler->pressed)
+					{
+						if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_DOWN)
+						{
+							handler->pressed = false;
+						}
+					}
 				}
 				else
-					handler->hovered = false;
-
-				if (handler->pressed)
 				{
-					if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_DOWN)
-					{
-						handler->pressed = false;
-					}
+					handler->pressed = false;
+					handler->hovered = false;
 				}
 			}
 			
-			(*it)->Render(relative_size);
+			(*it)->Render(relative_size, segment_pos);
 		}
 	}
 

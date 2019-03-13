@@ -15,7 +15,7 @@ public:
 	~Guizmo() {};
 
 	virtual void Start() {};
-	virtual void Render(float relative_size) {};
+	virtual void Render(float relative_size, const float2& mouse_pos) {};
 
 	void CleanUp();
 
@@ -25,7 +25,7 @@ public:
 	void SetEnabled(bool set);
 
 protected:
-	void AddHandler();
+	GuizmoHandler* AddHandler();
 
 	void DestroyAllHandlers();
 
@@ -55,12 +55,16 @@ public:
 	bool GetHovered() const;
 	bool GetPressed() const;
 
+	void SetActive(bool set);
+
 private:
 	float2 pos = float2::zero;
 	float2 size = float2::zero;
 
 	bool hovered = false;
 	bool pressed = false;
+
+	bool active = true;
 
 	AABB bbox;
 };

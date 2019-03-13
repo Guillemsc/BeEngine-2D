@@ -11,7 +11,7 @@ public:
 	~GridGuizmo() {};
 
 	void Start();
-	void Render(float relative_size);
+	void Render(float relative_size, const float2& mouse_pos);
 
 private:
 
