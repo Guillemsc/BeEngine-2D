@@ -33,6 +33,7 @@ void PhysicsPolygonGuizmo::Render(float relative_size, const float2& mouse_pos)
 				float2 size = float2(15 * relative_size, 15 * relative_size);
 
 				App->scene_renderer->quad_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(101));
+				App->scene_renderer->line_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(100));
 
 				float2 mouse_closest_point = float2::inf;
 				int closest_point_index = -1;
