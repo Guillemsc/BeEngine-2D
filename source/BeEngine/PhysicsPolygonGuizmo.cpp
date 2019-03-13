@@ -181,6 +181,32 @@ GameObject* PhysicsPolygonGuizmo::GetEditingGameObject() const
 	return ret;
 }
 
+void PhysicsPolygonGuizmo::SetPolygonPoint(int index, const float2 & point)
+{
+	if(polygon_points.size() > index)
+	{
+		polygon_points[index] = point;
+	}
+}
+
+std::vector<float2> PhysicsPolygonGuizmo::GetPolygonPoints() const
+{
+	return polygon_points;
+}
+
+void PhysicsPolygonGuizmo::RemovePoint(int index)
+{
+	int counter = 0;
+	for (std::vector<float2>::iterator it = polygon_points.begin(); it != polygon_points.end(); ++it, ++counter)
+	{
+		if (counter == index)
+		{
+			polygon_points.erase(it);
+			break;
+		}
+	}
+}
+
 void PhysicsPolygonGuizmo::RebuildHandlers()
 {
 	DestroyAllHandlers();

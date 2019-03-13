@@ -40,6 +40,33 @@ void ComponentPolygonCollider::EditorDraw()
 	}
 	else
 	{
+		std::vector<float2> editing_points = App->guizmo->physics_polygon_guizmo->GetPolygonPoints();
+
+		int counter = 0;
+		for (std::vector<float2>::iterator it = editing_points.begin(); it != editing_points.end(); ++it, ++counter)
+		{
+			std::string name = "Point " + std::to_string(counter);
+
+			ImGui::PushID(std::to_string(counter).c_str());
+
+			if (ImGui::DragFloat2(name.c_str(), (float*)&(*it), 0.1f))
+			{
+				App->guizmo->physics_polygon_guizmo->SetPolygonPoint(counter, (*it));
+			}
+
+			if (editing_points.size() > 3)
+			{
+				ImGui::SameLine();
+
+				if (ImGui::Button("X"))
+				{
+					App->guizmo->physics_polygon_guizmo->RemovePoint(counter);
+				}
+			}
+
+			ImGui::PopID();
+		}
+
 		if (ImGui::Button("Save Editing"))
 		{
 			std::vector<float2> vertices = App->guizmo->physics_polygon_guizmo->FinishEditing(this);

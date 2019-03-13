@@ -23,10 +23,13 @@ public:
 
 	GameObject* GetEditingGameObject() const;
 
+	void SetPolygonPoint(int index, const float2& point);
+	std::vector<float2> GetPolygonPoints() const;
+	void RemovePoint(int index);
+	void AddPoint(int index, const float2& point);
+
 private: 
 	void RebuildHandlers();
-
-	void AddPoint(int index, const float2& point);
 
 private:
 	ComponentPolygonCollider* polygon_editing = nullptr;
