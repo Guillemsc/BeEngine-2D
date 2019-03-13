@@ -22,13 +22,13 @@
         "configuration": ""
     },
     "camera": {
-        "wheel_speed": 10,
-        "camera_speed": 1000,
+        "wheel_speed": 0.05000000074505806,
+        "camera_speed": 0,
         "position": [
-            2.4365355968475342,
-            -0.70914649963378906
+            4.6392178535461426,
+            -2.3402659893035889
         ],
-        "size": 0.13184519112110138
+        "size": 0.12703697383403778
     },
     "guizmos": {
         "render_all_physics_guizmos": true

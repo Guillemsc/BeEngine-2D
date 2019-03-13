@@ -126,7 +126,7 @@ void ModuleGuizmo::DestroyAllGuizmos()
 
 void ModuleGuizmo::RenderGuizmos()
 {
-	float relative_size = App->camera->GetEditorCamera()->GetSize();
+	float relative_size = App->camera->GetEditorCamera()->GetViewScale();
 
 	LineSegment ls = App->camera->GetEditorCamera()->ShootRay(App->editor->scene_window->GetSceneRect(), App->input->GetMouse());
 

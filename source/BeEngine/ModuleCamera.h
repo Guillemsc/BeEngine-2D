@@ -90,6 +90,8 @@ public:
 	const float GetNearPlaneDistance() const;
 	const float GetFarPlaneDistance() const;
 
+	const float GetViewScale() const;
+
 	const float4x4 GetViewMatrix() const;
 	const float4x4 GetProjectionMatrix() const;
 	const float4x4 GetOpenGLViewMatrix() const;

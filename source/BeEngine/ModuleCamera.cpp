@@ -50,8 +50,7 @@ bool ModuleCamera::CleanUp()
 
 void ModuleCamera::OnLoadConfig(JSON_Doc * config)
 {
-	wheel_speed = config->GetNumber("camera.wheel_speed", 10000.0f);
-	camera_speed = config->GetNumber("camera.camera_speed", 1000.0f);
+	wheel_speed = config->GetNumber("camera.wheel_speed", 0.05f);
 
 	float2 cam_pos = config->GetNumber2("camera.position");
 	editor_camera->SetPosition(cam_pos);
@@ -72,72 +71,54 @@ void ModuleCamera::UpdateEditorCameraInput()
 {
 	if (editor_camera != nullptr)
 	{
-		float cam_speed = camera_speed * App->GetDT();
-		float whe_speed = wheel_speed * App->GetDT();
-
-		if (App->input->GetKeyRepeat(SDL_SCANCODE_LSHIFT))
-			cam_speed = camera_speed / 2 * App->GetDT();
-
 		// Mouse motion ----------------
-		if (1)
+
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 		{
-			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
-			{
-				if (App->editor->scene_window->GetMouseInsideWindow())
-					dragging = true;
-			}
-
-			if (dragging && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_DOWN)
-				dragging = false;
-
-			if (dragging)
-			{
-				ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-
-				float2 mouse_pos = App->input->GetMouse();
-
-				float2 motion = float2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-
-				motion.x *= editor_camera->size;
-
-				if (motion.x > 0)
-					editor_camera->MoveLeft(motion.x);
-				if (motion.x < 0)
-					editor_camera->MoveRight(-motion.x);
-
-				motion.y *= editor_camera->size;
-
-				if (motion.y > 0)
-					editor_camera->MoveUp(motion.y);
-				if (motion.y < 0)
-					editor_camera->MoveDown(-motion.y);
-			}
-
 			if (App->editor->scene_window->GetMouseInsideWindow())
-			{
-				if (App->input->GetMouseWheel() == 1)
-				{
-					editor_camera->SetSize(editor_camera->size - (wheel_speed * App->GetDT()));
-				}
-				else if (App->input->GetMouseWheel() == -1)
-				{
-					editor_camera->SetSize(editor_camera->size + (wheel_speed * App->GetDT()));
-				}
-			}
-
-			//if (App->input->GetKeyRepeat(SDL_SCANCODE_W))
-			//	editor_camera->MoveUp(cam_speed);
-
-			//if (App->input->GetKeyRepeat(SDL_SCANCODE_S))
-			//	editor_camera->MoveDown(cam_speed);
-
-			//if (App->input->GetKeyRepeat(SDL_SCANCODE_A))
-			//	editor_camera->MoveLeft(cam_speed);
-
-			//if (App->input->GetKeyRepeat(SDL_SCANCODE_D))
-			//	editor_camera->MoveRight(cam_speed);
-
+				dragging = true;
 		}
+
+		if (dragging && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KEY_DOWN)
+			dragging = false;
+
+		if (dragging)
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
+			float2 mouse_pos = App->input->GetMouse();
+
+			float2 motion = float2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+
+			motion.x *= editor_camera->GetViewScale();
+
+			if (motion.x > 0)
+				editor_camera->MoveLeft(motion.x);
+			if (motion.x < 0)
+				editor_camera->MoveRight(-motion.x);
+
+			motion.y *= editor_camera->size;
+
+			if (motion.y > 0)
+				editor_camera->MoveUp(motion.y);
+			if (motion.y < 0)
+				editor_camera->MoveDown(-motion.y);
+		}
+
+		if (App->editor->scene_window->GetMouseInsideWindow())
+		{
+			float speed = wheel_speed * editor_camera->size;
+
+			if (App->input->GetMouseWheel() == 1)
+			{
+				editor_camera->SetSize(editor_camera->size - (speed));
+			}
+			else if (App->input->GetMouseWheel() == -1)
+			{
+				editor_camera->SetSize(editor_camera->size + (speed));
+			}
+		}
+		
 	}
 }
 
@@ -338,7 +319,12 @@ void Camera2D::SetViewportSize(float width, float height)
 {
 	if (width > 0 && height > 0 && size > 0)
 	{
-		frustum.SetOrthographic(width * size, height * size);
+		float ratio = 1;
+		
+		if(height > 0)
+			ratio = height / width;
+
+		frustum.SetOrthographic(1280 * size, 1280 * size * ratio);
 
 		viewport_size = float2(width, height);
 	}
@@ -372,6 +358,11 @@ const float Camera2D::GetNearPlaneDistance() const
 const float Camera2D::GetFarPlaneDistance() const
 {
 	return frustum.FarPlaneDistance();
+}
+
+const float Camera2D::GetViewScale() const
+{
+	return size * (1280.0f / viewport_size.x);
 }
 
 const float4x4 Camera2D::GetViewMatrix() const
