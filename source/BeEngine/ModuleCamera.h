@@ -167,7 +167,6 @@ private:
 
 	// Camera Movement
 	bool  mouse_movement = false;
-	float camera_speed = 0.0f;
 	float wheel_speed = 0.0f;
 
 	bool dragging = false;

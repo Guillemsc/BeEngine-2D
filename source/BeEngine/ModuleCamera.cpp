@@ -62,7 +62,6 @@ void ModuleCamera::OnLoadConfig(JSON_Doc * config)
 void ModuleCamera::OnSaveConfig(JSON_Doc * config)
 {
 	config->SetNumber("camera.wheel_speed", wheel_speed);
-	config->SetNumber("camera.camera_speed", camera_speed);
 	config->SetNumber2("camera.position", editor_camera->GetPosition());
 	config->SetNumber("camera.size", editor_camera->GetSize());
 }
@@ -118,7 +117,6 @@ void ModuleCamera::UpdateEditorCameraInput()
 				editor_camera->SetSize(editor_camera->size + (speed));
 			}
 		}
-		
 	}
 }
 
