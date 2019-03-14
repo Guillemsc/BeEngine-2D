@@ -45,6 +45,9 @@ public:
 	Rect GetWindowRect();
 	bool GetMouseInsideWindow() const;
 
+protected:
+	bool	    maximized = false;
+
 private:
 	std::string name;
 	bool		opened = true;

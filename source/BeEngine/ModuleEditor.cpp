@@ -248,24 +248,52 @@ void ModuleEditor::DrawEditorWindows()
 	
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 	{
-		(*it)->prof_draw->Start();
+		EditorWindow* curr_window = (*it);
+
+		curr_window->prof_draw->Start();
 
 		ImGuiWindowFlags flags = 0;
-		flags |= (*it)->GetWindowFlags();
+		flags |= curr_window->GetWindowFlags();
 
-		if (ImGui::BeginDock((*it)->name.c_str(), &(*it)->opened, flags))
+		if (!curr_window->maximized)
 		{
-			ImVec2 win_pos = ImGui::GetWindowPos();
-			ImVec2 win_size = ImGui::GetWindowSize();
+			if (ImGui::BeginDock(curr_window->name.c_str(), &curr_window->opened, flags))
+			{
+				ImVec2 win_pos = ImGui::GetWindowPos();
+				ImVec2 win_size = ImGui::GetWindowSize();
 
-			(*it)->window_pos = float2(win_pos.x, win_pos.y);
-			(*it)->window_size = float2(win_size.x, win_size.y);
+				curr_window->window_pos = float2(win_pos.x, win_pos.y);
+				curr_window->window_size = float2(win_size.x, win_size.y);
 
-			if(draw_editor)
-				(*it)->DrawEditor();
+				if (draw_editor)
+					curr_window->DrawEditor();
+			}
+
+			ImGui::EndDock();
 		}
+		else
+		{
+			flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings
+				| ImGuiWindowFlags_NoTitleBar;
 
-		ImGui::EndDock();
+			float2 screen_size = App->window->GetWindowSize();
+			ImGui::SetNextWindowPos(ImVec2(-10, -25));
+			ImGui::SetNextWindowSize(ImVec2(screen_size.x + 20, screen_size.y + 50));
+			if (ImGui::Begin(curr_window->name.c_str(), &curr_window->opened, flags))
+			{
+				ImVec2 win_pos = ImGui::GetWindowPos();
+				ImVec2 win_size = ImGui::GetWindowSize();
+
+				curr_window->window_pos = float2(win_pos.x, win_pos.y);
+				curr_window->window_size = float2(win_size.x, win_size.y);
+
+				if (draw_editor)
+					curr_window->DrawEditor();
+
+				ImGui::End();
+			}
+		}
 
 		(*it)->prof_draw->Finish();
 	}

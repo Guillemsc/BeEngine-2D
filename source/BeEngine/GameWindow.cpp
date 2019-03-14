@@ -82,6 +82,11 @@ void GameWindow::DrawEditor()
 
 	if (ImGui::BeginMenuBar())
 	{
+		if(ImGui::Button("Maximize"))
+		{
+			maximized = true;
+		}
+
 		ImGui::Checkbox("Use reference size", &use_reference_size);
 
 		if (use_reference_size)
@@ -98,6 +103,7 @@ void GameWindow::DrawEditor()
 			if (reference_size.y < 1)
 				reference_size.y = 1;
 		}
+
 		ImGui::EndMenuBar();
 	}
 }
