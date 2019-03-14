@@ -151,10 +151,7 @@ public:
 	Camera2D* GetGameCamera() const;
 
 	void SetWheelSpeed(const float& set);
-	void SetCameraSpeed(const float& set);
-
 	const float GetWheelSpeed() const;
-	const float GetCameraSpeed() const;
 
 private:
 	void DestroyAllCameras();

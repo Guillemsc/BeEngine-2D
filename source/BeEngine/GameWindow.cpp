@@ -35,16 +35,19 @@ void GameWindow::DrawEditor()
 
 	if (use_reference_size)
 	{
-		float wanted_ratio = reference_size.y / reference_size.x;
-		float curr_ratio = image_size.y / image_size.x;
+		if (reference_size.x > 0 && reference_size.y > 0)
+		{
+			float wanted_ratio = reference_size.y / reference_size.x;
+			float curr_ratio = image_size.y / image_size.x;
 
-		if (curr_ratio > wanted_ratio)
-		{
-			image_size.y = image_size.x * wanted_ratio;
-		}
-		else if (curr_ratio < wanted_ratio)
-		{
-			image_size.x = image_size.y / wanted_ratio;
+			if (curr_ratio > wanted_ratio)
+			{
+				image_size.y = image_size.x * wanted_ratio;
+			}
+			else if (curr_ratio < wanted_ratio)
+			{
+				image_size.x = image_size.y / wanted_ratio;
+			}
 		}
 	}
 
@@ -84,10 +87,16 @@ void GameWindow::DrawEditor()
 		if (use_reference_size)
 		{
 			int values[2] { reference_size.x, reference_size.y };
-			ImGui::DragInt2("", values, 1, 0, 9999999);
+			ImGui::DragInt2("", values, 1, 1, 9999999);
 
 			reference_size.x = values[0];
 			reference_size.y = values[1];
+
+			if (reference_size.x < 1)
+				reference_size.x = 1;
+
+			if (reference_size.y < 1)
+				reference_size.y = 1;
 		}
 		ImGui::EndMenuBar();
 	}

@@ -186,22 +186,11 @@ void ModuleCamera::SetWheelSpeed(const float& set)
 	wheel_speed = set;
 }
 
-void ModuleCamera::SetCameraSpeed(const float& set)
-{
-	camera_speed = set;
-}
-
 const float ModuleCamera::GetWheelSpeed() const
 {
 	return wheel_speed;
 }
 
-const float ModuleCamera::GetCameraSpeed() const
-{
-	return camera_speed;
-}
-
-// -----------------------------------------------------------------
 bool ModuleCamera::Update()
 {
 	bool ret = true;
@@ -222,7 +211,7 @@ Camera2D::Camera2D()
 	SetZDir(float3(0, 0, 1));
 	SetYDir(float3(0, 1, 0));
 
-	SetNearPlaneDistance(1.0f);
+	SetNearPlaneDistance(0.1f);
 	SetFarPlaneDistance(9999999);
 
 	render_tex = new RenderTexture();
@@ -315,8 +304,14 @@ void Camera2D::SetFarPlaneDistance(const float & set)
 
 void Camera2D::SetViewportSize(float width, float height)
 {
-	if (width > 0 && height > 0 && size > 0)
+	if (size > 0)
 	{
+		if (width < 1)
+			width = 1;
+
+		if (height < 1)
+			height = 1;
+
 		float ratio = 1;
 		
 		if(height > 0)
@@ -540,14 +535,14 @@ bool RenderTexture::Create(uint _width, uint _height)
 {
 	bool ret = true;
 
-	width = _width;
-	height = _height;
-
 	if (width < 1)
 		width = 1;
 
 	if (height < 1)
 		height = 1;
+
+	width = _width;
+	height = _height;
 
 	// Create MSAA framebufer
 	fbo_msaa_id = App->renderer->GenFrameBuffer();
@@ -601,6 +596,12 @@ void RenderTexture::Resize(uint width, uint height)
 
 void RenderTexture::Bind(uint _width, uint _height)
 {
+	if (_width < 1)
+		_width = 1;
+
+	if (_height < 1)
+		_height = 1;
+
 	if (!created)
 		Create(_width, _height);
 
