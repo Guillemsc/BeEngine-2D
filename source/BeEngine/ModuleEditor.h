@@ -46,7 +46,7 @@ public:
 	bool GetMouseInsideWindow() const;
 
 protected:
-	bool	    maximized = false;
+	bool	    full_screen = false;
 
 private:
 	std::string name;
@@ -124,7 +124,7 @@ private:
 	void DestroyAllEditorElements();
 	void DrawEditorElements();
 
-	EditorWindow* AddEditorWindow(const char* name, EditorWindow* window);
+	EditorWindow* AddEditorWindow(const char* name, EditorWindow* window, bool full_screen = false);
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
 

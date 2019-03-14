@@ -33,7 +33,7 @@ void GameWindow::DrawEditor()
 	float2 image_pos = float2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y);
 	float2 image_size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 
-	if (use_reference_size)
+	if (use_reference_size && !full_screen)
 	{
 		if (reference_size.x > 0 && reference_size.y > 0)
 		{
@@ -82,9 +82,9 @@ void GameWindow::DrawEditor()
 
 	if (ImGui::BeginMenuBar())
 	{
-		if(ImGui::Button("Maximize"))
+		if(ImGui::Button("Full Screen Debug"))
 		{
-			maximized = true;
+			full_screen = true;
 		}
 
 		ImGui::Checkbox("Use reference size", &use_reference_size);

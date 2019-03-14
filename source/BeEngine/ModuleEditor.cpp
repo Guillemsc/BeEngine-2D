@@ -199,7 +199,7 @@ void ModuleEditor::DrawEditorElements()
 	prof_editor_elements_draw->Finish();
 }
 
-EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window)
+EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window, bool full_screen)
 {
 	EditorWindow* ret = nullptr;;
 
@@ -219,6 +219,7 @@ EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * wi
 		if (!exists)
 		{
 			window->name = name;
+			window->full_screen = full_screen;
 			window->prof_draw = prof_editor_windows_draw->AddProfileChild(window->name.c_str());
 			editor_windows.push_back(window);
 
@@ -255,7 +256,7 @@ void ModuleEditor::DrawEditorWindows()
 		ImGuiWindowFlags flags = 0;
 		flags |= curr_window->GetWindowFlags();
 
-		if (!curr_window->maximized)
+		if (!curr_window->full_screen)
 		{
 			if (ImGui::BeginDock(curr_window->name.c_str(), &curr_window->opened, flags))
 			{

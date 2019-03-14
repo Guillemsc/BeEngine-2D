@@ -200,7 +200,7 @@
     },
     "curr_layout": "Test1",
     "Test1": {
-        "Docks_Size": 12,
+        "Docks_Size": 14,
         "Dock0": {
             "Label": "Scene",
             "pos_X": 380,
@@ -318,16 +318,16 @@
             "pos_X": 1259,
             "pos_Y": 53,
             "size_X": 662,
-            "size_Y": 931,
+            "size_Y": 465,
             "status": 0,
             "active": true,
             "opened": true,
-            "location": "0",
+            "location": "20",
             "child0": -1,
             "child1": -1,
             "prev_tab": -1,
             "next_tab": -1,
-            "parent": 10
+            "parent": 13
         },
         "Dock8": {
             "Label": "Explorer",
@@ -372,7 +372,7 @@
             "opened": false,
             "location": "",
             "child0": 3,
-            "child1": 7,
+            "child1": 13,
             "prev_tab": -1,
             "next_tab": -1,
             "parent": -1
@@ -392,6 +392,38 @@
             "prev_tab": 2,
             "next_tab": -1,
             "parent": 6
+        },
+        "Dock12": {
+            "Label": "Game",
+            "pos_X": 1259,
+            "pos_Y": 518,
+            "size_X": 662,
+            "size_Y": 466,
+            "status": 0,
+            "active": true,
+            "opened": true,
+            "location": "30",
+            "child0": -1,
+            "child1": -1,
+            "prev_tab": -1,
+            "next_tab": -1,
+            "parent": 13
+        },
+        "Dock13": {
+            "Label": "",
+            "pos_X": 1259,
+            "pos_Y": 53,
+            "size_X": 662,
+            "size_Y": 931,
+            "status": 0,
+            "active": true,
+            "opened": false,
+            "location": "0",
+            "child0": 7,
+            "child1": 12,
+            "prev_tab": -1,
+            "next_tab": -1,
+            "parent": 10
         }
     }
 }
