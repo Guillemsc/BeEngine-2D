@@ -209,7 +209,12 @@ PhysicsShape * ModulePhysics::CreatePhysicsShape(PhysicsShapeType type)
 	}
 
 	if (ret != nullptr)
+	{
+		ret->SetFriction(0.3f);
+		ret->SetDensity(1.0f);
+
 		shapes.push_back(ret);
+	}
 
 	return ret;
 }

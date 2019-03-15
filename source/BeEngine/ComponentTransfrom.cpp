@@ -407,14 +407,14 @@ void ComponentTransform::UpdatePhysicsMovement()
 
 		if (last_pos.x != curr_pos.x || last_pos.y != curr_pos.y)
 		{
-			SetPosition(base_physics_body->GetPosition());
+			SetPosition(curr_pos);
 		}
 
 		float curr_rotation = base_physics_body->GetRotationDegrees();
 
 		if (last_rotation != curr_rotation)
 		{
-			base_physics_body->SetRotationDegrees(curr_rotation);
+			SetRotationDegrees(curr_rotation);
 		}
 	}
 }
