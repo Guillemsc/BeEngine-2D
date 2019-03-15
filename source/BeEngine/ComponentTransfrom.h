@@ -64,14 +64,17 @@ public:
 	ScriptingBridgeComponentTransform* GetScriptingBridge() const;
 
 private:
-	void UpdateLocalFromWorldTransform();
-	void UpdateWorldFromLocalTransform();
 	void UpdateWorldAndLocalValues();
 
 	void UpdateLocalTransformFromValues();
 	void UpdateWorldTransformFromValues();
 
 	void UpdatePhysicsMovement();
+
+	void RecalculateWorldTransform();
+	void RecalculateLocalTransform();
+
+	void UpdateLastValues();
 
 private:
 	float4x4 local_transform;

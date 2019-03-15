@@ -120,8 +120,6 @@ void ComponentPolygonCollider::Update()
 
 void ComponentPolygonCollider::CleanUp()
 {
-	App->guizmo->physics_polygon_guizmo->StopEditing(this);
-
 	GetOwner()->transform->base_physics_body->RemoveShape(physics_shape);
 	App->physics->DestroyPhysicsShape(physics_shape);
 }
@@ -144,6 +142,11 @@ void ComponentPolygonCollider::OnLoadAbstraction(DataAbstraction & abs)
 
 void ComponentPolygonCollider::OnEvent(Event * ev)
 {
+}
+
+void ComponentPolygonCollider::OnDestroy()
+{
+	App->guizmo->physics_polygon_guizmo->StopEditing(this);
 }
 
 void ComponentPolygonCollider::OnChildAdded(GameObject * child)

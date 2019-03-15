@@ -68,7 +68,7 @@ public:
 	ScriptingBridgeGameObject* GetScriptingBridge() const;
 
 private:
-	void DestroyAllComponentsNow();
+	void DestroyAllComponents();
 	void ActuallyDestroyComponents();
 
 private:

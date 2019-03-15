@@ -65,9 +65,6 @@ void ComponentCamera::Update()
 
 void ComponentCamera::CleanUp()
 {
-	if (App->camera->GetGameCamera() == camera)
-		App->camera->SetGameCamera(nullptr);
-
 	App->camera->DestroyCamera(camera);
 }
 
@@ -83,6 +80,12 @@ void ComponentCamera::OnLoadAbstraction(DataAbstraction & abs)
 
 void ComponentCamera::OnEvent(Event * ev)
 {
+}
+
+void ComponentCamera::OnDestroy()
+{
+	if (App->camera->GetGameCamera() == camera)
+		App->camera->SetGameCamera(nullptr);
 }
 
 void ComponentCamera::OnChildAdded(GameObject * child)

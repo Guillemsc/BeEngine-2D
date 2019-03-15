@@ -31,6 +31,7 @@ public:
 
 	void OnEvent(Event* ev);
 
+	void OnDestroy();
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
