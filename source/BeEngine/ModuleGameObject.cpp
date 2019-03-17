@@ -180,6 +180,8 @@ void ModuleGameObject::DestroyGameObject(GameObject * go)
 
 			if (!found)
 			{
+				curr->DestroyAllComponents();
+
 				game_objects_to_destroy.push_back(curr);
 			}
 

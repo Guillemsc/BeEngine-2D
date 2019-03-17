@@ -78,8 +78,6 @@ public:
 	ScriptingBridgeComponentTransform* GetScriptingBridge() const;
 
 private:
-	void UpdateLocalFromWorldTransform();
-	void UpdateWorldFromLocalTransform();
 	void UpdateWorldAndLocalValues();
 
 	void UpdateLocalTransformFromValues();
@@ -87,6 +85,11 @@ private:
 
 	void UpdatePhysicsMovement();
 
+	void RecalculateWorldTransform();
+	void RecalculateLocalTransform();
+
+	void UpdateLastValues();
+	
 	void FindParentUsedCanvas();
 	void RecalculateCanvasLayout();
 

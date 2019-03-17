@@ -19,6 +19,7 @@
 ComponentTransform::ComponentTransform() 
 	: GameObjectComponent("Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
 {
+
 }
 
 ComponentTransform::~ComponentTransform()
@@ -75,15 +76,22 @@ void ComponentTransform::EditorDraw()
 
 void ComponentTransform::Start()
 {
+	local_transform = float4x4::identity;
+	local_transform[0][3] = 1;
+	local_transform[1][3] = 1;
+	local_transform[2][3] = 1;
+
+	world_transform = float4x4::identity;
+	world_transform[0][3] = 1;
+	world_transform[1][3] = 1;
+	world_transform[2][3] = 1;
+
 	scripting_bridge = new ScriptingBridgeComponentTransform(this);
 	App->scripting->AddScriptingBridgeObject(scripting_bridge);
 
 	base_physics_body = App->physics->CreatePhysicsBody();
 	base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_KINEMATIC);
 	base_physics_body->SetComponentTransform(this);
-
-	local_transform = float4x4::identity;
-	world_transform = float4x4::identity;
 
 	UpdateLocalTransformFromValues();
 }
@@ -200,14 +208,14 @@ void ComponentTransform::SetLocalTransform(const float4x4 & local)
 {
 	local_transform = local;
 
-	UpdateWorldFromLocalTransform();
+	RecalculateWorldTransform();
 }
 
 void ComponentTransform::SetWorldTransform(const float4x4 & world)
 {
 	world_transform = world;
 
-	UpdateLocalFromWorldTransform();
+	RecalculateLocalTransform();
 }
 
 void ComponentTransform::SetLocalPosition(const float2 & pos)
@@ -325,54 +333,62 @@ void ComponentTransform::SetScale(const float2 & scale)
 
 float2 ComponentTransform::GetLocalPosition() const
 {
+	RecalculateLocalTransform();
+
 	return local_pos;
 }
 
 float ComponentTransform::GetLocalRotationDegrees() const
 {
+	RecalculateLocalTransform();
+
 	return local_rotation * RADTODEG;
 }
 
 float2 ComponentTransform::GetLocalScale() const
 {
+	RecalculateLocalTransform();
+
 	return local_scale;
 }
 
 float2 ComponentTransform::GetPosition() const
 {
-	return base_physics_body->GetPosition();
+	float2 ret = base_physics_body->GetPosition();
+
+	RecalculateWorldTransform();
+
+	return ret;
 }
 
 float ComponentTransform::GetRotationDegrees() const
 {
-	return base_physics_body->GetRotationDegrees();
+	float ret = base_physics_body->GetRotationDegrees();
+
+	RecalculateWorldTransform();
+
+	return ret;
 }
 
 float2 ComponentTransform::GetScale() const
 {
-	return world_scale;
+	float2 ret = world_scale;
+
+	RecalculateWorldTransform();
+
+	return ret;
 }
 
 float4x4 ComponentTransform::GetLocalTransform() const
 {
+	RecalculateLocalTransform();
+
 	return local_transform;
 }
 
 float4x4 ComponentTransform::GetWorldTransform()
 {
-	float4x4 parent_world_transform = float4x4::identity;
-
-	if (owner->GetParent() != nullptr)
-	{
-		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
-	}
-
-	float4x4 test_trans = parent_world_transform * local_transform;
-
-	if (!world_transform.Equals(test_trans))
-	{
-		UpdateWorldFromLocalTransform();
-	}
+	RecalculateWorldTransform();
 
 	return world_transform;
 }
@@ -428,50 +444,6 @@ ScriptingBridgeComponentTransform * ComponentTransform::GetScriptingBridge() con
 	return scripting_bridge;
 }
 
-void ComponentTransform::UpdateLocalFromWorldTransform()
-{
-	float4x4 parent_world_transform = float4x4::identity;
-
-	if (owner->GetParent() != nullptr)
-	{
-		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
-	}
-
-	local_transform = parent_world_transform.Inverted() * world_transform;
-
-	if (keep_scale_ratio)
-	{
-		if (local_transform[0][0] != local_transform[1][1])
-		{
-			local_transform[1][1] = local_transform[0][0];
-		}
-	}
-
-	UpdateWorldAndLocalValues();
-}
-
-void ComponentTransform::UpdateWorldFromLocalTransform()
-{
-	float4x4 parent_world_transform = float4x4::identity;
-
-	if(owner->GetParent() != nullptr)
-	{
-		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
-	}
-
-	world_transform = parent_world_transform * local_transform;
-
-	if (keep_scale_ratio)
-	{
-		if (world_transform[0][0] != world_transform[1][1])
-		{
-			world_transform[1][1] = world_transform[0][0];
-		}
-	}
-
-	UpdateWorldAndLocalValues();
-}
-
 void ComponentTransform::UpdateWorldAndLocalValues()
 {
 	float3 pos = float3::zero;
@@ -501,7 +473,7 @@ void ComponentTransform::UpdateLocalTransformFromValues()
 		Quat::FromEulerXYZ(0, 0, local_rotation),
 		float3(local_scale.x, local_scale.y, 1));
 
-	UpdateWorldFromLocalTransform();
+	RecalculateWorldTransform();
 }
 
 void ComponentTransform::UpdateWorldTransformFromValues()
@@ -513,10 +485,7 @@ void ComponentTransform::UpdateWorldTransformFromValues()
 		Quat::FromEulerXYZ(0, 0, world_rotation * DEGTORAD),
 		float3(world_scale.x, world_scale.y, 1));
 
-	last_pos = world_pos;
-	last_rotation = world_rotation;
-
-	UpdateLocalFromWorldTransform();
+	RecalculateLocalTransform();
 }
 
 void ComponentTransform::UpdatePhysicsMovement()
@@ -527,14 +496,14 @@ void ComponentTransform::UpdatePhysicsMovement()
 
 		if (last_pos.x != curr_pos.x || last_pos.y != curr_pos.y)
 		{
-			SetPosition(base_physics_body->GetPosition());
+			SetPosition(curr_pos);
 		}
 
 		float curr_rotation = base_physics_body->GetRotationDegrees();
 
 		if (last_rotation != curr_rotation)
 		{
-			base_physics_body->SetRotationDegrees(curr_rotation);
+			SetRotationDegrees(curr_rotation);
 		}
 	}
 }
@@ -560,5 +529,59 @@ void ComponentTransform::FindParentUsedCanvas()
 void ComponentTransform::RecalculateCanvasLayout()
 {
 	SetAnchorPos(anchor_pos);
+}
+
+void ComponentTransform::RecalculateWorldTransform()
+{
+	float4x4 parent_world_transform = float4x4::identity;
+
+	if (owner->GetParent() != nullptr)
+	{
+		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
+	}
+
+	float4x4 check_world_trans = parent_world_transform * local_transform;
+
+	if (!world_transform.Equals(check_world_trans))
+	{
+		world_transform = check_world_trans;
+
+		UpdateLastValues();
+
+		UpdateWorldAndLocalValues();
+	}
+}
+
+void ComponentTransform::RecalculateLocalTransform()
+{
+	float4x4 parent_world_transform = float4x4::identity;
+
+	if (owner->GetParent() != nullptr)
+	{
+		parent_world_transform = owner->GetParent()->transform->GetWorldTransform();
+	}
+
+	float4x4 check_local_trans = parent_world_transform.Inverted() * world_transform;
+
+	if (!local_transform.Equals(check_local_trans))
+	{
+		local_transform = check_local_trans;
+
+		UpdateLastValues();
+
+		UpdateWorldAndLocalValues();
+	}
+}
+
+void ComponentTransform::UpdateLastValues()
+{
+	float3 pos = float3::zero; 
+	Quat rot = Quat::identity; 
+	float3 scal = float3::zero;
+
+	world_transform.Decompose(pos, rot, scal);
+
+	last_pos = float2(pos.x, pos.y);
+	last_rotation = rot.ToEulerXYZ().z * RADTODEG;
 }
 

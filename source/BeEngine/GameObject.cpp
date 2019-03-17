@@ -61,7 +61,7 @@ void GameObject::Update()
 
 void GameObject::CleanUp()
 {
-	DestroyAllComponentsNow();
+	ActuallyDestroyComponents();
 
 	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
 }
@@ -330,6 +330,8 @@ void GameObject::DestroyComponent(GameObjectComponent * component, bool check_ca
 
 			if (!exists)
 			{
+				component->OnDestroy();
+
 				CallOnRemoveComponent(component);
 
 				components_to_destroy.push_back(component);
@@ -395,7 +397,7 @@ ScriptingBridgeGameObject * GameObject::GetScriptingBridge() const
 	return scripting_bridge;
 }
 
-void GameObject::DestroyAllComponentsNow()
+void GameObject::DestroyAllComponents()
 {
 	std::vector<GameObjectComponent*> all_components = components;
 
@@ -404,7 +406,6 @@ void GameObject::DestroyAllComponentsNow()
 		DestroyComponent(*it, false);
 	}
 
-	ActuallyDestroyComponents();
 }
 
 void GameObject::ActuallyDestroyComponents()

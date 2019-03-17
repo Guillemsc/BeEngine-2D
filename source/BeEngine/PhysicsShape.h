@@ -27,6 +27,12 @@ public:
 	void SetIsSensor(bool set);
 	bool GetIsSensor() const;
 
+	void SetDensity(float set);
+	float GetDensity() const;
+
+	void SetFriction(float set);
+	float GetFriction() const;
+
 	PhysicsBody* GetAttachedBody() const;
 
 	std::vector<std::vector<float2>> GetTriangles() const;
@@ -39,6 +45,8 @@ protected:
 	std::vector<std::vector<float2>> triangles;
 
 	bool is_sensor = false;
+	float density = 0.0f;
+	float friction = 0.0f;
 
 	PhysicsBody* attached_body = nullptr;
 };

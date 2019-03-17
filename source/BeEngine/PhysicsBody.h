@@ -88,6 +88,7 @@ public:
 	void SetCanSleep(bool set);
 
 	float2 LocalPointToWorldPoint(const float2& local_point) const;
+	float2 WorldPointToLocalPoint(const float2& world_point) const;
 
 	void SetComponentTransform(ComponentTransform* set);
 	ComponentTransform* GetComponentTransform() const;

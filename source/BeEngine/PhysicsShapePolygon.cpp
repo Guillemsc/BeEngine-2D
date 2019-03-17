@@ -18,7 +18,8 @@ void PhysicsShapePolygon::CreateFixture()
 	if (attached_body != nullptr)
 	{
 		b2FixtureDef b2fixture;
-		b2fixture.density = 0;
+		b2fixture.density = density;
+		b2fixture.friction = friction;
 		b2fixture.isSensor = is_sensor;
 
 		for (std::vector<b2PolygonShape>::iterator it = b2polygon_shapes.begin(); it != b2polygon_shapes.end(); ++it)

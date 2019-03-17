@@ -29,10 +29,22 @@ ComponentPolygonCollider::~ComponentPolygonCollider()
 void ComponentPolygonCollider::EditorDraw()
 {
 	bool is_sensor = physics_shape->GetIsSensor();
+	float density = physics_shape->GetDensity();
+	float friction = physics_shape->GetFriction();
+
+	if (ImGui::DragFloat("Density", &density, 0.1f, 0))
+	{
+		physics_shape->SetDensity(density);
+	}
+
+	if (ImGui::DragFloat("Friction", &friction, 0.1f, 0))
+	{
+		physics_shape->SetFriction(friction);
+	}
 
 	if (App->guizmo->physics_polygon_guizmo->GetEditingComponent() != this)
 	{
-		if (ImGui::Button("Edit"))
+		if (ImGui::Button("Edit Shape"))
 		{
 			App->gameobject->AddGameObjectAsOnlySelected(GetOwner());
 			App->guizmo->physics_polygon_guizmo->StartEditing(this);
@@ -108,26 +120,33 @@ void ComponentPolygonCollider::Update()
 
 void ComponentPolygonCollider::CleanUp()
 {
-	App->guizmo->physics_polygon_guizmo->StopEditing(this);
-
 	GetOwner()->transform->base_physics_body->RemoveShape(physics_shape);
 	App->physics->DestroyPhysicsShape(physics_shape);
 }
 
 void ComponentPolygonCollider::OnSaveAbstraction(DataAbstraction & abs)
 {
+	abs.AddFloat("density", physics_shape->GetDensity());
+	abs.AddFloat("friction", physics_shape->GetFriction());
 	abs.AddBool("is_sensor", physics_shape->GetIsSensor());
 	abs.AddFloat2Vector("vertices", physics_shape->GetVertices());
 }
 
 void ComponentPolygonCollider::OnLoadAbstraction(DataAbstraction & abs)
 {
+	physics_shape->SetDensity(abs.GetFloat("density"));
+	physics_shape->SetFriction(abs.GetFloat("friction"));
 	physics_shape->SetIsSensor(abs.GetBool("is_sensor"));
 	physics_shape->SetVertices(abs.GetFloat2Vector("vertices"));
 }
 
 void ComponentPolygonCollider::OnEvent(Event * ev)
 {
+}
+
+void ComponentPolygonCollider::OnDestroy()
+{
+	App->guizmo->physics_polygon_guizmo->StopEditing(this);
 }
 
 void ComponentPolygonCollider::OnChildAdded(GameObject * child)

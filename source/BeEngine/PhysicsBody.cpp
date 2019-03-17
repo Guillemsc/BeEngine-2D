@@ -306,6 +306,13 @@ float2 PhysicsBody::LocalPointToWorldPoint(const float2& local_point) const
 	return float2(METERS_TO_PIXELS(world_point.x), METERS_TO_PIXELS(world_point.y));
 }
 
+float2 PhysicsBody::WorldPointToLocalPoint(const float2 & world_point) const
+{
+	b2Vec2 local_point = b2body->GetLocalPoint(b2Vec2(PIXELS_TO_METERS(world_point.x), PIXELS_TO_METERS(world_point.y)));
+
+	return float2(METERS_TO_PIXELS(local_point.x), METERS_TO_PIXELS(local_point.y));
+}
+
 void PhysicsBody::SetComponentTransform(ComponentTransform * set)
 {
 	component_transform = set;
