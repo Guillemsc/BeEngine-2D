@@ -111,20 +111,12 @@ void ComponentTransform::CleanUp()
 
 void ComponentTransform::RenderGuizmos(float relative_size)
 {
-	if (parent_used_canvas != nullptr)
-	{
-		float2 size = float2(20.5f * relative_size, 20.5f * relative_size);
 
-		App->scene_renderer->quad_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(99));
-
-		float2 anchor_world_pos = parent_used_canvas->GetPositionFromAnchorPoint(anchor_pos);
-
-		App->scene_renderer->quad_renderer->DrawQuad(anchor_world_pos, size, float3(1, 0, 0));
-	}
 }
 
 void ComponentTransform::OnSaveAbstraction(DataAbstraction & abs)
 {
+	abs.AddFloat2("anchor_pos", GetAnchorPos());
 	abs.AddFloat2("position", GetPosition());
 	abs.AddFloat2("scale", GetScale());
 	abs.AddFloat("rotation", GetRotationDegrees());
@@ -134,9 +126,15 @@ void ComponentTransform::OnSaveAbstraction(DataAbstraction & abs)
 void ComponentTransform::OnLoadAbstraction(DataAbstraction & abs)
 {
 	keep_scale_ratio = abs.GetBool("keep_ratio");
+	SetAnchorPos(abs.GetFloat2("anchor_pos"));
 	SetPosition(abs.GetFloat2("position"));
 	SetScale(abs.GetFloat2("scale"));
 	SetRotationDegrees(abs.GetFloat("rotation"));
+}
+
+void ComponentTransform::OnDestroy()
+{
+	App->guizmo->canvas_item_guizmo->StopEditing(this);
 }
 
 void ComponentTransform::OnOwnerSelected()
@@ -331,28 +329,28 @@ void ComponentTransform::SetScale(const float2 & scale)
 	}
 }
 
-float2 ComponentTransform::GetLocalPosition() const
+float2 ComponentTransform::GetLocalPosition()
 {
 	RecalculateLocalTransform();
 
 	return local_pos;
 }
 
-float ComponentTransform::GetLocalRotationDegrees() const
+float ComponentTransform::GetLocalRotationDegrees()
 {
 	RecalculateLocalTransform();
 
 	return local_rotation * RADTODEG;
 }
 
-float2 ComponentTransform::GetLocalScale() const
+float2 ComponentTransform::GetLocalScale()
 {
 	RecalculateLocalTransform();
 
 	return local_scale;
 }
 
-float2 ComponentTransform::GetPosition() const
+float2 ComponentTransform::GetPosition()
 {
 	float2 ret = base_physics_body->GetPosition();
 
@@ -361,7 +359,7 @@ float2 ComponentTransform::GetPosition() const
 	return ret;
 }
 
-float ComponentTransform::GetRotationDegrees() const
+float ComponentTransform::GetRotationDegrees()
 {
 	float ret = base_physics_body->GetRotationDegrees();
 
@@ -370,7 +368,7 @@ float ComponentTransform::GetRotationDegrees() const
 	return ret;
 }
 
-float2 ComponentTransform::GetScale() const
+float2 ComponentTransform::GetScale()
 {
 	float2 ret = world_scale;
 
@@ -379,7 +377,7 @@ float2 ComponentTransform::GetScale() const
 	return ret;
 }
 
-float4x4 ComponentTransform::GetLocalTransform() const
+float4x4 ComponentTransform::GetLocalTransform()
 {
 	RecalculateLocalTransform();
 
@@ -437,6 +435,11 @@ float2 ComponentTransform::GetAnchorPos() const
 ComponentCanvas * ComponentTransform::GetUsedCanvas() const
 {
 	return used_canvas_comp;
+}
+
+ComponentCanvas * ComponentTransform::GetParentUsedCanvas() const
+{
+	return parent_used_canvas;
 }
 
 ScriptingBridgeComponentTransform * ComponentTransform::GetScriptingBridge() const
@@ -524,6 +527,9 @@ void ComponentTransform::FindParentUsedCanvas()
 
 	if(had_parent_canvas && parent_used_canvas == nullptr)
 		App->guizmo->canvas_item_guizmo->StopEditing(this);
+
+	if(!had_parent_canvas && parent_used_canvas != nullptr)
+		App->guizmo->canvas_item_guizmo->StartEditing(this);
 }
 
 void ComponentTransform::RecalculateCanvasLayout()

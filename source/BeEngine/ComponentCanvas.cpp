@@ -77,7 +77,7 @@ float2 ComponentCanvas::GetCanvasCenter() const
 
 	ret = GetOwner()->transform->GetPosition();
 
-	return float2();
+	return ret;
 }
 
 float2 ComponentCanvas::GetPositionFromAnchorPoint(const float2& anchor_point)
@@ -126,6 +126,43 @@ float2 ComponentCanvas::GetPositionFromAnchorPoint(const float2& anchor_point)
 		}
 
 		ret += center;
+	}
+
+	return ret;
+}
+
+float2 ComponentCanvas::GetAnchorPointFromPosition(const float2 & position)
+{
+	float2 ret = float2::zero;
+
+	Camera2D* game_cam = App->camera->GetGameCamera();
+
+	if (game_cam != nullptr)
+	{
+		float2 win_size = game_cam->GetViewportSize();
+		float2 half_win_size = win_size * 0.5f;
+
+		float2 center = GetCanvasCenter();
+
+		float2 center_offset = center - position;
+
+		if (center_offset.x > 0 && half_win_size.x > 0)
+		{
+			ret.x = -((1 * std::abs(center_offset.x)) / half_win_size.x);
+		}
+		else if (center_offset.x < 0 && half_win_size.x > 0)
+		{
+			ret.x = (1 * std::abs(center_offset.x)) / half_win_size.x;
+		}
+
+		if (center_offset.y > 0 && half_win_size.y > 0)
+		{
+			ret.y = -((1 * std::abs(center_offset.y)) / half_win_size.y);
+		}
+		else if (center_offset.y < 0 && half_win_size.y > 0)
+		{
+			ret.y = (1 * std::abs(center_offset.y)) / half_win_size.y;
+		}
 	}
 
 	return ret;

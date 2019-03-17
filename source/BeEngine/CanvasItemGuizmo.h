@@ -7,6 +7,11 @@
 class ComponentTransform;
 class GameObject;
 
+enum CanvasItemGuizmoHandlers
+{
+	ANCHOR,
+};
+
 class CanvasItemGuizmo : public Guizmo
 {
 public:

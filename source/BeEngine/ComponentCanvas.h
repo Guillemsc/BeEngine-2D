@@ -38,6 +38,7 @@ public:
 
 	float2 GetCanvasCenter() const;
 	float2 GetPositionFromAnchorPoint(const float2& anchor_point);
+	float2 GetAnchorPointFromPosition(const float2& position);
 
 private:
 	void UpdateCanvasPosition();

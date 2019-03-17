@@ -51,11 +51,7 @@ void PhysicsPolygonGuizmo::Render(float relative_size, const float2& mouse_pos)
 
 					if (handler->GetPressed() && !over_existent_point)
 					{
-						float2 mouse_movement = float2(App->input->GetMouseXMotion() * relative_size, -App->input->GetMouseYMotion() * relative_size);
-
-						float2 new_pos = curr_pos + mouse_movement;
-
-						(*it) = body->WorldPointToLocalPoint(new_pos);
+						(*it) += float2(App->input->GetMouseXMotion() * relative_size, -App->input->GetMouseYMotion() * relative_size);
 
 						over_existent_point = true;
 					}

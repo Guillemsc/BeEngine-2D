@@ -36,6 +36,8 @@ public:
 	void OnSaveAbstraction(DataAbstraction& abs);
 	void OnLoadAbstraction(DataAbstraction& abs);
 
+	void OnDestroy();
+
 	void OnOwnerSelected();
 	void OnOwnerDeSelected();
 
@@ -57,15 +59,15 @@ public:
 	void SetRotationDegrees(float rotation);
 	void SetScale(const float2& scale);
 
-	float2 GetLocalPosition() const;
-	float GetLocalRotationDegrees() const;
-	float2 GetLocalScale() const;
+	float2 GetLocalPosition();
+	float GetLocalRotationDegrees();
+	float2 GetLocalScale();
 
-	float2 GetPosition() const;
-	float GetRotationDegrees() const;
-	float2 GetScale() const;
+	float2 GetPosition();
+	float GetRotationDegrees();
+	float2 GetScale();
 
-	float4x4 GetLocalTransform() const;
+	float4x4 GetLocalTransform();
 	float4x4 GetWorldTransform();
 
 	void SetAnchorPos(const float2& anchor);
@@ -74,6 +76,7 @@ public:
 	float2 GetAnchorPos() const;
 
 	ComponentCanvas* GetUsedCanvas() const;
+	ComponentCanvas* GetParentUsedCanvas() const;
 
 	ScriptingBridgeComponentTransform* GetScriptingBridge() const;
 
