@@ -10,6 +10,7 @@
 
 class Event;
 class Scene;
+class ComponentCanvas;
 
 class ModuleGameObject : public Module
 {
@@ -64,6 +65,8 @@ public:
 	void ChangeScenePositionOnList(Scene* scene, uint new_pos);
 
 	std::map<ComponentType, std::string> GetComponentsTypes() const;
+
+	ComponentCanvas* GetComponentCanvasOnParentTree(GameObject* go);
 
 private:
 	void AddComponentType(const ComponentType& type, const std::string& name);

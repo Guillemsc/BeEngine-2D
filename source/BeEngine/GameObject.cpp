@@ -10,6 +10,7 @@
 #include "ResourcePrefab.h"
 #include "ComponentPhysicsBody.h"
 #include "ComponentPolygonCollider.h"
+#include "ComponentCanvas.h"
 #include "Event.h"
 #include "ModuleEvent.h"
 #include "Scene.h"
@@ -259,6 +260,10 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 
 	case ComponentType::COMPONENT_TYPE_CAMERA:
 		ret = new ComponentCamera();
+		break;
+
+	case ComponentType::COMPONENT_TYPE_CANVAS:
+		ret = new ComponentCanvas();
 		break;
 
 	case ComponentType::COMPONENT_TYPE_PHYSICS_BODY:

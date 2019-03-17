@@ -7,6 +7,7 @@
 #include "Event.h"
 #include "ModuleState.h"
 #include "Scene.h"
+#include "ComponentTransfrom.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -32,6 +33,7 @@ bool ModuleGameObject::Awake()
 	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer");
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
 	AddComponentType(ComponentType::COMPONENT_TYPE_CAMERA, "Camera");
+	AddComponentType(ComponentType::COMPONENT_TYPE_CANVAS, "UI Canvas");
 	AddComponentType(ComponentType::COMPONENT_TYPE_PHYSICS_BODY, "Physics Body");
 	AddComponentType(ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, "Polygon Collider");
 

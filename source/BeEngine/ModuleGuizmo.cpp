@@ -11,6 +11,7 @@
 #include "ComponentTransfrom.h"
 #include "GridGuizmo.h"
 #include "PhysicsPolygonGuizmo.h"
+#include "CanvasItemGuizmo.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -30,6 +31,7 @@ bool ModuleGuizmo::Awake()
 	(GridGuizmo*)AddGuizmo(new GridGuizmo());
 	position_guizmo = (PositionGuizmo*)AddGuizmo(new PositionGuizmo());
 	physics_polygon_guizmo = (PhysicsPolygonGuizmo*)AddGuizmo(new PhysicsPolygonGuizmo());
+	canvas_item_guizmo = (CanvasItemGuizmo*)AddGuizmo(new CanvasItemGuizmo());
 
 	return ret;
 }

@@ -511,6 +511,16 @@ Frustum Camera2D::GetFrustum()
 	return frustum;
 }
 
+void Camera2D::SetComponentCamera(ComponentCamera * comp)
+{
+	component_camera = comp;
+}
+
+ComponentCamera * Camera2D::GetComponentCamera() const
+{
+	return component_camera;
+}
+
 void Camera2D::UpdateTransform()
 {
 	frustum.SetFront(frustum.Front());
@@ -635,6 +645,8 @@ void RenderTexture::ChangeMSAALevel(int MSAA_level)
 
 void RenderTexture::Destroy()
 {
+	Unbind();
+
 	App->renderer->DeleteTexture(texture_id);
 	App->renderer->DeleteTexture(texture_msaa_id);
 	App->renderer->DeleteFrameBuffer(fbo_id);

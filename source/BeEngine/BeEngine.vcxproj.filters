@@ -612,6 +612,12 @@
     <ClInclude Include="PhysicsWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CanvasItemGuizmo.h">
+      <Filter>Sources\8. Guizmos =============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1009,6 +1015,12 @@
     </ClCompile>
     <ClCompile Include="PhysicsWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCanvas.cpp">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CanvasItemGuizmo.cpp">
+      <Filter>Sources\8. Guizmos =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

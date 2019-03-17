@@ -59,6 +59,8 @@ private:
 	bool flip_y = false;
 
 	int layer = 0;
+
+	float ui_scale_factor = 1.0f;
 };
 
 #endif // !__COMPONENT_SPRITE_RENDERER_H__

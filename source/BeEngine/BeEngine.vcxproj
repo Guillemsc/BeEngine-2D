@@ -103,7 +103,9 @@
     <ClInclude Include="Algorithm\SAT.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="BottomBar.h" />
+    <ClInclude Include="CanvasItemGuizmo.h" />
     <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentCanvas.h" />
     <ClInclude Include="ComponentPhysicsBody.h" />
     <ClInclude Include="ComponentPolygonCollider.h" />
     <ClInclude Include="ComponentScript.h" />
@@ -270,7 +272,9 @@
     <ClCompile Include="Algorithm\Random\LCG.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="BottomBar.cpp" />
+    <ClCompile Include="CanvasItemGuizmo.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentCanvas.cpp" />
     <ClCompile Include="ComponentPhysicsBody.cpp" />
     <ClCompile Include="ComponentPolygonCollider.cpp" />
     <ClCompile Include="ComponentScript.cpp" />

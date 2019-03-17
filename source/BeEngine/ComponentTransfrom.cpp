@@ -6,6 +6,12 @@
 #include "ModuleScripting.h"
 #include "App.h"
 #include "PhysicsBody.h"
+#include "ModuleGameObject.h"
+#include "ModuleSceneRenderer.h"
+#include "QuadRenderer.h"
+#include "ComponentCanvas.h"
+#include "ModuleGuizmo.h"
+#include "CanvasItemGuizmo.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -21,22 +27,40 @@ ComponentTransform::~ComponentTransform()
 
 void ComponentTransform::EditorDraw()
 {
-	float2 position = GetLocalPosition();
-	float rotation = GetLocalRotationDegrees();
-	float2 scale = GetLocalScale();
-
 	float2 world_position = GetPosition();
 
-	if (ImGui::DragFloat2("Position", (float*)&position, 0.1f))
-		SetLocalPosition(position);
+	if (used_canvas_comp == nullptr)
+	{
+		float2 position = GetLocalPosition();
+		float rotation = GetLocalRotationDegrees();
+		float2 scale = GetLocalScale();
 
-	if (ImGui::DragFloat("Rotation", (float*)&rotation, 0.1f))
-		SetLocalRotationDegrees(rotation);
+		if (parent_used_canvas != nullptr)
+		{
+			if (ImGui::DragFloat2("Anchor", (float*)&anchor_pos, 0.1f))
+				SetAnchorPos(anchor_pos);
 
-	if (ImGui::DragFloat2("Scale", (float*)&scale, 0.1f))
-		SetLocalScale(scale);
+			if (ImGui::DragFloat2("Anchor offset", (float*)&anchor_offset_pos, 0.1f))
+				SetAnchorOffsetPos(anchor_offset_pos);
+		}
+		else
+		{
+			if (ImGui::DragFloat2("Position", (float*)&position, 0.1f))
+				SetLocalPosition(position);
+		}
 
-	ImGui::Checkbox("Keep scale ratio", &keep_scale_ratio);
+		if (ImGui::DragFloat("Rotation", (float*)&rotation, 0.1f))
+			SetLocalRotationDegrees(rotation);
+
+		if (ImGui::DragFloat2("Scale", (float*)&scale, 0.1f))
+			SetLocalScale(scale);
+
+		ImGui::Checkbox("Keep scale ratio", &keep_scale_ratio);
+	}
+	else
+	{
+		ImGui::Text("Position is controled by the UI Canvas");
+	}
 
 	ImGui::Text("World Positions: ");
 
@@ -67,6 +91,7 @@ void ComponentTransform::Start()
 void ComponentTransform::Update()
 {
 	UpdatePhysicsMovement();
+	FindParentUsedCanvas();
 }
 
 void ComponentTransform::CleanUp()
@@ -74,6 +99,20 @@ void ComponentTransform::CleanUp()
 	App->physics->DestroyPhysicsBody(base_physics_body);
 
 	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
+}
+
+void ComponentTransform::RenderGuizmos(float relative_size)
+{
+	if (parent_used_canvas != nullptr)
+	{
+		float2 size = float2(20.5f * relative_size, 20.5f * relative_size);
+
+		App->scene_renderer->quad_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(99));
+
+		float2 anchor_world_pos = parent_used_canvas->GetPositionFromAnchorPoint(anchor_pos);
+
+		App->scene_renderer->quad_renderer->DrawQuad(anchor_world_pos, size, float3(1, 0, 0));
+	}
 }
 
 void ComponentTransform::OnSaveAbstraction(DataAbstraction & abs)
@@ -92,6 +131,17 @@ void ComponentTransform::OnLoadAbstraction(DataAbstraction & abs)
 	SetRotationDegrees(abs.GetFloat("rotation"));
 }
 
+void ComponentTransform::OnOwnerSelected()
+{
+	if (parent_used_canvas != nullptr)
+		App->guizmo->canvas_item_guizmo->StartEditing(this);
+}
+
+void ComponentTransform::OnOwnerDeSelected()
+{
+	App->guizmo->canvas_item_guizmo->StopEditing(this);
+}
+
 void ComponentTransform::OnChildAdded(GameObject * child)
 {
 }
@@ -106,19 +156,43 @@ void ComponentTransform::OnParentChanged(GameObject * new_parent)
 
 void ComponentTransform::OnAddComponent(GameObjectComponent * new_component)
 {
-	if (new_component->GetType() == ComponentType::COMPONENT_TYPE_PHYSICS_BODY)
+	switch (new_component->GetType())
+	{
+	case ComponentType::COMPONENT_TYPE_PHYSICS_BODY:
 	{
 		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_DYNAMIC);
 		base_physics_body->ClearForces();
+
+		break;
+	}
+
+	case ComponentType::COMPONENT_TYPE_CANVAS:
+	{
+		used_canvas_comp = (ComponentCanvas*)new_component;
+
+		break;
+	}
 	}
 }
 
 void ComponentTransform::OnRemoveComponent(GameObjectComponent * deleted)
 {
-	if (deleted->GetType() == ComponentType::COMPONENT_TYPE_PHYSICS_BODY)
+	switch (deleted->GetType())
+	{
+	case ComponentType::COMPONENT_TYPE_PHYSICS_BODY:
 	{
 		base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_KINEMATIC);
 		base_physics_body->ClearForces();
+
+		break;
+	}
+
+	case ComponentType::COMPONENT_TYPE_CANVAS:
+	{
+		used_canvas_comp = nullptr;
+
+		break;
+	}
 	}
 }
 
@@ -249,37 +323,37 @@ void ComponentTransform::SetScale(const float2 & scale)
 	}
 }
 
-float2 ComponentTransform::GetLocalPosition()
+float2 ComponentTransform::GetLocalPosition() const
 {
 	return local_pos;
 }
 
-float ComponentTransform::GetLocalRotationDegrees()
+float ComponentTransform::GetLocalRotationDegrees() const
 {
 	return local_rotation * RADTODEG;
 }
 
-float2 ComponentTransform::GetLocalScale()
+float2 ComponentTransform::GetLocalScale() const
 {
 	return local_scale;
 }
 
-float2 ComponentTransform::GetPosition()
+float2 ComponentTransform::GetPosition() const
 {
 	return base_physics_body->GetPosition();
 }
 
-float ComponentTransform::GetRotationDegrees()
+float ComponentTransform::GetRotationDegrees() const
 {
 	return base_physics_body->GetRotationDegrees();
 }
 
-float2 ComponentTransform::GetScale()
+float2 ComponentTransform::GetScale() const
 {
 	return world_scale;
 }
 
-float4x4 ComponentTransform::GetLocalTransform()
+float4x4 ComponentTransform::GetLocalTransform() const
 {
 	return local_transform;
 }
@@ -301,6 +375,52 @@ float4x4 ComponentTransform::GetWorldTransform()
 	}
 
 	return world_transform;
+}
+
+void ComponentTransform::SetAnchorPos(const float2& anchor)
+{
+	anchor_pos = anchor;
+
+	if (anchor_pos.x > 1)
+		anchor_pos.x = 1;
+
+	if (anchor_pos.x < -1)
+		anchor_pos.x = -1;
+
+	if (anchor_pos.y > 1)
+		anchor_pos.y = 1;
+
+	if (anchor_pos.y < -1)
+		anchor_pos.y = -1;
+
+	SetAnchorOffsetPos(anchor_offset_pos);
+}
+
+void ComponentTransform::SetAnchorOffsetPos(const float2 & anchor_offset)
+{
+	anchor_offset_pos = anchor_offset;
+
+	if (parent_used_canvas != nullptr && GetOwner()->GetParent() != nullptr)
+	{
+		if (parent_used_canvas->GetOwner() == GetOwner()->GetParent())
+		{
+			float2 new_pos = parent_used_canvas->GetPositionFromAnchorPoint(anchor_pos);
+
+			new_pos += anchor_offset;
+
+			SetPosition(new_pos);
+		}
+	}
+}
+
+float2 ComponentTransform::GetAnchorPos() const
+{
+	return anchor_pos;
+}
+
+ComponentCanvas * ComponentTransform::GetUsedCanvas() const
+{
+	return used_canvas_comp;
 }
 
 ScriptingBridgeComponentTransform * ComponentTransform::GetScriptingBridge() const
@@ -417,5 +537,28 @@ void ComponentTransform::UpdatePhysicsMovement()
 			base_physics_body->SetRotationDegrees(curr_rotation);
 		}
 	}
+}
+
+void ComponentTransform::FindParentUsedCanvas()
+{
+	bool had_parent_canvas = false;
+
+	if (parent_used_canvas != nullptr)
+		had_parent_canvas = true;
+
+	parent_used_canvas = nullptr;
+
+	GameObject* parent = GetOwner()->GetParent();
+
+	if (parent != nullptr)
+		parent_used_canvas = parent->transform->GetUsedCanvas();
+
+	if(had_parent_canvas && parent_used_canvas == nullptr)
+		App->guizmo->canvas_item_guizmo->StopEditing(this);
+}
+
+void ComponentTransform::RecalculateCanvasLayout()
+{
+	SetAnchorPos(anchor_pos);
 }
 

@@ -6,6 +6,7 @@
 
 class PositionGuizmo;
 class PhysicsPolygonGuizmo;
+class CanvasItemGuizmo;
 
 class ModuleGuizmo : public Module
 {
@@ -40,6 +41,7 @@ private:
 public:
 	PositionGuizmo* position_guizmo = nullptr;
 	PhysicsPolygonGuizmo* physics_polygon_guizmo = nullptr;
+	CanvasItemGuizmo* canvas_item_guizmo = nullptr;
 
 private:
 	std::vector<Guizmo*> guizmos;

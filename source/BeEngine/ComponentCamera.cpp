@@ -51,6 +51,9 @@ void ComponentCamera::EditorDraw()
 void ComponentCamera::Start()
 {
 	camera = App->camera->CreateCamera();
+	camera->SetComponentCamera(this);
+
+	camera->SetSize(0.1f);
 
 	if (App->camera->GetGameCamera() == nullptr)
 	{
@@ -65,6 +68,8 @@ void ComponentCamera::Update()
 
 void ComponentCamera::CleanUp()
 {
+	camera->SetComponentCamera(nullptr);
+
 	if (App->camera->GetGameCamera() == camera)
 		App->camera->SetGameCamera(nullptr);
 

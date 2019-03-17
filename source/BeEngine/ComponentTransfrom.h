@@ -9,12 +9,14 @@ class GameObject;
 class ScriptingBridgeComponentTransform;
 class PhysicsBody;
 class ComponenPhysicsBody;
+class ComponentCanvas;
 
 class ComponentTransform : public GameObjectComponent
 {
 	friend class GameObject;
 	friend class ComponentPhysicsBody;
 	friend class ComponentPolygonCollider;
+	friend class ComponentCanvas;
 
 private:
 	void operator delete(void *) {}
@@ -29,8 +31,13 @@ public:
 	void Update();
 	void CleanUp();
 
+	void RenderGuizmos(float relative_size);
+
 	void OnSaveAbstraction(DataAbstraction& abs);
 	void OnLoadAbstraction(DataAbstraction& abs);
+
+	void OnOwnerSelected();
+	void OnOwnerDeSelected();
 
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
@@ -50,16 +57,23 @@ public:
 	void SetRotationDegrees(float rotation);
 	void SetScale(const float2& scale);
 
-	float2 GetLocalPosition();
-	float GetLocalRotationDegrees();
-	float2 GetLocalScale();
+	float2 GetLocalPosition() const;
+	float GetLocalRotationDegrees() const;
+	float2 GetLocalScale() const;
 
-	float2 GetPosition();
-	float GetRotationDegrees();
-	float2 GetScale();
+	float2 GetPosition() const;
+	float GetRotationDegrees() const;
+	float2 GetScale() const;
 
-	float4x4 GetLocalTransform();
+	float4x4 GetLocalTransform() const;
 	float4x4 GetWorldTransform();
+
+	void SetAnchorPos(const float2& anchor);
+	void SetAnchorOffsetPos(const float2& anchor_offset);
+
+	float2 GetAnchorPos() const;
+
+	ComponentCanvas* GetUsedCanvas() const;
 
 	ScriptingBridgeComponentTransform* GetScriptingBridge() const;
 
@@ -73,6 +87,9 @@ private:
 
 	void UpdatePhysicsMovement();
 
+	void FindParentUsedCanvas();
+	void RecalculateCanvasLayout();
+
 private:
 	float4x4 local_transform;
 	float4x4 world_transform;
@@ -85,8 +102,14 @@ private:
 
 	bool keep_scale_ratio = false;
 
+	float2 anchor_pos = float2::zero;
+	float2 anchor_offset_pos = float2::zero;
+
 	PhysicsBody* base_physics_body = nullptr;
 	ComponentPhysicsBody* used_physics_body_comp = nullptr;
+	ComponentCanvas* used_canvas_comp = nullptr;
+
+	ComponentCanvas* parent_used_canvas = nullptr;
 
 private:
 	ScriptingBridgeComponentTransform* scripting_bridge = nullptr;

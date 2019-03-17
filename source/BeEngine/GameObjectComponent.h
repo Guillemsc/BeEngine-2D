@@ -16,6 +16,7 @@ enum ComponentType
 	COMPONENT_TYPE_CAMERA,
 	COMPONENT_TYPE_PHYSICS_BODY,
 	COMPONENT_TYPE_POLYGON_COLLIDER,
+	COMPONENT_TYPE_CANVAS,
 };
 
 enum ComponentGroup
@@ -25,6 +26,7 @@ enum ComponentGroup
 	SCRIPTING,
 	CAMERA,
 	PHYSICS,
+	UI,
 };
 
 class GameObjectComponent
@@ -58,7 +60,7 @@ public:
 
 	virtual void RenderGuizmos(float relative_size) {};
 
-	GameObject* GetOwner();
+	GameObject* GetOwner() const;
 
 	ComponentType GetType() const;
 	ComponentGroup GetGroup() const;

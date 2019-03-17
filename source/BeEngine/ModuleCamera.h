@@ -7,6 +7,7 @@
 
 class GameObject;
 class RenderTexture;
+class ComponentCamera;
 
 class RenderTexture
 {
@@ -112,17 +113,22 @@ public:
 
 	Frustum GetFrustum();
 
+	void SetComponentCamera(ComponentCamera* comp);
+	ComponentCamera* GetComponentCamera() const;
+
 private:
 	void UpdateTransform();
 
 private:
-	Frustum		   frustum;
-	float2		   viewport_size = float2::zero;
-	float		   size = 1;
+	Frustum		     frustum;
+	float2		     viewport_size = float2::zero;
+	float		     size = 1;
 
-	bool	       frustum_culling = true;
+	bool	         frustum_culling = true;
 
-	RenderTexture* render_tex = nullptr;
+	RenderTexture*   render_tex = nullptr;
+
+	ComponentCamera* component_camera = nullptr;
 };
 
 class ModuleCamera : public Module
