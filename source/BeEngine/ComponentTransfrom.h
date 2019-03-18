@@ -95,6 +95,7 @@ private:
 	
 	void FindParentUsedCanvas();
 	void RecalculateCanvasLayout();
+	void RecalculateAnchorOffset();
 
 private:
 	float4x4 local_transform;

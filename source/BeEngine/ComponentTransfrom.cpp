@@ -117,6 +117,7 @@ void ComponentTransform::RenderGuizmos(float relative_size)
 void ComponentTransform::OnSaveAbstraction(DataAbstraction & abs)
 {
 	abs.AddFloat2("anchor_pos", GetAnchorPos());
+	abs.AddFloat2("anchor_offset", anchor_offset_pos);
 	abs.AddFloat2("position", GetPosition());
 	abs.AddFloat2("scale", GetScale());
 	abs.AddFloat("rotation", GetRotationDegrees());
@@ -127,6 +128,7 @@ void ComponentTransform::OnLoadAbstraction(DataAbstraction & abs)
 {
 	keep_scale_ratio = abs.GetBool("keep_ratio");
 	SetAnchorPos(abs.GetFloat2("anchor_pos"));
+	SetAnchorOffsetPos(abs.GetFloat2("anchor_offset"));
 	SetPosition(abs.GetFloat2("position"));
 	SetScale(abs.GetFloat2("scale"));
 	SetRotationDegrees(abs.GetFloat("rotation"));
@@ -214,6 +216,8 @@ void ComponentTransform::SetWorldTransform(const float4x4 & world)
 	world_transform = world;
 
 	RecalculateLocalTransform();
+
+	RecalculateAnchorOffset();
 }
 
 void ComponentTransform::SetLocalPosition(const float2 & pos)
@@ -535,6 +539,24 @@ void ComponentTransform::FindParentUsedCanvas()
 void ComponentTransform::RecalculateCanvasLayout()
 {
 	SetAnchorPos(anchor_pos);
+}
+
+void ComponentTransform::RecalculateAnchorOffset()
+{
+	float3 pos = float3::zero;
+	Quat rot = Quat::identity;
+	float3 scal = float3::zero;
+
+	world_transform.Decompose(pos, rot, scal);
+
+	if (parent_used_canvas != nullptr)
+	{
+		float2 world_pos = float2(pos.x, pos.y);
+
+		float2 anchor_world_pos = parent_used_canvas->GetPositionFromAnchorPoint(anchor_pos);
+
+		anchor_offset_pos = world_pos - anchor_world_pos;
+	}
 }
 
 void ComponentTransform::RecalculateWorldTransform()
