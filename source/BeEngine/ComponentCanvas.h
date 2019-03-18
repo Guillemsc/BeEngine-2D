@@ -28,8 +28,6 @@ public:
 	void OnSaveAbstraction(DataAbstraction& abs);
 	void OnLoadAbstraction(DataAbstraction& abs);
 
-	void OnEvent(Event* ev);
-
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);

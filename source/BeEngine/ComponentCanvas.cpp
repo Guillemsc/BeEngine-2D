@@ -24,19 +24,19 @@ void ComponentCanvas::EditorDraw()
 
 void ComponentCanvas::Start()
 {
-	App->event->Suscribe(std::bind(&ComponentCanvas::OnEvent, this, std::placeholders::_1), EventType::GAME_WINDOW_RESIZE);
-
-	UpdateCanvasLayout();
+	
 }
 
 void ComponentCanvas::Update()
 {
 	UpdateCanvasPosition();
+
+	UpdateCanvasLayout();
 }
 
 void ComponentCanvas::CleanUp()
 {
-	App->event->UnSuscribe(std::bind(&ComponentCanvas::OnEvent, this, std::placeholders::_1), EventType::GAME_WINDOW_RESIZE);
+	
 }
 
 void ComponentCanvas::OnSaveAbstraction(DataAbstraction & abs)
@@ -45,14 +45,6 @@ void ComponentCanvas::OnSaveAbstraction(DataAbstraction & abs)
 
 void ComponentCanvas::OnLoadAbstraction(DataAbstraction & abs)
 {
-}
-
-void ComponentCanvas::OnEvent(Event * ev)
-{
-	if (ev->GetType() == EventType::GAME_WINDOW_RESIZE)
-	{
-		UpdateCanvasLayout();
-	}
 }
 
 void ComponentCanvas::OnChildAdded(GameObject * child)

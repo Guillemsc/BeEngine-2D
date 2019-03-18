@@ -279,8 +279,11 @@ void ModuleEditor::DrawEditorWindows()
 				| ImGuiWindowFlags_NoTitleBar;
 
 			float2 screen_size = App->window->GetWindowSize();
-			ImGui::SetNextWindowPos(ImVec2(-10, -25));
-			ImGui::SetNextWindowSize(ImVec2(screen_size.x + 20, screen_size.y + 50));
+
+			float4 offset = float4(-8, -33, 16, 37);
+
+			ImGui::SetNextWindowPos(ImVec2(offset.x, offset.y));
+			ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y  + offset.w));
 			if (ImGui::Begin(curr_window->name.c_str(), &curr_window->opened, flags))
 			{
 				ImVec2 win_pos = ImGui::GetWindowPos();

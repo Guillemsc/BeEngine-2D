@@ -55,7 +55,7 @@ void GameWindow::DrawEditor()
 	image_pos.x = game_view_center.x - image_size.x * 0.5f;
 	image_pos.y = game_view_center.y - image_size.y * 0.5f;
 
-	image_pos.y += 10.0f;
+	image_pos.y += 15.0f;
 
 	game_viewport_rect = Rect(window_pos.x + image_pos.x, window_pos.y + image_pos.y, image_size.x, image_size.y);
 
