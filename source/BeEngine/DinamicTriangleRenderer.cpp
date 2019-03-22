@@ -110,11 +110,11 @@ void DinamicTriangleRenderer::Render(const float4x4 & view, const float4x4 & pro
 	glDisable(GL_DEPTH_TEST);
 }
 
-void DinamicTriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, float rotation_degrees, const float3 & colour, float alpha)
+void DinamicTriangleRenderer::DrawTriangle(const float2 & pos, const float2 & size, float angle_degrees, const float3 & colour, float alpha)
 {
 	float2 half_size = float2(size.x * 0.5f, size.y * 0.5f);
 
-	float rotation = rotation_degrees * DEGTORAD;
+	float rotation = angle_degrees * DEGTORAD;
 
 	float2 point1 = float2(pos.x - half_size.x, pos.y - half_size.y);
 	float2 point2 = float2(pos.x + half_size.x, pos.y - half_size.y);

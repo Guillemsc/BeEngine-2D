@@ -143,3 +143,52 @@ void QuadRenderer::DrawQuad(const float2 & pos, const float2 & size, const float
 
 	++quads_count;
 }
+
+void QuadRenderer::DrawRotatedQuad(const float2 & pos, const float2 & size, const float angle_degrees, const float3 & colour, float alpha)
+{
+	float rotation = angle_degrees * DEGTORAD;
+
+	float2 half_size = float2(size.x * 0.5f, size.y * 0.5f);
+
+	float3 final_1 = float3(pos.x - half_size.x, pos.y - half_size.y, z_pos);
+	float3 final_2 = float3(pos.x + half_size.x, pos.y - half_size.y, z_pos);
+	float3 final_3 = float3(pos.x + half_size.x, pos.y + half_size.y, z_pos);
+	float3 final_4 = float3(pos.x - half_size.x, pos.y + half_size.y, z_pos);
+
+	float new_pos_1_x = ((final_1.x - pos.x) * cos(rotation)) - ((final_1.y - pos.y) * sin(rotation)) + pos.x;
+	float new_pos_1_y = ((final_1.x - pos.x) * sin(rotation)) + ((final_1.y - pos.y) * cos(rotation)) + pos.y;
+
+	float new_pos_2_x = ((final_2.x - pos.x) * cos(rotation)) - ((final_2.y - pos.y) * sin(rotation)) + pos.x;
+	float new_pos_2_y = ((final_2.x - pos.x) * sin(rotation)) + ((final_2.y - pos.y) * cos(rotation)) + pos.y;
+
+	float new_pos_3_x = ((final_3.x - pos.x) * cos(rotation)) - ((final_3.y - pos.y) * sin(rotation)) + pos.x;
+	float new_pos_3_y = ((final_3.x - pos.x) * sin(rotation)) + ((final_3.y - pos.y) * cos(rotation)) + pos.y;
+
+	float new_pos_4_x = ((final_4.x - pos.x) * cos(rotation)) - ((final_4.y - pos.y) * sin(rotation)) + pos.x;
+	float new_pos_4_y = ((final_4.x - pos.x) * sin(rotation)) + ((final_4.y - pos.y) * cos(rotation)) + pos.y;
+
+	final_1 = float3(new_pos_1_x, new_pos_1_y, 0);
+	final_2 = float3(new_pos_2_x, new_pos_2_y, 0);
+	final_3 = float3(new_pos_3_x, new_pos_3_y, 0);
+	final_4 = float3(new_pos_4_x, new_pos_4_y, 0);
+
+	quads_vb.AddSpace(42);
+
+	float4 full_colour = float4(colour.x, colour.y, alpha, colour.z);
+
+	quads_vb.AddFloat3(final_1);
+	quads_vb.AddFloat4(full_colour);
+	quads_vb.AddFloat3(final_2);
+	quads_vb.AddFloat4(full_colour);
+	quads_vb.AddFloat3(final_3);
+	quads_vb.AddFloat4(full_colour);
+
+	quads_vb.AddFloat3(final_1);
+	quads_vb.AddFloat4(full_colour);
+	quads_vb.AddFloat3(final_3);
+	quads_vb.AddFloat4(full_colour);
+	quads_vb.AddFloat3(final_4);
+	quads_vb.AddFloat4(full_colour);
+
+	++quads_count;
+}

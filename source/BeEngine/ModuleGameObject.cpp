@@ -34,6 +34,7 @@ bool ModuleGameObject::Awake()
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
 	AddComponentType(ComponentType::COMPONENT_TYPE_CAMERA, "Camera");
 	AddComponentType(ComponentType::COMPONENT_TYPE_CANVAS, "UI Canvas");
+	AddComponentType(ComponentType::COMPONENT_TYPE_BUTTON, "UI Button");
 	AddComponentType(ComponentType::COMPONENT_TYPE_PHYSICS_BODY, "Physics Body");
 	AddComponentType(ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, "Polygon Collider");
 

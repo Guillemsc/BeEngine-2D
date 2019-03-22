@@ -16,7 +16,8 @@ void GuizmoHandler::SetTransfroms(const float2 & _pos, const float2 & _size)
 	float2 half_size = size * 0.5f;
 
 	bbox.SetNegativeInfinity();
-	bbox = AABB(float3(_pos.x - half_size.x, _pos.y - half_size.y, -1), float3(_pos.x + half_size.x, _pos.y + half_size.y, 1));
+	bbox = AABB(float3(_pos.x - half_size.x, _pos.y - half_size.y, -1), 
+		float3(_pos.x + half_size.x, _pos.y + half_size.y, 1));
 }
 
 bool GuizmoHandler::CheckRay(const LineSegment & ray)

@@ -55,6 +55,12 @@ void SceneWindow::DrawEditor()
 			App->guizmo->SetRenderHandlers(guizmos_handlers);
 		}
 
+		bool ui_handlers = App->guizmo->GetRenderUIHandlers();
+		if (ImGui::Checkbox("Handlers UI", &ui_handlers))
+		{
+			App->guizmo->SetRenderUIHandlers(ui_handlers);
+		}
+
 		bool guizmos_physics = App->guizmo->GetRenderAllPhysicsGuizmos();
 		if (ImGui::Checkbox("Physics Guizmos", &guizmos_physics))
 		{

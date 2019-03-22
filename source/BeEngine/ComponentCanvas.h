@@ -42,9 +42,6 @@ private:
 	void UpdateCanvasPosition();
 
 	void UpdateCanvasLayout();
-
-private:
-	float2 reference_size = float2(1280, 720);
 };
 
 #endif // !__COMPONENT_CANVAS_H__

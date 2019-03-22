@@ -15,6 +15,7 @@
 #include "ModuleEvent.h"
 #include "Scene.h"
 #include "ScriptingBridgeGameObject.h"
+#include "ComponentButton.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -272,6 +273,10 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 
 	case ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER:
 		ret = new ComponentPolygonCollider();
+		break;
+
+	case ComponentType::COMPONENT_TYPE_BUTTON:
+		ret = new ComponentButton();
 		break;
 
 	default:

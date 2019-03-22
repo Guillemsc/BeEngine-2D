@@ -12,6 +12,7 @@
 #include "GridGuizmo.h"
 #include "PhysicsPolygonGuizmo.h"
 #include "CanvasItemGuizmo.h"
+#include "ModuleUI.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -149,7 +150,8 @@ void ModuleGuizmo::RenderGuizmos()
 				if (handler->active)
 				{
 					if (render_handlers)
-						App->scene_renderer->quad_renderer->DrawQuad(handler->GetPos(), handler->GetSize(), float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
+						App->scene_renderer->quad_renderer->DrawQuad(handler->GetPos(), handler->GetSize(), 
+							float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
 
 					if (handler->CheckRay(ls))
 					{
@@ -183,6 +185,7 @@ void ModuleGuizmo::RenderGuizmos()
 
 	RenderSelectedGameObjectGuizmos(relative_size);
 	RenderAllPhysicsGuizmos(relative_size);
+	RenderAllUIHandlerGuizmos(relative_size);
 }
 
 void ModuleGuizmo::RenderSelectedGameObjectGuizmos(float relative_size)
@@ -221,6 +224,30 @@ void ModuleGuizmo::RenderAllPhysicsGuizmos(float relative_size)
 	}
 }
 
+void ModuleGuizmo::RenderAllUIHandlerGuizmos(float relative_size)
+{
+	if (render_ui_handlers)
+	{
+		std::vector<UIElement*> elements = App->ui->GetAllElements();
+
+		for (std::vector<UIElement*>::iterator it = elements.begin(); it != elements.end(); ++it)
+		{
+			std::vector<UIHandler*> handlers = (*it)->GetAllHandlers();
+
+			for (std::vector<UIHandler*>::iterator ha = handlers.begin(); ha != handlers.end(); ++ha)
+			{
+				UIHandler* handler = (*ha);
+
+				if (handler->GetActive())
+				{
+					App->scene_renderer->quad_renderer->DrawRotatedQuad(handler->GetPos(), handler->GetSize(),
+						handler->GetRotationDegrees(), float3(0, 122.0f / 255.0f, 204.0f / 255.0f), 0.5f);
+				}
+			}
+		}
+	}
+}
+
 void ModuleGuizmo::SetRenderHandlers(bool set)
 {
 	render_handlers = set;
@@ -239,4 +266,14 @@ void ModuleGuizmo::SetRenderAllPhysicsGuizmos(bool set)
 bool ModuleGuizmo::GetRenderAllPhysicsGuizmos() const
 {
 	return render_all_physics_guizmos;
+}
+
+void ModuleGuizmo::SetRenderUIHandlers(bool set)
+{
+	render_ui_handlers = set;
+}
+
+bool ModuleGuizmo::GetRenderUIHandlers() const
+{
+	return render_ui_handlers;
 }

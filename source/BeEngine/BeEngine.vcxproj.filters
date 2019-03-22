@@ -112,6 +112,9 @@
     <Filter Include="Sources\4. Rendering =============\DynamicRenderers">
       <UniqueIdentifier>{0f41f913-277f-41fc-9620-72d6b21f30cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\9. SceneObjects ==========\GameObject\Components\UI">
+      <UniqueIdentifier>{76f0bab5-888d-4498-b8b5-90b61bfb50cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -612,11 +615,17 @@
     <ClInclude Include="PhysicsWindow.h">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCanvas.h">
-      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="CanvasItemGuizmo.h">
       <Filter>Sources\8. Guizmos =============</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleUI.h">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentButton.h">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1016,11 +1025,17 @@
     <ClCompile Include="PhysicsWindow.cpp">
       <Filter>Sources\3. Editor ================\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCanvas.cpp">
-      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
-    </ClCompile>
     <ClCompile Include="CanvasItemGuizmo.cpp">
       <Filter>Sources\8. Guizmos =============</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleUI.cpp">
+      <Filter>Sources\2. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCanvas.cpp">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentButton.cpp">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

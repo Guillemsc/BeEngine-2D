@@ -18,6 +18,10 @@ public:
 	void Render(const float4x4& view, const float4x4& projection);
 
 	void DrawQuad(const float2& pos, const float2& size, const float3& colour, float alpha = 1.0f);
+	void DrawRotatedQuad(const float2& pos, const float2& size, const float angle_degrees, const float3& colour, float alpha = 1.0f);
+
+private:
+
 
 private:
 	ShaderProgram* program = nullptr;

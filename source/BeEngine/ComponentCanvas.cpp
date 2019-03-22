@@ -19,7 +19,7 @@ ComponentCanvas::~ComponentCanvas()
 
 void ComponentCanvas::EditorDraw()
 {
-	ImGui::DragFloat2("Reference size", (float*)&reference_size, 0.1f, 0);
+	
 }
 
 void ComponentCanvas::Start()
