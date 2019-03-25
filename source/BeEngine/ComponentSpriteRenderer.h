@@ -23,6 +23,7 @@ public:
 	void EditorDraw();
 
 	void Start();
+	void Update();
 	void CleanUp();
 
 	void OnSaveAbstraction(DataAbstraction& abs);
@@ -35,6 +36,13 @@ public:
 	void OnParentChanged(GameObject* new_parent);
 
 	void SetResourceTexture(ResourceTexture* set);
+	ResourceTexture* GetResourceTexture() const;
+
+	void SetColour(const float4& set);
+	float4 GetColour() const;
+
+	void SetUseSprite(bool set);
+	bool GetUseSprite() const;
 
 	uint GetTextureId() const;
 	float GetTextureHeightWidthRatio() const;
@@ -51,7 +59,13 @@ public:
 	bool GetFlipY() const;
 
 private:
+	void SetComponentTransformSize();
+
+private:
 	ResourceTexture* resource_texture = nullptr;
+	float4 colour = float4(1.0f, 0.0f, 1.0f, 1.0f);
+
+	bool use_sprite = true;
 
 	std::string resource_filter;
 

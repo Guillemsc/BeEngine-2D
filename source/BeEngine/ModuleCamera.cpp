@@ -256,6 +256,16 @@ const float2 Camera2D::GetPosition()
 	return float2(pos.x, pos.y);
 }
 
+void Camera2D::SetRotationDegrees(float rotation_degrees)
+{
+	//frustum.s
+}
+
+float Camera2D::GetRotationDegrees() const
+{
+	return 0.0f;
+}
+
 void Camera2D::SetZDir(const float3 & front)
 {
 	frustum.SetFront(front.Normalized());

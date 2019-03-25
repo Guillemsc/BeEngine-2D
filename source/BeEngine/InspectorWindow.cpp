@@ -44,13 +44,11 @@ void InspectorWindow::DrawEditor()
 
 		ImGui::SameLine();
 
-		bool enabled = true;
+		bool active = selected_go->GetActive();
 
-		if (ImGui::Checkbox("Enabled", &enabled))
-		{
-
-		}
-
+		if (ImGui::Checkbox("Active", &active))
+			selected_go->SetActive(active);
+		
 		ImGui::Separator();
 
 	}

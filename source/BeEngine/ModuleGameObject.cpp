@@ -643,13 +643,16 @@ void ModuleGameObject::UpdateGameObjects()
 	{
 		GameObject* curr_go = (*it);
 
-		curr_go->Update();
-
-		for (std::vector<GameObjectComponent*>::iterator co = curr_go->components.begin(); co != curr_go->components.end(); ++co)
+		if (curr_go->GetActive())
 		{
-			GameObjectComponent* curr_component = *co;
+			curr_go->Update();
 
-			curr_component->Update();
+			for (std::vector<GameObjectComponent*>::iterator co = curr_go->components.begin(); co != curr_go->components.end(); ++co)
+			{
+				GameObjectComponent* curr_component = *co;
+
+				curr_component->Update();
+			}
 		}
 	}
 

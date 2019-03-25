@@ -156,14 +156,19 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			ComponentSpriteRenderer* curr_sprite = (*it);
 			float2 texture_size = curr_sprite->GetTextureSize();
 
+			float4 colour = curr_sprite->GetColour();
+
 			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
 
 			float z_pos = App->scene_renderer->layer_space_component_sprite.GetLayerValue(curr_sprite->GetLayer());
 
-			float4x4 size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(10, 10, 1));
+			float4x4 size_mat = float4x4::identity;
 			
-			if (curr_sprite->GetHasTexture())
-				size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(texture_size.x * 0.1f, texture_size.y * 0.1f, 1));
+			float2 size = transform->GetSize();
+
+			bool use_texture = curr_sprite->GetHasTexture() && curr_sprite->GetUseSprite();
+
+			size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(size.x, size.y, 1));
 
 			float4x4 world_transform = transform->GetWorldTransform() * size_mat;
 
@@ -176,12 +181,12 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 
 			App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
 
-			App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
-			App->renderer->SetUniformInt(program->GetID(), "hasTexture", curr_sprite->GetHasTexture());
+			App->renderer->SetUniformVec4(program->GetID(), "col", colour);
+			App->renderer->SetUniformInt(program->GetID(), "hasTexture", use_texture);
 
 			App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
 
-			if(curr_sprite->GetHasTexture())
+			if(use_texture)
 				App->renderer->BindTexture(curr_sprite->GetTextureId());
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);

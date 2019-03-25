@@ -8,6 +8,8 @@
 #include "ModuleEvent.h"
 #include "ModuleSceneRenderer.h"
 #include "ModuleJson.h"
+#include "ModuleGameObject.h"
+#include "ComponentTransfrom.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -27,33 +29,43 @@ void ComponentSpriteRenderer::EditorDraw()
 
 	ImGui::SameLine();
 
-	Resource* res = resource_texture;
-	if (App->resource->EditorResourceSelector(ResourceType::RESOURCE_TYPE_TEXTURE, res, resource_filter))
-	{
-		resource_texture = (ResourceTexture*)res;
-	}
-
 	ImGui::DragInt("Layer", &layer, 1, 0, 9999);
 
-	if (resource_texture != nullptr)
+	ImGui::Checkbox("Use sprite", &use_sprite);
+
+	if (use_sprite)
 	{
-		ImGui::Text("Filp");
-		ImGui::SameLine();
-		ImGui::Checkbox("X", &flip_x);
-		ImGui::SameLine();
-		ImGui::Checkbox("Y", &flip_y);
+		Resource* res = resource_texture;
+		if (App->resource->EditorResourceSelector(ResourceType::RESOURCE_TYPE_TEXTURE, res, resource_filter))
+		{
+			resource_texture = (ResourceTexture*)res;
+		}
 
-		ImGui::Spacing();
+		if (resource_texture != nullptr)
+		{
+			ImGui::Text("Filp");
+			ImGui::SameLine();
+			ImGui::Checkbox("X", &flip_x);
+			ImGui::SameLine();
+			ImGui::Checkbox("Y", &flip_y);
 
-		float2 image_size = resource_texture->GetSize();
+			ImGui::Spacing();
 
-		std::string size_text = "Size: x: " + std::to_string((int)image_size.x) + "  y: " + std::to_string((int)image_size.y);
-		ImGui::Text(size_text.c_str());
+			float2 image_size = resource_texture->GetSize();
 
-		ImGui::Spacing();
+			std::string size_text = "Size: x: " + std::to_string((int)image_size.x) + "  y: " + std::to_string((int)image_size.y);
+			ImGui::Text(size_text.c_str());
 
-		float ratio = resource_texture->GetHeightWidthRatio();
-		ImGui::Image((ImTextureID)resource_texture->GetTextureId(), ImVec2(100, 100 * ratio));
+			ImGui::Spacing();
+		}
+	}
+	else
+	{
+		float4 col = float4(colour.x, colour.y, colour.w, colour.z);
+		if (ImGui::ColorEdit4("Colour", (float*)&col))
+		{
+			colour = float4(col.x, col.y, col.w, col.z);
+		}
 	}
 }
 
@@ -62,6 +74,11 @@ void ComponentSpriteRenderer::Start()
 	App->event->Suscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
+}
+
+void ComponentSpriteRenderer::Update()
+{
+	SetComponentTransformSize();
 }
 
 void ComponentSpriteRenderer::CleanUp()
@@ -76,6 +93,9 @@ void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
 	if(resource_texture != nullptr)
 		abs.AddString("resource", resource_texture->GetUID());
 
+	abs.AddBool("use_sprite", use_sprite);
+	abs.AddFloat4("colour", colour);
+
 	abs.AddBool("flip_x", flip_x);
 	abs.AddBool("flip_y", flip_y);
 }
@@ -88,6 +108,9 @@ void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
 	{
 		resource_texture = (ResourceTexture*)App->resource->GetResourceFromUid(resource_uid, ResourceType::RESOURCE_TYPE_TEXTURE);
 	}
+
+	use_sprite = abs.GetBool("use_sprite");
+	colour = abs.GetFloat4("colour");
 
 	flip_x = abs.GetBool("flip_x");
 	flip_y = abs.GetBool("flip_y");
@@ -119,6 +142,31 @@ void ComponentSpriteRenderer::OnParentChanged(GameObject * new_parent)
 void ComponentSpriteRenderer::SetResourceTexture(ResourceTexture* set)
 {
 	resource_texture = set;
+}
+
+ResourceTexture * ComponentSpriteRenderer::GetResourceTexture() const
+{
+	return resource_texture;
+}
+
+void ComponentSpriteRenderer::SetColour(const float4 & set)
+{
+	colour = set;
+}
+
+float4 ComponentSpriteRenderer::GetColour() const
+{
+	return colour;
+}
+
+void ComponentSpriteRenderer::SetUseSprite(bool set)
+{
+	use_sprite = set;
+}
+
+bool ComponentSpriteRenderer::GetUseSprite() const
+{
+	return use_sprite;
 }
 
 uint ComponentSpriteRenderer::GetTextureId() const
@@ -189,4 +237,16 @@ void ComponentSpriteRenderer::SetFilpY(bool set)
 bool ComponentSpriteRenderer::GetFlipY() const
 {
 	return flip_y;
+}
+
+void ComponentSpriteRenderer::SetComponentTransformSize()
+{
+	if (resource_texture != nullptr && use_sprite)
+	{
+		GetOwner()->transform->size = resource_texture->GetSize() * 0.1f;
+	}
+	else
+	{
+		GetOwner()->transform->size = float2(10, 10);
+	}
 }

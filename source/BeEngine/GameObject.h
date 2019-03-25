@@ -40,6 +40,9 @@ public:
 	void SetName(const char* set);
 	std::string GetName();
 
+	void SetActive(bool set);
+	bool GetActive() const;
+
 	std::string GetUID();
 
 	Scene* GetScene() const;
@@ -76,11 +79,14 @@ private:
 	void CallOnRemoveComponent(GameObjectComponent* comp);
 	void CallOnGameObjectSelected();
 	void CallOnGameObjectDeSelected();
+	void CallOnChangeActive(bool active);
 
 public:
 	ComponentTransform* transform = nullptr;
 
 private:
+	bool active = true;
+
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> childs;
 

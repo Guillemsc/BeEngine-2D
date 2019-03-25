@@ -53,6 +53,7 @@ public:
 	virtual void OnChildAdded(GameObject* child) {};
 	virtual void OnChildRemoved(GameObject* child) {};
 	virtual void OnParentChanged(GameObject* new_parent) {};
+	virtual void OnChangeActive(bool active) {}
 
 	virtual void OnAddComponent(GameObjectComponent* new_component) {};
 	virtual void OnRemoveComponent(GameObjectComponent* new_component) {};

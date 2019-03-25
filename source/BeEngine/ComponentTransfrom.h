@@ -17,6 +17,7 @@ class ComponentTransform : public GameObjectComponent
 	friend class ComponentPhysicsBody;
 	friend class ComponentPolygonCollider;
 	friend class ComponentCanvas;
+	friend class ComponentSpriteRenderer;
 
 private:
 	void operator delete(void *) {}
@@ -75,6 +76,8 @@ public:
 
 	float2 GetAnchorPos() const;
 
+	float2 GetSize() const;
+
 	ComponentCanvas* GetUsedCanvas() const;
 	ComponentCanvas* GetParentUsedCanvas() const;
 
@@ -111,6 +114,8 @@ private:
 
 	float2 anchor_pos = float2::zero;
 	float2 anchor_offset_pos = float2::zero;
+
+	float2 size = float2(1, 1);
 
 	PhysicsBody* base_physics_body = nullptr;
 	ComponentPhysicsBody* used_physics_body_comp = nullptr;

@@ -8,6 +8,7 @@
 
 class GameObject;
 class Event;
+class ResourceTexture;
 
 class ComponentSpriteRenderer;
 
@@ -41,13 +42,25 @@ public:
 	void RenderGuizmos(float relative_size);
 
 private:
+	void TryFindComponentSpriteRenderer();
+
+	void UpdateState();
+
+private:
 	UIElement* ui_element = nullptr;
 	UIHandler* handler = nullptr;
 
 	ComponentSpriteRenderer* c_sprite_renderer = nullptr;
 
+	bool use_sprites = false;
 
+	ResourceTexture* resource_texture_idle = nullptr;
+	ResourceTexture* resource_texture_hover = nullptr;
+	ResourceTexture* resource_texture_pressed = nullptr;
 
+	float4 colour_idle = float4(1.0f, 0.0f, 1.0f, 1.0f);
+	float4 colour_hover = float4(0.7f, 0.0f, 1.0f, 1.0f);
+	float4 colour_pressed = float4(1.0f, 0.0f, 1.0f, 0.0f);
 };
 
 #endif // !__COMPONENT_BUTTON_H__

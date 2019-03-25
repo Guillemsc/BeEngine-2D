@@ -73,6 +73,9 @@ public:
 	void SetPosition(const float2& pos);
 	const float2 GetPosition();
 
+	void SetRotationDegrees(float rotation_degrees);
+	float GetRotationDegrees() const;
+
 	void SetZDir(const float3& front);
 	void SetYDir(const float3& up);
 	float3 GetZDir();

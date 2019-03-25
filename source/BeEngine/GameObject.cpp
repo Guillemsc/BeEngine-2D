@@ -30,6 +30,7 @@ void GameObject::OnSaveAbstraction(DataAbstraction & abs)
 	abs.Clear();
 
 	abs.AddString("name", name);
+	abs.AddBool("active", active);
 
 	if(resource_prefab != nullptr)
 		abs.AddString("resource_prefab", resource_prefab->GetUID());
@@ -38,6 +39,7 @@ void GameObject::OnSaveAbstraction(DataAbstraction & abs)
 void GameObject::OnLoadAbstraction(DataAbstraction & abs)
 {
 	name = abs.GetString("name");
+	active = abs.GetBool("active", true);
 
 	std::string prefab_uid = abs.GetString("resource_prefab");
 
@@ -86,6 +88,36 @@ void GameObject::SetName(const char * set)
 std::string GameObject::GetName()
 {
 	return name;
+}
+
+void GameObject::SetActive(bool set)
+{
+	std::vector<GameObject*> to_check;
+
+	to_check.push_back(this);
+
+	while (to_check.size() > 0)
+	{
+		GameObject* curr_go = *to_check.begin();
+
+		bool last_active = curr_go->active;
+
+		curr_go->active = set;
+
+		if (last_active != set)
+			curr_go->CallOnChangeActive(set);
+
+		std::vector<GameObject*> childs = curr_go->GetChilds();
+
+		to_check.erase(to_check.begin());
+
+		to_check.insert(to_check.begin(), childs.begin(), childs.end());
+	}
+}
+
+bool GameObject::GetActive() const
+{
+	return active;
 }
 
 std::string GameObject::GetUID()
@@ -457,5 +489,13 @@ void GameObject::CallOnGameObjectDeSelected()
 	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
 	{
 		(*it)->OnOwnerDeSelected();
+	}
+}
+
+void GameObject::CallOnChangeActive(bool active)
+{
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		(*it)->OnChangeActive(active);
 	}
 }

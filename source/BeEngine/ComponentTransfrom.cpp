@@ -436,6 +436,11 @@ float2 ComponentTransform::GetAnchorPos() const
 	return anchor_pos;
 }
 
+float2 ComponentTransform::GetSize() const
+{
+	return size;
+}
+
 ComponentCanvas * ComponentTransform::GetUsedCanvas() const
 {
 	return used_canvas_comp;

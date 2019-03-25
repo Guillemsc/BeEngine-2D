@@ -21,6 +21,8 @@ public:
 	float2 GetSize() const;
 	float GetRotationDegrees() const;
 
+	int GetLayer() const;
+
 	bool GetHovered() const;
 	bool GetPressed() const;
 
@@ -79,6 +81,8 @@ public:
 	UIElement* CreateUIElement();
 	void DestroyUIElement(UIElement* el);
 	std::vector<UIElement*> GetAllElements() const;
+
+	void UpdateUIElements();
 
 private:
 	void DestroyAllUIElements();

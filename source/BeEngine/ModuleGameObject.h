@@ -66,8 +66,6 @@ public:
 
 	std::map<ComponentType, std::string> GetComponentsTypes() const;
 
-	ComponentCanvas* GetComponentCanvasOnParentTree(GameObject* go);
-
 private:
 	void AddComponentType(const ComponentType& type, const std::string& name);
 

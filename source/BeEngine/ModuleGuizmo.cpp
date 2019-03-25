@@ -135,6 +135,8 @@ void ModuleGuizmo::RenderGuizmos()
 
 	float2 segment_pos = float2(ls.CenterPoint().x, ls.CenterPoint().y);
 
+	bool inside_window = App->editor->scene_window->GetMouseInsideWindow();
+
 	for (std::vector<Guizmo*>::iterator it = guizmos.begin(); it != guizmos.end(); ++it)
 	{
 		if ((*it)->enabled && (*it)->visible)
@@ -143,8 +145,6 @@ void ModuleGuizmo::RenderGuizmos()
 
 			for (int i = 0; i < handlers_count; ++i)
 			{
-				bool inside_window = App->editor->scene_window->GetMouseInsideWindow();
-
 				GuizmoHandler* handler = (*it)->GetHandler(i);
 
 				if (handler->active)
