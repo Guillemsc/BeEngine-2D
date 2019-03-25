@@ -91,11 +91,11 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(resource, "Module Resource");
 	AddModule(assets, "Module Assets");
 	AddModule(scripting, "Module Scripting");
+	AddModule(ui, "Module UI");
 	AddModule(gameobject, "Module GameObject");
 	AddModule(scene, "Module Scene");
 	AddModule(guizmo, "Module Guizmo");
 	AddModule(state, "Module State");
-	AddModule(ui, "Module UI");
 }
 
 Application::~Application()
