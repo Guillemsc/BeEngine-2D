@@ -52,6 +52,9 @@ public:
 
 	int GetLayer() const;
 
+	void SetSize(const float2& size);
+	float2 GetSize() const;
+
 	void SetFilpX(bool set);
 	bool GetFlipX() const;
 
@@ -71,6 +74,8 @@ private:
 
 	bool flip_x = false;
 	bool flip_y = false;
+
+	float2 size = float2(10, 10);
 
 	int layer = 0;
 

@@ -25,18 +25,19 @@ ComponentSpriteRenderer::~ComponentSpriteRenderer()
 
 void ComponentSpriteRenderer::EditorDraw()
 {
-	ImGui::Text("Sprite:   ");
-
-	ImGui::SameLine();
-
 	ImGui::DragInt("Layer", &layer, 1, 0, 9999);
 
 	ImGui::Checkbox("Use sprite", &use_sprite);
 
+	if (ImGui::DragFloat2("Size", (float*)&size, 1, 0))
+	{
+		SetSize(size);
+	}
+
 	if (use_sprite)
 	{
 		Resource* res = resource_texture;
-		if (App->resource->EditorResourceSelector(ResourceType::RESOURCE_TYPE_TEXTURE, res, resource_filter))
+		if (App->resource->EditorResourceSelector("Sprite:", ResourceType::RESOURCE_TYPE_TEXTURE, res, resource_filter))
 		{
 			resource_texture = (ResourceTexture*)res;
 		}
@@ -52,9 +53,6 @@ void ComponentSpriteRenderer::EditorDraw()
 			ImGui::Spacing();
 
 			float2 image_size = resource_texture->GetSize();
-
-			std::string size_text = "Size: x: " + std::to_string((int)image_size.x) + "  y: " + std::to_string((int)image_size.y);
-			ImGui::Text(size_text.c_str());
 
 			ImGui::Spacing();
 		}
@@ -90,6 +88,8 @@ void ComponentSpriteRenderer::CleanUp()
 
 void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
 {
+	abs.AddFloat2("size", size);
+
 	if(resource_texture != nullptr)
 		abs.AddString("resource", resource_texture->GetUID());
 
@@ -102,6 +102,8 @@ void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
 
 void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
 {
+	size = abs.GetFloat2("size", float2(10, 10));
+
 	std::string resource_uid = abs.GetString("resource");
 
 	if (resource_uid.compare("") != 0)
@@ -219,6 +221,22 @@ int ComponentSpriteRenderer::GetLayer() const
 	return layer;
 }
 
+void ComponentSpriteRenderer::SetSize(const float2 & set)
+{
+	size = set;
+
+	if (size.x < 0)
+		size.x = 0;
+
+	if (size.y < 0)
+		size.y = 0;
+}
+
+float2 ComponentSpriteRenderer::GetSize() const
+{
+	return size;
+}
+
 void ComponentSpriteRenderer::SetFilpX(bool set)
 {
 	flip_x = set;
@@ -240,13 +258,6 @@ bool ComponentSpriteRenderer::GetFlipY() const
 }
 
 void ComponentSpriteRenderer::SetComponentTransformSize()
-{
-	if (resource_texture != nullptr && use_sprite)
-	{
-		GetOwner()->transform->size = resource_texture->GetSize() * 0.1f;
-	}
-	else
-	{
-		GetOwner()->transform->size = float2(10, 10);
-	}
+{	
+	GetOwner()->transform->size = size;	
 }

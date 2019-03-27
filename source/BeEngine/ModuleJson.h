@@ -18,10 +18,10 @@ public:
 	void AddInt(const std::string& name, int val);
 	void AddBool(const std::string& name, bool val);
 	void AddFloat(const std::string& name, float val);
-	void AddString(const std::string& name, std::string val);
-	void AddFloat2(const std::string& name, float2 val);
-	void AddFloat3(const std::string& name, float3 val);
-	void AddFloat4(const std::string& name, float4 val);
+	void AddString(const std::string& name, const std::string& val);
+	void AddFloat2(const std::string& name, const float2& val);
+	void AddFloat3(const std::string& name, const float3& val);
+	void AddFloat4(const std::string& name, const float4& val);
 	void AddFloat2Vector(const std::string& name, const std::vector<float2> val);
 
 	int GetInt(const std::string& name, int def = 0);

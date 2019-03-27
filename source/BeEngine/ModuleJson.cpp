@@ -620,22 +620,22 @@ void DataAbstraction::AddFloat(const std::string & name, float val)
 	floats[name] = val;
 }
 
-void DataAbstraction::AddString(const std::string & name, std::string val)
+void DataAbstraction::AddString(const std::string & name, const std::string& val)
 {
 	strings[name] = val;
 }
 
-void DataAbstraction::AddFloat2(const std::string & name, float2 val)
+void DataAbstraction::AddFloat2(const std::string & name, const float2& val)
 {
 	floats2[name] = val;
 }
 
-void DataAbstraction::AddFloat3(const std::string & name, float3 val)
+void DataAbstraction::AddFloat3(const std::string & name, const float3& val)
 {
 	floats3[name] = val;
 }
 
-void DataAbstraction::AddFloat4(const std::string & name, float4 val)
+void DataAbstraction::AddFloat4(const std::string & name, const float4& val)
 {
 	floats4[name] = val;
 }

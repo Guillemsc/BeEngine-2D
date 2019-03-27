@@ -85,40 +85,18 @@ void ResourceScript::ClearScriptFields()
 	script_fields.clear();
 }
 
-void ResourceScript::AddIntScriptField(const std::string & field_name)
+void ResourceScript::AddScriptField(const std::string & field_name, const std::string& type_name)
 {
-	ResourceScriptField sf;
-	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_INT;
-	sf.field_name = field_name;
+	ScriptFieldType type = App->scripting->scripting_cluster->GetScriptFieldTypeFromName(type_name);
 
-	script_fields.push_back(sf);
-}
+	if (type != ScriptFieldType::SCRIPT_FIELD_UNDEFINED)
+	{
+		ResourceScriptField sf;
+		sf.type = type;
+		sf.field_name = field_name;
 
-void ResourceScript::AddFloatScriptField(const std::string & field_name)
-{
-	ResourceScriptField sf;
-	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_FLOAT;
-	sf.field_name = field_name;
-
-	script_fields.push_back(sf);
-}
-
-void ResourceScript::AddStringScriptField(const std::string & field_name)
-{
-	ResourceScriptField sf;
-	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_STRING;
-	sf.field_name = field_name;
-
-	script_fields.push_back(sf);
-}
-
-void ResourceScript::AddBoolScriptField(const std::string & field_name)
-{
-	ResourceScriptField sf;
-	sf.type = ResourceScriptFieldType::SCRIPT_FIELD_BOOL;
-	sf.field_name = field_name;
-
-	script_fields.push_back(sf);
+		script_fields.push_back(sf);
+	}
 }
 
 std::vector<ResourceScriptField> ResourceScript::GetFields()
@@ -128,7 +106,7 @@ std::vector<ResourceScriptField> ResourceScript::GetFields()
 
 bool ResourceScript::GetInheritsFromBeengineScript() const
 {
-	return inherits_from_beengine_script;
+	return inherits_from_component_script;
 }
 
 ScriptingClass ResourceScript::GetScriptingClass() const
@@ -155,17 +133,17 @@ ResourceScriptField::ResourceScriptField()
 
 }
 
-ResourceScriptFieldValue::ResourceScriptFieldValue(const ResourceScriptField fiel)
+ResourceScriptFieldValue::ResourceScriptFieldValue(const ResourceScriptField & fiel)
 {
-	field = fiel;
+	field = fiel.type;
 }
 
 std::string ResourceScriptFieldValue::GetFieldName() const
 {
-	return field.field_name;
+	return "";
 }
 
-ResourceScriptFieldType ResourceScriptFieldValue::GetFieldType() const
+ScriptFieldType ResourceScriptFieldValue::GetFieldType() const
 {
-	return field.type;
+	return field;
 }

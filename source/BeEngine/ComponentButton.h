@@ -9,6 +9,8 @@
 class GameObject;
 class Event;
 class ResourceTexture;
+class Event;
+class ScriptingBridgeComponentButton;
 
 class ComponentSpriteRenderer;
 
@@ -42,6 +44,8 @@ public:
 	void RenderGuizmos(float relative_size);
 
 private:
+	void OnEvent(Event * ev);
+
 	void TryFindComponentSpriteRenderer();
 
 	void UpdateState();
@@ -61,6 +65,13 @@ private:
 	float4 colour_idle = float4(1.0f, 0.0f, 1.0f, 1.0f);
 	float4 colour_hover = float4(0.7f, 0.0f, 1.0f, 1.0f);
 	float4 colour_pressed = float4(1.0f, 0.0f, 1.0f, 0.0f);
+
+	std::string resource_filter;
+
+	bool last_frame_pressed = false;
+
+private:
+	ScriptingBridgeComponentButton* scripting_bridge = nullptr;
 };
 
 #endif // !__COMPONENT_BUTTON_H__

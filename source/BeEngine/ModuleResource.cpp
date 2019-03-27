@@ -304,7 +304,8 @@ std::vector<Resource*> ModuleResource::GetResourcesOnAssetsPath(const std::strin
 	return ret;
 }
 
-bool ModuleResource::EditorResourceSelector(const ResourceType type, Resource *& res, std::string& filter_text)
+bool ModuleResource::EditorResourceSelector(const std::string& selector_name, const ResourceType type, Resource *& res, 
+	std::string& filter_text)
 {
 	bool ret = false;
 
@@ -319,6 +320,14 @@ bool ModuleResource::EditorResourceSelector(const ResourceType type, Resource *&
 		std::string resource_type_name = GetResourceNameFromResourceType(type);
 		resource_name = "None (" + resource_type_name + ")";
 	}
+
+	std::string name = selector_name + "    ";
+
+	ImGui::PushID(name.c_str());
+
+	ImGui::Text(name.c_str());
+
+	ImGui::SameLine();
 
 	ImGui::Text(resource_name.c_str());
 
@@ -404,6 +413,8 @@ bool ModuleResource::EditorResourceSelector(const ResourceType type, Resource *&
 
 		ImGui::EndPopup();
 	}
+
+	ImGui::PopID();
 
 	return ret;
 }

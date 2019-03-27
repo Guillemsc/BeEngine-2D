@@ -5,6 +5,16 @@
 
 class PhysicsBody;
 
+enum ScriptFieldType
+{
+	SCRIPT_FIELD_UNDEFINED,
+	SCRIPT_FIELD_INT,
+	SCRIPT_FIELD_FLOAT,
+	SCRIPT_FIELD_STRING,
+	SCRIPT_FIELD_BOOL,
+	SCRIPT_FIELD_GAMEOBJECT,
+};
+
 class ScriptingCluster 
 {
 	friend class ModuleScripting;
@@ -17,6 +27,8 @@ private:
 	void RebuildClasses();
 
 public:
+	ScriptFieldType GetScriptFieldTypeFromName(const std::string& name);
+
 	// Unboxing
 	float2 UnboxFloat2(MonoObject* obj);
 
@@ -35,6 +47,7 @@ public:
 	ScriptingClass component_class;
 	ScriptingClass component_script_class;
 	ScriptingClass component_transform_class;
+	ScriptingClass component_button_class;
 
 	ScriptingClass collision_class;
 

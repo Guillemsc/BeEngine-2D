@@ -43,7 +43,6 @@ private:
 
 private:
 	ComponentTransform* component_transform_ref = nullptr;
-	ScriptingClass class_generated;
 	ScriptingClassInstance* component_transform_scripting_instance = nullptr;
 };
 

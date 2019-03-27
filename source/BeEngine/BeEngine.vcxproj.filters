@@ -627,6 +627,9 @@
     <ClInclude Include="ComponentButton.h">
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components\UI</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingBridgeComponentButton.h">
+      <Filter>Sources\7. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1036,6 +1039,9 @@
     </ClCompile>
     <ClCompile Include="ComponentButton.cpp">
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeComponentButton.cpp">
+      <Filter>Sources\7. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

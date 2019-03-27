@@ -26,14 +26,10 @@ ComponentScript::~ComponentScript()
 
 void ComponentScript::EditorDraw()
 {
-	ImGui::Text("Script:   ");
-
-	ImGui::SameLine();
-
 	bool open_error_script = false;
 
 	Resource* res = resource_script;
-	if (App->resource->EditorResourceSelector(ResourceType::RESOURCE_TYPE_SCRIPT, res, resource_filter))
+	if (App->resource->EditorResourceSelector("Script:", ResourceType::RESOURCE_TYPE_SCRIPT, res, resource_filter))
 	{
 		ResourceScript* resource = (ResourceScript*)res;
 		if (resource != nullptr && !resource->GetInheritsFromBeengineScript())
@@ -222,7 +218,7 @@ void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)
 
 	switch (field_value.GetFieldType())
 	{
-	case ResourceScriptFieldType::SCRIPT_FIELD_BOOL:
+	case ScriptFieldType::SCRIPT_FIELD_BOOL:
 	{
 		if (ImGui::Checkbox(field_name.c_str(), &field_value.bool_field))
 		{
@@ -230,7 +226,7 @@ void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)
 		}
 		break;
 	}
-	case ResourceScriptFieldType::SCRIPT_FIELD_INT:
+	case ScriptFieldType::SCRIPT_FIELD_INT:
 	{
 		if (ImGui::DragInt(field_name.c_str(), &field_value.int_field))
 		{
@@ -238,7 +234,7 @@ void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)
 		}
 		break;
 	}
-	case ResourceScriptFieldType::SCRIPT_FIELD_FLOAT:
+	case ScriptFieldType::SCRIPT_FIELD_FLOAT:
 	{
 		if (ImGui::DragFloat(field_name.c_str(), &field_value.float_field))
 		{
@@ -246,7 +242,7 @@ void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)
 		}
 		break;
 	}
-	case ResourceScriptFieldType::SCRIPT_FIELD_STRING:
+	case ScriptFieldType::SCRIPT_FIELD_STRING:
 	{
 		char text[999];
 		memset(text, 0, 999 * sizeof(char));

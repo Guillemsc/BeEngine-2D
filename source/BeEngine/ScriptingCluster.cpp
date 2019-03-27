@@ -44,10 +44,39 @@ void ScriptingCluster::RebuildClasses()
 
 		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentScript", component_script_class);
 		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentTransform", component_transform_class);
+		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentButton", component_button_class);
 
 		// Physics
 		App->scripting->scripting_assembly->GetClass("BeEngine", "Collision", collision_class);
 	}
+}
+
+ScriptFieldType ScriptingCluster::GetScriptFieldTypeFromName(const std::string & name)
+{
+	ScriptFieldType ret = ScriptFieldType::SCRIPT_FIELD_UNDEFINED;
+
+	if (name.compare("System.String") == 0)
+	{
+		ret = ScriptFieldType::SCRIPT_FIELD_STRING;
+	}
+	else if (name.compare("System.Int32") == 0)
+	{
+		ret = ScriptFieldType::SCRIPT_FIELD_INT;
+	}
+	else if (name.compare("System.Single") == 0)
+	{
+		ret = ScriptFieldType::SCRIPT_FIELD_FLOAT;
+	}
+	else if (name.compare("System.Boolean") == 0)
+	{
+		ret = ScriptFieldType::SCRIPT_FIELD_BOOL;
+	}
+	else if (name.compare("BeEngine.GameObject") == 0)
+	{
+		ret = ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT;
+	}
+
+	return ret;
 }
 
 float2 ScriptingCluster::UnboxFloat2(MonoObject* obj)
@@ -99,7 +128,6 @@ MonoObject* ScriptingCluster::BoxCollision(PhysicsBody * pb)
 			{
 				ret = instance.GetMonoObject();
 			}
-
 		}
 	}
 

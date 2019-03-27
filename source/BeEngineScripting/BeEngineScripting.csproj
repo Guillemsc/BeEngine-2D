@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BeEngineObject.cs" />
     <Compile Include="GameObject\Components\Component.cs" />
+    <Compile Include="GameObject\Components\ComponentButton.cs" />
     <Compile Include="GameObject\Components\ComponentScript.cs" />
     <Compile Include="GameObject\Components\ComponentTransform.cs" />
     <Compile Include="GameObject\GameObject.cs" />

@@ -659,14 +659,14 @@ void ModuleAssets::LoadUserScriptsInfo()
 
 				std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
 
-				curr_script->inherits_from_beengine_script = false;
+				curr_script->inherits_from_component_script = false;
 
 				ScriptingClass sc;
 				if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
 				{
-					curr_script->inherits_from_beengine_script = sc.GetIsInheritedFrom(App->scripting->scripting_cluster->component_script_class);
+					curr_script->inherits_from_component_script = sc.GetIsInheritedFrom(App->scripting->scripting_cluster->component_script_class);
 
-					if (curr_script->inherits_from_beengine_script)
+					if (curr_script->inherits_from_component_script)
 					{
 						curr_script->script_class = sc;
 
@@ -676,22 +676,7 @@ void ModuleAssets::LoadUserScriptsInfo()
 						{
 							std::string type_name = mono_type_get_name((*it).second);
 
-							if (type_name.compare("System.String") == 0)
-							{
-								curr_script->AddStringScriptField((*it).first);
-							}
-							else if (type_name.compare("System.Int32") == 0)
-							{
-								curr_script->AddIntScriptField((*it).first);
-							}
-							else if (type_name.compare("System.Single") == 0)
-							{
-								curr_script->AddFloatScriptField((*it).first);
-							}
-							else if (type_name.compare("System.Boolean") == 0)
-							{
-								curr_script->AddBoolScriptField((*it).first);
-							}
+							curr_script->AddScriptField(type_name, type_name);
 						}
 					}
 				}
