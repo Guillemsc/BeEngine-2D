@@ -110,6 +110,7 @@
     <ClInclude Include="ComponentPhysicsBody.h" />
     <ClInclude Include="ComponentPolygonCollider.h" />
     <ClInclude Include="ComponentScript.h" />
+    <ClInclude Include="ComponentScriptFields.h" />
     <ClInclude Include="ComponentSpriteRenderer.h" />
     <ClInclude Include="ComponentTransfrom.h" />
     <ClInclude Include="ConsoleWindow.h" />
@@ -282,6 +283,7 @@
     <ClCompile Include="ComponentPhysicsBody.cpp" />
     <ClCompile Include="ComponentPolygonCollider.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
+    <ClCompile Include="ComponentScriptFields.cpp" />
     <ClCompile Include="ComponentSpriteRenderer.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cursor.cpp" />

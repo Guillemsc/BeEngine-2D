@@ -6,6 +6,7 @@
 #include "App.h"
 #include "ComponentTransfrom.h"
 #include "ModuleFileSystem.h"
+#include "Functions.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -29,13 +30,13 @@ void GameObjectAbstraction::Abstract(const std::vector<GameObject*>& to_abstract
 	for (std::vector<GameObject*>::const_iterator it = to_abstract.cbegin(); it != to_abstract.cend(); ++it)
 		all_to_abstract.push_back((*it));
 
-	std::map<uint, GameObject*> temp_relations;
+	std::vector<GameObject*> go_indexed;
 
 	while (all_to_abstract.size() > 0)
 	{
 		GameObject* curr_go = *all_to_abstract.begin();
 
-		temp_relations[id_counter++] = curr_go;
+		go_indexed.push_back(curr_go);
 
 		std::vector<GameObject*> childs = curr_go->GetChilds();
 
@@ -45,29 +46,25 @@ void GameObjectAbstraction::Abstract(const std::vector<GameObject*>& to_abstract
 		all_to_abstract.erase(all_to_abstract.begin());
 	}
 
-	for (std::map<uint, GameObject*>::iterator it = temp_relations.begin(); it != temp_relations.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = go_indexed.begin(); it != go_indexed.end(); ++it)
 	{
-		GameObject* curr_go = (*it).second;
+		GameObject* curr_go = (*it);
 
-		int parent_id = -1;
+		GameObjectAbstractionRelation curr_relation;
+
+		curr_relation.uid = curr_go->GetUID();
+
+		std::string parent_uid = "";
 
 		GameObject* parent_go = curr_go->GetParent();
 
 		if (parent_go != nullptr)
-		{
-			for (std::map<uint, GameObject*>::iterator ch = temp_relations.begin(); ch != temp_relations.end(); ++ch)
-			{
-				if ((*ch).second == parent_go)
-				{
-					parent_id = (*ch).first;
-					break;
-				}
-			}
-		}
+			parent_uid = parent_go->GetUID();
 
+		curr_relation.parent_uid = parent_uid;
+		
 		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
 
-		GameObjectAbstractionRelation curr_relation;
 		curr_go->OnSaveAbstraction(curr_relation.go_abstraction);
 
 		curr_relation.go_abstraction.AddInt("components_count", components.size());
@@ -85,9 +82,6 @@ void GameObjectAbstraction::Abstract(const std::vector<GameObject*>& to_abstract
 			curr_relation.components_abstraction.push_back(components_abstraction);
 		}
 
-		curr_relation.id = (*it).first;
-		curr_relation.parent_id = parent_id;
-
 		relations.push_back(curr_relation);
 	}
 
@@ -97,26 +91,53 @@ void GameObjectAbstraction::Abstract(const std::vector<GameObject*>& to_abstract
 std::vector<GameObject*> GameObjectAbstraction::DeAbstract()
 {
 	std::vector<GameObject*> ret;
+	ret.reserve(relations.size());
+
+	std::string instance_uid = GetUIDRandomHexadecimal();
+
+	class TmpGameObjectReference
+	{
+	public:
+		GameObjectAbstractionRelation abstraction;
+		GameObject* go = nullptr;
+	};
+
+	std::vector<TmpGameObjectReference> tmp_references;
+	tmp_references.reserve(relations.size());
 
 	if (abstracted)
 	{
-		class TempRelationStruct
-		{
-		public:
-			GameObjectAbstractionRelation relation;
-			GameObject* go = nullptr;
-		};
-
-		std::vector<TempRelationStruct> temp_relations;
-
 		for (std::vector<GameObjectAbstractionRelation>::iterator it = relations.begin(); it != relations.end(); ++it)
 		{
-			GameObject* go = App->gameobject->CreateGameObject();
+			GameObject* go = App->gameobject->CreateGameObject(nullptr, (*it).uid, instance_uid);
 			ret.push_back(go);
 
 			go->OnLoadAbstraction((*it).go_abstraction);
 
-			std::vector<DataAbstraction> components_abstractions = (*it).components_abstraction;
+			TmpGameObjectReference tmp_ref;
+			tmp_ref.go = go;
+			tmp_ref.abstraction = (*it);
+
+			tmp_references.push_back(tmp_ref);
+		}
+
+		for (std::vector<TmpGameObjectReference>::iterator it = tmp_references.begin(); it != tmp_references.end(); ++it)
+		{
+			GameObject* curr_go = (*it).go;
+
+			if ((*it).abstraction.parent_uid.compare("") != 0)
+			{
+				for (std::vector<TmpGameObjectReference>::iterator ch = tmp_references.begin(); ch != tmp_references.end(); ++ch)
+				{
+					if ((*it).abstraction.parent_uid.compare((*ch).abstraction.uid) == 0)
+					{
+						curr_go->SetParent((*ch).go);
+						break;
+					}
+				}
+			}
+
+			std::vector<DataAbstraction> components_abstractions = (*it).abstraction.components_abstraction;
 
 			for (std::vector<DataAbstraction>::iterator c = components_abstractions.begin(); c != components_abstractions.end(); ++c)
 			{
@@ -126,35 +147,12 @@ std::vector<GameObject*> GameObjectAbstraction::DeAbstract()
 				{
 					if (type == 0)
 					{
-						go->transform->OnLoadAbstraction((*c));
+						curr_go->transform->OnLoadAbstraction((*c));
 					}
 					else
 					{
-						GameObjectComponent* new_component = go->CreateComponent(static_cast<ComponentType>(type));
+						GameObjectComponent* new_component = curr_go->CreateComponent(static_cast<ComponentType>(type));
 						new_component->OnLoadAbstraction((*c));
-					}
-				}
-			}
-
-			TempRelationStruct str;
-			str.relation = (*it);
-			str.go = go;
-
-			temp_relations.push_back(str);
-		}
-
-		for (std::vector<TempRelationStruct>::iterator it = temp_relations.begin(); it != temp_relations.end(); ++it)
-		{
-			if ((*it).relation.parent_id > -1)
-			{
-				GameObject* curr_go = (*it).go;
-
-				for (std::vector<TempRelationStruct>::iterator ch = temp_relations.begin(); ch != temp_relations.end(); ++ch)
-				{
-					if ((*it).relation.parent_id == (*ch).relation.id)
-					{
-						curr_go->SetParent((*ch).go);
-						break;
 					}
 				}
 			}
@@ -195,10 +193,10 @@ bool GameObjectAbstraction::Serialize(const std::string& path, const std::string
 
 					if (doc->MoveToSection(curr_go_section))
 					{
-						JSON_Doc go_node = doc->GetNode();
+						doc->SetString("uid", (*it).uid.c_str());
+						doc->SetString("parent_uid", (*it).parent_uid.c_str());
 
-						go_node.SetNumber("id", (*it).id);
-						go_node.SetNumber("parent_id", (*it).parent_id);
+						JSON_Doc go_node = doc->GetNode();
 
 						(*it).go_abstraction.Serialize(go_node);
 
@@ -255,14 +253,14 @@ bool GameObjectAbstraction::DeSerialize(const std::string & filepath)
 
 				if (doc->MoveToSection(curr_go_section))
 				{
-					JSON_Doc go_node = doc->GetNode();
-
 					GameObjectAbstractionRelation curr_relation;
 
-					curr_relation.id = go_node.GetNumber("id", -1);
-					curr_relation.parent_id = go_node.GetNumber("parent_id", -1);
+					curr_relation.uid = doc->GetString("uid", "");
+					curr_relation.parent_uid = doc->GetString("parent_uid", "");
 
-					if (curr_relation.id > -1)
+					JSON_Doc go_node = doc->GetNode();
+
+					if (curr_relation.uid.compare("") != 0)
 					{
 						curr_relation.go_abstraction.DeSerialize(go_node);
 
@@ -300,14 +298,6 @@ void GameObjectAbstraction::Clear()
 {
 	relations.clear();
 	abstracted = false;
-}
-
-uint GameObjectAbstraction::GetParentId(uint id)
-{
-	uint ret = -1;
-
-
-	return ret;
 }
 
 GameObjectAbstractionRelation::GameObjectAbstractionRelation()

@@ -16,33 +16,14 @@ class ResourceScriptField
 	friend class ResourceScript;
 
 public:
-	ResourceScriptField();
+	ResourceScriptField(ScriptFieldType type, const std::string& field_name);
 
-	ScriptFieldType type = ScriptFieldType::SCRIPT_FIELD_UNDEFINED;
-	std::string field_name;
-};
-
-class ResourceScriptFieldValue
-{
-	friend class ResourceScript;
-
-public:
-	ResourceScriptFieldValue(const ResourceScriptField& field);
-
-	std::string GetFieldName() const;
-	ScriptFieldType GetFieldType() const;
-
-public:
-	int int_field = 0;
-	float float_field = 0.0f;
-	std::string string_field = "";
-	bool bool_field = false;
-	//GameObject* game_object_field = nullptr;
-	//GameObjectComponent* game_object_class_field = nullptr;
-	//Resource* resource_field = nullptr;
+	ScriptFieldType GetType() const;
+	std::string GetName() const;
 
 private:
-	ScriptFieldType field;
+	ScriptFieldType type = ScriptFieldType::SCRIPT_FIELD_UNDEFINED;
+	std::string name;
 };
 
 class ResourceScript : public Resource

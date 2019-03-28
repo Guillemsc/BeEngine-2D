@@ -670,13 +670,13 @@ void ModuleAssets::LoadUserScriptsInfo()
 					{
 						curr_script->script_class = sc;
 
-						std::map<std::string, MonoType*> fields = sc.GetFields();
+						std::vector<ScriptingClassField> fields = sc.GetFields();
 
-						for (std::map<std::string, MonoType*>::iterator it = fields.begin(); it != fields.end(); ++it)
+						for (std::vector<ScriptingClassField>::const_iterator it = fields.begin(); it != fields.end(); ++it)
 						{
-							std::string type_name = mono_type_get_name((*it).second);
+							std::string type_name = mono_type_get_name((*it).GetType());
 
-							curr_script->AddScriptField(type_name, type_name);
+							curr_script->AddScriptField((*it).GetName(), type_name);
 						}
 					}
 				}

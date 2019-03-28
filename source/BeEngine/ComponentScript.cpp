@@ -11,6 +11,7 @@
 #include "ComponentTransfrom.h"
 #include "ModuleJson.h"
 #include "ScriptingBridgeComponentScript.h"
+#include "ComponentScriptFields.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -38,8 +39,6 @@ void ComponentScript::EditorDraw()
 		}
 		else
 		{
-			ClearFieldsValues();
-
 			resource_script = (ResourceScript*)res;
 
 			if (resource_script != nullptr)
@@ -75,7 +74,7 @@ void ComponentScript::EditorDraw()
 
 	if (resource_script != nullptr)
 	{
-		for (std::vector<ResourceScriptFieldValue>::iterator it = fields_values.begin(); it != fields_values.end(); ++it)
+		for (std::vector<ComponentScriptField*>::iterator it = fields_values.begin(); it != fields_values.end(); ++it)
 		{
 			DrawFieldValue((*it));
 		}
@@ -93,6 +92,8 @@ void ComponentScript::Start()
 
 void ComponentScript::CleanUp()
 {
+	RemoveAllFieldValues();
+
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 
@@ -101,12 +102,129 @@ void ComponentScript::CleanUp()
 
 void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)
 {
+	int fields_count = fields_values.size();
+
+	abs.AddInt("fields_count", fields_count);
+
+	int counter = 0;
+	for (std::vector<ComponentScriptField*>::iterator it = fields_values.begin(); it != fields_values.end(); ++it, ++counter)
+	{
+		std::string number = std::to_string(counter);
+
+		std::string field_name_name = "field_name_" + number;
+		std::string field_type_name = "field_type_" + number;
+		std::string field_val_name = "field_val_" + number;
+
+		abs.AddString(field_name_name, (*it)->GetName());
+		abs.AddInt(field_type_name, (*it)->GetType());
+
+		switch ((*it)->GetType())
+		{
+			case ScriptFieldType::SCRIPT_FIELD_INT:
+			{
+				ComponentScriptFieldInt* field = (ComponentScriptFieldInt*)(*it);
+
+				abs.AddInt(field_val_name, field->GetValue());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_FLOAT:
+			{
+				ComponentScriptFieldFloat* field = (ComponentScriptFieldFloat*)(*it);
+
+				abs.AddFloat(field_val_name, field->GetValue());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_STRING:
+			{
+				ComponentScriptFieldString* field = (ComponentScriptFieldString*)(*it);
+
+				abs.AddString(field_val_name, field->GetValue());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_BOOL:
+			{
+				ComponentScriptFieldBool* field = (ComponentScriptFieldBool*)(*it);
+
+				abs.AddBool(field_val_name, field->GetValue());
+				break;
+			}
+		default:
+			break;
+		}
+	}
+
 	if (resource_script != nullptr)
 		abs.AddString("resource", resource_script->GetUID());
 }
 
 void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 {
+	RemoveAllFieldValues();
+
+	int fields_count = abs.GetInt("fields_count");
+
+	for (int i = 0; i < fields_count; ++i)
+	{
+		std::string number = std::to_string(i);
+
+		std::string field_name_name = "field_name_" + number;
+		std::string field_type_name = "field_type_" + number;
+		std::string field_val_name = "field_val_" + number;
+
+		std::string name = abs.GetString(field_name_name);
+		int field_int = abs.GetInt(field_type_name, -1);
+
+		if (field_int > -1)
+		{
+			ScriptFieldType field = static_cast<ScriptFieldType>(field_int);
+
+			ComponentScriptField* field_obj = nullptr;
+
+			switch (field)
+			{
+			case ScriptFieldType::SCRIPT_FIELD_INT:
+			{
+				int val = abs.GetInt(field_val_name);
+				field_obj = new ComponentScriptFieldInt(name);
+				((ComponentScriptFieldInt*)field_obj)->SetValue(val);
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_FLOAT:
+			{
+				float val = abs.GetFloat(field_val_name);
+				field_obj = new ComponentScriptFieldFloat(name);
+				((ComponentScriptFieldFloat*)field_obj)->SetValue(val);
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_STRING:
+			{
+				std::string val = abs.GetString(field_val_name);
+				field_obj = new ComponentScriptFieldString(name);
+				((ComponentScriptFieldString*)field_obj)->SetValue(val);
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_BOOL:
+			{
+				bool val = abs.GetBool(field_val_name);
+				field_obj = new ComponentScriptFieldBool(name);
+				((ComponentScriptFieldBool*)field_obj)->SetValue(val);
+				break;
+			}
+			}
+
+			if (field_obj != nullptr)
+			{
+				fields_values.push_back(field_obj);
+			}
+		}
+	}
+
 	std::string resource_uid = abs.GetString("resource");
 
 	if (resource_uid.compare("") != 0)
@@ -129,7 +247,7 @@ void ComponentScript::OnEvent(Event * ev)
 		{
 			resource_script = nullptr;
 
-			ClearFieldsValues();
+			RemoveAllFieldValues();
 
 			UpdateScriptInstance();
 		}
@@ -143,8 +261,6 @@ void ComponentScript::OnEvent(Event * ev)
 			if (!resource_script->GetInheritsFromBeengineScript())
 			{
 				resource_script = nullptr;
-
-				ClearFieldsValues();
 			}
 			else
 			{
@@ -192,6 +308,10 @@ void ComponentScript::UpdateScriptInstance()
 	}
 }
 
+void ComponentScript::InitFields()
+{
+}
+
 void ComponentScript::CallAwake()
 {
 	scripting_bridge->CallAwake();
@@ -212,84 +332,156 @@ void ComponentScript::CallOnDestroy()
 	scripting_bridge->CallOnDestroy();
 }
 
-void ComponentScript::DrawFieldValue(ResourceScriptFieldValue & field_value)
+void ComponentScript::DrawFieldValue(ComponentScriptField* field_value)
 {
-	std::string field_name = field_value.GetFieldName();
+	std::string field_name = field_value->GetName();
 
-	switch (field_value.GetFieldType())
+	switch (field_value->GetType())
 	{
-	case ScriptFieldType::SCRIPT_FIELD_BOOL:
-	{
-		if (ImGui::Checkbox(field_name.c_str(), &field_value.bool_field))
-		{
-
-		}
-		break;
-	}
 	case ScriptFieldType::SCRIPT_FIELD_INT:
 	{
-		if (ImGui::DragInt(field_name.c_str(), &field_value.int_field))
-		{
+		ComponentScriptFieldInt* field_obj = (ComponentScriptFieldInt*)field_value;
 
-		}
+		int val = field_obj->GetValue();
+
+		if (ImGui::DragInt(field_name.c_str(), &val))
+			field_obj->SetValue(val);
+		
 		break;
 	}
+
 	case ScriptFieldType::SCRIPT_FIELD_FLOAT:
 	{
-		if (ImGui::DragFloat(field_name.c_str(), &field_value.float_field))
-		{
+		ComponentScriptFieldFloat* field_obj = (ComponentScriptFieldFloat*)field_value;
 
-		}
+		float val = field_obj->GetValue();
+
+		if (ImGui::DragFloat(field_name.c_str(), &val))
+			field_obj->SetValue(val);
+
 		break;
 	}
+
 	case ScriptFieldType::SCRIPT_FIELD_STRING:
 	{
+		ComponentScriptFieldString* field_obj = (ComponentScriptFieldString*)field_value;
+
+		std::string val = field_obj->GetValue();
+
 		char text[999];
 		memset(text, 0, 999 * sizeof(char));
-		TextCpy(text, field_value.string_field.c_str());
+		TextCpy(text, val.c_str());
 
-		if (ImGui::InputText(field_name.c_str(), text, 999))
-		{
-			field_value.string_field = text;
-		}
+		if (ImGui::InputText(field_name.c_str(), text, 998))
+			field_obj->SetValue(text);
+		
 		break;
 	}
-	default:
+
+	case ScriptFieldType::SCRIPT_FIELD_BOOL:
+	{
+		ComponentScriptFieldBool* field_obj = (ComponentScriptFieldBool*)field_value;
+
+		bool val = field_obj->GetValue();
+
+		if (ImGui::Checkbox(field_name.c_str(), &val))
+			field_obj->SetValue(val);
+
 		break;
+	}
+
 	}
 }
 
-void ComponentScript::ClearFieldsValues()
+void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptField>& fields)
 {
-	fields_values.clear();
-}
-
-void ComponentScript::RecalculateFieldsValues(std::vector<ResourceScriptField> fields)
-{
-	std::vector<ResourceScriptFieldValue> fields_values_to_check = fields_values;
-
-	fields_values.clear();
+	std::vector<ComponentScriptField*> fields_values_to_check = fields_values;
 
 	for (std::vector<ResourceScriptField>::const_iterator fi = fields.begin(); fi != fields.end(); ++fi)
 	{
-		bool found = false;
+		ComponentScriptField* field = nullptr;
 
-		for (std::vector<ResourceScriptFieldValue>::iterator it = fields_values_to_check.begin(); it != fields_values_to_check.end(); ++it)
-		{	
-			if ((*it).GetFieldName().compare((*fi).field_name) == 0)
+		for (std::vector<ComponentScriptField*>::iterator it = fields_values_to_check.begin(); it != fields_values_to_check.end(); ++it)
+		{
+			if ((*it)->GetType() == (*it)->GetType())
 			{
-				fields_values.push_back((*it));
-				fields_values_to_check.erase(it);
-				found = true;
-				break;
+				if ((*it)->GetName().compare((*fi).GetName()) == 0)
+				{
+					field = (*it);
+					fields_values_to_check.erase(it);
+					break;
+				}
 			}
 		}
 
-		if (!found)
+		if (field == nullptr)
 		{
-			ResourceScriptFieldValue nfv((*fi));
-			fields_values.push_back(nfv);
+			switch ((*fi).GetType())
+			{
+			case ScriptFieldType::SCRIPT_FIELD_INT:
+			{
+				field = new ComponentScriptFieldInt((*fi).GetName());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_FLOAT:
+			{
+				field = new ComponentScriptFieldFloat((*fi).GetName());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_STRING:
+			{
+				field = new ComponentScriptFieldString((*fi).GetName());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_BOOL:
+			{
+				field = new ComponentScriptFieldBool((*fi).GetName());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT:
+			{
+				field = new ComponentScriptFieldGameObject((*fi).GetName());
+				break;
+			}
+
+			}
+		}
+
+		if (field != nullptr)
+		{
+			fields_values.push_back(field);
 		}
 	}
 
+	RemoveFieldValues(fields_values_to_check);
+}
+
+void ComponentScript::RemoveFieldValues(const std::vector<ComponentScriptField*>& vals)
+{
+	for (std::vector<ComponentScriptField*>::const_iterator it = vals.begin(); it != vals.end(); ++it)
+	{
+		for (std::vector<ComponentScriptField*>::iterator fi = fields_values.begin(); fi != fields_values.end(); ++fi)
+		{
+			if ((*it) == (*fi))
+			{
+				RELEASE(*fi);
+				fields_values.erase(fi);
+				break;
+			}
+		}
+	}
+}
+
+void ComponentScript::RemoveAllFieldValues()
+{
+	for (std::vector<ComponentScriptField*>::iterator fi = fields_values.begin(); fi != fields_values.end(); ++fi)
+	{		
+		RELEASE(*fi);
+	}
+
+	fields_values.clear();
 }

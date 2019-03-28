@@ -576,7 +576,7 @@ void HierarchyWindow::DrawGameObjectRecursive(Scene* scene, GameObject* go, uint
 			flags |= ImGuiTreeNodeFlags_Selected;
 
 		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
-		ImGui::PushID(go->GetUID().c_str());
+		ImGui::PushID(go->GetUIDPlusInstanceUID().c_str());
 
 		std::string go_text = go->GetName();
 

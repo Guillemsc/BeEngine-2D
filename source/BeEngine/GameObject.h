@@ -26,7 +26,7 @@ private:
 	void operator delete(void *) {}
 
 public:
-	GameObject(const std::string& uid);
+	GameObject(const std::string& uid, const std::string& instance_uid);
 	~GameObject() {};
 
 	void OnSaveAbstraction(DataAbstraction& abs);
@@ -43,7 +43,9 @@ public:
 	void SetActive(bool set);
 	bool GetActive() const;
 
-	std::string GetUID();
+	std::string GetUID() const;;
+	std::string GetInstanceUID() const;
+	std::string GetUIDPlusInstanceUID() const;
 
 	Scene* GetScene() const;
 
@@ -85,6 +87,10 @@ public:
 	ComponentTransform* transform = nullptr;
 
 private:
+	std::string uid;
+	std::string instance_uid;
+	std::string uid_plus_instance_uid;
+
 	bool active = true;
 
 	GameObject* parent = nullptr;
@@ -96,7 +102,6 @@ private:
 	std::vector<GameObjectComponent*> components_to_destroy;
 
 	std::string name;
-	std::string uid;
 
 	ResourcePrefab* resource_prefab = nullptr;
 

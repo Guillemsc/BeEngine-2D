@@ -57,6 +57,19 @@ private:
 	bool used_to_compile = true;
 };
 
+class ScriptingClassField
+{
+public:
+	ScriptingClassField(const std::string& name, MonoType* type);
+
+	MonoType* GetType() const;
+	std::string GetName() const;
+
+private:
+	MonoType* type = nullptr;
+	std::string name;
+};
+
 class ScriptingClass
 {
 	friend class ScriptingClassInstance;
@@ -75,7 +88,7 @@ public:
 	bool GetParentClass(ScriptingClass& returned_parent_class);
 	bool GetIsInheritedFrom(const ScriptingClass& class_parent);
 
-	std::map<std::string, MonoType*> GetFields();
+	std::vector<ScriptingClassField> GetFields();
 
 	bool InvokeStaticMonoMethod(const char* method_name, void **args, uint args_count, MonoObject*& return_object);
 

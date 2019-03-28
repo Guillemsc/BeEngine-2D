@@ -8,8 +8,8 @@
 class GameObject;
 class ResourceScript;
 class Event;
-class ResourceScriptFieldValue;
 class ResourceScriptField;
+class ComponentScriptField;
 class ScriptingBridgeComponentScript;
 
 class ComponentScript : public GameObjectComponent
@@ -41,23 +41,25 @@ public:
 
 	void UpdateScriptInstance();
 
+	void InitFields();
 	void CallAwake();
 	void CallStart();
 	void CallUpdate();
 	void CallOnDestroy();
 
 private:
-	void DrawFieldValue(ResourceScriptFieldValue& field_value);
+	void DrawFieldValue(ComponentScriptField* field_value);
 
-	void ClearFieldsValues();
-	void RecalculateFieldsValues(std::vector<ResourceScriptField> fields);
+	void RecalculateFieldsValues(const std::vector<ResourceScriptField>& fields);
+	void RemoveFieldValues(const std::vector<ComponentScriptField*>& vals);
+	void RemoveAllFieldValues();
 
 private:
 	ResourceScript* resource_script = nullptr;
 
 	std::string resource_filter;
 
-	std::vector<ResourceScriptFieldValue> fields_values;
+	std::vector<ComponentScriptField*> fields_values;
 
 	ScriptingBridgeComponentScript* scripting_bridge = nullptr;
 };

@@ -31,6 +31,8 @@ public:
 	void SetGeneratedClass(const ScriptingClass& generated_class);
 	void RemoveGeneratedClass();
 
+	void SetField(ComponentScriptField* field);
+
 	void CallAwake();
 	void CallStart();
 	void CallUpdate();

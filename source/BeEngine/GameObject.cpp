@@ -20,9 +20,12 @@
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-GameObject::GameObject(const std::string& set_uid)
+GameObject::GameObject(const std::string & set_uid, const std::string & set_instance_uid)
 {
 	uid = set_uid;
+	instance_uid = set_instance_uid;
+
+	uid_plus_instance_uid = uid + instance_uid;
 }
 
 void GameObject::OnSaveAbstraction(DataAbstraction & abs)
@@ -120,9 +123,19 @@ bool GameObject::GetActive() const
 	return active;
 }
 
-std::string GameObject::GetUID()
+std::string GameObject::GetUID() const
 {
 	return uid;
+}
+
+std::string GameObject::GetInstanceUID() const
+{
+	return instance_uid;
+}
+
+std::string GameObject::GetUIDPlusInstanceUID() const
+{
+	return uid_plus_instance_uid;
 }
 
 Scene * GameObject::GetScene() const

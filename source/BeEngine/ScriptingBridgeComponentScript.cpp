@@ -76,6 +76,11 @@ void ScriptingBridgeComponentScript::CleanUp()
 	}
 }
 
+ScriptingClassInstance * ScriptingBridgeComponentScript::GetComponentScriptScriptingInstance() const
+{
+	return component_script_scripting_instance;
+}
+
 void ScriptingBridgeComponentScript::SetGeneratedClass(const ScriptingClass & g_class)
 {
 	class_generated = g_class;

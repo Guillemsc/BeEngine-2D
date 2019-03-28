@@ -115,6 +115,9 @@
     <Filter Include="Sources\9. SceneObjects ==========\GameObject\Components\UI">
       <UniqueIdentifier>{76f0bab5-888d-4498-b8b5-90b61bfb50cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\9. SceneObjects ==========\GameObject\Components\Script">
+      <UniqueIdentifier>{e85fc219-64ed-4a40-ace6-ce01094d76c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -513,9 +516,6 @@
     <ClInclude Include="StaticSpriteRenderer.h">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentScript.h">
-      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptingObjectCompiler.h">
       <Filter>Sources\7. Scripting ==============\ScriptingInternal</Filter>
     </ClInclude>
@@ -629,6 +629,12 @@
     </ClInclude>
     <ClInclude Include="ScriptingBridgeComponentButton.h">
       <Filter>Sources\7. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentScript.h">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentScriptFields.h">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -929,9 +935,6 @@
     <ClCompile Include="StaticSpriteRenderer.cpp">
       <Filter>Sources\4. Rendering =============\StaticRenderers</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentScript.cpp">
-      <Filter>Sources\9. SceneObjects ==========\GameObject\Components</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptingObjectCompiler.cpp">
       <Filter>Sources\7. Scripting ==============\ScriptingInternal</Filter>
     </ClCompile>
@@ -1042,6 +1045,12 @@
     </ClCompile>
     <ClCompile Include="ScriptingBridgeComponentButton.cpp">
       <Filter>Sources\7. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentScript.cpp">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentScriptFields.cpp">
+      <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

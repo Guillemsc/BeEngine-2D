@@ -120,12 +120,17 @@ void ModuleGameObject::OnEvent(Event * ev)
 
 GameObject* ModuleGameObject::CreateGameObject(Scene* scene)
 {
+	return CreateGameObject(scene, GetUIDRandomHexadecimal(), GetUIDRandomHexadecimal());
+}
+
+GameObject * ModuleGameObject::CreateGameObject(Scene* scene, const std::string & uid, const std::string & instance_uid)
+{
 	GameObject* ret = nullptr;
 
 	if (scene == nullptr)
 		scene = root_scene;
 
-	ret = new GameObject(GetUIDRandomHexadecimal());
+	ret = new GameObject(uid, instance_uid);
 
 	std::string name = "GameObject" + std::to_string(game_objects.size());
 	ret->SetName(name.c_str());
@@ -209,13 +214,13 @@ std::vector<GameObject*> ModuleGameObject::GetGameObjects()
 	return game_objects;
 }
 
-GameObject * ModuleGameObject::GetGameObjectByUID(const char * uid)
+GameObject * ModuleGameObject::GetGameObjectByUID(const std::string & uid, const std::string & instance_uid)
 {
 	GameObject* ret = nullptr;
 
 	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
 	{
-		if ((*it)->GetUID().compare(uid) == 0)
+		if ((*it)->GetUID().compare(uid) == 0 && (*it)->GetInstanceUID().compare(instance_uid))
 		{
 			ret = *it;
 			break;

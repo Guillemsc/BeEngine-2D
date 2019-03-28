@@ -91,10 +91,7 @@ void ResourceScript::AddScriptField(const std::string & field_name, const std::s
 
 	if (type != ScriptFieldType::SCRIPT_FIELD_UNDEFINED)
 	{
-		ResourceScriptField sf;
-		sf.type = type;
-		sf.field_name = field_name;
-
+		ResourceScriptField sf(type, field_name);
 		script_fields.push_back(sf);
 	}
 }
@@ -128,22 +125,18 @@ bool ResourceScript::DrawEditorExplorer()
 	return ret;
 }
 
-ResourceScriptField::ResourceScriptField()
+ResourceScriptField::ResourceScriptField(ScriptFieldType t, const std::string& f)
 {
-
+	type = t;
+	name = f;
 }
 
-ResourceScriptFieldValue::ResourceScriptFieldValue(const ResourceScriptField & fiel)
+ScriptFieldType ResourceScriptField::GetType() const
 {
-	field = fiel.type;
+	return type;
 }
 
-std::string ResourceScriptFieldValue::GetFieldName() const
+std::string ResourceScriptField::GetName() const
 {
-	return "";
-}
-
-ScriptFieldType ResourceScriptFieldValue::GetFieldType() const
-{
-	return field;
+	return name;
 }

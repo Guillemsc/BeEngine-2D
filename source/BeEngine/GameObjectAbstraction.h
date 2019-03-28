@@ -21,9 +21,8 @@ public:
 	GameObjectAbstractionRelation();
 
 private:
-	int id = -1;
-	int parent_id = -1;
-
+	std::string uid;
+	std::string parent_uid;
 	DataAbstraction go_abstraction;
 	std::vector<DataAbstraction> components_abstraction;
 };
@@ -49,12 +48,8 @@ public:
 	void Clear();
 
 private:
-	uint GetParentId(uint id);
-
-private:
 	std::vector<GameObjectAbstractionRelation> relations;
 
-	std::string uid = "";
 	bool abstracted = false;
 };
 

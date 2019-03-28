@@ -34,11 +34,12 @@ public:
 	void OnEvent(Event* ev);
 
 	GameObject* CreateGameObject(Scene* scene = nullptr);
+	GameObject* CreateGameObject(Scene* scene, const std::string& uid, const std::string& instance_uid);
 	void DestroyGameObject(GameObject* go);
 	void DuplicateGameObjects(std::vector<GameObject*> gos);
 	std::vector<GameObject*> GetGameObjects();
 
-	GameObject* GetGameObjectByUID(const char* uid);
+	GameObject* GetGameObjectByUID(const std::string& uid, const std::string& instance_uid);
 
 	void AddGameObjectToSelected(GameObject* go);
 	void AddGameObjectAsOnlySelected(GameObject* go);

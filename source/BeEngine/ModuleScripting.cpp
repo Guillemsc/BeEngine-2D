@@ -1114,9 +1114,9 @@ bool ScriptingClass::GetIsInheritedFrom(const ScriptingClass & class_parent)
 	return ret;
 }
 
-std::map<std::string, MonoType*> ScriptingClass::GetFields()
+std::vector<ScriptingClassField> ScriptingClass::GetFields()
 {
-	std::map<std::string, MonoType*> ret;
+	std::vector<ScriptingClassField > ret;
 
 	if (mono_class != nullptr)
 	{
@@ -1139,7 +1139,8 @@ std::map<std::string, MonoType*> ScriptingClass::GetFields()
 					std::string property_name = mono_field_get_name(curr_field);
 					MonoType* property_type = mono_field_get_type(curr_field);
 
-					ret[property_name] = property_type;
+					ScriptingClassField scf(property_name, property_type);
+					ret.push_back(scf);
 				}
 			}
 			else
@@ -1369,4 +1370,20 @@ bool ScriptingClassInstance::InvokeMonoMethodUnmanagedOnParentClass(ScriptingCla
 MonoObject * ScriptingClassInstance::GetMonoObject() const
 {
 	return mono_gchandle_get_target(id);
+}
+
+ScriptingClassField::ScriptingClassField(const std::string & n, MonoType * t)
+{
+	name = n;
+	type = t;
+}
+
+MonoType * ScriptingClassField::GetType() const
+{
+	return type;
+}
+
+std::string ScriptingClassField::GetName() const
+{
+	return name;
 }
