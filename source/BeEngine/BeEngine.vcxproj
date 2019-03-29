@@ -124,6 +124,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectAbstraction.h" />
     <ClInclude Include="GameObjectComponent.h" />
+    <ClInclude Include="GameObjectSelectorWidget.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="GridGuizmo.h" />
     <ClInclude Include="Guizmo.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="ResourcePrefab.h" />
     <ClInclude Include="ResourceScene.h" />
     <ClInclude Include="ResourceScript.h" />
+    <ClInclude Include="ResourceSelectorWidget.h" />
     <ClInclude Include="ResourcesWindow.h" />
     <ClInclude Include="ResourceTexture.h" />
     <ClInclude Include="Scene.h" />
@@ -295,6 +297,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectAbstraction.cpp" />
     <ClCompile Include="GameObjectComponent.cpp" />
+    <ClCompile Include="GameObjectSelectorWidget.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="GridGuizmo.cpp" />
     <ClCompile Include="Guizmo.cpp" />
@@ -328,6 +331,7 @@
     <ClCompile Include="ResourcePrefab.cpp" />
     <ClCompile Include="ResourceScene.cpp" />
     <ClCompile Include="ResourceScript.cpp" />
+    <ClCompile Include="ResourceSelectorWidget.cpp" />
     <ClCompile Include="ResourcesWindow.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
     <ClCompile Include="Scene.cpp" />

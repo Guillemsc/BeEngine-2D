@@ -37,7 +37,7 @@ void ComponentSpriteRenderer::EditorDraw()
 	if (use_sprite)
 	{
 		Resource* res = resource_texture;
-		if (App->resource->EditorResourceSelector("Sprite:", ResourceType::RESOURCE_TYPE_TEXTURE, res, resource_filter))
+		if (selector_widget.Draw("Sprite:", ResourceType::RESOURCE_TYPE_TEXTURE, res))
 		{
 			resource_texture = (ResourceTexture*)res;
 		}

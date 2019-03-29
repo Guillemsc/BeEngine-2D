@@ -2,7 +2,7 @@
 #define __COMPONENT_SPRITE_RENDERER_H__
 
 #include "GameObjectComponent.h"
-
+#include "ResourceSelectorWidget.h"
 #include "GeometryMath.h"
 
 class GameObject;
@@ -80,6 +80,8 @@ private:
 	int layer = 0;
 
 	float ui_scale_factor = 1.0f;
+
+	ResourceSelectorWidget selector_widget;
 };
 
 #endif // !__COMPONENT_SPRITE_RENDERER_H__

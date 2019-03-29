@@ -112,7 +112,7 @@ public:
 
 	ScriptingClass GetClass();
 
-	bool SetFieldValue(const char* field_name, MonoObject* obj_value);
+	bool SetFieldValue(const char* field_name, void* obj_value);
 	MonoObject* GetFieldValue(const char* field_name);
 
 	bool InvokeMonoMethod(const char* method_name, void **args, uint args_count, MonoObject*& return_object);
@@ -173,7 +173,7 @@ public:
 	const char* GetMonoTypeName(MonoType* mono_type);
 
 	// Fields
-	bool SetFieldValue(MonoObject* field_object, MonoClass* field_object_class, const char* field_name, MonoObject* new_field_value);
+	bool SetFieldValue(MonoObject* field_object, MonoClass* field_object_class, const char* field_name, void* new_field_value);
 	MonoObject* GetFieldValue(MonoObject* field_object, MonoClass* field_object_class, const char* field_name);
 
 	// Boxing

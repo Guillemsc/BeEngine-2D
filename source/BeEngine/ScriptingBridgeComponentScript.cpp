@@ -5,6 +5,7 @@
 #include "ScriptingCluster.h"
 #include "GameObject.h"
 #include "ScriptingBridgeGameObject.h"
+#include "ComponentScriptFields.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -89,6 +90,14 @@ void ScriptingBridgeComponentScript::SetGeneratedClass(const ScriptingClass & g_
 void ScriptingBridgeComponentScript::RemoveGeneratedClass()
 {
 	class_generated = ScriptingClass();
+}
+
+void ScriptingBridgeComponentScript::SetField(ComponentScriptField * field)
+{
+	if (field != nullptr && component_script_scripting_instance != nullptr)
+	{
+		component_script_scripting_instance->SetFieldValue(field->GetName().c_str(), field->VoidValue());
+	}
 }
 
 void ScriptingBridgeComponentScript::CallAwake()

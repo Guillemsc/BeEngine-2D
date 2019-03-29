@@ -761,6 +761,7 @@ void ModuleGameObject::GameObjectsLogicStart()
 			{
 				ComponentScript* script = (ComponentScript*)curr_component;
 
+				script->InitFields();
 				script->CallAwake();
 			}
 		}

@@ -29,19 +29,19 @@ void ComponentButton::EditorDraw()
 		if (use_sprites)
 		{
 			Resource* res_1 = (Resource*)resource_texture_idle;
-			if (App->resource->EditorResourceSelector("Idle:", ResourceType::RESOURCE_TYPE_TEXTURE, res_1, resource_filter))
+			if (selector_widget_1.Draw("Idle:", ResourceType::RESOURCE_TYPE_TEXTURE, res_1))
 			{
 				resource_texture_idle = (ResourceTexture*)res_1;
 			}
 
 			Resource* res_2 = (Resource*)resource_texture_hover;
-			if (App->resource->EditorResourceSelector("Hover:", ResourceType::RESOURCE_TYPE_TEXTURE, res_2, resource_filter))
+			if (selector_widget_2.Draw("Hover:", ResourceType::RESOURCE_TYPE_TEXTURE, res_2))
 			{
 				resource_texture_hover = (ResourceTexture*)res_2;
 			}
 
 			Resource* res_3 = (Resource*)resource_texture_pressed;
-			if (App->resource->EditorResourceSelector("Pressed:", ResourceType::RESOURCE_TYPE_TEXTURE, res_3, resource_filter))
+			if (selector_widget_2.Draw("Pressed:", ResourceType::RESOURCE_TYPE_TEXTURE, res_3))
 			{
 				resource_texture_pressed = (ResourceTexture*)res_3;
 			}

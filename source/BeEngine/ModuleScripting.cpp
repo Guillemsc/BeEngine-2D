@@ -325,7 +325,7 @@ const char * ModuleScripting::GetMonoTypeName(MonoType * mono_type)
 	return ret;
 }
 
-bool ModuleScripting::SetFieldValue(MonoObject * field_object, MonoClass * field_object_class, const char * field_name, MonoObject * new_field_value)
+bool ModuleScripting::SetFieldValue(MonoObject * field_object, MonoClass * field_object_class, const char * field_name, void * new_field_value)
 {
 	bool ret = false;
 
@@ -1225,13 +1225,14 @@ ScriptingClass ScriptingClassInstance::GetClass()
 	return scripting_class;
 }
 
-bool ScriptingClassInstance::SetFieldValue(const char * field_name, MonoObject * obj_value)
+bool ScriptingClassInstance::SetFieldValue(const char * field_name, void * obj_value)
 {
 	bool ret = false;
 
 	MonoObject* mono_obj = GetMonoObject();
 
-	ret = App->scripting->SetFieldValue(mono_obj, scripting_class.GetMonoClass(), field_name, obj_value);
+	if (mono_obj != nullptr)
+		ret = App->scripting->SetFieldValue(mono_obj, scripting_class.GetMonoClass(), field_name, obj_value);
 
 	return ret;
 }

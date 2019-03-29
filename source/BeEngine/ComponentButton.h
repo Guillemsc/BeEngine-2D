@@ -3,7 +3,7 @@
 
 #include "GameObjectComponent.h"
 #include "ModuleUI.h"
-
+#include "ResourceSelectorWidget.h"
 #include "GeometryMath.h"
 
 class GameObject;
@@ -72,6 +72,10 @@ private:
 
 private:
 	ScriptingBridgeComponentButton* scripting_bridge = nullptr;
+
+	ResourceSelectorWidget selector_widget_1;
+	ResourceSelectorWidget selector_widget_2;
+	ResourceSelectorWidget selector_widget_3;
 };
 
 #endif // !__COMPONENT_BUTTON_H__

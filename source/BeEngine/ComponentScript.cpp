@@ -30,7 +30,7 @@ void ComponentScript::EditorDraw()
 	bool open_error_script = false;
 
 	Resource* res = resource_script;
-	if (App->resource->EditorResourceSelector("Script:", ResourceType::RESOURCE_TYPE_SCRIPT, res, resource_filter))
+	if (selector_widget.Draw("Script:", ResourceType::RESOURCE_TYPE_SCRIPT, res))
 	{
 		ResourceScript* resource = (ResourceScript*)res;
 		if (resource != nullptr && !resource->GetInheritsFromBeengineScript())
@@ -310,6 +310,10 @@ void ComponentScript::UpdateScriptInstance()
 
 void ComponentScript::InitFields()
 {
+	for (std::vector<ComponentScriptField*>::iterator it = fields_values.begin(); it != fields_values.end(); ++it)
+	{
+		scripting_bridge->SetField(*it);
+	}
 }
 
 void ComponentScript::CallAwake()
@@ -401,12 +405,16 @@ void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptFi
 	{
 		ComponentScriptField* field = nullptr;
 
+		bool alredy_exists = false;
+
 		for (std::vector<ComponentScriptField*>::iterator it = fields_values_to_check.begin(); it != fields_values_to_check.end(); ++it)
 		{
 			if ((*it)->GetType() == (*it)->GetType())
 			{
 				if ((*it)->GetName().compare((*fi).GetName()) == 0)
 				{
+					alredy_exists = true;
+
 					field = (*it);
 					fields_values_to_check.erase(it);
 					break;
@@ -451,7 +459,7 @@ void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptFi
 			}
 		}
 
-		if (field != nullptr)
+		if (field != nullptr && !alredy_exists)
 		{
 			fields_values.push_back(field);
 		}

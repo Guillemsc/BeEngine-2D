@@ -39,8 +39,6 @@ public:
 	std::map<ResourceType, std::string> GetAllResourcesNames() const;
 	std::vector<Resource*> GetResourcesOnAssetsPath(const std::string& path);
 
-	bool EditorResourceSelector(const std::string& selector_name, const ResourceType type, Resource *& res, std::string& filter_text);
-
 	ResourceType GetResourceTypeFromAssetExtension(const char* extension);
 	ResourceType GetResourceTypeFromLibraryExtension(const char* extension);
 

@@ -7,6 +7,7 @@
 class GameObject;
 class GameObjectComponent;
 class Event;
+class ComponentScriptField;
 
 class ScriptingBridgeComponentScript : public ScriptingBridgeObject
 {

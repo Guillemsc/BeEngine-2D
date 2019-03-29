@@ -3,6 +3,7 @@
 
 #include "GameObjectComponent.h"
 #include "GeometryMath.h"
+#include "ModuleScripting.h"
 
 class GameObject;
 class ResourceScript;
@@ -24,7 +25,8 @@ public:
 	ScriptFieldType GetType() const;
 	std::string GetName() const;
 
-	virtual MonoObject* BoxObject() {};
+	virtual MonoObject* BoxObject() { return nullptr; }
+	virtual void* VoidValue() { return nullptr; }
 
 private:
 	ScriptFieldType type;
@@ -40,6 +42,7 @@ public:
 	int GetValue() const;
 
 	MonoObject* BoxObject();
+	void* VoidValue();
 
 private:
 	int value = 0;
@@ -54,6 +57,7 @@ public:
 	float GetValue() const;
 
 	MonoObject* BoxObject();
+	void* VoidValue();
 
 private:
 	float value = 0;
@@ -68,6 +72,7 @@ public:
 	std::string GetValue() const;
 
 	MonoObject* BoxObject();
+	void* VoidValue();
 
 private:
 	std::string value = "";
@@ -83,6 +88,7 @@ public:
 	bool GetValue() const;
 
 	MonoObject* BoxObject();
+	void* VoidValue();
 
 private:
 	bool value = false;

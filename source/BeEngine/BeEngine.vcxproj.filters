@@ -118,6 +118,9 @@
     <Filter Include="Sources\9. SceneObjects ==========\GameObject\Components\Script">
       <UniqueIdentifier>{e85fc219-64ed-4a40-ace6-ce01094d76c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3. Editor ================\Widgets">
+      <UniqueIdentifier>{793c2138-5367-4b81-876b-f4e65553f8e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -636,6 +639,12 @@
     <ClInclude Include="ComponentScriptFields.h">
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Script</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceSelectorWidget.h">
+      <Filter>Sources\3. Editor ================\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectSelectorWidget.h">
+      <Filter>Sources\3. Editor ================\Widgets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1051,6 +1060,12 @@
     </ClCompile>
     <ClCompile Include="ComponentScriptFields.cpp">
       <Filter>Sources\9. SceneObjects ==========\GameObject\Components\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceSelectorWidget.cpp">
+      <Filter>Sources\3. Editor ================\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectSelectorWidget.cpp">
+      <Filter>Sources\3. Editor ================\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
