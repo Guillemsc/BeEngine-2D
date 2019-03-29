@@ -21,6 +21,7 @@ void ScriptingCluster::RegisterInternalCalls()
 		// GameObject -------------------------------
 		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
 		mono_add_internal_call("BeEngine.GameObject::GetName", (const void*)ScriptingBridgeGameObject::GetName);
+		mono_add_internal_call("BeEngine.GameObject::AddComponentTypeName", (const void*)ScriptingBridgeGameObject::AddComponent);
 		// ------------------------------- GameObject
 
 		// ComponentTransform -----------------------

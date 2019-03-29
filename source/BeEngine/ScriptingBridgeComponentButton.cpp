@@ -61,10 +61,34 @@ void ScriptingBridgeComponentButton::CleanUp()
 
 ScriptingClassInstance * ScriptingBridgeComponentButton::GetComponentButtonScriptingInstance() const
 {
-	return nullptr;
+	return component_button_scripting_instance;
 }
 
-ComponentButton * ScriptingBridgeComponentButton::GetComponentTransformFromMonoObject(MonoObject * mono_object)
+void ScriptingBridgeComponentButton::CallOnClick()
 {
-	return nullptr;
+	if (component_button_scripting_instance != nullptr)
+	{
+		MonoObject* ret_obj = nullptr;
+		component_button_scripting_instance->InvokeMonoMethod("CallOnClick", nullptr, 0, ret_obj);
+	}
+}
+
+ComponentButton * ScriptingBridgeComponentButton::GetComponentButtonFromMonoObject(MonoObject * mono_object)
+{
+	ComponentButton* ret = nullptr;
+
+	if (mono_object != nullptr)
+	{
+		MonoObject* obj_ret = nullptr;
+		if (App->scripting->InvokeMonoMethod(mono_object,
+			App->scripting->scripting_cluster->beengine_object_class.GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
+		{
+			if (obj_ret != nullptr)
+			{
+				ret = (ComponentButton*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
+			}
+		}
+	}
+
+	return ret;
 }

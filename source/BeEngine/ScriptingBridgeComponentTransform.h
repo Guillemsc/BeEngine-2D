@@ -30,14 +30,11 @@ public:
 
 private:
 	static ComponentTransform* GetComponentTransformFromMonoObject(MonoObject* mono_object);
-	//static GameObjectComponent* CreateGameObjectComponentFromComponentType(GameObject* go, MonoType* type);
 
 	// Internal Calls
 
 	static void SetPosition(MonoObject* mono_object, MonoObject* mono_float2);
 	static MonoObject* GetPosition(MonoObject * mono_object);
-
-	//static void AddComponent(MonoObject* mono_object, MonoType* component_type);
 
 	// --------------
 

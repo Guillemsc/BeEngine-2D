@@ -6,6 +6,11 @@ public class test_script_fields : ComponentScript
 {
 	public override void Start () 
 	{
+        button = game_object.AddComponent<ComponentButton>();
+
+        if (button != null)
+            button.SuscribeToOnClick(OnClick);
+
         game_object.Transform.Position = new float2(pos_x, pos_z);
 
         if(go != null)
@@ -17,6 +22,12 @@ public class test_script_fields : ComponentScript
 		
 	}
 
+    public void OnClick(ComponentButton but)
+    {
+        Debug.LOG("Click");
+    }
+
+
     public int int_val = 0;
     public float float_val = 0;
     public string string_val = "";
@@ -26,4 +37,5 @@ public class test_script_fields : ComponentScript
     public float pos_z = 16;
 
     public GameObject go = null;
+    private ComponentButton button;
 }

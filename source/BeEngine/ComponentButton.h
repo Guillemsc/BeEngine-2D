@@ -43,6 +43,8 @@ public:
 
 	void RenderGuizmos(float relative_size);
 
+	ScriptingBridgeComponentButton* GetScriptingBridge() const;
+
 private:
 	void OnEvent(Event * ev);
 

@@ -174,6 +174,11 @@ void ComponentButton::RenderGuizmos(float relative_size)
 {
 }
 
+ScriptingBridgeComponentButton * ComponentButton::GetScriptingBridge() const
+{
+	return scripting_bridge;
+}
+
 void ComponentButton::OnEvent(Event * ev)
 {	
 	if (ev->GetType() == EventType::RESOURCE_DESTROYED)
@@ -229,7 +234,7 @@ void ComponentButton::UpdateState()
 			{
 				if (!last_frame_pressed)
 				{
-					
+					scripting_bridge->CallOnClick();
 				}
 
 				last_frame_pressed = true;

@@ -8,6 +8,8 @@
 #include "ScriptingCluster.h"
 #include "ComponentTransfrom.h"
 #include "ScriptingBridgeComponentTransform.h"
+#include "ComponentButton.h"
+#include "ScriptingBridgeComponentButton.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -193,12 +195,28 @@ MonoString* ScriptingBridgeGameObject::GetName(MonoObject * mono_object)
 	return ret;
 }
 
-void ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, MonoType * component_type)
+MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, MonoString * component_type)
 {
+	MonoObject* ret = nullptr;
+
 	GameObject* go = GetGameObjectFromMonoObject(mono_object);
 
 	if (go != nullptr)
 	{
+		std::string type = App->scripting->UnboxString(component_type);
 
+		// Button
+		if (type.compare(App->scripting->scripting_cluster->component_button_class.GetName()) == 0)
+		{
+			ComponentButton* button = (ComponentButton*)go->CreateComponent(ComponentType::COMPONENT_TYPE_BUTTON);
+
+			ret = button->GetScriptingBridge()->GetComponentButtonScriptingInstance()->GetMonoObject();
+		}
 	}
+
+	if (ret == nullptr)
+		CONSOLE_ERROR("Component %s could not be created, as it does not exist on Bridge Code");
+
+
+	return ret;
 }

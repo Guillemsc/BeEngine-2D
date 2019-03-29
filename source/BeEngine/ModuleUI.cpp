@@ -155,6 +155,7 @@ void ModuleUI::UpdateUIElements()
 			{
 				if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 					handler_on_top->pressed = true;
+
 				else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) != KEY_REPEAT)
 					handler_on_top->pressed = false;
 			}

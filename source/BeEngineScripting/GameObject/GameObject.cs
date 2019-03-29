@@ -31,7 +31,11 @@ namespace BeEngine
 
             Type type = typeof(T);
 
-            Component created_comp = AddComponentType(type);
+            string type_name = type.ToString();
+
+            type_name = type_name.Replace("BeEngine.", "");
+
+            Component created_comp = AddComponentTypeName(type_name);
 
             if(created_comp != null)
                 ret = (T)Convert.ChangeType(created_comp, type);
@@ -114,7 +118,7 @@ namespace BeEngine
         private extern string GetName();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern Component AddComponentType(Type type);
+        private extern Component AddComponentTypeName(string name);
 
         // -----------------------------------------------------
     }

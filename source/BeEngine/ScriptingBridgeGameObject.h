@@ -45,7 +45,7 @@ private:
 	static void SetName(MonoObject* mono_object, MonoString* mono_string);
 	static MonoString* GetName(MonoObject * mono_object);
 
-	static void AddComponent(MonoObject* mono_object, MonoType* component_type);
+	static MonoObject* AddComponent(MonoObject* mono_object, MonoString* component_type);
 
 	// --------------
 

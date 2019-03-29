@@ -29,8 +29,10 @@ public:
 
 	ScriptingClassInstance* GetComponentButtonScriptingInstance() const;
 
+	void CallOnClick();
+
 private:
-	static ComponentButton* GetComponentTransformFromMonoObject(MonoObject* mono_object);
+	static ComponentButton* GetComponentButtonFromMonoObject(MonoObject* mono_object);
 	//static GameObjectComponent* CreateGameObjectComponentFromComponentType(GameObject* go, MonoType* type);
 
 	// Internal Calls
