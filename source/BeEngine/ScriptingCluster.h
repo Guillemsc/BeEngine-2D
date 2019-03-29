@@ -40,6 +40,8 @@ public:
 public:
 	ScriptingClass beengine_object_class;
 
+	ScriptingClass debug_class;
+
 	ScriptingClass float2_class;
 
 	ScriptingClass game_object_class;

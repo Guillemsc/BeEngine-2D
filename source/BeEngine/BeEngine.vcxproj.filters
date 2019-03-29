@@ -645,6 +645,9 @@
     <ClInclude Include="GameObjectSelectorWidget.h">
       <Filter>Sources\3. Editor ================\Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingBridgeDebug.h">
+      <Filter>Sources\7. Scripting ==============\Bridges</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1066,6 +1069,9 @@
     </ClCompile>
     <ClCompile Include="GameObjectSelectorWidget.cpp">
       <Filter>Sources\3. Editor ================\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeDebug.cpp">
+      <Filter>Sources\7. Scripting ==============\Bridges</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

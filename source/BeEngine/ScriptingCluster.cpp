@@ -3,6 +3,7 @@
 #include "ModuleScripting.h"
 #include "ScriptingBridgeGameObject.h"
 #include "ScriptingBridgeComponentTransform.h"
+#include "ScriptingBridgeDebug.h"
 #include "PhysicsBody.h"
 #include "ComponentTransfrom.h"
 #include "GameObject.h"
@@ -12,6 +13,10 @@ void ScriptingCluster::RegisterInternalCalls()
 	if (rebuild_internal_calls)
 	{
 		rebuild_internal_calls = false;
+
+		// Debug ------------------------------------
+		mono_add_internal_call("BeEngine.Debug::Log", (const void*)ScriptingBridgeDebug::Log);
+		// ------------------------------------ Debug
 
 		// GameObject -------------------------------
 		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
@@ -32,6 +37,9 @@ void ScriptingCluster::RebuildClasses()
 	{
 		// BeEngineObject
 		App->scripting->scripting_assembly->GetClass("BeEngine", "BeEngineObject", beengine_object_class);
+
+		// Debug
+		App->scripting->scripting_assembly->GetClass("BeEngine", "Debug", debug_class);
 
 		// Math
 		App->scripting->scripting_assembly->GetClass("BeEngine", "float2", float2_class);

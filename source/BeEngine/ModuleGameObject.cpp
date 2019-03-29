@@ -25,6 +25,8 @@ bool ModuleGameObject::Awake()
 {
 	bool ret = true;
 
+	base_instance_uid = GetUIDRandomHexadecimal();
+
 	CreateRootScene();
 
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
@@ -120,7 +122,7 @@ void ModuleGameObject::OnEvent(Event * ev)
 
 GameObject* ModuleGameObject::CreateGameObject(Scene* scene)
 {
-	return CreateGameObject(scene, GetUIDRandomHexadecimal(), GetUIDRandomHexadecimal());
+	return CreateGameObject(scene, GetUIDRandomHexadecimal(), base_instance_uid);
 }
 
 GameObject * ModuleGameObject::CreateGameObject(Scene* scene, const std::string & uid, const std::string & instance_uid)
@@ -220,7 +222,7 @@ GameObject * ModuleGameObject::GetGameObjectByUID(const std::string & uid, const
 
 	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
 	{
-		if ((*it)->GetUID().compare(uid) == 0 && (*it)->GetInstanceUID().compare(instance_uid))
+		if ((*it)->GetUID().compare(uid) == 0 && (*it)->GetInstanceUID().compare(instance_uid) == 0)
 		{
 			ret = *it;
 			break;

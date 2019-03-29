@@ -1,6 +1,8 @@
 #include "ComponentScriptFields.h"
 #include "ScriptingCluster.h"
 #include "App.h"
+#include "GameObject.h"
+#include "ScriptingBridgeGameObject.h"
 
 ComponentScriptField::ComponentScriptField(ScriptFieldType t, const std::string & n)
 {
@@ -33,11 +35,6 @@ int ComponentScriptFieldInt::GetValue() const
 	return value;
 }
 
-MonoObject * ComponentScriptFieldInt::BoxObject()
-{
-	return App->scripting->BoxInt(value);
-}
-
 void * ComponentScriptFieldInt::VoidValue()
 {
 	return &value;
@@ -56,11 +53,6 @@ void ComponentScriptFieldFloat::SetValue(float val)
 float ComponentScriptFieldFloat::GetValue() const
 {
 	return value;
-}
-
-MonoObject * ComponentScriptFieldFloat::BoxObject()
-{
-	return App->scripting->BoxFloat(value);
 }
 
 void * ComponentScriptFieldFloat::VoidValue()
@@ -83,14 +75,9 @@ std::string ComponentScriptFieldString::GetValue() const
 	return value;
 }
 
-MonoObject * ComponentScriptFieldString::BoxObject()
-{
-	return (MonoObject*)App->scripting->BoxString(value.c_str());
-}
-
 void * ComponentScriptFieldString::VoidValue()
 {
-	return &value;
+	return App->scripting->BoxString(value.c_str());
 }
 
 ComponentScriptFieldBool::ComponentScriptFieldBool(const std::string & name)
@@ -106,11 +93,6 @@ void ComponentScriptFieldBool::SetValue(bool val)
 bool ComponentScriptFieldBool::GetValue() const
 {
 	return value;
-}
-
-MonoObject * ComponentScriptFieldBool::BoxObject()
-{
-	return App->scripting->BoxBool(value);
 }
 
 void * ComponentScriptFieldBool::VoidValue()
@@ -133,7 +115,11 @@ GameObject * ComponentScriptFieldGameObject::GetValue() const
 	return value;
 }
 
-MonoObject * ComponentScriptFieldGameObject::BoxObject()
+void * ComponentScriptFieldGameObject::VoidValue()
 {
+	if (value != nullptr)
+		return value->GetScriptingBridge()->GetGoScriptingInstance()->GetMonoObject();
+
 	return nullptr;
 }
+

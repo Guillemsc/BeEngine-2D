@@ -510,7 +510,8 @@ std::string ModuleScripting::UnboxString(MonoString* val)
 
 		ret = str;
 
-		mono_free(str);
+		if(str != nullptr)
+			mono_free(str);
 	}
 
 	return ret;

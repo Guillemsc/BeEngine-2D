@@ -7,6 +7,9 @@ public class test_script_fields : ComponentScript
 	public override void Start () 
 	{
         game_object.Transform.Position = new float2(pos_x, pos_z);
+
+        if(go != null)
+            Debug.LOG(go.Name);
 	}
 	
 	public override void Update () 
@@ -21,4 +24,6 @@ public class test_script_fields : ComponentScript
 
     public float pos_x = 15;
     public float pos_z = 16;
+
+    public GameObject go = null;
 }

@@ -258,6 +258,7 @@
     <ClInclude Include="ScriptingBridgeComponentButton.h" />
     <ClInclude Include="ScriptingBridgeComponentScript.h" />
     <ClInclude Include="ScriptingBridgeComponentTransform.h" />
+    <ClInclude Include="ScriptingBridgeDebug.h" />
     <ClInclude Include="ScriptingBridgeObject.h" />
     <ClInclude Include="ScriptingBridgeGameObject.h" />
     <ClInclude Include="ScriptingCluster.h" />
@@ -399,6 +400,7 @@
     <ClCompile Include="ScriptingBridgeComponentButton.cpp" />
     <ClCompile Include="ScriptingBridgeComponentScript.cpp" />
     <ClCompile Include="ScriptingBridgeComponentTransform.cpp" />
+    <ClCompile Include="ScriptingBridgeDebug.cpp" />
     <ClCompile Include="ScriptingBridgeObject.cpp" />
     <ClCompile Include="ScriptingBridgeGameObject.cpp" />
     <ClCompile Include="ScriptingCluster.cpp" />

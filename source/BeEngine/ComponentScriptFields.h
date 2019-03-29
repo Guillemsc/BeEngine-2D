@@ -25,7 +25,6 @@ public:
 	ScriptFieldType GetType() const;
 	std::string GetName() const;
 
-	virtual MonoObject* BoxObject() { return nullptr; }
 	virtual void* VoidValue() { return nullptr; }
 
 private:
@@ -41,7 +40,6 @@ public:
 	void SetValue(int val);
 	int GetValue() const;
 
-	MonoObject* BoxObject();
 	void* VoidValue();
 
 private:
@@ -56,7 +54,6 @@ public:
 	void SetValue(float val);
 	float GetValue() const;
 
-	MonoObject* BoxObject();
 	void* VoidValue();
 
 private:
@@ -71,7 +68,6 @@ public:
 	void SetValue(const std::string& val);
 	std::string GetValue() const;
 
-	MonoObject* BoxObject();
 	void* VoidValue();
 
 private:
@@ -87,7 +83,6 @@ public:
 	void SetValue(bool val);
 	bool GetValue() const;
 
-	MonoObject* BoxObject();
 	void* VoidValue();
 
 private:
@@ -102,7 +97,7 @@ public:
 	void SetValue(GameObject* val);
 	GameObject* GetValue() const;
 
-	MonoObject* BoxObject();
+	void* VoidValue();
 
 private:
 	GameObject* value = false;

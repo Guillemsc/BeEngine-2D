@@ -4,6 +4,7 @@
 #include "GameObjectComponent.h"
 #include "ResourceSelectorWidget.h"
 #include "GeometryMath.h"
+#include "GameObjectSelectorWidget.h"
 
 class GameObject;
 class ResourceScript;
@@ -57,7 +58,8 @@ private:
 private:
 	ResourceScript* resource_script = nullptr;
 
-	ResourceSelectorWidget selector_widget;
+	ResourceSelectorWidget resource_selector_widget;
+	GameObjectSelectorWidget go_selector_widget;
 
 	std::vector<ComponentScriptField*> fields_values;
 

@@ -12,6 +12,7 @@
 #include "ModuleJson.h"
 #include "ScriptingBridgeComponentScript.h"
 #include "ComponentScriptFields.h"
+#include "ModuleGameObject.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -30,7 +31,7 @@ void ComponentScript::EditorDraw()
 	bool open_error_script = false;
 
 	Resource* res = resource_script;
-	if (selector_widget.Draw("Script:", ResourceType::RESOURCE_TYPE_SCRIPT, res))
+	if (resource_selector_widget.Draw("Script:", ResourceType::RESOURCE_TYPE_SCRIPT, res))
 	{
 		ResourceScript* resource = (ResourceScript*)res;
 		if (resource != nullptr && !resource->GetInheritsFromBeengineScript())
@@ -151,6 +152,21 @@ void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)
 				abs.AddBool(field_val_name, field->GetValue());
 				break;
 			}
+
+			case ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT:
+			{
+				ComponentScriptFieldGameObject* field = (ComponentScriptFieldGameObject*)(*it);
+
+				std::string uid = "";
+
+				GameObject* go_to_save = field->GetValue();
+
+				if (go_to_save != nullptr)
+					uid = go_to_save->GetUID();
+
+				abs.AddString(field_val_name, uid);
+				break;
+			}
 		default:
 			break;
 		}
@@ -216,6 +232,22 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 				((ComponentScriptFieldBool*)field_obj)->SetValue(val);
 				break;
 			}
+
+			case ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT:
+			{
+				std::string uid = abs.GetString(field_val_name);
+				std::string instance_uid = GetOwner()->GetInstanceUID();
+
+				GameObject* value = nullptr;
+
+				if (uid.compare("") != 0)
+					value = App->gameobject->GetGameObjectByUID(uid, instance_uid);
+				
+				field_obj = new ComponentScriptFieldGameObject(name);
+				((ComponentScriptFieldGameObject*)field_obj)->SetValue(value);
+
+				break;
+			}
 			}
 
 			if (field_obj != nullptr)
@@ -232,6 +264,11 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 		resource_script = (ResourceScript*)App->resource->GetResourceFromUid(resource_uid, ResourceType::RESOURCE_TYPE_SCRIPT);
 
 		UpdateScriptInstance();
+
+		if (resource_script != nullptr)
+		{
+			RecalculateFieldsValues(resource_script->GetFields());
+		}
 	}
 }
 
@@ -389,6 +426,18 @@ void ComponentScript::DrawFieldValue(ComponentScriptField* field_value)
 		bool val = field_obj->GetValue();
 
 		if (ImGui::Checkbox(field_name.c_str(), &val))
+			field_obj->SetValue(val);
+
+		break;
+	}
+
+	case ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT:
+	{
+		ComponentScriptFieldGameObject* field_obj = (ComponentScriptFieldGameObject*)field_value;
+
+		GameObject* val = field_obj->GetValue();
+
+		if (go_selector_widget.Draw(field_name.c_str(), val))
 			field_obj->SetValue(val);
 
 		break;

@@ -88,6 +88,8 @@ private:
 	void LoadSceneEditorPlay();
 
 private:
+	std::string base_instance_uid;
+
 	std::vector<GameObject*> game_objects;
 	std::vector<GameObject*> game_objects_to_destroy;
 	std::vector<GameObject*> game_objects_selected;
