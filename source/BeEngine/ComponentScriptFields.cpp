@@ -118,7 +118,7 @@ GameObject * ComponentScriptFieldGameObject::GetValue() const
 void * ComponentScriptFieldGameObject::VoidValue()
 {
 	if (value != nullptr)
-		return value->GetScriptingBridge()->GetGoScriptingInstance()->GetMonoObject();
+		return value->GetScriptingBridge()->GetInstance()->GetMonoObject();
 
 	return nullptr;
 }

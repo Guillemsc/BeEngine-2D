@@ -24,11 +24,8 @@ public:
 	~ScriptingBridgeGameObject();
 
 	void Start();
-	void RebuildInstances();
-	void PostRebuildInstances();
+	void OnRebuildInstances();
 	void CleanUp();
-
-	ScriptingClassInstance* GetGoScriptingInstance() const;
 
 	void SetComponentTransform(ComponentTransform* trans);
 
@@ -51,7 +48,6 @@ private:
 
 private:
 	GameObject* go_ref = nullptr;
-	ScriptingClassInstance* go_scripting_instance = nullptr;
 };
 
 #endif // !__SCRIPTING_BRIDGE_GAME_OBJECT_H__

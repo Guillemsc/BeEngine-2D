@@ -47,9 +47,14 @@
     <Compile Include="BeEngineObject.cs" />
     <Compile Include="Debug\Debug.cs" />
     <Compile Include="GameObject\Components\Component.cs" />
-    <Compile Include="GameObject\Components\ComponentButton.cs" />
+    <Compile Include="GameObject\Components\UI\ComponentButton.cs" />
+    <Compile Include="GameObject\Components\ComponentCamera.cs" />
+    <Compile Include="GameObject\Components\UI\ComponentCanvas.cs" />
+    <Compile Include="GameObject\Components\Physics\ComponentPhysicsBody.cs" />
+    <Compile Include="GameObject\Components\Physics\ComponentPolygonCollider.cs" />
     <Compile Include="GameObject\Components\ComponentScript.cs" />
     <Compile Include="GameObject\Components\ComponentTransform.cs" />
+    <Compile Include="GameObject\Components\ComponentSpriteRenderer.cs" />
     <Compile Include="GameObject\GameObject.cs" />
     <Compile Include="Math\float2.cs" />
     <Compile Include="Physics\Collision.cs" />

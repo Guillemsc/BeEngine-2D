@@ -23,11 +23,8 @@ public:
 	~ScriptingBridgeComponentButton();
 
 	void Start();
-	void RebuildInstances();
-	void PostRebuildInstances();
+	void OnRebuildInstances();
 	void CleanUp();
-
-	ScriptingClassInstance* GetComponentButtonScriptingInstance() const;
 
 	void CallOnClick();
 
@@ -43,7 +40,6 @@ private:
 
 private:
 	ComponentButton* component_button_ref = nullptr;
-	ScriptingClassInstance* component_button_scripting_instance = nullptr;
 };
 
 #endif // !__SCRIPTING_BRIDGE_COMPONENT_BUTTON_H__

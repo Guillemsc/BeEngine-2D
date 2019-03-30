@@ -11,7 +11,6 @@
 
 #include <map>
 
-#include "ScriptingObject.h"
 #include "ScriptingBridgeObject.h"
 
 class Event;
@@ -22,6 +21,7 @@ class ScriptingClass;
 class ScriptingItemGameObject;
 class ScriptingItemComponent;
 class ScriptingCluster;
+class ScriptingObject;
 
 class ScriptingAssembly
 {
@@ -39,6 +39,7 @@ public:
 	const char* GetPath();
 
 	bool GetClass(const char* class_namepsace, const char* class_name, ScriptingClass& class_returned);
+	bool UpdateClassPointer(const char* class_namepsace, const char* class_name, ScriptingClass*& class_returned);
 
 	bool GetUsedToCompile() const;
 
@@ -78,6 +79,8 @@ public:
 	ScriptingClass();
 	ScriptingClass(MonoClass* mono_class);
 	ScriptingClass(const ScriptingClass& scripting_class);
+
+	void Update(MonoClass* mono_class);
 
 	bool GetLoaded() const;
 
@@ -157,7 +160,7 @@ public:
 	void DestroyScriptingObject(ScriptingObject* obj);
 
 	void AddScriptingBridgeObject(ScriptingBridgeObject* obj);
-	void ScriptingBridgeRebuildInstances(ScriptingBridgeObject* obj);
+	void ScriptingBridgeChangeClass(ScriptingBridgeObject* obj, ScriptingClass* scripting_class);
 	void DestroyScriptingBridgeObject(ScriptingBridgeObject* obj);
 
 	// Assembly management

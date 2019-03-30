@@ -3,7 +3,8 @@
 #include "App.h"
 #include "ModuleScripting.h"
 
-ScriptingBridgeDebug::ScriptingBridgeDebug()
+ScriptingBridgeDebug::ScriptingBridgeDebug() 
+	: ScriptingBridgeObject(nullptr)
 {
 }
 

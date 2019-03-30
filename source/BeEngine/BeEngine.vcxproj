@@ -262,6 +262,7 @@
     <ClInclude Include="ScriptingBridgeObject.h" />
     <ClInclude Include="ScriptingBridgeGameObject.h" />
     <ClInclude Include="ScriptingCluster.h" />
+    <ClInclude Include="ScriptableObject.h" />
     <ClInclude Include="ScriptingObject.h" />
     <ClInclude Include="ScriptingObjectCompiler.h" />
     <ClInclude Include="ScriptingObjectFileWatcher.h" />
@@ -404,6 +405,7 @@
     <ClCompile Include="ScriptingBridgeObject.cpp" />
     <ClCompile Include="ScriptingBridgeGameObject.cpp" />
     <ClCompile Include="ScriptingCluster.cpp" />
+    <ClCompile Include="ScriptableObject.cpp" />
     <ClCompile Include="ScriptingObject.cpp" />
     <ClCompile Include="ScriptingObjectCompiler.cpp" />
     <ClCompile Include="ScriptingObjectFileWatcher.cpp" />

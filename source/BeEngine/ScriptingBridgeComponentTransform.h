@@ -22,11 +22,8 @@ public:
 	~ScriptingBridgeComponentTransform();
 
 	void Start();
-	void RebuildInstances();
-	void PostRebuildInstances();
+	void OnRebuildInstances();
 	void CleanUp();
-
-	ScriptingClassInstance* GetComponentTransformScriptingInstance() const;
 
 private:
 	static ComponentTransform* GetComponentTransformFromMonoObject(MonoObject* mono_object);
@@ -40,7 +37,6 @@ private:
 
 private:
 	ComponentTransform* component_transform_ref = nullptr;
-	ScriptingClassInstance* component_transform_scripting_instance = nullptr;
 };
 
 #endif // !__SCRIPTING_BRIDGE_COMPONENT_TRANSFORM_H__

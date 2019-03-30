@@ -25,6 +25,7 @@ private:
 private:
 	void RegisterInternalCalls();
 	void RebuildClasses();
+	void CleanUp();
 
 public:
 	ScriptFieldType GetScriptFieldTypeFromName(const std::string& name);
@@ -38,20 +39,20 @@ public:
 	MonoObject* BoxCollision(PhysicsBody* pb);
 
 public:
-	ScriptingClass beengine_object_class;
+	ScriptingClass* beengine_object_class = nullptr;
 
-	ScriptingClass debug_class;
+	ScriptingClass* debug_class = nullptr;
 
-	ScriptingClass float2_class;
+	ScriptingClass* float2_class = nullptr;
 
-	ScriptingClass game_object_class;
+	ScriptingClass* game_object_class = nullptr;
 
-	ScriptingClass component_class;
-	ScriptingClass component_script_class;
-	ScriptingClass component_transform_class;
-	ScriptingClass component_button_class;
+	ScriptingClass* component_class = nullptr;
+	ScriptingClass* component_script_class = nullptr;
+	ScriptingClass* component_transform_class = nullptr;
+	ScriptingClass* component_button_class = nullptr;
 
-	ScriptingClass collision_class;
+	ScriptingClass* collision_class = nullptr;
 
 private:
 	bool rebuild_internal_calls = true;

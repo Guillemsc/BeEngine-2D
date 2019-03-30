@@ -140,6 +140,7 @@ bool ModuleScripting::CleanUp()
 
 	DestroyAllAssemblys();
 
+	scripting_cluster->CleanUp();
 	RELEASE(scripting_cluster);
 
 	mono_jit_cleanup(mono_get_root_domain());
@@ -230,19 +231,18 @@ void ModuleScripting::AddScriptingBridgeObject(ScriptingBridgeObject * obj)
 	{
 		obj->Start();
 
-		ScriptingBridgeRebuildInstances(obj);
+		obj->OnRebuildInstances();
 
 		scripting_bridge_objects.push_back(obj);
 	}
 }
 
-void ModuleScripting::ScriptingBridgeRebuildInstances(ScriptingBridgeObject * obj)
+void ModuleScripting::ScriptingBridgeChangeClass(ScriptingBridgeObject * obj, ScriptingClass* scripting_class)
 {
-	if (obj != nullptr)
+	if (obj != nullptr && scripting_class != nullptr)
 	{
-		obj->PreRebuildInstances();
-		obj->RebuildInstances();
-		obj->PostRebuildInstances();
+		obj->SetScriptingClass(scripting_class);
+		obj->OnRebuildInstances();
 	}
 }
 
@@ -255,6 +255,7 @@ void ModuleScripting::DestroyScriptingBridgeObject(ScriptingBridgeObject * obj)
 			if ((*it) == obj)
 			{
 				obj->CleanUp();
+				obj->DestroyInstance();
 				RELEASE(obj);
 				scripting_bridge_objects.erase(it);
 				break;
@@ -900,17 +901,12 @@ void ModuleScripting::RebuildScriptingBridgeObjects()
 {
 	for (std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
 	{
-		(*it)->PreRebuildInstances();
+		(*it)->RebuildInstance();
 	}
 
 	for(std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
 	{
-		(*it)->RebuildInstances();
-	}
-
-	for (std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
-	{
-		(*it)->PostRebuildInstances();
+		(*it)->OnRebuildInstances();
 	}
 }
 
@@ -1015,6 +1011,31 @@ bool ScriptingAssembly::GetClass(const char* class_namepsace, const char* class_
 	return ret;
 }
 
+bool ScriptingAssembly::UpdateClassPointer(const char * class_namepsace, const char * class_name, ScriptingClass *& class_returned)
+{
+	bool ret = false;
+
+	if (loaded)
+	{
+		if (class_returned == nullptr)
+			class_returned = new ScriptingClass();
+		
+		MonoClass* cl = nullptr;
+
+		cl = mono_class_from_name_case(image, class_namepsace, class_name);
+
+		if (cl != nullptr)
+		{
+			class_returned->Update(cl);
+
+			ret = true;
+		}
+		
+	}
+
+	return ret;
+}
+
 bool ScriptingAssembly::GetUsedToCompile() const
 {
 	return used_to_compile;
@@ -1024,7 +1045,19 @@ ScriptingClass::ScriptingClass()
 {
 }
 
-ScriptingClass::ScriptingClass(MonoClass * _mono_class)
+ScriptingClass::ScriptingClass(MonoClass * mono_class)
+{
+	Update(mono_class);
+}
+
+ScriptingClass::ScriptingClass(const ScriptingClass & scripting_class)
+{
+	mono_class = scripting_class.mono_class;
+	class_namespace = scripting_class.class_namespace;
+	class_name = scripting_class.class_name;
+}
+
+void ScriptingClass::Update(MonoClass * _mono_class)
 {
 	mono_class = _mono_class;
 
@@ -1033,13 +1066,6 @@ ScriptingClass::ScriptingClass(MonoClass * _mono_class)
 		class_namespace = mono_class_get_namespace(mono_class);
 		class_name = mono_class_get_name(mono_class);
 	}
-}
-
-ScriptingClass::ScriptingClass(const ScriptingClass & scripting_class)
-{
-	mono_class = scripting_class.mono_class;
-	class_namespace = scripting_class.class_namespace;
-	class_name = scripting_class.class_name;
 }
 
 bool ScriptingClass::GetLoaded() const

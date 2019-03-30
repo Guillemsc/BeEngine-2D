@@ -336,12 +336,14 @@ void ComponentScript::UpdateScriptInstance()
 	if (resource_script != nullptr)
 	{
 		scripting_bridge->SetGeneratedClass(resource_script->GetScriptingClass());
-		App->scripting->ScriptingBridgeRebuildInstances(scripting_bridge);
+		scripting_bridge->RebuildInstance();
+		scripting_bridge->OnRebuildInstances();
 	}
 	else
 	{
 		scripting_bridge->RemoveGeneratedClass();
-		App->scripting->ScriptingBridgeRebuildInstances(scripting_bridge);
+		scripting_bridge->RebuildInstance();
+		scripting_bridge->OnRebuildInstances();
 	}
 }
 

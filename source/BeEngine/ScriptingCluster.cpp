@@ -37,27 +37,45 @@ void ScriptingCluster::RebuildClasses()
 	if (App->scripting->scripting_assembly != nullptr && App->scripting->scripting_assembly->GetAssemblyLoaded())
 	{
 		// BeEngineObject
-		App->scripting->scripting_assembly->GetClass("BeEngine", "BeEngineObject", beengine_object_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "BeEngineObject", beengine_object_class);
 
 		// Debug
-		App->scripting->scripting_assembly->GetClass("BeEngine", "Debug", debug_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Debug", debug_class);
 
 		// Math
-		App->scripting->scripting_assembly->GetClass("BeEngine", "float2", float2_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "float2", float2_class);
 
 		// GameObject
-		App->scripting->scripting_assembly->GetClass("BeEngine", "GameObject", game_object_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "GameObject", game_object_class);
 
 		// Components
-		App->scripting->scripting_assembly->GetClass("BeEngine", "Component", component_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Component", component_class);
 
-		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentScript", component_script_class);
-		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentTransform", component_transform_class);
-		App->scripting->scripting_assembly->GetClass("BeEngine", "ComponentButton", component_button_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentScript", component_script_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentTransform", component_transform_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentButton", component_button_class);
 
 		// Physics
-		App->scripting->scripting_assembly->GetClass("BeEngine", "Collision", collision_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Collision", collision_class);
 	}
+}
+
+void ScriptingCluster::CleanUp()
+{
+	RELEASE(beengine_object_class);
+
+	RELEASE(debug_class);
+
+	RELEASE(float2_class);
+
+	RELEASE(game_object_class);
+
+	RELEASE(component_class);
+	RELEASE(component_script_class);
+	RELEASE(component_transform_class);
+	RELEASE(component_button_class);
+
+	RELEASE(collision_class);
 }
 
 ScriptFieldType ScriptingCluster::GetScriptFieldTypeFromName(const std::string & name)
@@ -94,8 +112,8 @@ float2 ScriptingCluster::UnboxFloat2(MonoObject* obj)
 
 	if (obj != nullptr)
 	{
-		MonoObject* x_val = App->scripting->GetFieldValue(obj, float2_class.GetMonoClass(), "_x");
-		MonoObject* y_val = App->scripting->GetFieldValue(obj, float2_class.GetMonoClass(), "_y");
+		MonoObject* x_val = App->scripting->GetFieldValue(obj, float2_class->GetMonoClass(), "_x");
+		MonoObject* y_val = App->scripting->GetFieldValue(obj, float2_class->GetMonoClass(), "_y");
 
 		if (x_val != nullptr && y_val != nullptr)
 		{
@@ -128,11 +146,11 @@ MonoObject* ScriptingCluster::BoxCollision(PhysicsBody * pb)
 		{
 			GameObject* collided_go = component->GetOwner();
 
-			ScriptingClassInstance* collided_go_instance = collided_go->GetScriptingBridge()->GetGoScriptingInstance();
+			ScriptingClassInstance* collided_go_instance = collided_go->GetScriptingBridge()->GetInstance();
 
-			ScriptingClassInstance instance = collision_class.CreateWeakInstance();
+			ScriptingClassInstance instance = collision_class->CreateWeakInstance();
 
-			if (App->scripting->SetFieldValue(instance.GetMonoObject(), collision_class.GetMonoClass(),
+			if (App->scripting->SetFieldValue(instance.GetMonoObject(), collision_class->GetMonoClass(),
 				"_go_collided", collided_go_instance->GetMonoObject()))
 			{
 				ret = instance.GetMonoObject();

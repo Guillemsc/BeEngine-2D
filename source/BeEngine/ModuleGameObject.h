@@ -12,6 +12,21 @@ class Event;
 class Scene;
 class ComponentCanvas;
 
+class GameObjectComponentData
+{
+public:
+	GameObjectComponentData(const std::string& name, ComponentType type, const std::string scripting_name);
+
+	std::string GetName() const;
+	ComponentType GetType() const;
+	std::string GetScriptingName() const;
+
+private:
+	std::string name;
+	ComponentType type;
+	std::string scripting_name;
+};
+
 class ModuleGameObject : public Module
 {
 	friend class GameObject;
@@ -65,10 +80,11 @@ public:
 	void ChangeGameObjectPositionOnParentChildren(GameObject* go, uint new_pos);
 	void ChangeScenePositionOnList(Scene* scene, uint new_pos);
 
-	std::map<ComponentType, std::string> GetComponentsTypes() const;
+	std::vector<GameObjectComponentData> GetComponentsData() const;
+	ComponentType GetComponentTypeByComponentScriptingName(const std::string& name);
 
 private:
-	void AddComponentType(const ComponentType& type, const std::string& name);
+	void AddComponentType(const ComponentType& type, const std::string& name, const std::string& scripting_name);
 
 	void CreateRootScene();
 	void MergeScenes();
@@ -99,7 +115,7 @@ private:
 	std::vector<Scene*> scenes_to_destroy;
 	std::vector<Scene*> sub_scenes_selected;
 
-	std::map<ComponentType, std::string> components_type;
+	std::vector<GameObjectComponentData> components_data;
 
 	bool needs_to_start_logic = false;
 	bool needs_to_stop_logic = false;

@@ -3,6 +3,9 @@
 
 #include "Globals.h"
 
+class ScriptingClassInstance;
+class ScriptingClass;
+
 class ScriptingBridgeObject
 {
 	friend class ModuleScripting;
@@ -11,18 +14,24 @@ private:
 	void operator delete(void *) {}
 
 public:
-	ScriptingBridgeObject();
+	ScriptingBridgeObject(ScriptingClass* scripting_class);
 	~ScriptingBridgeObject();
 
+	void RebuildInstance();
+	void DestroyInstance();
+	ScriptingClassInstance* GetInstance() const;
+	ScriptingClass* GetClass() const;
+
 	virtual void Start() {};
-	virtual void PreRebuildInstances() {};
-	virtual void RebuildInstances() {};
-	virtual void PostRebuildInstances() {};
+	virtual void OnRebuildInstances() {};
 	virtual void CleanUp() {};
 
+private:
+	void SetScriptingClass(ScriptingClass* scripting_class);
+
 protected:
-	bool loaded = false;
-	bool ready_to_use = false;
+	ScriptingClass* scripting_class = nullptr;
+	ScriptingClassInstance* class_instance = nullptr;
 };
 
 #endif // !__SCRIPTING_BRIDGE_OBJECT_H__

@@ -664,7 +664,7 @@ void ModuleAssets::LoadUserScriptsInfo()
 				ScriptingClass sc;
 				if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
 				{
-					curr_script->inherits_from_component_script = sc.GetIsInheritedFrom(App->scripting->scripting_cluster->component_script_class);
+					curr_script->inherits_from_component_script = sc.GetIsInheritedFrom(*App->scripting->scripting_cluster->component_script_class);
 
 					if (curr_script->inherits_from_component_script)
 					{

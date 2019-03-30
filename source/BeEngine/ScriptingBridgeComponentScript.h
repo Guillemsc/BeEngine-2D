@@ -23,11 +23,8 @@ public:
 	~ScriptingBridgeComponentScript();
 
 	void Start();
-	void RebuildInstances();
-	void PostRebuildInstances();
+	void OnRebuildInstances();
 	void CleanUp();
-
-	ScriptingClassInstance* GetComponentScriptScriptingInstance() const;
 
 	void SetGeneratedClass(const ScriptingClass& generated_class);
 	void RemoveGeneratedClass();
@@ -55,7 +52,6 @@ private:
 private:
 	ComponentScript* component_script_ref = nullptr;
 	ScriptingClass class_generated;
-	ScriptingClassInstance* component_script_scripting_instance = nullptr;
 };
 
 #endif // !__SCRIPTING_BRIDGE_COMPONENT_SCRIPT_H__

@@ -32,13 +32,13 @@ bool ModuleGameObject::Awake()
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
 
-	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer");
-	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script");
-	AddComponentType(ComponentType::COMPONENT_TYPE_CAMERA, "Camera");
-	AddComponentType(ComponentType::COMPONENT_TYPE_CANVAS, "UI Canvas");
-	AddComponentType(ComponentType::COMPONENT_TYPE_BUTTON, "UI Button");
-	AddComponentType(ComponentType::COMPONENT_TYPE_PHYSICS_BODY, "Physics Body");
-	AddComponentType(ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, "Polygon Collider");
+	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer", "ComponentSpriteRenderer");
+	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script", "ComponentScript");
+	AddComponentType(ComponentType::COMPONENT_TYPE_CAMERA, "Camera", "ComponentCamera");
+	AddComponentType(ComponentType::COMPONENT_TYPE_CANVAS, "UI Canvas", "ComponentCanvas");
+	AddComponentType(ComponentType::COMPONENT_TYPE_BUTTON, "UI Button", "ComponentButton");
+	AddComponentType(ComponentType::COMPONENT_TYPE_PHYSICS_BODY, "Physics Body", "ComponentPhysicsBody");
+	AddComponentType(ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, "Polygon Collider", "ComponentPolygonCollider");
 
 	return ret;
 }
@@ -623,14 +623,31 @@ void ModuleGameObject::ChangeScenePositionOnList(Scene * scene, uint new_pos)
 	}
 }
 
-std::map<ComponentType, std::string> ModuleGameObject::GetComponentsTypes() const
+std::vector<GameObjectComponentData> ModuleGameObject::GetComponentsData() const
 {
-	return components_type;
+	return components_data;
 }
 
-void ModuleGameObject::AddComponentType(const ComponentType & type, const std::string& name)
+ComponentType ModuleGameObject::GetComponentTypeByComponentScriptingName(const std::string & name)
 {
-	components_type[type] = name;
+	ComponentType ret = ComponentType::COMPONENT_TYPE_UNDEFINED;
+
+	for (std::vector<GameObjectComponentData>::iterator it = components_data.begin(); it != components_data.end(); ++it)
+	{
+		if ((*it).GetScriptingName().compare(name) == 0)
+		{
+			ret = (*it).GetType();
+			break;
+		}
+	}
+
+	return ret;
+}
+
+void ModuleGameObject::AddComponentType(const ComponentType & type, const std::string & name, const std::string & scripting_name)
+{
+	GameObjectComponentData data(name, type, scripting_name);
+	components_data.push_back(data);
 }
 
 void ModuleGameObject::CreateRootScene()
@@ -856,4 +873,26 @@ void ModuleGameObject::LoadSceneEditorPlay()
 			}
 		}
 	}
+}
+
+GameObjectComponentData::GameObjectComponentData(const std::string & n, ComponentType t, const std::string sn)
+{
+	name = n;
+	type = t;
+	scripting_name = sn;
+}
+
+std::string GameObjectComponentData::GetName() const
+{
+	return name;
+}
+
+ComponentType GameObjectComponentData::GetType() const
+{
+	return type;
+}
+
+std::string GameObjectComponentData::GetScriptingName() const
+{
+	return scripting_name;
 }

@@ -14,7 +14,8 @@
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-ScriptingBridgeGameObject::ScriptingBridgeGameObject(GameObject* go) : ScriptingBridgeObject()
+ScriptingBridgeGameObject::ScriptingBridgeGameObject(GameObject* go) 
+	: ScriptingBridgeObject(App->scripting->scripting_cluster->game_object_class)
 {
 	go_ref = go;
 }
@@ -28,54 +29,32 @@ void ScriptingBridgeGameObject::Start()
 	
 }
 
-void ScriptingBridgeGameObject::RebuildInstances()
+void ScriptingBridgeGameObject::OnRebuildInstances()
 {
-	if (go_scripting_instance != nullptr)
-	{
-		go_scripting_instance->DestroyReference();
-		RELEASE(go_scripting_instance);
-	}
-
-	go_scripting_instance = App->scripting->scripting_cluster->game_object_class.CreateInstance();
-
-	if (go_scripting_instance != nullptr)
+	if (class_instance != nullptr)
 	{
 		MonoArray* mono_pointer = App->scripting->BoxPointer(go_ref);
 	
 		void* args[1] = { mono_pointer };
 	
 		MonoObject* ret_obj = nullptr;
-		go_scripting_instance->InvokeMonoMethodOnParentClass(
-			App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
+		class_instance->InvokeMonoMethodOnParentClass(
+			*App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
 	}
-}
-
-void ScriptingBridgeGameObject::PostRebuildInstances()
-{
-
 }
 
 void ScriptingBridgeGameObject::CleanUp()
 {
-	if (go_scripting_instance != nullptr)
-	{
-		go_scripting_instance->DestroyReference();
-		RELEASE(go_scripting_instance);
-	}
-}
 
-ScriptingClassInstance * ScriptingBridgeGameObject::GetGoScriptingInstance() const
-{
-	return go_scripting_instance;
 }
 
 void ScriptingBridgeGameObject::SetComponentTransform(ComponentTransform * trans)
 {
-	if (go_scripting_instance != nullptr)
+	if (class_instance != nullptr)
 	{
 		if (trans != nullptr)
 		{
-			ScriptingClassInstance* scripting_instance_transform = trans->GetScriptingBridge()->GetComponentTransformScriptingInstance();
+			ScriptingClassInstance* scripting_instance_transform = trans->GetScriptingBridge()->GetInstance();
 
 			if (scripting_instance_transform != nullptr)
 			{
@@ -84,8 +63,8 @@ void ScriptingBridgeGameObject::SetComponentTransform(ComponentTransform * trans
 				void* args[1] = { mono_object_transform };
 
 				MonoObject* ret_obj = nullptr;
-				go_scripting_instance->InvokeMonoMethodOnParentClass(
-					App->scripting->scripting_cluster->game_object_class, "SetComponentTransform", args, 1, ret_obj);
+				class_instance->InvokeMonoMethodOnParentClass(
+					*App->scripting->scripting_cluster->game_object_class, "SetComponentTransform", args, 1, ret_obj);
 			}
 		}
 	}
@@ -93,40 +72,49 @@ void ScriptingBridgeGameObject::SetComponentTransform(ComponentTransform * trans
 
 void ScriptingBridgeGameObject::CallOnCollisionEnter(PhysicsBody * pb)
 {
-	if (pb != nullptr)
+	if (class_instance != nullptr)
 	{
-		MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
+		if (pb != nullptr)
+		{
+			MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
 
-		void* args[1] = { collision_mono_obj };
+			void* args[1] = { collision_mono_obj };
 
-		MonoObject* ret_obj = nullptr;
-		go_scripting_instance->InvokeMonoMethod("CallOnCollisionEnter", args, 1, ret_obj);
+			MonoObject* ret_obj = nullptr;
+			class_instance->InvokeMonoMethod("CallOnCollisionEnter", args, 1, ret_obj);
+		}
 	}
 }
 
 void ScriptingBridgeGameObject::CallOnCollisionStay(PhysicsBody * pb)
 {
-	if (pb != nullptr)
+	if (class_instance != nullptr)
 	{
-		MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
+		if (pb != nullptr)
+		{
+			MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
 
-		void* args[1] = { collision_mono_obj };
+			void* args[1] = { collision_mono_obj };
 
-		MonoObject* ret_obj = nullptr;
-		go_scripting_instance->InvokeMonoMethod("CallOnCollisionStay", args, 1, ret_obj);
+			MonoObject* ret_obj = nullptr;
+			class_instance->InvokeMonoMethod("CallOnCollisionStay", args, 1, ret_obj);
+		}
 	}
 }
 
 void ScriptingBridgeGameObject::CallOnCollisionExit(PhysicsBody * pb)
 {
-	if (pb != nullptr)
+	if (class_instance != nullptr)
 	{
-		MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
+		if (pb != nullptr)
+		{
+			MonoObject* collision_mono_obj = App->scripting->scripting_cluster->BoxCollision(pb);
 
-		void* args[1] = { collision_mono_obj };
+			void* args[1] = { collision_mono_obj };
 
-		MonoObject* ret_obj = nullptr;
-		go_scripting_instance->InvokeMonoMethod("CallOnCollisionExit", args, 1, ret_obj);
+			MonoObject* ret_obj = nullptr;
+			class_instance->InvokeMonoMethod("CallOnCollisionExit", args, 1, ret_obj);
+		}
 	}
 }
 
@@ -138,7 +126,7 @@ GameObject* ScriptingBridgeGameObject::GetGameObjectFromMonoObject(MonoObject * 
 	{		
 		MonoObject* obj_ret = nullptr;
 		if (App->scripting->InvokeMonoMethod(mono_object, 
-			App->scripting->scripting_cluster->beengine_object_class.GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
+			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
 		{
 			if (obj_ret != nullptr)
 			{
@@ -203,15 +191,17 @@ MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, Mo
 
 	if (go != nullptr)
 	{
-		std::string type = App->scripting->UnboxString(component_type);
+		std::string type_name = App->scripting->UnboxString(component_type);
 
-		// Button
-		if (type.compare(App->scripting->scripting_cluster->component_button_class.GetName()) == 0)
-		{
-			ComponentButton* button = (ComponentButton*)go->CreateComponent(ComponentType::COMPONENT_TYPE_BUTTON);
+		ComponentType type = App->gameobject->GetComponentTypeByComponentScriptingName(type_name);
 
-			ret = button->GetScriptingBridge()->GetComponentButtonScriptingInstance()->GetMonoObject();
-		}
+		//// Button
+		//if (type.compare(App->scripting->scripting_cluster->component_button_class.GetName()) == 0)
+		//{
+		//	ComponentButton* button = (ComponentButton*)go->CreateComponent(ComponentType::COMPONENT_TYPE_BUTTON);
+
+		//	ret = button->GetScriptingBridge()->GetComponentButtonScriptingInstance()->GetMonoObject();
+		//}
 	}
 
 	if (ret == nullptr)

@@ -9,6 +9,7 @@
 #include "mmgr\mmgr.h"
 
 ScriptingBridgeComponentTransform::ScriptingBridgeComponentTransform(ComponentTransform * component_transform)
+	: ScriptingBridgeObject(App->scripting->scripting_cluster->component_transform_class)
 {
 	component_transform_ref = component_transform;
 }
@@ -21,39 +22,25 @@ void ScriptingBridgeComponentTransform::Start()
 {
 }
 
-void ScriptingBridgeComponentTransform::RebuildInstances()
+void ScriptingBridgeComponentTransform::OnRebuildInstances()
 {
-	if (component_transform_scripting_instance != nullptr)
-	{
-		component_transform_scripting_instance->DestroyReference();
-		RELEASE(component_transform_scripting_instance);
-	}
-
-	component_transform_scripting_instance = App->scripting->scripting_cluster->component_transform_class.CreateInstance();
-
-	if (component_transform_scripting_instance != nullptr)
+	if (class_instance != nullptr)
 	{
 		MonoArray* mono_pointer = App->scripting->BoxPointer(component_transform_ref);
 
 		void* args[1] = { mono_pointer };
 
 		MonoObject* ret_obj = nullptr;
-		component_transform_scripting_instance->InvokeMonoMethodOnParentClass(
-			App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
-	}
-}
+		class_instance->InvokeMonoMethodOnParentClass(
+			*App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
 
-void ScriptingBridgeComponentTransform::PostRebuildInstances()
-{
-	if (component_transform_scripting_instance != nullptr)
-	{
-		MonoObject* owner_go_mono_object = component_transform_ref->GetOwner()->GetScriptingBridge()->GetGoScriptingInstance()->GetMonoObject();
+		MonoObject* owner_go_mono_object = component_transform_ref->GetOwner()->GetScriptingBridge()->GetInstance()->GetMonoObject();
 
-		void* args[1] = { owner_go_mono_object };
+		void* args2[1] = { owner_go_mono_object };
 
-		MonoObject* ret_obj = nullptr;
-		component_transform_scripting_instance->InvokeMonoMethodOnParentClass(
-			App->scripting->scripting_cluster->component_class, "SetOwner", args, 1, ret_obj);
+		MonoObject* ret_obj2 = nullptr;
+		class_instance->InvokeMonoMethodOnParentClass(
+			*App->scripting->scripting_cluster->component_class, "SetOwner", args2, 1, ret_obj2);
 
 		component_transform_ref->GetOwner()->GetScriptingBridge()->SetComponentTransform(component_transform_ref);
 	}
@@ -61,11 +48,6 @@ void ScriptingBridgeComponentTransform::PostRebuildInstances()
 
 void ScriptingBridgeComponentTransform::CleanUp()
 {
-}
-
-ScriptingClassInstance * ScriptingBridgeComponentTransform::GetComponentTransformScriptingInstance() const
-{
-	return component_transform_scripting_instance;
 }
 
 ComponentTransform * ScriptingBridgeComponentTransform::GetComponentTransformFromMonoObject(MonoObject * mono_object)
@@ -76,7 +58,7 @@ ComponentTransform * ScriptingBridgeComponentTransform::GetComponentTransformFro
 	{
 		MonoObject* obj_ret = nullptr;
 		if (App->scripting->InvokeMonoMethod(mono_object,
-			App->scripting->scripting_cluster->beengine_object_class.GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
+			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
 		{
 			if (obj_ret != nullptr)
 			{

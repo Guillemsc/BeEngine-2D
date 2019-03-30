@@ -154,15 +154,15 @@ void InspectorWindow::DrawComponentsPopup(const std::vector<GameObject*>& select
 
 		ImGui::Separator();
 
-		std::map<ComponentType, std::string> components_type = App->gameobject->GetComponentsTypes();
+		std::vector<GameObjectComponentData> components_data = App->gameobject->GetComponentsData();
 
-		for (std::map<ComponentType, std::string>::iterator it = components_type.begin(); it != components_type.end(); ++it)
+		for (std::vector<GameObjectComponentData>::iterator it = components_data.begin(); it != components_data.end(); ++it)
 		{
-			if(ImGui::Button((*it).second.c_str()))
+			if(ImGui::Button((*it).GetName().c_str()))
 			{
 				for (std::vector<GameObject*>::const_iterator go = selected_gos.begin(); go != selected_gos.end(); ++go)
 				{
-					(*go)->CreateComponent((*it).first);
+					(*go)->CreateComponent((*it).GetType());
 				}
 
 				ImGui::CloseCurrentPopup();
