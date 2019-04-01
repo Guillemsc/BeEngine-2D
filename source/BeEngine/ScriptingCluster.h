@@ -51,6 +51,7 @@ public:
 	ScriptingClass* component_script_class = nullptr;
 	ScriptingClass* component_transform_class = nullptr;
 	ScriptingClass* component_button_class = nullptr;
+	ScriptingClass* component_sprite_renderer_class = nullptr;
 
 	ScriptingClass* collision_class = nullptr;
 

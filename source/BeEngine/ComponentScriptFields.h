@@ -14,8 +14,6 @@ class GameObject;
 
 enum ScriptFieldType;
 
-/*	SCRIPT_FIELD_UNDEFINED,
-	SCRIPT_FIELD_GAMEOBJECT,*/
 
 class ComponentScriptField
 {

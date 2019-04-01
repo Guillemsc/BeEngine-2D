@@ -649,41 +649,44 @@ void ModuleAssets::LoadUserScriptsInfo()
 	{
 		if (App->scripting->scripting_assembly != nullptr && App->scripting->scripting_assembly->GetAssemblyLoaded())
 		{
-			std::vector<Resource*> script_resources = App->resource->GetResourcesFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
-
-			for (std::vector<Resource*>::iterator it = script_resources.begin(); it != script_resources.end(); ++it)
+			if (App->scripting->scripting_cluster->component_script_class != nullptr)
 			{
-				ResourceScript* curr_script = (ResourceScript*)(*it);
+				std::vector<Resource*> script_resources = App->resource->GetResourcesFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
 
-				curr_script->ClearScriptFields();
-
-				std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
-
-				curr_script->inherits_from_component_script = false;
-
-				ScriptingClass sc;
-				if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
+				for (std::vector<Resource*>::iterator it = script_resources.begin(); it != script_resources.end(); ++it)
 				{
-					curr_script->inherits_from_component_script = sc.GetIsInheritedFrom(*App->scripting->scripting_cluster->component_script_class);
+					ResourceScript* curr_script = (ResourceScript*)(*it);
 
-					if (curr_script->inherits_from_component_script)
+					curr_script->ClearScriptFields();
+
+					std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
+
+					curr_script->inherits_from_component_script = false;
+
+					ScriptingClass sc;
+					if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
 					{
-						curr_script->script_class = sc;
+						curr_script->inherits_from_component_script = sc.GetIsInheritedFrom(*App->scripting->scripting_cluster->component_script_class);
 
-						std::vector<ScriptingClassField> fields = sc.GetFields();
-
-						for (std::vector<ScriptingClassField>::const_iterator it = fields.begin(); it != fields.end(); ++it)
+						if (curr_script->inherits_from_component_script)
 						{
-							std::string type_name = mono_type_get_name((*it).GetType());
+							curr_script->script_class = sc;
 
-							curr_script->AddScriptField((*it).GetName(), type_name);
+							std::vector<ScriptingClassField> fields = sc.GetFields();
+
+							for (std::vector<ScriptingClassField>::const_iterator it = fields.begin(); it != fields.end(); ++it)
+							{
+								std::string type_name = mono_type_get_name((*it).GetType());
+
+								curr_script->AddScriptField((*it).GetName(), type_name);
+							}
 						}
 					}
 				}
-			}
 
-			EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
-			App->event->SendEvent(ersfc);
+				EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
+				App->event->SendEvent(ersfc);
+			}
 			
 		}
 	}

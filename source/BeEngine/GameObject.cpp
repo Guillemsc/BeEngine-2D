@@ -20,7 +20,8 @@
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-GameObject::GameObject(const std::string & set_uid, const std::string & set_instance_uid)
+GameObject::GameObject(const std::string & set_uid, const std::string & set_instance_uid) :
+	BeObject(new ScriptingBridgeGameObject(this))
 {
 	uid = set_uid;
 	instance_uid = set_instance_uid;
@@ -52,8 +53,7 @@ void GameObject::OnLoadAbstraction(DataAbstraction & abs)
 
 void GameObject::Start()
 {
-	scripting_bridge = new ScriptingBridgeGameObject(this);
-	App->scripting->AddScriptingBridgeObject(scripting_bridge);
+	InitBeObject();
 
 	transform = (ComponentTransform*)CreateComponent(ComponentType::COMPONENT_TYPE_TRANSFORM);
 
@@ -69,7 +69,7 @@ void GameObject::CleanUp()
 {
 	ActuallyDestroyComponents();
 
-	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
+	CleanUpBeObject();
 }
 
 void GameObject::OnEvent(Event * ev)
@@ -440,11 +440,6 @@ bool GameObject::GetHasPrefab() const
 ResourcePrefab * GameObject::GetPrefab() const
 {
 	return resource_prefab;
-}
-
-ScriptingBridgeGameObject * GameObject::GetScriptingBridge() const
-{
-	return scripting_bridge;
 }
 
 void GameObject::DestroyAllComponents()

@@ -2,7 +2,6 @@
 #define __COMPONENT_CAMERA_H__
 
 #include "GameObjectComponent.h"
-
 #include "GeometryMath.h"
 
 class GameObject;

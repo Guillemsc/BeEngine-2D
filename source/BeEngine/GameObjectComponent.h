@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Globals.h"
+#include "BeObject.h"
 
 class GameObject;
 class DataAbstraction;
@@ -32,7 +33,7 @@ enum ComponentGroup
 	UI,
 };
 
-class GameObjectComponent
+class GameObjectComponent : public BeObject
 {
 	friend class GameObject;
 
@@ -40,7 +41,8 @@ private:
 	void operator delete(void *) {}
 
 public:
-	GameObjectComponent(std::string name, const ComponentType& type, const ComponentGroup& group, bool unique_per_game_object = false, bool can_destroy = true);
+	GameObjectComponent(ScriptingBridgeObject* scripting_bridge, std::string name, const ComponentType& type, const ComponentGroup& group, 
+		bool unique_per_game_object = false, bool can_destroy = true);
 	~GameObjectComponent() {};
 
 	virtual void EditorDraw() {};

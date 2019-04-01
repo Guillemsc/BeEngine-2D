@@ -5,6 +5,7 @@
 
 #include "Globals.h"
 #include "GameObjectComponent.h"
+#include "BeObject.h"
 
 class DataAbstraction;
 class ComponentTransform;
@@ -13,7 +14,7 @@ class ResourcePrefab;
 class Event;
 class Scene;
 
-class GameObject 
+class GameObject : public BeObject
 {
 	friend class ModuleGameObject;
 	friend class ModuleScene;
@@ -70,8 +71,6 @@ public:
 	bool GetHasPrefab() const;
 	ResourcePrefab* GetPrefab() const;
 
-	ScriptingBridgeGameObject* GetScriptingBridge() const;
-
 private:
 	void DestroyAllComponents();
 	void ActuallyDestroyComponents();
@@ -106,9 +105,6 @@ private:
 	ResourcePrefab* resource_prefab = nullptr;
 
 	bool selected = false;
-
-private:
-	ScriptingBridgeGameObject* scripting_bridge = nullptr;
 };
 
 #endif // !__GAME_OBJECT_H__

@@ -54,6 +54,7 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentScript", component_script_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentTransform", component_transform_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentButton", component_button_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentSpriteRenderer", component_sprite_renderer_class);
 
 		// Physics
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Collision", collision_class);
@@ -74,6 +75,7 @@ void ScriptingCluster::CleanUp()
 	RELEASE(component_script_class);
 	RELEASE(component_transform_class);
 	RELEASE(component_button_class);
+	RELEASE(component_sprite_renderer_class);
 
 	RELEASE(collision_class);
 }

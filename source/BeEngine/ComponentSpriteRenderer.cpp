@@ -14,7 +14,8 @@
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent("Sprite Renderer", ComponentType::COMPONENT_TYPE_SPRITE_RENDERER,
+ComponentSpriteRenderer::ComponentSpriteRenderer() : GameObjectComponent(new ScriptingBridgeComponentSpriteRenderer(this)
+	"Sprite Renderer", ComponentType::COMPONENT_TYPE_SPRITE_RENDERER,
 	ComponentGroup::RENDERING, true)
 {
 }

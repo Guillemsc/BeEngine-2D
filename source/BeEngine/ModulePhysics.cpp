@@ -100,8 +100,11 @@ void ModulePhysics::BeginContact(b2Contact * contact)
 		ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
 		ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
 
-		trans_pb1->GetOwner()->GetScriptingBridge()->CallOnCollisionEnter(pb2);
-		trans_pb2->GetOwner()->GetScriptingBridge()->CallOnCollisionEnter(pb1);
+		ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
+		ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
+
+		bridge_go1->CallOnCollisionEnter(pb2);
+		bridge_go2->CallOnCollisionEnter(pb1);
 	}
 }
 
@@ -115,8 +118,11 @@ void ModulePhysics::EndContact(b2Contact * contact)
 		ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
 		ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
 
-		trans_pb1->GetOwner()->GetScriptingBridge()->CallOnCollisionExit(pb2);
-		trans_pb2->GetOwner()->GetScriptingBridge()->CallOnCollisionExit(pb1);
+		ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
+		ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
+
+		bridge_go1->CallOnCollisionExit(pb2);
+		bridge_go2->CallOnCollisionExit(pb1);
 	}
 }
 
@@ -136,8 +142,11 @@ void ModulePhysics::UpdateContacts()
 				ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
 				ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
 
-				trans_pb1->GetOwner()->GetScriptingBridge()->CallOnCollisionStay(pb2);
-				trans_pb2->GetOwner()->GetScriptingBridge()->CallOnCollisionStay(pb1);
+				ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
+				ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
+
+				bridge_go2->CallOnCollisionStay(pb2);
+				bridge_go2->CallOnCollisionStay(pb1);
 			}
 		}
 	}

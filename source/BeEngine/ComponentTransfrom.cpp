@@ -17,7 +17,8 @@
 #include "mmgr\mmgr.h"
 
 ComponentTransform::ComponentTransform() 
-	: GameObjectComponent("Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
+	: GameObjectComponent(new ScriptingBridgeComponentTransform(this), 
+		"Transform", ComponentType::COMPONENT_TYPE_TRANSFORM, ComponentGroup::TRANSFORMATIONS, true, false)
 {
 
 }
@@ -76,6 +77,8 @@ void ComponentTransform::EditorDraw()
 
 void ComponentTransform::Start()
 {
+	InitBeObject();
+
 	local_transform = float4x4::identity;
 	local_transform[0][3] = 1;
 	local_transform[1][3] = 1;
@@ -85,9 +88,6 @@ void ComponentTransform::Start()
 	world_transform[0][3] = 1;
 	world_transform[1][3] = 1;
 	world_transform[2][3] = 1;
-
-	scripting_bridge = new ScriptingBridgeComponentTransform(this);
-	App->scripting->AddScriptingBridgeObject(scripting_bridge);
 
 	base_physics_body = App->physics->CreatePhysicsBody();
 	base_physics_body->SetType(PhysicsBodyType::PHYSICS_BODY_KINEMATIC);
@@ -106,7 +106,7 @@ void ComponentTransform::CleanUp()
 {
 	App->physics->DestroyPhysicsBody(base_physics_body);
 
-	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
+	CleanUpBeObject();
 }
 
 void ComponentTransform::RenderGuizmos(float relative_size)
@@ -449,11 +449,6 @@ ComponentCanvas * ComponentTransform::GetUsedCanvas() const
 ComponentCanvas * ComponentTransform::GetParentUsedCanvas() const
 {
 	return parent_used_canvas;
-}
-
-ScriptingBridgeComponentTransform * ComponentTransform::GetScriptingBridge() const
-{
-	return scripting_bridge;
 }
 
 void ComponentTransform::UpdateWorldAndLocalValues()

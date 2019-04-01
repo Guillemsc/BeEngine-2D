@@ -3,8 +3,9 @@
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-GameObjectComponent::GameObjectComponent(std::string _name, const ComponentType& _type, const ComponentGroup& _group, 
-	bool _unique_per_game_object, bool _can_destroy)
+GameObjectComponent::GameObjectComponent(ScriptingBridgeObject* scripting_bridge, 
+	std::string _name, const ComponentType& _type, const ComponentGroup& _group, bool _unique_per_game_object, bool _can_destroy) : 
+	BeObject(scripting_bridge)
 {
 	name = _name;
 	type = _type;

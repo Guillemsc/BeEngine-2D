@@ -26,6 +26,8 @@ void ScriptingBridgeComponentTransform::OnRebuildInstances()
 {
 	if (class_instance != nullptr)
 	{
+		ScriptingBridgeGameObject* bridge_go = (ScriptingBridgeGameObject*)component_transform_ref->GetOwner()->GetScriptingBridge();
+
 		MonoArray* mono_pointer = App->scripting->BoxPointer(component_transform_ref);
 
 		void* args[1] = { mono_pointer };
@@ -34,7 +36,7 @@ void ScriptingBridgeComponentTransform::OnRebuildInstances()
 		class_instance->InvokeMonoMethodOnParentClass(
 			*App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
 
-		MonoObject* owner_go_mono_object = component_transform_ref->GetOwner()->GetScriptingBridge()->GetInstance()->GetMonoObject();
+		MonoObject* owner_go_mono_object = bridge_go->GetInstance()->GetMonoObject();
 
 		void* args2[1] = { owner_go_mono_object };
 
@@ -42,7 +44,7 @@ void ScriptingBridgeComponentTransform::OnRebuildInstances()
 		class_instance->InvokeMonoMethodOnParentClass(
 			*App->scripting->scripting_cluster->component_class, "SetOwner", args2, 1, ret_obj2);
 
-		component_transform_ref->GetOwner()->GetScriptingBridge()->SetComponentTransform(component_transform_ref);
+		bridge_go->SetComponentTransform(component_transform_ref);
 	}
 }
 

@@ -2,7 +2,6 @@
 #define __COMPONENT_TRANSFORM_H__
 
 #include "GameObjectComponent.h"
-
 #include "GeometryMath.h"
 
 class GameObject;
@@ -81,8 +80,6 @@ public:
 	ComponentCanvas* GetUsedCanvas() const;
 	ComponentCanvas* GetParentUsedCanvas() const;
 
-	ScriptingBridgeComponentTransform* GetScriptingBridge() const;
-
 private:
 	void UpdateWorldAndLocalValues();
 
@@ -124,8 +121,6 @@ private:
 	ComponentCanvas* parent_used_canvas = nullptr;
 
 private:
-	ScriptingBridgeComponentTransform* scripting_bridge = nullptr;
-
 	float2 last_pos = float2::zero;
 	float last_rotation = 0;
 };
