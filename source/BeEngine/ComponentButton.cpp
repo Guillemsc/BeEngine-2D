@@ -12,7 +12,9 @@
 #include "ModuleEvent.h"
 #include "ScriptingBridgeComponentButton.h"
 
-ComponentButton::ComponentButton() : GameObjectComponent("Button", ComponentType::COMPONENT_TYPE_BUTTON, ComponentGroup::UI, true)
+ComponentButton::ComponentButton() 
+	: GameObjectComponent(new ScriptingBridgeComponentButton(this),
+		"Button", ComponentType::COMPONENT_TYPE_BUTTON, ComponentGroup::UI, true)
 {
 }
 
@@ -71,10 +73,9 @@ void ComponentButton::EditorDraw()
 
 void ComponentButton::Start()
 {
-	App->event->Suscribe(std::bind(&ComponentButton::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+	InitBeObject();
 
-	scripting_bridge = new ScriptingBridgeComponentButton(this);
-	App->scripting->AddScriptingBridgeObject(scripting_bridge);
+	App->event->Suscribe(std::bind(&ComponentButton::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	ui_element = App->ui->CreateUIElement();
 	handler = ui_element->AddHandler();
@@ -93,9 +94,9 @@ void ComponentButton::CleanUp()
 	App->ui->DestroyUIElement(ui_element);
 	ui_element = nullptr;
 
-	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
-
 	App->event->UnSuscribe(std::bind(&ComponentButton::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+
+	CleanUpBeObject();
 }
 
 void ComponentButton::OnSaveAbstraction(DataAbstraction & abs)
@@ -174,11 +175,6 @@ void ComponentButton::RenderGuizmos(float relative_size)
 {
 }
 
-ScriptingBridgeComponentButton * ComponentButton::GetScriptingBridge() const
-{
-	return scripting_bridge;
-}
-
 void ComponentButton::OnEvent(Event * ev)
 {	
 	if (ev->GetType() == EventType::RESOURCE_DESTROYED)
@@ -234,7 +230,8 @@ void ComponentButton::UpdateState()
 			{
 				if (!last_frame_pressed)
 				{
-					scripting_bridge->CallOnClick();
+					ScriptingBridgeComponentButton* bridge = (ScriptingBridgeComponentButton*)GetScriptingBridge();
+					bridge->CallOnClick();
 				}
 
 				last_frame_pressed = true;

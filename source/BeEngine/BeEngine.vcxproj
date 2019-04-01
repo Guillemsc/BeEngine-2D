@@ -257,6 +257,10 @@
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="ScriptingBridgeComponentButton.h" />
+    <ClInclude Include="ScriptingBridgeComponentCamera.h" />
+    <ClInclude Include="ScriptingBridgeComponentCanvas.h" />
+    <ClInclude Include="ScriptingBridgeComponentPhysicsBody.h" />
+    <ClInclude Include="ScriptingBridgeComponentPolygonCollider.h" />
     <ClInclude Include="ScriptingBridgeComponentScript.h" />
     <ClInclude Include="ScriptingBridgeComponentSpriteRenderer.h" />
     <ClInclude Include="ScriptingBridgeComponentTransform.h" />
@@ -402,6 +406,10 @@
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="ScriptingBridgeComponentButton.cpp" />
+    <ClCompile Include="ScriptingBridgeComponentCamera.cpp" />
+    <ClCompile Include="ScriptingBridgeComponentCanvas.cpp" />
+    <ClCompile Include="ScriptingBridgeComponentPhysicsBody.cpp" />
+    <ClCompile Include="ScriptingBridgeComponentPolygonCollider.cpp" />
     <ClCompile Include="ScriptingBridgeComponentScript.cpp" />
     <ClCompile Include="ScriptingBridgeComponentSpriteRenderer.cpp" />
     <ClCompile Include="ScriptingBridgeComponentTransform.cpp" />

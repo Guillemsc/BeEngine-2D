@@ -194,19 +194,24 @@ MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, Mo
 		std::string type_name = App->scripting->UnboxString(component_type);
 
 		ComponentType type = App->gameobject->GetComponentTypeByComponentScriptingName(type_name);
+		
+		if (type != ComponentType::COMPONENT_TYPE_UNDEFINED)
+		{
+			GameObjectComponent* comp = go->CreateComponent(type);
 
-		//// Button
-		//if (type.compare(App->scripting->scripting_cluster->component_button_class.GetName()) == 0)
-		//{
-		//	ComponentButton* button = (ComponentButton*)go->CreateComponent(ComponentType::COMPONENT_TYPE_BUTTON);
+			if (comp != nullptr)
+			{
+				ScriptingClassInstance* ins = comp->GetScriptingBridge()->GetInstance();
 
-		//	ret = button->GetScriptingBridge()->GetComponentButtonScriptingInstance()->GetMonoObject();
-		//}
+				if (ins != nullptr)
+					ret = ins->GetMonoObject();
+			}
+		}
+
+
+		if (ret == nullptr)
+			CONSOLE_ERROR("Component %s could not be created, as it does not exist on Bridge Code", type_name.c_str());
 	}
-
-	if (ret == nullptr)
-		CONSOLE_ERROR("Component %s could not be created, as it does not exist on Bridge Code");
-
 
 	return ret;
 }

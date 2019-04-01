@@ -13,12 +13,14 @@
 #include "ModuleGameObject.h"
 #include "ModuleSceneRenderer.h"
 #include "LineRenderer.h"
+#include "ScriptingBridgeComponentPolygonCollider.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
 ComponentPolygonCollider::ComponentPolygonCollider() 
-	: GameObjectComponent("Polygon Collider", ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, ComponentGroup::PHYSICS)
+	: GameObjectComponent(new ScriptingBridgeComponentPolygonCollider(this), 
+		"Polygon Collider", ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, ComponentGroup::PHYSICS)
 {
 }
 
@@ -110,6 +112,8 @@ void ComponentPolygonCollider::EditorDraw()
 
 void ComponentPolygonCollider::Start()
 {
+	InitBeObject();
+
 	physics_shape = (PhysicsShapePolygon*)App->physics->CreatePhysicsShape(PhysicsShapeType::PHYSICS_SHAPE_POLYGON);
 	GetOwner()->transform->base_physics_body->AddShape(physics_shape);
 }
@@ -122,6 +126,8 @@ void ComponentPolygonCollider::CleanUp()
 {
 	GetOwner()->transform->base_physics_body->RemoveShape(physics_shape);
 	App->physics->DestroyPhysicsShape(physics_shape);
+
+	CleanUpBeObject();
 }
 
 void ComponentPolygonCollider::OnSaveAbstraction(DataAbstraction & abs)

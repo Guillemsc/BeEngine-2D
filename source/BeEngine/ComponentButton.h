@@ -43,8 +43,6 @@ public:
 
 	void RenderGuizmos(float relative_size);
 
-	ScriptingBridgeComponentButton* GetScriptingBridge() const;
-
 private:
 	void OnEvent(Event * ev);
 
@@ -73,8 +71,6 @@ private:
 	bool last_frame_pressed = false;
 
 private:
-	ScriptingBridgeComponentButton* scripting_bridge = nullptr;
-
 	ResourceSelectorWidget selector_widget_1;
 	ResourceSelectorWidget selector_widget_2;
 	ResourceSelectorWidget selector_widget_3;

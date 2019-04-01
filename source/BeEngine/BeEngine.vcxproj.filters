@@ -660,6 +660,18 @@
     <ClInclude Include="ScriptingBridgeComponentSpriteRenderer.h">
       <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingBridgeComponentCamera.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeComponentPhysicsBody.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeComponentPolygonCollider.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeComponentCanvas.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1092,6 +1104,18 @@
       <Filter>Sources\2. Base =================</Filter>
     </ClCompile>
     <ClCompile Include="ScriptingBridgeComponentSpriteRenderer.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeComponentCamera.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeComponentPhysicsBody.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeComponentPolygonCollider.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeComponentCanvas.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>

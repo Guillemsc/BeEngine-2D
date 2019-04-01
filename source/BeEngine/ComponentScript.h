@@ -62,8 +62,6 @@ private:
 	GameObjectSelectorWidget go_selector_widget;
 
 	std::vector<ComponentScriptField*> fields_values;
-
-	ScriptingBridgeComponentScript* scripting_bridge = nullptr;
 };
 
 #endif // !__COMPONENT_SCRIPT_H__

@@ -8,8 +8,11 @@
 #include "ComponentCamera.h"
 #include "ModuleGameObject.h"
 #include "ModuleEvent.h"
+#include "ScriptingBridgeComponentCanvas.h"
 
-ComponentCanvas::ComponentCanvas() : GameObjectComponent("Canvas", ComponentType::COMPONENT_TYPE_CANVAS, ComponentGroup::UI, true)
+ComponentCanvas::ComponentCanvas() 
+	: GameObjectComponent(new ScriptingBridgeComponentCanvas(this),
+		"Canvas", ComponentType::COMPONENT_TYPE_CANVAS, ComponentGroup::UI, true)
 {
 }
 
@@ -24,7 +27,7 @@ void ComponentCanvas::EditorDraw()
 
 void ComponentCanvas::Start()
 {
-	
+	InitBeObject();
 }
 
 void ComponentCanvas::Update()
@@ -36,7 +39,7 @@ void ComponentCanvas::Update()
 
 void ComponentCanvas::CleanUp()
 {
-	
+	CleanUpBeObject();
 }
 
 void ComponentCanvas::OnSaveAbstraction(DataAbstraction & abs)

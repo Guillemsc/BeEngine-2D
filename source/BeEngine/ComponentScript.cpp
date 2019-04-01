@@ -17,7 +17,9 @@
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-ComponentScript::ComponentScript() : GameObjectComponent("Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
+ComponentScript::ComponentScript() 
+	: GameObjectComponent(new ScriptingBridgeComponentScript(this),
+		"Script", ComponentType::COMPONENT_TYPE_SCRIPT, ComponentGroup::SCRIPTING)
 {
 	
 }
@@ -84,8 +86,7 @@ void ComponentScript::EditorDraw()
 
 void ComponentScript::Start()
 {
-	scripting_bridge = new ScriptingBridgeComponentScript(this);
-	App->scripting->AddScriptingBridgeObject(scripting_bridge);
+	InitBeObject();
 
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
@@ -98,7 +99,7 @@ void ComponentScript::CleanUp()
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 
-	App->scripting->DestroyScriptingBridgeObject(scripting_bridge);
+	CleanUpBeObject();
 }
 
 void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)
@@ -333,46 +334,52 @@ void ComponentScript::SetResourceScript(ResourceScript * set)
 
 void ComponentScript::UpdateScriptInstance()
 {
+	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
+
 	if (resource_script != nullptr)
 	{
-		scripting_bridge->SetGeneratedClass(resource_script->GetScriptingClass());
-		scripting_bridge->RebuildInstance();
-		scripting_bridge->OnRebuildInstances();
+		bridge->SetGeneratedClass(resource_script->GetScriptingClass());
+		bridge->RebuildInstance();
+		bridge->OnRebuildInstances();
 	}
 	else
 	{
-		scripting_bridge->RemoveGeneratedClass();
-		scripting_bridge->RebuildInstance();
-		scripting_bridge->OnRebuildInstances();
+		bridge->RemoveGeneratedClass();
+		bridge->RebuildInstance();
+		bridge->OnRebuildInstances();
 	}
 }
 
 void ComponentScript::InitFields()
 {
+	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
+
 	for (std::vector<ComponentScriptField*>::iterator it = fields_values.begin(); it != fields_values.end(); ++it)
-	{
-		scripting_bridge->SetField(*it);
-	}
+		bridge->SetField(*it);
 }
 
 void ComponentScript::CallAwake()
 {
-	scripting_bridge->CallAwake();
+	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
+	bridge->CallAwake();
 }
 
 void ComponentScript::CallStart()
 {
-	scripting_bridge->CallStart();
+	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
+	bridge->CallStart();
 }
 
 void ComponentScript::CallUpdate()
 {
-	scripting_bridge->CallUpdate();
+	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
+	bridge->CallUpdate();
 }
 
 void ComponentScript::CallOnDestroy()
 {
-	scripting_bridge->CallOnDestroy();
+	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
+	bridge->CallOnDestroy();
 }
 
 void ComponentScript::DrawFieldValue(ComponentScriptField* field_value)
