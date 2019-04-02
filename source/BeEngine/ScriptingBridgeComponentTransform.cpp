@@ -86,5 +86,66 @@ void ScriptingBridgeComponentTransform::SetPosition(MonoObject * mono_object, Mo
 
 MonoObject * ScriptingBridgeComponentTransform::GetPosition(MonoObject * mono_object)
 {
-	return nullptr;
+	MonoObject* ret = nullptr;
+
+	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+
+	if (component_trans != nullptr)
+	{
+		ret = App->scripting->scripting_cluster->BoxFloat2(component_trans->GetPosition());
+	}
+
+	return ret;
+}
+
+void ScriptingBridgeComponentTransform::SetRotationDegrees(MonoObject * mono_object, float value)
+{
+	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+
+	if (component_trans != nullptr)
+	{
+		//float rot_degrees = App->scripting->UnboxFloat(mono_float);
+
+		component_trans->SetRotationDegrees(value);
+	}
+}
+
+float ScriptingBridgeComponentTransform::GetRotationDegrees(MonoObject * mono_object)
+{
+	float ret = 0.0f;
+
+	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+
+	if (component_trans != nullptr)
+	{
+		ret = component_trans->GetRotationDegrees();
+	}
+
+	return ret;
+}
+
+void ScriptingBridgeComponentTransform::SetScale(MonoObject * mono_object, MonoObject * mono_float2)
+{
+	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+
+	if (component_trans != nullptr)
+	{
+		float2 new_scal = App->scripting->scripting_cluster->UnboxFloat2(mono_float2);
+
+		component_trans->SetScale(new_scal);
+	}
+}
+
+MonoObject * ScriptingBridgeComponentTransform::GetScale(MonoObject * mono_object)
+{
+	MonoObject* ret = nullptr;
+
+	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+
+	if (component_trans != nullptr)
+	{
+		ret = App->scripting->scripting_cluster->BoxFloat2(component_trans->GetScale());
+	}
+
+	return ret;
 }

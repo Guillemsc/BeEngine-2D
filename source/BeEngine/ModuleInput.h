@@ -23,13 +23,12 @@ enum EventWindow
 	WE_COUNT
 };
 
-struct KeyBinding
+struct Key
 {
-	const char* binding_name = nullptr;
 	int         key;
 	KEY_STATE   state = KEY_IDLE;
 
-	bool operator == (const KeyBinding& bin)
+	bool operator == (const Key& bin)
 	{
 		if (key == bin.key)
 			return true;
@@ -45,9 +44,12 @@ public:
 
 	void OnLoadConfig(JSON_Doc* config);
 	void OnSaveConfig(JSON_Doc* config);
+
 	bool Awake();
 	bool PreUpdate();
 	bool CleanUp();
+
+	void ManageInput();
 
 	const bool GetKeyDown(int id);
 	const bool GetKeyRepeat(int id);
@@ -55,12 +57,6 @@ public:
 	const bool GetKeyDown(const char* key);
 	const bool GetKeyRepeat(const char* key);
 	const bool GetKeyUp(const char* key);
-
-	bool GetKeyBindingDown(const char* binding_name);
-	bool GetKeyBindingRepeat(const char* binding_name);
-	bool GetKeyBindingUp(const char* binding_name);
-	void SetKeyBinding(const char* key, const char* binding_name);
-	const char* GetKeyBinding(const char* binding_name);
 
 	bool GetKeyboardInput(std::string& input);
 	void ClearKeyboardInput();
@@ -80,18 +76,18 @@ public:
 	const char* KeyToChar(int key);
 
 private:
-	void AddKeyDown(KeyBinding k);
-	void AddKeyRepeat(KeyBinding k);
-	void AddKeyUp(KeyBinding k);
+	void AddKeyDown(const Key& k);
+	void AddKeyRepeat(const Key& k);
+	void AddKeyUp(const Key& k);
 
 private:
 	// Those lists are filled and cleaned every frame
-	std::vector<KeyBinding> keys_down;
-	std::vector<KeyBinding> keys_repeat;
-	std::vector<KeyBinding> keys_up;
+	std::vector<Key> keys_down;
+	std::vector<Key> keys_repeat;
+	std::vector<Key> keys_up;
 
 	// Used to reference bindings and keys and keep track of states
-	KeyBinding*		   keyboard;
+	Key*		       keyboard;
 
 	bool			   windowEvents[WE_COUNT];
 	KEY_STATE		   mouse_buttons[MAX_MOUSE_BUTTONS];
@@ -104,9 +100,6 @@ private:
 	int				   last_mouse_y = 0;
 
 	int				   mouse_wheel = 0;
-
-public:
-	bool			   right_clicking = false;
 };
 
 #endif // !__MODULE_INPUT_H__

@@ -8,6 +8,8 @@
 #include "tinyfiledialogs.h"
 #include "Event.h"
 #include "ModuleEvent.h"
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -535,6 +537,30 @@ bool FileSystem::FolderDelete(const std::string& folderpath)
 	else
 	{
 		INTERNAL_LOG("Error deleting path): %s", folderpath);
+	}
+
+	return ret;
+}
+
+bool FileSystem::FolderCopyPaste(const std::string & folderpath, const std::string & folderpath_destination, bool check_name_collision, std::string & new_folderpath)
+{
+	bool ret = true;
+
+	fs::path source = folderpath;
+	fs::path target = folderpath_destination;
+
+	try // If you want to avoid exception handling then use the error code overload of the following functions.
+	{
+		fs::create_directories(target); // Recursively create target directory if not existing.
+		fs::copy(source, target, fs::copy_options::recursive);
+
+		ret = true;
+	}
+	catch (std::exception& e) // Not using fs::filesystem_error since std::bad_alloc can throw too.
+	{
+		std::cout << e.what();
+
+		ret = false;
 	}
 
 	return ret;

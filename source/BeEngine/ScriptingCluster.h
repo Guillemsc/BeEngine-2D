@@ -43,6 +43,8 @@ public:
 
 	ScriptingClass* debug_class = nullptr;
 
+	ScriptingClass* input_class = nullptr;
+
 	ScriptingClass* float2_class = nullptr;
 
 	ScriptingClass* game_object_class = nullptr;

@@ -20,6 +20,31 @@ namespace BeEngine
             }
         }
 
+
+        public float RotationDegrees
+        {
+            get
+            {
+                return GetRotationDegrees();
+            }
+            set
+            {
+                SetRotationDegrees(value);
+            }
+        }
+
+        public float2 Scale
+        {
+            get
+            {
+                return GetScale();
+            }
+            set
+            {
+                SetScale(value);
+            }
+        }
+
         // -----------------------------------------------------
 
         // Internal Calls --------------------------------------
@@ -29,6 +54,18 @@ namespace BeEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern float2 GetPosition();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void SetRotationDegrees(float value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern float GetRotationDegrees();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void SetScale(float2 value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern float2 GetScale();
 
         // -----------------------------------------------------
     }

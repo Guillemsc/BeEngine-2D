@@ -52,6 +52,7 @@ public:
 
 	std::string GetCurrProjectBasePath() const;
 	bool GetCurrProjectIsSelected() const;
+	Project* GetCurrProject() const;
 
 	bool CreateNewProject(const char* path, const char* name);
 	bool LoadProject(const char* project_folder);

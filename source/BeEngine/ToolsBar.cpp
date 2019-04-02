@@ -3,6 +3,8 @@
 #include "imgui.h"
 #include "ModuleWindow.h"
 #include "ModuleState.h"
+#include "ModuleFileSystem.h"
+#include "ModuleBuild.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -39,6 +41,20 @@ void ToolsBar::DrawEditor()
 	{
 		if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 		{
+			if (ImGui::Button("Build"))
+			{
+				bool cancelled = false;
+				std::string folder = App->file_system->SelectFolderDialog(cancelled);
+
+				if (!cancelled)
+				{
+					std::vector<std::string> errors;
+					App->build->GenerateBuild(folder, errors);
+				}
+			}
+
+			ImGui::SameLine();
+
 			if(ImGui::Button("Play"))
 			{
 				App->state->SetEditorUpdateState(EditorUpdateState::EDITOR_UPDATE_STATE_PLAY);

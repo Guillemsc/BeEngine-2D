@@ -33,6 +33,12 @@ private:
 	static void SetPosition(MonoObject* mono_object, MonoObject* mono_float2);
 	static MonoObject* GetPosition(MonoObject * mono_object);
 
+	static void SetRotationDegrees(MonoObject* mono_object, float rotation);
+	static float GetRotationDegrees(MonoObject * mono_object);
+
+	static void SetScale(MonoObject* mono_object, MonoObject* mono_float2);
+	static MonoObject* GetScale(MonoObject * mono_object);
+
 	// --------------
 
 private:

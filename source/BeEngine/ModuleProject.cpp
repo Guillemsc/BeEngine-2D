@@ -88,6 +88,11 @@ bool ModuleProject::GetCurrProjectIsSelected() const
 	return curr_project != nullptr;
 }
 
+Project * ModuleProject::GetCurrProject() const
+{
+	return curr_project;
+}
+
 bool ModuleProject::CreateNewProject(const char* path, const char * name)
 {
 	bool ret = false;

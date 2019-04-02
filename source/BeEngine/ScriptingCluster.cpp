@@ -7,6 +7,7 @@
 #include "PhysicsBody.h"
 #include "ComponentTransfrom.h"
 #include "GameObject.h"
+#include "ScriptingBridgeInput.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -18,6 +19,12 @@ void ScriptingCluster::RegisterInternalCalls()
 		mono_add_internal_call("BeEngine.Debug::Log", (const void*)ScriptingBridgeDebug::Log);
 		// ------------------------------------ Debug
 
+		// Input ------------------------------------
+		mono_add_internal_call("BeEngine.Input::GetKeyDown", (const void*)ScriptingBridgeInput::GetKeyDown);
+		mono_add_internal_call("BeEngine.Input::KeyRepeat", (const void*)ScriptingBridgeInput::GetKeyRepeat);
+		mono_add_internal_call("BeEngine.Input::KeyUp", (const void*)ScriptingBridgeInput::GetKeyUp);
+		// ------------------------------------ Input
+
 		// GameObject -------------------------------
 		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
 		mono_add_internal_call("BeEngine.GameObject::GetName", (const void*)ScriptingBridgeGameObject::GetName);
@@ -28,6 +35,10 @@ void ScriptingCluster::RegisterInternalCalls()
 		// ComponentTransform -----------------------
 		mono_add_internal_call("BeEngine.ComponentTransform::SetPosition", (const void*)ScriptingBridgeComponentTransform::SetPosition);
 		mono_add_internal_call("BeEngine.ComponentTransform::GetPosition", (const void*)ScriptingBridgeComponentTransform::GetPosition);
+		mono_add_internal_call("BeEngine.ComponentTransform::SetRotationDegrees", (const void*)ScriptingBridgeComponentTransform::SetRotationDegrees);
+		mono_add_internal_call("BeEngine.ComponentTransform::GetRotationDegrees", (const void*)ScriptingBridgeComponentTransform::GetRotationDegrees);
+		mono_add_internal_call("BeEngine.ComponentTransform::SetScale", (const void*)ScriptingBridgeComponentTransform::SetScale);
+		mono_add_internal_call("BeEngine.ComponentTransform::GetScale", (const void*)ScriptingBridgeComponentTransform::GetScale);
 		// ----------------------- ComponentTransform
 
 	}
@@ -42,6 +53,9 @@ void ScriptingCluster::RebuildClasses()
 
 		// Debug
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Debug", debug_class);
+
+		// Input
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Input", input_class);
 
 		// Math
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "float2", float2_class);
@@ -71,6 +85,7 @@ void ScriptingCluster::CleanUp()
 	RELEASE(beengine_object_class);
 
 	RELEASE(debug_class);
+	RELEASE(input_class);
 
 	RELEASE(float2_class);
 
@@ -139,7 +154,15 @@ MonoObject * ScriptingCluster::BoxFloat2(const float2 & val)
 {
 	MonoObject* ret = nullptr;
 
+	if (float2_class != nullptr)
+	{
+		ScriptingClassInstance ins = float2_class->CreateWeakInstance();
 
+		ins.SetFieldValue("_x", &(float)val.x);
+		ins.SetFieldValue("_y", &(float)val.y);
+
+		ret = ins.GetMonoObject();
+	}
 
 	return ret;
 }

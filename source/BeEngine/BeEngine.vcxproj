@@ -135,6 +135,7 @@
     <ClInclude Include="InspectorWindow.h" />
     <ClInclude Include="MapboxTriangulation\earcut.hpp" />
     <ClInclude Include="ModuleAssets.h" />
+    <ClInclude Include="ModuleBuild.h" />
     <ClInclude Include="ModuleGuizmo.h" />
     <ClInclude Include="ModulePhysics.h" />
     <ClInclude Include="ModuleScene.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="ScriptingBridgeComponentSpriteRenderer.h" />
     <ClInclude Include="ScriptingBridgeComponentTransform.h" />
     <ClInclude Include="ScriptingBridgeDebug.h" />
+    <ClInclude Include="ScriptingBridgeInput.h" />
     <ClInclude Include="ScriptingBridgeObject.h" />
     <ClInclude Include="ScriptingBridgeGameObject.h" />
     <ClInclude Include="ScriptingCluster.h" />
@@ -318,6 +320,7 @@
     <ClCompile Include="imgui_docking.cpp" />
     <ClCompile Include="InspectorWindow.cpp" />
     <ClCompile Include="ModuleAssets.cpp" />
+    <ClCompile Include="ModuleBuild.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="LineRenderer.cpp" />
     <ClCompile Include="ModuleGuizmo.cpp" />
@@ -418,6 +421,7 @@
     <ClCompile Include="ScriptingBridgeComponentSpriteRenderer.cpp" />
     <ClCompile Include="ScriptingBridgeComponentTransform.cpp" />
     <ClCompile Include="ScriptingBridgeDebug.cpp" />
+    <ClCompile Include="ScriptingBridgeInput.cpp" />
     <ClCompile Include="ScriptingBridgeObject.cpp" />
     <ClCompile Include="ScriptingBridgeGameObject.cpp" />
     <ClCompile Include="ScriptingCluster.cpp" />

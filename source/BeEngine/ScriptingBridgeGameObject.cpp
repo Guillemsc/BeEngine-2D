@@ -216,7 +216,7 @@ MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, Mo
 	return ret;
 }
 
-MonoObject* ScriptingBridgeGameObject::GetComponent(MonoObject * mono_object, MonoString * component_type)
+MonoObject* ScriptingBridgeGameObject::GetComponent(MonoObject * mono_object, MonoString * component_type, int index)
 {
 	MonoObject* ret = nullptr;
 
@@ -228,7 +228,7 @@ MonoObject* ScriptingBridgeGameObject::GetComponent(MonoObject * mono_object, Mo
 
 		ComponentType type = App->gameobject->GetComponentTypeByComponentScriptingName(type_name);
 
-		GameObjectComponent* comp = go->GetComponent(type);
+		GameObjectComponent* comp = go->GetComponent(type, index);
 
 		if (comp != nullptr)
 		{

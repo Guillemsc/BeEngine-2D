@@ -1030,7 +1030,6 @@ bool ScriptingAssembly::UpdateClassPointer(const char * class_namepsace, const c
 
 			ret = true;
 		}
-		
 	}
 
 	return ret;

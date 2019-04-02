@@ -130,6 +130,9 @@
     <Filter Include="Sources\4. Editor ================\Widgets\Selectors">
       <UniqueIdentifier>{d08fc7ca-549a-462b-8bba-0d43a79592f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\8. Scripting ==============\Bridges\Input">
+      <UniqueIdentifier>{9ad19bb7-b6b7-497b-80e8-5dca02049701}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -684,6 +687,12 @@
     <ClInclude Include="DragDropCluster.h">
       <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingBridgeInput.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBuild.h">
+      <Filter>Sources\3. Modules ==============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1135,6 +1144,12 @@
     </ClCompile>
     <ClCompile Include="DragDropCluster.cpp">
       <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeInput.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleBuild.cpp">
+      <Filter>Sources\3. Modules ==============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

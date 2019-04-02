@@ -204,7 +204,7 @@ bool ConsoleWindow::PersonalLogExists(const std::string & identifier)
 void ConsoleWindow::DrawLogs()
 {
 	// Normal logs
-	for (std::vector<ConsoleLogLine>::iterator it = console_logs_shown.begin(); it != console_logs_shown.end(); ++it)
+	for (std::vector<ConsoleLogLine>::reverse_iterator it = console_logs_shown.rbegin(); it != console_logs_shown.rend(); ++it)
 	{
 		DrawLog(*it);
 	}

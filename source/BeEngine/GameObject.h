@@ -65,6 +65,7 @@ public:
 	bool GetHasComponent(const ComponentType& type) const;
 	std::vector<GameObjectComponent*> GetComponents() const;
 	GameObjectComponent* GetComponent(ComponentType type) const;
+	GameObjectComponent* GetComponent(ComponentType type, int index) const;
 
 	bool GetSelected() const;
 

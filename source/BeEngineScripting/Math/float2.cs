@@ -7,6 +7,12 @@ namespace BeEngine
 {
     public class float2
     {
+        public float2()
+        {
+            x = 0;
+            y = 0;
+        }
+
         private float _x = 0;
         private float _y = 0;
 
@@ -26,6 +32,11 @@ namespace BeEngine
         {
             get { return _y; }
             set { _y = value; }
+        }
+
+        public override string ToString()
+        {
+            return "x: " + x + " y: " + y;
         }
     }
 }

@@ -45,6 +45,11 @@ namespace BeEngine
 
         public T GetComponent<T>() where T : Component
         {
+            return GetComponent<T>(0);
+        }
+
+        public T GetComponent<T>(int index) where T : Component
+        {
             T ret = null;
 
             Type type = typeof(T);
@@ -53,7 +58,7 @@ namespace BeEngine
 
             type_name = type_name.Replace("BeEngine.", "");
 
-            Component found_comp = GetComponentTypeName(type_name);
+            Component found_comp = GetComponentTypeName(type_name, index);
 
             if (found_comp != null)
                 ret = (T)Convert.ChangeType(found_comp, type);
@@ -139,7 +144,7 @@ namespace BeEngine
         private extern Component AddComponentTypeName(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern Component GetComponentTypeName(string name);
+        private extern Component GetComponentTypeName(string name, int index);
 
         // -----------------------------------------------------
     }

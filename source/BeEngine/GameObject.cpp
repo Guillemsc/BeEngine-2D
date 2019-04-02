@@ -413,14 +413,25 @@ std::vector<GameObjectComponent*> GameObject::GetComponents() const
 
 GameObjectComponent* GameObject::GetComponent(ComponentType type) const
 {
+	return GetComponent(type, 0);
+}
+
+GameObjectComponent * GameObject::GetComponent(ComponentType type, int index) const
+{
 	GameObjectComponent* ret = nullptr;
 
+	int counter = 0;
 	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
 	{
 		if ((*it)->GetType() == type)
 		{
-			ret = (*it);
-			break;
+			if (counter == index)
+			{
+				ret = (*it);
+				break;
+			}
+
+			++counter;
 		}
 	}
 

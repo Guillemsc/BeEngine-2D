@@ -15,7 +15,7 @@
 
 ModuleInput::ModuleInput() : Module()
 {
-	keyboard = new KeyBinding[MAX_KEYS];
+	keyboard = new Key[MAX_KEYS];
 
 	for (int i = 0; i < MAX_KEYS; ++i)
 		keyboard[i].key = i;
@@ -69,6 +69,29 @@ bool ModuleInput::Awake()
 
 // Called every draw update
 bool ModuleInput::PreUpdate()
+{
+	bool ret = true;
+
+	ManageInput();
+	
+	return ret;
+}
+
+// Called before quitting
+bool ModuleInput::CleanUp()
+{
+	bool ret = true;
+
+	INTERNAL_LOG("Quitting SDL input event subsystem");
+
+	RELEASE_ARRAY(keyboard);
+
+	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+
+	return ret;
+}
+
+void ModuleInput::ManageInput()
 {
 	bool ret = true;
 
@@ -137,7 +160,7 @@ bool ModuleInput::PreUpdate()
 				mouse_buttons[i] = KEY_IDLE;
 		}
 	}
-	
+
 	bool quit = false;
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
@@ -196,29 +219,13 @@ bool ModuleInput::PreUpdate()
 			break;
 		}
 	}
-	
-	return ret;
-}
-
-// Called before quitting
-bool ModuleInput::CleanUp()
-{
-	bool ret = true;
-
-	INTERNAL_LOG("Quitting SDL input event subsystem");
-
-	delete[] keyboard;
-
-	SDL_QuitSubSystem(SDL_INIT_EVENTS);
-
-	return ret;
 }
 
 const bool ModuleInput::GetKeyDown(int id)
 {
 	if (!keys_down.empty())
 	{
-		for (std::vector<KeyBinding>::iterator it = keys_down.begin(); it != keys_down.end(); it++)
+		for (std::vector<Key>::iterator it = keys_down.begin(); it != keys_down.end(); it++)
 		{
 			if (id == (*it).key)
 				return true;
@@ -232,7 +239,7 @@ const bool ModuleInput::GetKeyRepeat(int id)
 {
 	if (!keys_repeat.empty())
 	{
-		for (std::vector<KeyBinding>::iterator it = keys_repeat.begin(); it != keys_repeat.end(); it++)
+		for (std::vector<Key>::iterator it = keys_repeat.begin(); it != keys_repeat.end(); it++)
 		{
 			if (id == (*it).key)
 				return true;
@@ -246,7 +253,7 @@ const bool ModuleInput::GetKeyUp(int id)
 {
 	if (!keys_up.empty())
 	{
-		for (std::vector<KeyBinding>::iterator it = keys_up.begin(); it != keys_up.end(); it++)
+		for (std::vector<Key>::iterator it = keys_up.begin(); it != keys_up.end(); it++)
 		{
 			if (id == (*it).key)
 				return true;
@@ -269,75 +276,6 @@ const bool ModuleInput::GetKeyRepeat(const char * key)
 const bool ModuleInput::GetKeyUp(const char * key)
 {
 	return GetKeyUp(CharToKey(key));
-}
-
-bool ModuleInput::GetKeyBindingDown(const char * binding_name)
-{
-	if (!keys_down.empty())
-	{
-		for (std::vector<KeyBinding>::iterator it = keys_down.begin(); it != keys_down.end(); it++)
-		{
-			if (TextCmp(binding_name, (*it).binding_name))
-				return true;
-		}
-	}
-
-	return false;
-}
-
-bool ModuleInput::GetKeyBindingRepeat(const char * binding_name)
-{
-	if (!keys_repeat.empty())
-	{
-		for (std::vector<KeyBinding>::iterator it = keys_repeat.begin(); it != keys_repeat.end(); it++)
-		{
-			if (TextCmp(binding_name, (*it).binding_name))
-				return true;
-		}
-	}
-}
-
-bool ModuleInput::GetKeyBindingUp(const char * binding_name)
-{
-	if (!keys_up.empty())
-	{
-		for (std::vector<KeyBinding>::iterator it = keys_up.begin(); it != keys_up.end(); it++)
-		{
-			if (TextCmp(binding_name, (*it).binding_name))
-				return true;
-		}
-	}
-
-	return false;
-}
-
-void ModuleInput::SetKeyBinding(const char * key, const char * binding_name)
-{
-	for (int i = 0; i < MAX_KEYS; ++i)
-	{
-		if (TextCmp(keyboard[i].binding_name, binding_name))
-		{
-			keyboard[i].binding_name = "";
-		}
-
-		if (i == CharToKey(key))
-		{
-			keyboard[i].binding_name = binding_name;
-		}
-	}
-}
-
-const char * ModuleInput::GetKeyBinding(const char * binding_name)
-{
-	for (int i = 0; i < MAX_KEYS; ++i)
-	{
-		if (TextCmp(keyboard[i].binding_name, binding_name))
-		{
-			return KeyToChar(keyboard[i].key);
-		}
-	}
-
-	return "";
 }
 
 bool ModuleInput::GetKeyboardInput(std::string& input)
@@ -371,17 +309,17 @@ const char * ModuleInput::KeyToChar(int key)
 	return SDL_GetScancodeName((SDL_Scancode)key);
 }
 
-void ModuleInput::AddKeyDown(KeyBinding k)
+void ModuleInput::AddKeyDown(const Key& k)
 {
 	keys_down.push_back(k);
 }
 
-void ModuleInput::AddKeyRepeat(KeyBinding k)
+void ModuleInput::AddKeyRepeat(const Key& k)
 {
 	keys_repeat.push_back(k);
 }
 
-void ModuleInput::AddKeyUp(KeyBinding k)
+void ModuleInput::AddKeyUp(const Key& k)
 {
 	keys_up.push_back(k);
 }

@@ -55,8 +55,9 @@ public:
 
 	// Folders
 	bool FolderExists(const std::string& path); 
-	bool FolderCreate(const std::string& path, const std::string& name, bool check_name_collision = false, std::string& new_filepath = std::string()); 
+	bool FolderCreate(const std::string& path, const std::string& name, bool check_name_collision = false, std::string& new_folderpath = std::string());
 	bool FolderDelete(const std::string& folderpath); 
+	bool FolderCopyPaste(const std::string& folderpath, const std::string& folderpath_destination, bool check_name_collision = false, std::string& new_folderpath = std::string());
 	std::string FolderParent(const std::string& folder); 
 	bool FolderRename(const std::string& folderpath, const std::string& new_name, bool check_name_collision = false, std::string& new_folderpath = std::string()); 
 

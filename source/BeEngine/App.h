@@ -31,6 +31,7 @@ class ModuleState;
 class ModuleScene;
 class ModulePhysics;
 class ModuleUI;
+class ModuleBuild;
 
 class Profiler;
 class JSON_Doc;
@@ -113,6 +114,7 @@ public:
 	ModuleScene*          scene = nullptr;
 	ModulePhysics*		  physics = nullptr;
 	ModuleUI*			  ui = nullptr;
+	ModuleBuild*		  build = nullptr;
 
 	Profiler*			  profiler = nullptr;
 
