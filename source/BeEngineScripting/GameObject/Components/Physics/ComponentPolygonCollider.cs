@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BeEngine
 {
-    class ComponentPolygonCollider : Component
+    public class ComponentPolygonCollider : Component
     {
     }
 }

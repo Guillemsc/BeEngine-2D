@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BeEngine
 {
-    class ComponentPhysicsBody : Component
+    public class ComponentPhysicsBody : Component
     {
     }
 }

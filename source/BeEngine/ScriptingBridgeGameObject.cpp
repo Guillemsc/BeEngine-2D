@@ -215,3 +215,29 @@ MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, Mo
 
 	return ret;
 }
+
+MonoObject* ScriptingBridgeGameObject::GetComponent(MonoObject * mono_object, MonoString * component_type)
+{
+	MonoObject* ret = nullptr;
+
+	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+
+	if (go != nullptr)
+	{
+		std::string type_name = App->scripting->UnboxString(component_type);
+
+		ComponentType type = App->gameobject->GetComponentTypeByComponentScriptingName(type_name);
+
+		GameObjectComponent* comp = go->GetComponent(type);
+
+		if (comp != nullptr)
+		{
+			ScriptingClassInstance* ins = comp->GetScriptingBridge()->GetInstance();
+
+			if (ins != nullptr)
+				ret = ins->GetMonoObject();
+		}
+	}
+
+	return ret;
+}

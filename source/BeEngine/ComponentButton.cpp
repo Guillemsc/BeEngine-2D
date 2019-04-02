@@ -79,12 +79,12 @@ void ComponentButton::Start()
 
 	ui_element = App->ui->CreateUIElement();
 	handler = ui_element->AddHandler();
+
+	TryFindComponentSpriteRenderer();
 }
 
 void ComponentButton::Update()
 {
-	TryFindComponentSpriteRenderer();
-
 	UpdateState();
 }
 

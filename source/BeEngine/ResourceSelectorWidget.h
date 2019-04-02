@@ -10,7 +10,6 @@ enum ResourceType;
 
 class ResourceSelectorWidget 
 {
-
 public:
 	ResourceSelectorWidget();
 

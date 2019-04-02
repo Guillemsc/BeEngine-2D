@@ -5,6 +5,7 @@
 #include "imgui.h"
 
 class GameObject;
+class Event;
 
 class InspectorWindow : public EditorWindow
 {
@@ -22,11 +23,19 @@ public:
 	void DrawEditor();
 	ImGuiWindowFlags GetWindowFlags();
 
+	void SetShowingGos(const std::vector<GameObject*>& gos);
+	void SetShowingGos(GameObject* go);
+	void RemoveFromShowingGos(GameObject* go);
+
 private:
+	void OnEvent(Event* ev);
+
 	void DrawComponentsPopup(const std::vector<GameObject*>& selected_gos);
 
 private:
 	ImFont* font = nullptr;
+
+	std::vector<GameObject*> showing_gos;
 };
 
 #endif // !__INSPECTOR_WINDOW_H__

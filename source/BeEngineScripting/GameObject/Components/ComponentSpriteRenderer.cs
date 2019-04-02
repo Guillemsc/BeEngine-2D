@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BeEngine
 {
-    class ComponentSpriteRenderer : Component
+    public class ComponentSpriteRenderer : Component
     {
     }
 }

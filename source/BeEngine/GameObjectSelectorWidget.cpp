@@ -3,6 +3,9 @@
 #include "ModuleGameObject.h"
 #include "App.h"
 #include "Functions.h"
+#include "ModuleEditor.h"
+#include "DragDropCluster.h"
+#include "DragDropGameObjectWidget.h"
 
 GameObjectSelectorWidget::GameObjectSelectorWidget()
 {
@@ -32,6 +35,15 @@ bool GameObjectSelectorWidget::Draw(const std::string & selector_name, GameObjec
 	ImGui::SameLine();
 
 	ImGui::Text(go_name.c_str());
+
+	std::vector<GameObject*> dragged;
+	if (App->editor->dragdrop_cluster->dragdrop_gameobjects.DrawDragTarget(dragged))
+	{
+		if (dragged.size() > 0)
+			go = dragged[0];
+
+		ret = true;
+	}
 
 	ImGui::SameLine();
 

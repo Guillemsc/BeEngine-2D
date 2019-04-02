@@ -3,6 +3,8 @@
 #include "ModuleGameObject.h"
 #include "GameObjectComponent.h"
 #include "imgui.h"
+#include "ModuleEvent.h"
+#include "Event.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -17,21 +19,23 @@ InspectorWindow::~InspectorWindow()
 
 void InspectorWindow::Start()
 {
+	App->event->Suscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_DESTROYED);
+	App->event->Suscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_CREATED);
 }
 
 void InspectorWindow::CleanUp()
 {
+	App->event->UnSuscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_DESTROYED);
+	App->event->UnSuscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_CREATED);
 }
 
 void InspectorWindow::DrawEditor()
 {
 	float2 win_size = GetWindowSize();
 
-	std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
-
-	if (selected_gos.size() == 1)
+	if (showing_gos.size() == 1)
 	{
-		GameObject* selected_go = *selected_gos.begin();
+		GameObject* selected_go = *showing_gos.begin();
 
 		std::string name = selected_go->GetName();
 		if (name.size() > 99)
@@ -54,7 +58,7 @@ void InspectorWindow::DrawEditor()
 	}
 
 	int count = 0;
-	for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = showing_gos.begin(); it != showing_gos.end(); ++it)
 	{
 		GameObject* curr_game_object = (*it);
 
@@ -123,7 +127,7 @@ void InspectorWindow::DrawEditor()
 
 	bool open_components_popup = false;
 
-	if (selected_gos.size() > 0)
+	if (showing_gos.size() > 0)
 	{
 		ImGui::Spacing();
 
@@ -138,12 +142,61 @@ void InspectorWindow::DrawEditor()
 		ImGui::OpenPopup("CreateComponentPopup");
 	}
 
-	DrawComponentsPopup(selected_gos);
+	DrawComponentsPopup(showing_gos);
 }
 
 ImGuiWindowFlags InspectorWindow::GetWindowFlags()
 {
 	return ImGuiWindowFlags();
+}
+
+void InspectorWindow::SetShowingGos(const std::vector<GameObject*>& gos)
+{
+	showing_gos.clear();
+
+	showing_gos = gos;
+}
+
+void InspectorWindow::SetShowingGos(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		std::vector<GameObject*> gos;
+		gos.push_back(go);
+
+		SetShowingGos(gos);
+	}
+}
+
+void InspectorWindow::RemoveFromShowingGos(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::vector<GameObject*>::iterator it = showing_gos.begin(); it != showing_gos.end(); ++it)
+		{
+			if ((*it) == go)
+			{
+				showing_gos.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+void InspectorWindow::OnEvent(Event * ev)
+{
+	if (ev->GetType() == EventType::GAME_OBJECT_DESTROYED)
+	{
+		EventGameObjectDestroyed* evd = (EventGameObjectDestroyed*)ev;
+
+		RemoveFromShowingGos(evd->GetGameObject());
+	}
+	else if (ev->GetType() == EventType::GAME_OBJECT_CREATED)
+	{
+		EventGameObjectCreated* evc = (EventGameObjectCreated*)ev;
+
+		SetShowingGos(evc->GetGameObject());
+	}
 }
 
 void InspectorWindow::DrawComponentsPopup(const std::vector<GameObject*>& selected_gos)

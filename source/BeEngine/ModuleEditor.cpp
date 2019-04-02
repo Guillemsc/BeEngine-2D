@@ -22,6 +22,7 @@
 #include "BottomBar.h"
 #include "imgui_docking.h"
 #include "GameWindow.h"
+#include "DragDropCluster.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -46,6 +47,8 @@ bool ModuleEditor::Awake()
 	bool ret = true;
 
 	ImGuiInit();
+
+	dragdrop_cluster = new DragDropCluster();
 
 	docking_space = (DockingSpace*)AddEditorElement(new DockingSpace(float2(0, 58), float2(0, 33)));
 	menu_bar = (MenuBar*)AddEditorElement(new MenuBar(), true);
@@ -128,6 +131,8 @@ bool ModuleEditor::CleanUp()
 	DestroyAllEditorElements();
 
 	editor_fonts.clear();
+
+	RELEASE(dragdrop_cluster);
 
 	ImGuiQuit();
 

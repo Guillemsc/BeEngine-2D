@@ -1,5 +1,5 @@
 {
-    "game_objects_count": 1,
+    "game_objects_count": 2,
     "game_object_0": {
         "uid": "4f886f3",
         "parent_uid": "",
@@ -95,9 +95,56 @@
                 "string_name_7": "field_val_2",
                 "string_value_7": "string",
                 "string_name_8": "field_val_6",
-                "string_value_8": "4f886f3",
+                "string_value_8": "77829d01",
                 "string_name_9": "resource",
                 "string_value_9": "700a0216"
+            }
+        ]
+    },
+    "game_object_1": {
+        "uid": "77829d01",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 1,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "GameObject1",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
             }
         ]
     },

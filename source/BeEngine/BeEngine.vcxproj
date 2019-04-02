@@ -117,6 +117,8 @@
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DockingSpace.h" />
+    <ClInclude Include="DragDropCluster.h" />
+    <ClInclude Include="DragDropGameObjectWidget.h" />
     <ClInclude Include="DynamicGridRenderer.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="ExplorerWindow.h" />
@@ -299,6 +301,8 @@
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DockingSpace.cpp" />
+    <ClCompile Include="DragDropCluster.cpp" />
+    <ClCompile Include="DragDropGameObjectWidget.cpp" />
     <ClCompile Include="DynamicGridRenderer.cpp" />
     <ClCompile Include="ExplorerWindow.cpp" />
     <ClCompile Include="FBO.cpp" />

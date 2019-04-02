@@ -8,6 +8,9 @@
 #include "ResourceScene.h"
 #include "Scene.h"
 #include "ModuleAssets.h"
+#include "DragDropGameObjectWidget.h"
+#include "DragDropCluster.h"
+#include "InspectorWindow.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -499,7 +502,7 @@ void HierarchyWindow::DrawGameObjectsPopup(bool left_clicked, bool right_clicked
 	}
 }
 
-void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked)
+void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked, bool left_released, bool right_released)
 {	
 	//If ctrl is pressed do multiselection
 	
@@ -530,6 +533,10 @@ void HierarchyWindow::GameObjectInput(GameObject* go, bool left_clicked, bool ri
 			App->gameobject->AddGameObjectToSelected(go);
 
 			disable_button_up = true;
+		}
+		else if ((left_released || right_released) && go->GetSelected())
+		{
+			App->editor->inspector_window->SetShowingGos(go);
 		}
 		else if(App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && go->GetSelected() && selected_count == 1)
 		{
@@ -589,16 +596,25 @@ void HierarchyWindow::DrawGameObjectRecursive(Scene* scene, GameObject* go, uint
 
 		bool left_clicked = false;
 		bool right_clicked = false;
+		bool left_released = false;
+		bool right_released = false;
 
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 			left_clicked = true;
 
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 			right_clicked = true;
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			left_released = true;
+
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_UP)
+			right_released = true;
+
 		
 		// -----
 
-		GameObjectInput(go, left_clicked, right_clicked);
+		GameObjectInput(go, left_clicked, right_clicked, left_released, right_released);
 
 		DrawGameObjectsPopup(left_clicked, right_clicked);
 
@@ -631,44 +647,59 @@ void HierarchyWindow::DrawGameObjectRecursive(Scene* scene, GameObject* go, uint
 void HierarchyWindow::DragAndDropBeforeChilds(Scene* scene, GameObject * go, uint child_index, uint height_count)
 {
 	// GO slot become drag target
-	uint drag_drop_flags = ImGuiDragDropFlags_SourceNoDisableHover;
-
-	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-	{
-		int size = sizeof(go);
-		ImGui::SetDragDropPayload("GameObjects", go, size);
-
-		std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
-
-		for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
-		{
-			ImGui::Text((*it)->GetName().c_str());
-		}
-
+	if (App->editor->dragdrop_cluster->dragdrop_gameobjects.DrawDragSource(App->gameobject->GetSelectedGameObjects()))
 		dragging = true;
 
-		ImGui::EndDragDropSource();
+	// GO slot become drag target
+	//if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	//{
+	//	int size = sizeof(go);
+	//	ImGui::SetDragDropPayload("GameObjects", go, size);
+
+	//	std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
+
+	//	for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+	//	{
+	//		ImGui::Text((*it)->GetName().c_str());
+	//	}
+
+	//	dragging = true;
+
+	//	ImGui::EndDragDropSource();
+	//}
+
+	//GO slot become drop target
+	std::vector<GameObject*> dragged;
+	if (App->editor->dragdrop_cluster->dragdrop_gameobjects.DrawDragTarget(dragged))
+	{
+		for (std::vector<GameObject*>::iterator it = dragged.begin(); it != dragged.end(); ++it)
+		{
+			if ((*it)->GetScene() != go->GetScene())
+				App->gameobject->SetGameObjectScene(go->GetScene(), (*it));
+
+			(*it)->SetParent(go);
+		}
 	}
 
 	// GO slot become drop target
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
-		{
-			std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
+	//if (ImGui::BeginDragDropTarget())
+	//{
+	//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
+	//	{
+	//		std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
 
-			for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
-			{
-				if ((*it)->GetScene() != go->GetScene())
-					App->gameobject->SetGameObjectScene(go->GetScene(), (*it));
+	//		for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+	//		{
+	//			if ((*it)->GetScene() != go->GetScene())
+	//				App->gameobject->SetGameObjectScene(go->GetScene(), (*it));
 
-				(*it)->SetParent(go);
-			}
+	//			(*it)->SetParent(go);
+	//		}
 
-			dragging = false;
-		}
-		ImGui::EndDragDropTarget();
-	}
+	//		dragging = false;
+	//	}
+	//	ImGui::EndDragDropTarget();
+	//}
 
 	if (dragging)
 	{
@@ -678,7 +709,31 @@ void HierarchyWindow::DragAndDropBeforeChilds(Scene* scene, GameObject * go, uin
 			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count - 20));
 			ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
-			if (ImGui::BeginDragDropTarget())
+			std::vector<GameObject*> dragged;
+			if (App->editor->dragdrop_cluster->dragdrop_gameobjects.DrawDragTarget(dragged))
+			{
+				for (std::vector<GameObject*>::iterator it = dragged.begin(); it != dragged.end(); ++it)
+				{
+					if ((*it)->GetScene() != scene)
+						App->gameobject->SetGameObjectScene(scene, (*it));
+
+					if (go->GetParent() == nullptr)
+					{
+						(*it)->SetParent(nullptr);
+
+						App->gameobject->ChangeGameObjectPositionOnRootList((*it), child_index);
+					}
+					else
+					{
+						(*it)->SetParent(go->GetParent());
+
+						App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index);
+					}
+				}
+			}
+
+
+		/*	if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
 				{
@@ -705,7 +760,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(Scene* scene, GameObject * go, uin
 					dragging = false;
 				}
 				ImGui::EndDragDropTarget();
-			}
+			}*/
 		}
 
 		// Slot in between on down of go become drop target
@@ -716,7 +771,31 @@ void HierarchyWindow::DragAndDropBeforeChilds(Scene* scene, GameObject * go, uin
 				ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
 				ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
-				if (ImGui::BeginDragDropTarget())
+				std::vector<GameObject*> dragged;
+				if (App->editor->dragdrop_cluster->dragdrop_gameobjects.DrawDragTarget(dragged))
+				{
+					for (std::vector<GameObject*>::iterator it = dragged.begin(); it != dragged.end(); ++it)
+					{
+						if ((*it)->GetScene() != scene)
+							App->gameobject->SetGameObjectScene(scene, (*it));
+
+						if (go->GetParent() == nullptr)
+						{
+							(*it)->SetParent(nullptr);
+
+							App->gameobject->ChangeGameObjectPositionOnRootList((*it), child_index + 1);
+						}
+						else
+						{
+							(*it)->SetParent(go->GetParent());
+
+							App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index + 1);
+						}
+					}
+				}
+
+
+	/*			if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
 					{
@@ -743,7 +822,7 @@ void HierarchyWindow::DragAndDropBeforeChilds(Scene* scene, GameObject * go, uin
 						dragging = false;
 					}
 					ImGui::EndDragDropTarget();
-				}
+				}*/
 			}
 		}
 	}
@@ -761,34 +840,57 @@ void HierarchyWindow::DragAndDropAfterChilds(Scene* scene, GameObject * go, uint
 		ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x, height_count));
 		ImGui::Button("", ImVec2(GetWindowSize().x - ImGui::GetCursorPos().x - 10, 2));
 
-		if (ImGui::BeginDragDropTarget())
+		std::vector<GameObject*> dragged;
+		if (App->editor->dragdrop_cluster->dragdrop_gameobjects.DrawDragTarget(dragged))
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
+			for (std::vector<GameObject*>::iterator it = dragged.begin(); it != dragged.end(); ++it)
 			{
-				std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
-				for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+				if ((*it)->GetScene() != scene)
+					App->gameobject->SetGameObjectScene(scene, (*it));
+
+				if (go->GetParent() == nullptr)
 				{
-					if ((*it)->GetScene() != scene)
-						App->gameobject->SetGameObjectScene(scene, (*it));
+					(*it)->SetParent(nullptr);
 
-					if (go->GetParent() == nullptr)
-					{
-						(*it)->SetParent(nullptr);
-
-						App->gameobject->ChangeGameObjectPositionOnRootList((*it), child_index + 1);
-					}
-					else
-					{
-						(*it)->SetParent(go->GetParent());
-
-						App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index + 1);
-					}
+					App->gameobject->ChangeGameObjectPositionOnRootList((*it), child_index + 1);
 				}
+				else
+				{
+					(*it)->SetParent(go->GetParent());
 
-				dragging = false;
+					App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index + 1);
+				}
 			}
-			ImGui::EndDragDropTarget();
 		}
+
+		//if (ImGui::BeginDragDropTarget())
+		//{
+		//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjects"))
+		//	{
+		//		std::vector<GameObject*> selected_gos = App->gameobject->GetSelectedGameObjects();
+		//		for (std::vector<GameObject*>::iterator it = selected_gos.begin(); it != selected_gos.end(); ++it)
+		//		{
+		//			if ((*it)->GetScene() != scene)
+		//				App->gameobject->SetGameObjectScene(scene, (*it));
+
+		//			if (go->GetParent() == nullptr)
+		//			{
+		//				(*it)->SetParent(nullptr);
+
+		//				App->gameobject->ChangeGameObjectPositionOnRootList((*it), child_index + 1);
+		//			}
+		//			else
+		//			{
+		//				(*it)->SetParent(go->GetParent());
+
+		//				App->gameobject->ChangeGameObjectPositionOnParentChildren((*it), child_index + 1);
+		//			}
+		//		}
+
+		//		dragging = false;
+		//	}
+		//	ImGui::EndDragDropTarget();
+		//}
 	}
 }
 

@@ -19,6 +19,7 @@ class ConsoleWindow;
 class BottomBar;
 class GameWindow;
 class PhysicsWindow;
+class DragDropCluster;
 
 class EditorWindow
 {
@@ -141,6 +142,8 @@ private:
 	bool DockingProfileExists(const char* name);
 
 public:
+	DragDropCluster* dragdrop_cluster = nullptr;
+
 	DockingSpace*    docking_space = nullptr;
 	MenuBar*         menu_bar = nullptr;
 	ToolsBar*        tools_bar = nullptr;
@@ -159,7 +162,7 @@ private:
 	EditorState editor_state;
 
 	std::vector<EditorElement*> editor_elements;
-	std::vector<EditorWindow*> editor_windows;
+	std::vector<EditorWindow*> editor_windows;   
 
 	std::map<std::string, ImFont*> editor_fonts;
 

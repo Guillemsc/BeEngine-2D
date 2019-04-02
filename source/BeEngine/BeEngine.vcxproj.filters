@@ -124,6 +124,12 @@
     <Filter Include="Sources\12. ThirdParties ============\MapboxTriangulation">
       <UniqueIdentifier>{0abf4df1-6d1c-4814-b101-1f61d2cd5066}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\4. Editor ================\Widgets\DragDrop">
+      <UniqueIdentifier>{3dcff37a-75b3-4e00-93b1-52baf98f6f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\4. Editor ================\Widgets\Selectors">
+      <UniqueIdentifier>{d08fc7ca-549a-462b-8bba-0d43a79592f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -639,12 +645,6 @@
     <ClInclude Include="ComponentScriptFields.h">
       <Filter>Sources\10. SceneObjects ==========\GameObject\Components\Script</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceSelectorWidget.h">
-      <Filter>Sources\4. Editor ================\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectSelectorWidget.h">
-      <Filter>Sources\4. Editor ================\Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptingBridgeDebug.h">
       <Filter>Sources\8. Scripting ==============\Bridges</Filter>
     </ClInclude>
@@ -671,6 +671,18 @@
     </ClInclude>
     <ClInclude Include="ScriptingBridgeComponentCanvas.h">
       <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DragDropGameObjectWidget.h">
+      <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectSelectorWidget.h">
+      <Filter>Sources\4. Editor ================\Widgets\Selectors</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceSelectorWidget.h">
+      <Filter>Sources\4. Editor ================\Widgets\Selectors</Filter>
+    </ClInclude>
+    <ClInclude Include="DragDropCluster.h">
+      <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1085,12 +1097,6 @@
     <ClCompile Include="ComponentScriptFields.cpp">
       <Filter>Sources\10. SceneObjects ==========\GameObject\Components\Script</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceSelectorWidget.cpp">
-      <Filter>Sources\4. Editor ================\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectSelectorWidget.cpp">
-      <Filter>Sources\4. Editor ================\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptingBridgeDebug.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges</Filter>
     </ClCompile>
@@ -1117,6 +1123,18 @@
     </ClCompile>
     <ClCompile Include="ScriptingBridgeComponentCanvas.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DragDropGameObjectWidget.cpp">
+      <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectSelectorWidget.cpp">
+      <Filter>Sources\4. Editor ================\Widgets\Selectors</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceSelectorWidget.cpp">
+      <Filter>Sources\4. Editor ================\Widgets\Selectors</Filter>
+    </ClCompile>
+    <ClCompile Include="DragDropCluster.cpp">
+      <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

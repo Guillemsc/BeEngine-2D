@@ -32,7 +32,7 @@ private:
 	void DrawScene(Scene* scene, uint scene_count, uint& go_count, uint& height_count);
 
 	void DrawGameObjectsPopup(bool left_clicked, bool right_clicked);
-	void GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked);
+	void GameObjectInput(GameObject* go, bool left_clicked, bool right_clicked, bool left_released, bool right_released);
 
 	void DrawGameObjectRecursive(Scene* scene, GameObject* go, uint child_index, uint &go_count, uint& height_count);
 	void DragAndDropBeforeChilds(Scene* scene, GameObject* go, uint child_index, uint height_count);

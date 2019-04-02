@@ -7,6 +7,11 @@ public class test_script_fields : ComponentScript
 	public override void Start () 
 	{
         button = game_object.AddComponent<ComponentButton>();
+        game_object.AddComponent<ComponentCanvas>();
+        game_object.AddComponent<ComponentPhysicsBody>();
+        game_object.AddComponent<ComponentCamera>();
+        game_object.AddComponent<ComponentPolygonCollider>();
+        game_object.AddComponent<ComponentSpriteRenderer>();
 
         if (button != null)
             button.SuscribeToOnClick(OnClick);

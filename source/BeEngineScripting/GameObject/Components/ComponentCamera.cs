@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BeEngine
 {
-    class ComponentCamera : Component
+    public class ComponentCamera : Component
     {
     }
 }
