@@ -847,6 +847,11 @@ void ModuleScripting::ManageScriptsToCompile()
 
 	if (update)
 	{
+		bool is_build = false;
+
+		if (App->state->GetEngineState() == EngineState::ENGINE_STATE_BUILD)
+			is_build = true;
+
 		scripting_user_assembly_filepath = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
 		scripting_user_assembly_filepath += "user_scripting.dll";
 
@@ -854,15 +859,18 @@ void ModuleScripting::ManageScriptsToCompile()
 		std::vector<std::string> compile_warnings;
 		user_code_compiles = compiler->CompileScripts(scripting_user_assembly_filepath, compile_errors, compile_warnings);
 
-		App->editor->console_window->ClearPesonalLogs("scripting");
-		for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
+		if (!is_build)
 		{
-			App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_ERROR);
-		}
+			App->editor->console_window->ClearPesonalLogs("scripting");
+			for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
+			{
+				App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_ERROR);
+			}
 
-		for (std::vector<std::string>::iterator it = compile_warnings.begin(); it != compile_warnings.end(); ++it)
-		{
-			App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_WARNING);
+			for (std::vector<std::string>::iterator it = compile_warnings.begin(); it != compile_warnings.end(); ++it)
+			{
+				App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_WARNING);
+			}
 		}
 
 		if (user_code_compiles)
@@ -877,7 +885,8 @@ void ModuleScripting::ManageScriptsToCompile()
 				compiler->AddScript((*it).c_str());
 			}
 
-			solution_manager->CreateSolutionManagerInstance();
+			if (!is_build)
+				solution_manager->CreateSolutionManagerInstance();
 		}
 
 		App->assets->StartWatchingFolders();

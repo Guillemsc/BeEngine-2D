@@ -43,6 +43,8 @@ enum EventType
 	EDITOR_GOES_TO_IDLE,
 	EDITOR_GOES_TO_PAUSED,
 
+	ENGINE_IS_BUILD,
+
 	WATCH_FILE_FOLDER,
 
 	RESOURCE_DESTROYED,
@@ -296,5 +298,21 @@ public:
 	}
 };
 
+class EventEngineIsBuild : public Event
+{
+public:
+	EventEngineIsBuild(std::string data_path) : Event(EventType::ENGINE_IS_BUILD)
+	{
+		this->data_path = data_path;
+	}
+
+	std::string GetDataPath() const
+	{		
+		return data_path;
+	}
+
+private:
+	std::string data_path;
+};
 
 #endif // !__EVENT_H__

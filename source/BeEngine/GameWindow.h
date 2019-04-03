@@ -9,6 +9,7 @@ class Camera2D;
 class GameWindow : public EditorWindow
 {
 	friend class ModuleEditor;
+	friend class ModuleBuild;
 
 private:
 	void operator delete(void *) {}

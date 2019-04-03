@@ -308,6 +308,7 @@
     <ClCompile Include="DragDropCluster.cpp" />
     <ClCompile Include="DragDropGameObjectWidget.cpp" />
     <ClCompile Include="DynamicGridRenderer.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="ExplorerWindow.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Functions.cpp" />

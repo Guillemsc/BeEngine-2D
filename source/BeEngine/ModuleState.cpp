@@ -53,6 +53,16 @@ EditorUpdateState ModuleState::GetEditorUpdateState() const
 	return editor_state;
 }
 
+void ModuleState::SetEngineState(EngineState state)
+{
+	engine_state = state;
+}
+
+EngineState ModuleState::GetEngineState() const
+{
+	return engine_state;
+}
+
 void ModuleState::ActuallySetEditorState()
 {
 	bool can_update = true;

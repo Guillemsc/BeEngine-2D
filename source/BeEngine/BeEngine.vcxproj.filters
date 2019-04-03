@@ -1157,6 +1157,7 @@
     <ClCompile Include="BuildWindow.cpp">
       <Filter>Sources\4. Editor ================\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="Event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">

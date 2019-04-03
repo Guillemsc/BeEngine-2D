@@ -8,6 +8,10 @@
 #include "ModuleEvent.h"
 #include "ModuleResource.h"
 #include "ResourceScene.h"
+#include "ModuleState.h"
+#include "ModuleGameObject.h"
+#include "ModuleEditor.h"
+#include "GameWindow.h"
 
 ModuleBuild::ModuleBuild()
 {
@@ -21,6 +25,8 @@ bool ModuleBuild::Awake()
 {
 	bool ret = true;
 
+	TryLoadBuildProject();
+
 	return ret;
 }
 
@@ -29,6 +35,7 @@ bool ModuleBuild::Start()
 	bool ret = true;
 
 	App->event->Suscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCES_LOADED);
+	App->event->Suscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	return ret;
 }
@@ -38,6 +45,7 @@ bool ModuleBuild::CleanUp()
 	bool ret = true;
 
 	App->event->UnSuscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCES_LOADED);
+	App->event->UnSuscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	return ret;
 }
@@ -45,11 +53,63 @@ bool ModuleBuild::CleanUp()
 void ModuleBuild::OnLoadProject(JSON_Doc * config)
 {
 	scene_to_load = config->GetString("build.scene");
+	build_name = config->GetString("build.name");
 }
 
 void ModuleBuild::OnLoadBuild(JSON_Doc * config)
 {
-	scene_to_load = config->GetString("scene");
+
+}
+
+void ModuleBuild::SetResourceSceneToLoad(ResourceScene* scene)
+{
+	resource_scene_to_load = scene;
+	
+	std::string project_file = App->project->GetCurrProjectFilePath();
+
+	std::string scene_uid = "";
+
+	if (scene != nullptr)
+		scene_uid = scene->GetUID();
+	
+	JSON_Doc* doc = App->json->LoadJSON(project_file.c_str());
+
+	if (doc != nullptr)
+	{
+		doc->SetString("build.scene", scene_uid.c_str());
+
+		doc->Save();
+
+		App->json->UnloadJSON(doc);
+	}
+}
+
+ResourceScene * ModuleBuild::GetResourceSceneToLoad() const
+{
+	return resource_scene_to_load;
+}
+
+void ModuleBuild::SetBuildName(const std::string & name)
+{
+	build_name = name;
+
+	std::string project_file = App->project->GetCurrProjectFilePath();
+
+	JSON_Doc* doc = App->json->LoadJSON(project_file.c_str());
+
+	if (doc != nullptr)
+	{
+		doc->SetString("build.name", build_name.c_str());
+
+		doc->Save();
+
+		App->json->UnloadJSON(doc);
+	}
+}
+
+std::string ModuleBuild::GetBuildName() const
+{
+	return build_name;
 }
 
 bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::string>& errors)
@@ -59,6 +119,22 @@ bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::str
 	bool initial_checks_correct = true;
 
 	Project* proj = App->project->GetCurrProject();
+
+	if (build_name.compare("") == 0)
+	{
+		std::string error = "The build has no name";
+		errors.push_back(error);
+
+		initial_checks_correct = false;
+	}
+
+	if (resource_scene_to_load == nullptr)
+	{
+		std::string error = "The build has no scene to load";
+		errors.push_back(error);
+
+		initial_checks_correct = false;
+	}
 
 	if (proj == nullptr)
 	{
@@ -99,7 +175,7 @@ bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::str
 			std::string project_name = proj->GetName();
 
 			std::string new_folder;
-			if(App->file_system->FolderCreate(folder, project_name, true, new_folder))
+			if(App->file_system->FolderCreate(folder, build_name, true, new_folder))
 			{
 				std::string root_exe_path = App->file_system->GetExecutableFilePath();
 
@@ -116,31 +192,40 @@ bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::str
 				{
 					bool exe_copied = false;
 
-					exe_copied = App->file_system->FileCopyPaste(root_exe_path, new_folder, false);
+					std::string new_exe_path;
+					exe_copied = App->file_system->FileCopyPaste(root_exe_path, new_folder, false, new_exe_path);
 
 					if (exe_copied)
 					{
-						std::string resources_folder = App->file_system->GetWorkingDirectory();
+						bool exe_renamed = false;
+						exe_renamed = App->file_system->FileRename(new_exe_path, build_name);
 
-						bool engine_files_copied = App->file_system->FolderCopyPaste(resources_folder, new_folder, false);
-
-						if (engine_files_copied)
+						if (exe_renamed)
 						{
-							std::string new_data_path;
-							App->file_system->FolderCreate(new_folder, "data", false, new_data_path);
+							std::string resources_folder = App->file_system->GetWorkingDirectory();
 
-							std::string library_folder = App->assets->GetLibraryPath();
+							bool engine_files_copied = App->file_system->FolderCopyPaste(resources_folder, new_folder, false);
 
-							bool library_files_copied = App->file_system->FolderCopyPaste(library_folder, new_data_path, false);
-
-							if (library_files_copied)
+							if (engine_files_copied)
 							{
+								std::string new_data_path;
+								App->file_system->FolderCreate(new_folder, "data", false, new_data_path);
+
+								std::string library_folder = App->assets->GetLibraryPath();
+
+								App->file_system->FolderCopyPaste(library_folder, new_data_path, false);
+								
 								bool build_file_created = CreateBuildFile(new_folder);
+							}
+							else
+							{
+								std::string error = "There was a problem creating engine files";
+								errors.push_back(error);
 							}
 						}
 						else
 						{
-							std::string error = "There was a problem creating engine files";
+							std::string error = "Executable could not be created";
 							errors.push_back(error);
 						}
 					}
@@ -162,11 +247,6 @@ bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::str
 	return ret;
 }
 
-ResourceScene * ModuleBuild::GetResourceSceneToLoad() const
-{
-	return resource_scene_to_load;
-}
-
 void ModuleBuild::OnEvent(Event * ev)
 {
 	if (ev->GetType() == EventType::RESOURCES_LOADED)
@@ -174,7 +254,23 @@ void ModuleBuild::OnEvent(Event * ev)
 		if (scene_to_load.compare("") != 0)
 		{
 			resource_scene_to_load = (ResourceScene*)App->resource->GetResourceFromUid(scene_to_load, ResourceType::RESOURCE_TYPE_SCENE);
+
+			if (resource_scene_to_load != nullptr)
+			{
+				if (App->state->GetEngineState() == EngineState::ENGINE_STATE_BUILD)
+				{
+					App->gameobject->DestroyScene(App->gameobject->GetRootScene());
+					resource_scene_to_load->LoadToScene(App->gameobject->GetRootScene());
+				}
+			}
 		}
+	}
+	else if (ev->GetType() == EventType::RESOURCE_DESTROYED)
+	{
+		EventResourceDestroyed* erd = (EventResourceDestroyed*)ev;
+
+		if (resource_scene_to_load == erd->GetResource())
+			SetResourceSceneToLoad(nullptr);
 	}
 }
 
@@ -186,10 +282,48 @@ bool ModuleBuild::CreateBuildFile(const std::string & folder)
 
 	if (doc != nullptr)
 	{
+		doc->SetString("name", build_name.c_str());
 		doc->SetString("scene", scene_to_load.c_str());
 
 		doc->Save();
+
+		App->json->UnloadJSON(doc);
 	}
 
 	return ret;
+}
+
+void ModuleBuild::TryLoadBuildProject()
+{
+	bool is_build = false;
+
+	std::string build_project_path = App->file_system->GetWorkingDirectory() + "build.bebuild";
+
+	if (App->file_system->FileExists(build_project_path))
+	{
+		JSON_Doc* doc = App->json->LoadJSON(build_project_path.c_str());
+
+		if(doc != nullptr)
+		{
+			scene_to_load = doc->GetString("scene");
+			build_name = doc->GetString("name");
+
+			if (scene_to_load.compare("") != 0 && build_name.compare("") != 0)
+			{
+				is_build = true;
+			}
+		}
+	}
+
+	if (is_build)
+	{
+		App->state->SetEngineState(EngineState::ENGINE_STATE_BUILD);
+
+		App->editor->game_window->full_screen = true;
+
+		std::string data_path = App->file_system->GetWorkingDirectory() + "data\\";
+
+		EventEngineIsBuild* ev = new EventEngineIsBuild(data_path);
+		App->event->SendEvent(ev);
+	}
 }

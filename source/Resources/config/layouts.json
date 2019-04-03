@@ -342,7 +342,7 @@
             "child0": -1,
             "child1": -1,
             "prev_tab": 1,
-            "next_tab": -1,
+            "next_tab": 14,
             "parent": 4
         },
         "Dock9": {
@@ -352,7 +352,7 @@
             "size_X": 558,
             "size_Y": 326,
             "status": 0,
-            "active": true,
+            "active": false,
             "opened": true,
             "location": "311",
             "child0": -1,
@@ -427,19 +427,19 @@
         },
         "Dock14": {
             "Label": "Build",
-            "pos_X": -322,
-            "pos_Y": 158,
-            "size_X": 1920,
-            "size_Y": 1017,
-            "status": 1,
+            "pos_X": -2,
+            "pos_Y": 658,
+            "size_X": 558,
+            "size_Y": 326,
+            "status": 0,
             "active": true,
-            "opened": false,
-            "location": "",
+            "opened": true,
+            "location": "311",
             "child0": -1,
             "child1": -1,
-            "prev_tab": -1,
+            "prev_tab": 8,
             "next_tab": -1,
-            "parent": -1
+            "parent": 4
         }
     }
 }

@@ -24,6 +24,7 @@
 #include "GameWindow.h"
 #include "DragDropCluster.h"
 #include "BuildWindow.h"
+#include "ModuleState.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -59,7 +60,7 @@ bool ModuleEditor::Awake()
 	bottom_bar = (BottomBar*)AddEditorElement(new BottomBar(30), true);
 
 	scene_window = (SceneWindow*)AddEditorWindow("Scene", new SceneWindow());
-	game_window = (GameWindow*)AddEditorWindow("Game", new GameWindow());
+	game_window = (GameWindow*)AddEditorWindow("Game", new GameWindow(), false, true);
 	AddEditorWindow("Profiler", new ProfilerWindow());
 	AddEditorWindow("Resources", new ResourcesWindow());
 	AddEditorWindow("Hierarchy", new HierarchyWindow());
@@ -199,14 +200,19 @@ void ModuleEditor::DrawEditorElements()
 
 	for (std::vector<EditorElement*>::iterator it = editor_elements.begin(); it != editor_elements.end(); ++it)
 	{
-		if ((*it)->GetVisible())
+		bool draw = true;
+
+		if (App->state->GetEngineState() == EngineState::ENGINE_STATE_BUILD)
+			draw = false;
+
+		if ((*it)->GetVisible() && draw)
 			(*it)->DrawEditor();
 	}
 
 	prof_editor_elements_draw->Finish();
 }
 
-EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window, bool full_screen)
+EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * window, bool full_screen, bool used_on_build)
 {
 	EditorWindow* ret = nullptr;;
 
@@ -227,6 +233,7 @@ EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * wi
 		{
 			window->name = name;
 			window->full_screen = full_screen;
+			window->used_on_build = used_on_build;
 			window->prof_draw = prof_editor_windows_draw->AddProfileChild(window->name.c_str());
 			editor_windows.push_back(window);
 
@@ -256,8 +263,16 @@ void ModuleEditor::DrawEditorWindows()
 	
 	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 	{
+		bool draw = true;
+
 		EditorWindow* curr_window = (*it);
 
+		if(App->state->GetEngineState() == EngineState::ENGINE_STATE_BUILD)
+		{
+			if (!curr_window->used_on_build)
+				draw = false;
+		}
+		
 		curr_window->prof_draw->Start();
 
 		ImGuiWindowFlags flags = 0;
@@ -265,6 +280,9 @@ void ModuleEditor::DrawEditorWindows()
 
 		if (!curr_window->full_screen)
 		{
+			if (!draw)
+				curr_window->opened = draw;
+
 			if (ImGui::BeginDock(curr_window->name.c_str(), &curr_window->opened, flags))
 			{
 				ImVec2 win_pos = ImGui::GetWindowPos();
@@ -288,9 +306,9 @@ void ModuleEditor::DrawEditorWindows()
 			float2 screen_size = App->window->GetWindowSize();
 
 			float4 offset = float4(-8, -33, 16, 37);
-
+			
 			ImGui::SetNextWindowPos(ImVec2(offset.x, offset.y));
-			ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y  + offset.w));
+			ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y + offset.w));
 			if (ImGui::Begin(curr_window->name.c_str(), &curr_window->opened, flags))
 			{
 				ImVec2 win_pos = ImGui::GetWindowPos();
@@ -671,24 +689,27 @@ bool ModuleEditor::SaveCurrentDockingProfile()
 {
 	bool ret = false;
 
-	if (DockingProfileExists(current_docking_profile.c_str()))
+	if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
 	{
-		JSON_Doc* doc = App->json->LoadJSON(docking_layouts_json_filepath.c_str());
-
-		int layouts_arr_count = doc->GetArrayCount("layouts");
-
-		for (int i = 0; i < layouts_arr_count; ++i)
+		if (DockingProfileExists(current_docking_profile.c_str()))
 		{
-			std::string layout_name = doc->GetStringFromArray("layouts", i);
+			JSON_Doc* doc = App->json->LoadJSON(docking_layouts_json_filepath.c_str());
 
-			if (layout_name.compare(current_docking_profile.c_str()) == 0)
+			int layouts_arr_count = doc->GetArrayCount("layouts");
+
+			for (int i = 0; i < layouts_arr_count; ++i)
 			{
-				ImGui::SaveLayout(doc, current_docking_profile.c_str());
-				break;
-			}
-		}
+				std::string layout_name = doc->GetStringFromArray("layouts", i);
 
-		doc->Save();
+				if (layout_name.compare(current_docking_profile.c_str()) == 0)
+				{
+					ImGui::SaveLayout(doc, current_docking_profile.c_str());
+					break;
+				}
+			}
+
+			doc->Save();
+		}
 	}
 
 	return ret;
@@ -727,6 +748,11 @@ void EditorWindow::SetVisible(bool set)
 bool EditorWindow::GetVisible() const
 {
 	return visible;
+}
+
+void EditorWindow::SetOpened(bool set)
+{
+	opened = set;
 }
 
 bool EditorWindow::GetOpened() const

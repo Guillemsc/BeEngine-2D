@@ -48,12 +48,15 @@ bool ModuleResource::Awake()
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "png");
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "jpg");
+	AddLibraryExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "dds");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_SCRIPT, "cs");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");
+	AddLibraryExtension(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_SCENE, "scene");
+	AddLibraryExtension(ResourceType::RESOURCE_TYPE_SCENE, "scene");
 
 	return ret;
 }

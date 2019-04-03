@@ -5,6 +5,7 @@
 #include "ModuleState.h"
 #include "ModuleFileSystem.h"
 #include "ModuleBuild.h"
+#include "BuildWindow.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -43,14 +44,7 @@ void ToolsBar::DrawEditor()
 		{
 			if (ImGui::Button("Build"))
 			{
-				bool cancelled = false;
-				std::string folder = App->file_system->SelectFolderDialog(cancelled);
-
-				if (!cancelled)
-				{
-					std::vector<std::string> errors;
-					App->build->GenerateBuild(folder, errors);
-				}
+				App->editor->build_window->SetOpened(true);
 			}
 
 			ImGui::SameLine();

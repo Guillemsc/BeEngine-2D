@@ -41,6 +41,7 @@ public:
 	std::string GetName() const;
 	void SetVisible(bool set);
 	bool GetVisible() const;
+	void SetOpened(bool set);
 	bool GetOpened() const;
 	float2 GetWindowSize() const;
 	float2 GetWindowPos() const;
@@ -56,6 +57,8 @@ private:
 	bool		visible = true;
 	float2		window_pos = float2::zero;
 	float2	    window_size = float2::zero;
+
+	bool	    used_on_build = false;
 
 	Profile* prof_draw = nullptr;
 };
@@ -126,7 +129,7 @@ private:
 	void DestroyAllEditorElements();
 	void DrawEditorElements();
 
-	EditorWindow* AddEditorWindow(const char* name, EditorWindow* window, bool full_screen = false);
+	EditorWindow* AddEditorWindow(const char* name, EditorWindow* window, bool full_screen = false, bool used_on_build = false);
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
 

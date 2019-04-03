@@ -19,18 +19,24 @@ public:
 	void OnLoadProject(JSON_Doc* config);
 	void OnLoadBuild(JSON_Doc* config);
 
-	bool GenerateBuild(const std::string& folder, std::vector<std::string>& errors);
-
+	void SetResourceSceneToLoad(ResourceScene* scene);
 	ResourceScene* GetResourceSceneToLoad() const;
+
+	void SetBuildName(const std::string& name);
+	std::string GetBuildName() const;
+
+	bool GenerateBuild(const std::string& folder, std::vector<std::string>& errors);
 
 private:
 	void OnEvent(Event* ev);
 
 	bool CreateBuildFile(const std::string& folder);
 
+	void TryLoadBuildProject();
+
 private:
 	std::string scene_to_load;
-
+	std::string build_name;
 	ResourceScene* resource_scene_to_load = nullptr;
 
 };

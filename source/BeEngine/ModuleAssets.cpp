@@ -47,6 +47,7 @@ bool ModuleAssets::Awake()
 	bool ret = true;
 
 	App->event->Suscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+	App->event->Suscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::ENGINE_IS_BUILD);
 	App->event->Suscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
 	App->event->Suscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 	App->event->Suscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::SCRIPTS_COMPILED);
@@ -89,6 +90,7 @@ bool ModuleAssets::CleanUp()
 	bool ret = true;
 
 	App->event->UnSuscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+	App->event->UnSuscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::ENGINE_IS_BUILD);
 	App->event->UnSuscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::TIME_SLICED_TASK_FINISHED);
 	App->event->UnSuscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
 	App->event->UnSuscribe(std::bind(&ModuleAssets::OnEvent, this, std::placeholders::_1), EventType::SCRIPTS_COMPILED);
@@ -115,6 +117,18 @@ void ModuleAssets::OnEvent(Event* ev)
 
 		break;
 	}
+
+	case EventType::ENGINE_IS_BUILD:
+	{
+		EventEngineIsBuild* eeb = (EventEngineIsBuild*)ev;
+
+		library_folder = eeb->GetDataPath();
+
+		StartLoadLibraryFilesTimeSlicedTask();
+
+		break;
+	}
+
 	case EventType::TIME_SLICED_TASK_FINISHED:
 	{
 		EventTimeSlicedTaskFinished* ett = (EventTimeSlicedTaskFinished*)ev;
@@ -125,9 +139,20 @@ void ModuleAssets::OnEvent(Event* ev)
 			App->event->SendEvent(rl);
 
 			App->scripting->ForceCompileScripts();
-		}
 
-		App->editor->explorer_window->UpdateFiles();
+			App->editor->explorer_window->UpdateFiles();
+		}
+		else if (ett->GetTask() == time_sliced_task_manage_modified_assets)
+		{
+			App->editor->explorer_window->UpdateFiles();
+		}
+		else if (ett->GetTask() == time_sliced_task_load_build_resources)
+		{
+			EventResourcesLoaded* rl = new EventResourcesLoaded();
+			App->event->SendEvent(rl);
+
+			App->scripting->ForceCompileScripts();
+		}
 
 		break;
 	}
@@ -186,7 +211,7 @@ bool ModuleAssets::LoadFileToEngine(const char * filepath)
 
 	if (App->file_system->FileExists(filepath))
 	{
-		bool can_load = CanLoadFile(filepath);
+		bool can_load = CanLoadAssetFile(filepath);
 
 		if (can_load)
 		{
@@ -207,7 +232,7 @@ bool ModuleAssets::ManageModifiedAsset(const char * filepath)
 
 	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
 
-	bool can_load = App->assets->CanLoadFile(filepath);
+	bool can_load = App->assets->CanLoadAssetFile(filepath);
 	bool is_meta = App->assets->IsMeta(filepath);
 	bool exists = App->file_system->FileExists(filepath);
 
@@ -641,6 +666,26 @@ bool ModuleAssets::DeleteAssetsFolder(const char * folder)
 	return ret;
 }
 
+void ModuleAssets::LoadLibraryFile(const char * filepath)
+{
+	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
+
+	bool is_meta = App->assets->IsMeta(filepath);
+	bool exists = App->file_system->FileExists(filepath);
+
+	if (!is_meta && exists)
+	{
+		ResourceType type = App->resource->GetResourceTypeFromLibraryExtension(dfp.file_extension_lower_case.c_str());
+
+		if (type != ResourceType::RESOURCE_TYPE_UNKWNOWN)
+		{
+			Resource* res = App->resource->CreateResource(type);
+
+			res->GM_InitResource(filepath);
+		}
+	}
+}
+
 void ModuleAssets::ForceUpdateFolders()
 {
 	force_update_folders = true;
@@ -695,13 +740,27 @@ void ModuleAssets::LoadUserScriptsInfo()
 	}
 }
 
-bool ModuleAssets::CanLoadFile(const char * filepath)
+bool ModuleAssets::CanLoadAssetFile(const char * filepath)
 {
 	bool ret = false;
 
 	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
 
 	ResourceType type = App->resource->GetResourceTypeFromAssetExtension(dfp.file_extension_lower_case.c_str());
+
+	if (type != ResourceType::RESOURCE_TYPE_UNKWNOWN)
+		ret = true;
+
+	return ret;
+}
+
+bool ModuleAssets::CanLoadLibraryFile(const char * filepath)
+{
+	bool ret = false;
+
+	DecomposedFilePath dfp = App->file_system->DecomposeFilePath(filepath);
+
+	ResourceType type = App->resource->GetResourceTypeFromLibraryExtension(dfp.file_extension_lower_case.c_str());
 
 	if (type != ResourceType::RESOURCE_TYPE_UNKWNOWN)
 		ret = true;
@@ -738,12 +797,14 @@ std::string ModuleAssets::GetMetaFileFromAsset(const char * filepath)
 
 void ModuleAssets::StartWatchingFolders()
 {
-	App->scripting->file_watcher->Watch(GetAssetsPath().c_str());
+	if(App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
+		App->scripting->file_watcher->Watch(GetAssetsPath().c_str());
 }
 
 void ModuleAssets::StopWatchingFolders()
 {
-	App->scripting->file_watcher->StopWatch(GetAssetsPath().c_str());
+	if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
+		App->scripting->file_watcher->StopWatch(GetAssetsPath().c_str());
 }
 
 void ModuleAssets::StopRisingWatchingEvents()
@@ -841,6 +902,12 @@ void ModuleAssets::StartManageModifiedAssetsTimeSlicedTask(const std::string & f
 	App->time_sliced->StartTimeSlicedTask(time_sliced_task_manage_modified_assets);
 }
 
+void ModuleAssets::StartLoadLibraryFilesTimeSlicedTask()
+{
+	time_sliced_task_load_build_resources = new LoadBuildResourcesTimeSlicedTask();
+	App->time_sliced->StartTimeSlicedTask(time_sliced_task_load_build_resources);
+}
+
 LoadResourcesTimeSlicedTask::LoadResourcesTimeSlicedTask()
 	: TimeSlicedTask(TimeSlicedTaskType::FOCUS, 4)
 {
@@ -899,7 +966,7 @@ void LoadResourcesTimeSlicedTask::CheckAssetFilesImport()
 
 		if (!is_meta)
 		{
-			bool can_load = App->assets->CanLoadFile(curr_file.c_str());
+			bool can_load = App->assets->CanLoadAssetFile(curr_file.c_str());
 
 			if (can_load)
 			{
@@ -1113,3 +1180,32 @@ void ManageModifiedAssetsTimeSlicedTask::CheckForDeletedAssets()
 	}
 }
 
+LoadBuildResourcesTimeSlicedTask::LoadBuildResourcesTimeSlicedTask()
+	: TimeSlicedTask(TimeSlicedTaskType::FOCUS, 20)
+{
+}
+
+void LoadBuildResourcesTimeSlicedTask::Start()
+{
+	all_library_files = App->file_system->GetFilesInPathAndChilds(App->assets->GetLibraryPath().c_str());
+}
+
+void LoadBuildResourcesTimeSlicedTask::Update()
+{
+	if(!all_library_files.empty())
+	{
+		std::string curr_file = *all_library_files.begin();
+
+		App->assets->LoadLibraryFile(curr_file.c_str());
+
+		all_library_files.erase(all_library_files.begin());
+	}
+	else
+	{
+		FinishTask();
+	}
+}
+
+void LoadBuildResourcesTimeSlicedTask::Finish()
+{
+}

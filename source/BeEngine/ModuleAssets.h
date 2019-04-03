@@ -16,6 +16,7 @@
 class Event;
 class LoadResourcesTimeSlicedTask;
 class ManageModifiedAssetsTimeSlicedTask;
+class LoadBuildResourcesTimeSlicedTask;
 class ResourceScript;
 class GameObject;
 
@@ -63,11 +64,18 @@ public:
 
 	// --------------------------
 
+	// Asset build management ---
+
+	void LoadLibraryFile(const char* filepath);
+
+	// --------------------------
+
 	void ForceUpdateFolders();
 
 	void LoadUserScriptsInfo();
 
-	bool CanLoadFile(const char* filepath);
+	bool CanLoadAssetFile(const char* filepath);
+	bool CanLoadLibraryFile(const char* filepath);
 	bool IsMeta(const char* filepath);
 	std::string GetAssetFileFromMeta(const char* metapath);
 	std::string GetMetaFileFromAsset(const char* filepath);
@@ -86,6 +94,7 @@ private:
 
 	void StartLoadResourcesTimeSlicedTask();
 	void StartManageModifiedAssetsTimeSlicedTask(const std::string& folder);
+	void StartLoadLibraryFilesTimeSlicedTask();
 
 private:
 	std::string current_assets_folder;
@@ -100,6 +109,7 @@ private:
 
 	LoadResourcesTimeSlicedTask* time_sliced_task_loading_resources = nullptr;
 	ManageModifiedAssetsTimeSlicedTask* time_sliced_task_manage_modified_assets = nullptr;
+	LoadBuildResourcesTimeSlicedTask* time_sliced_task_load_build_resources = nullptr;
 };
 
 class ManageModifiedAssetsTimeSlicedTask : public TimeSlicedTask
@@ -131,6 +141,19 @@ private:
 
 	std::vector<Resource*> all_asset_resources;
 	std::vector<Resource*> asset_resources_to_check;
+};
+
+class LoadBuildResourcesTimeSlicedTask : public TimeSlicedTask
+{
+public:
+	LoadBuildResourcesTimeSlicedTask();
+
+	void Start();
+	void Update();
+	void Finish();
+
+private:
+	std::vector<std::string> all_library_files;
 };
 
 class LoadResourcesTimeSlicedTask : public TimeSlicedTask

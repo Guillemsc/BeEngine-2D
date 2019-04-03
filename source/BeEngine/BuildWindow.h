@@ -3,6 +3,7 @@
 
 #include "ModuleEditor.h"
 #include "imgui.h"
+#include "ResourceSelectorWidget.h"
 
 class BuildWindow : public EditorWindow
 {
@@ -22,6 +23,9 @@ public:
 
 private:
 	void Save();
+
+private:
+	ResourceSelectorWidget resource_selector;
 
 };
 

@@ -1,7 +1,7 @@
 {
     "name": "BeEngineTestProject",
-	
-	"build": {
-		"scene" : "7d2e13a3"
-	}
+    "build": {
+        "scene": "7d2e13a3",
+        "name": "TestGame"
+    }
 }

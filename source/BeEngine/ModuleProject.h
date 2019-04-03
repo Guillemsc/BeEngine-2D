@@ -51,6 +51,7 @@ public:
 	bool CleanUp();
 
 	std::string GetCurrProjectBasePath() const;
+	std::string GetCurrProjectFilePath() const;
 	bool GetCurrProjectIsSelected() const;
 	Project* GetCurrProject() const;
 

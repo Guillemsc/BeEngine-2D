@@ -83,6 +83,16 @@ std::string ModuleProject::GetCurrProjectBasePath() const
 	return ret;
 }
 
+std::string ModuleProject::GetCurrProjectFilePath() const
+{
+	std::string project_folder;
+
+	if (curr_project != nullptr)
+		project_folder = curr_project->GetPath();
+
+	return project_folder + std::string("project.beproject");;
+}
+
 bool ModuleProject::GetCurrProjectIsSelected() const
 {
 	return curr_project != nullptr;
