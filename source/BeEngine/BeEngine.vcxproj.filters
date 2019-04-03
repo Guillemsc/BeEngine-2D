@@ -693,6 +693,9 @@
     <ClInclude Include="ModuleBuild.h">
       <Filter>Sources\3. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="BuildWindow.h">
+      <Filter>Sources\4. Editor ================\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1150,6 +1153,9 @@
     </ClCompile>
     <ClCompile Include="ModuleBuild.cpp">
       <Filter>Sources\3. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildWindow.cpp">
+      <Filter>Sources\4. Editor ================\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

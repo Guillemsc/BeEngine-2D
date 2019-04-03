@@ -58,10 +58,7 @@ public:
 	virtual void OnSaveConfig(JSON_Doc* config) {};
 
 	virtual void OnLoadProject(JSON_Doc* config) {};
-	virtual void OnSaveProject(JSON_Doc* config) {};
-
-	virtual void LoadScene(JSON_Doc* config) {};
-	virtual void SaveScene(JSON_Doc* config) {};
+	virtual void OnLoadBuild(JSON_Doc* config) {};
 
 	virtual void OnLoadFile(const char* filepath) {};
 

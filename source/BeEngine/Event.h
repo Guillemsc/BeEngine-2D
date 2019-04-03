@@ -32,6 +32,8 @@ enum EventType
 
 	THREAD_TASK_FINISHED,
 
+	RESOURCES_LOADED,
+
 	SCENE_WINDOW_RESIZE,
 	GAME_WINDOW_RESIZE,
 
@@ -101,6 +103,18 @@ public:
 
 private:
 	ThreadTask* task = nullptr;
+};
+
+class EventResourcesLoaded : public Event
+{
+public:
+	EventResourcesLoaded() : Event(EventType::RESOURCES_LOADED)
+	{
+
+	}
+
+private:
+
 };
 
 class EventSceneWindowResize : public Event

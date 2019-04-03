@@ -151,6 +151,8 @@ bool ModuleProject::LoadProject(const char * project_folder)
 
 			projects.push_back(proj);
 
+			App->json->UnloadJSON(doc);
+
 			ret = true;
 		}
 
@@ -190,6 +192,17 @@ void ModuleProject::SetCurrProject(Project * set)
 	if (curr_project != nullptr)
 	{
 		App->window->GetWindowNamer()->UpdateNamePart("project_name", curr_project->GetName());
+
+		std::string filepath = GetCurrProjectBasePath() + std::string("project.beproject");
+
+		JSON_Doc* doc = App->json->LoadJSON(filepath.c_str());
+
+		if (doc != nullptr)
+		{
+			App->OnLoadProject(doc);
+
+			App->json->UnloadJSON(doc);
+		}
 	}
 }
 

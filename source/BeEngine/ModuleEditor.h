@@ -20,6 +20,7 @@ class BottomBar;
 class GameWindow;
 class PhysicsWindow;
 class DragDropCluster;
+class BuildWindow;
 
 class EditorWindow
 {
@@ -157,6 +158,7 @@ public:
 	ExplorerWindow*  explorer_window = nullptr;
 	ConsoleWindow*	 console_window = nullptr;
 	PhysicsWindow*   physics_window = nullptr;
+	BuildWindow*     build_window = nullptr;
 
 private:
 	EditorState editor_state;

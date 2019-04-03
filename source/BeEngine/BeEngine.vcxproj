@@ -104,6 +104,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="BeObject.h" />
     <ClInclude Include="BottomBar.h" />
+    <ClInclude Include="BuildWindow.h" />
     <ClInclude Include="CanvasItemGuizmo.h" />
     <ClInclude Include="ComponentButton.h" />
     <ClInclude Include="ComponentCamera.h" />
@@ -291,6 +292,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="BeObject.cpp" />
     <ClCompile Include="BottomBar.cpp" />
+    <ClCompile Include="BuildWindow.cpp" />
     <ClCompile Include="CanvasItemGuizmo.cpp" />
     <ClCompile Include="ComponentButton.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />

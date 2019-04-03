@@ -3,6 +3,11 @@
 #include "App.h"
 #include "ModuleProject.h"
 #include "ModuleScripting.h"
+#include "ModuleAssets.h"
+#include "ModuleJson.h"
+#include "ModuleEvent.h"
+#include "ModuleResource.h"
+#include "ResourceScene.h"
 
 ModuleBuild::ModuleBuild()
 {
@@ -19,11 +24,32 @@ bool ModuleBuild::Awake()
 	return ret;
 }
 
+bool ModuleBuild::Start()
+{
+	bool ret = true;
+
+	App->event->Suscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCES_LOADED);
+
+	return ret;
+}
+
 bool ModuleBuild::CleanUp()
 {
 	bool ret = true;
 
+	App->event->UnSuscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCES_LOADED);
+
 	return ret;
+}
+
+void ModuleBuild::OnLoadProject(JSON_Doc * config)
+{
+	scene_to_load = config->GetString("build.scene");
+}
+
+void ModuleBuild::OnLoadBuild(JSON_Doc * config)
+{
+	scene_to_load = config->GetString("scene");
 }
 
 bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::string>& errors)
@@ -96,11 +122,21 @@ bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::str
 					{
 						std::string resources_folder = App->file_system->GetWorkingDirectory();
 
-						bool files_copied = App->file_system->FolderCopyPaste(resources_folder, new_folder, false);
+						bool engine_files_copied = App->file_system->FolderCopyPaste(resources_folder, new_folder, false);
 
-						if (files_copied)
+						if (engine_files_copied)
 						{
+							std::string new_data_path;
+							App->file_system->FolderCreate(new_folder, "data", false, new_data_path);
 
+							std::string library_folder = App->assets->GetLibraryPath();
+
+							bool library_files_copied = App->file_system->FolderCopyPaste(library_folder, new_data_path, false);
+
+							if (library_files_copied)
+							{
+								bool build_file_created = CreateBuildFile(new_folder);
+							}
 						}
 						else
 						{
@@ -121,6 +157,38 @@ bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::str
 				}
 			}
 		}
+	}
+
+	return ret;
+}
+
+ResourceScene * ModuleBuild::GetResourceSceneToLoad() const
+{
+	return resource_scene_to_load;
+}
+
+void ModuleBuild::OnEvent(Event * ev)
+{
+	if (ev->GetType() == EventType::RESOURCES_LOADED)
+	{
+		if (scene_to_load.compare("") != 0)
+		{
+			resource_scene_to_load = (ResourceScene*)App->resource->GetResourceFromUid(scene_to_load, ResourceType::RESOURCE_TYPE_SCENE);
+		}
+	}
+}
+
+bool ModuleBuild::CreateBuildFile(const std::string & folder)
+{
+	bool ret = false;
+
+	JSON_Doc* doc = App->json->CreateJSON(folder.c_str(), "build", "bebuild");
+
+	if (doc != nullptr)
+	{
+		doc->SetString("scene", scene_to_load.c_str());
+
+		doc->Save();
 	}
 
 	return ret;

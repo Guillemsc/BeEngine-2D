@@ -34,6 +34,7 @@ class ModuleUI;
 class ModuleBuild;
 
 class Profiler;
+class Project;
 class JSON_Doc;
 
 
@@ -55,6 +56,9 @@ public:
 
 	void LoadConfig();
 	void SaveConfig(Module* module = nullptr);
+
+	void OnLoadProject(JSON_Doc* doc);
+	void OnLoadBuild(JSON_Doc* doc);
 
 	void Quit();
 

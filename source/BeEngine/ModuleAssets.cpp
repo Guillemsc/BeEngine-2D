@@ -121,6 +121,9 @@ void ModuleAssets::OnEvent(Event* ev)
 
 		if (ett->GetTask() == time_sliced_task_loading_resources)
 		{
+			EventResourcesLoaded* rl = new EventResourcesLoaded();
+			App->event->SendEvent(rl);
+
 			App->scripting->ForceCompileScripts();
 		}
 

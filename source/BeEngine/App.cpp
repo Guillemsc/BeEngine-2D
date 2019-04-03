@@ -333,6 +333,18 @@ void Application::SaveConfig(Module* module)
 	}
 }
 
+void Application::OnLoadProject(JSON_Doc * doc)
+{
+	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
+		(*it)->OnLoadProject(doc);
+}
+
+void Application::OnLoadBuild(JSON_Doc * doc)
+{
+	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
+		(*it)->OnLoadBuild(doc);
+}
+
 void Application::Quit()
 {
 	to_quit = true;

@@ -23,6 +23,7 @@
 #include "imgui_docking.h"
 #include "GameWindow.h"
 #include "DragDropCluster.h"
+#include "BuildWindow.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -66,6 +67,7 @@ bool ModuleEditor::Awake()
 	explorer_window = (ExplorerWindow*)AddEditorWindow("Explorer", new ExplorerWindow());
 	console_window = (ConsoleWindow*)AddEditorWindow("Console", new ConsoleWindow());
 	AddEditorWindow("Physics", new PhysicsWindow());
+	build_window = (BuildWindow*)AddEditorWindow("Build", new BuildWindow());
 
 	LoadDockingProfiles();
 
