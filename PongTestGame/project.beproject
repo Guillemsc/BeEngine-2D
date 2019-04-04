@@ -1,5 +1,5 @@
 {
-    "name": "BeEngineTestProject2",
+    "name": "PongTestGame",
     "build": {
         "scene": "1f9b9551",
         "name": "PongTestGame"
