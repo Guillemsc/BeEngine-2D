@@ -23,6 +23,7 @@ public:
 
 	void AddNamePart(std::string identifier, std::string default_val);
 	void UpdateNamePart(std::string identifier, std::string value);
+	void RemoveNamePart(std::string identifier);
 
 private:
 	void UpdateWindowName();

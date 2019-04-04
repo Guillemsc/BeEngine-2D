@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "App.h"
 #include "ModuleScripting.h"
+#include "ModuleState.h"
 
 ScriptingBridgeDebug::ScriptingBridgeDebug() 
 	: ScriptingBridgeObject(nullptr)
@@ -30,7 +31,10 @@ void ScriptingBridgeDebug::CleanUp()
 
 void ScriptingBridgeDebug::Log(MonoString * mono_string)
 {
-	std::string log_val = App->scripting->UnboxString(mono_string);
+	if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
+	{
+		std::string log_val = App->scripting->UnboxString(mono_string);
 
-	CONSOLE_INFO(log_val.c_str());
+		CONSOLE_INFO(log_val.c_str());
+	}
 }

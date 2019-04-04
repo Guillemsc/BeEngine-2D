@@ -60,6 +60,7 @@
     <Compile Include="Math\float2.cs" />
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Time\Time.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

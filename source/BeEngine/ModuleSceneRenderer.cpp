@@ -14,6 +14,7 @@
 #include "ModuleGuizmo.h"
 #include "ModuleEditor.h"
 #include "ModulePhysics.h"
+#include "ModuleState.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -122,16 +123,23 @@ void ModuleSceneRenderer::RenderOnCameras()
 	{
 		Camera2D* curr_camera = (*it);
 
-		curr_camera->Bind();
-
+		bool is_editor_camera = false;
 		if (curr_camera == App->camera->GetEditorCamera())
+			is_editor_camera = true;
+
+		if (!is_editor_camera || App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
 		{
-			App->guizmo->RenderGuizmos();
+			curr_camera->Bind();
+
+			if (is_editor_camera)
+			{
+				App->guizmo->RenderGuizmos();
+			}
+
+			RenderRenderers(curr_camera);
+
+			curr_camera->Unbind();
 		}
-
-		RenderRenderers(curr_camera);
-
-		curr_camera->Unbind();
 	}
 }
 

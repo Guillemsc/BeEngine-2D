@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BeEngine;
 
-public class test_script_fields : ComponentScript 
+public class asdf : ComponentScript 
 {
 	public override void Start () 
 	{
@@ -21,14 +21,31 @@ public class test_script_fields : ComponentScript
 	
 	public override void Update () 
 	{
-        go.Transform.RotationDegrees = 30;
+
 
         //if (go != null)
         //    Debug.LOG(go.Transform.RotationDegrees.ToString());
 
-        if(Input.KeyDown("a"))
+        float speed = Time.DeltaTime * 100.1f;
+
+        if (Input.KeyRepeat("a"))
         {
-            Debug.LOG("a");
+            game_object.Transform.Position = new float2(game_object.Transform.Position.x - speed, game_object.Transform.Position.y);
+        }
+
+        if (Input.KeyRepeat("d"))
+        {
+            game_object.Transform.Position = new float2(game_object.Transform.Position.x + speed, game_object.Transform.Position.y);
+        }
+
+        if (Input.KeyRepeat("s"))
+        {
+            game_object.Transform.Position = new float2(game_object.Transform.Position.x, game_object.Transform.Position.y - speed);
+        }
+
+        if (Input.KeyRepeat("w"))
+        {
+            game_object.Transform.Position = new float2(game_object.Transform.Position.x, game_object.Transform.Position.y + speed);
         }
     }
 

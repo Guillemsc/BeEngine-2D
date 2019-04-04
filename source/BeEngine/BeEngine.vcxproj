@@ -87,7 +87,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Box2D\Box2D;..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -272,6 +272,7 @@
     <ClInclude Include="ScriptingBridgeInput.h" />
     <ClInclude Include="ScriptingBridgeObject.h" />
     <ClInclude Include="ScriptingBridgeGameObject.h" />
+    <ClInclude Include="ScriptingBridgeTime.h" />
     <ClInclude Include="ScriptingCluster.h" />
     <ClInclude Include="ScriptableObject.h" />
     <ClInclude Include="ScriptingObject.h" />
@@ -427,6 +428,7 @@
     <ClCompile Include="ScriptingBridgeInput.cpp" />
     <ClCompile Include="ScriptingBridgeObject.cpp" />
     <ClCompile Include="ScriptingBridgeGameObject.cpp" />
+    <ClCompile Include="ScriptingBridgeTime.cpp" />
     <ClCompile Include="ScriptingCluster.cpp" />
     <ClCompile Include="ScriptableObject.cpp" />
     <ClCompile Include="ScriptingObject.cpp" />

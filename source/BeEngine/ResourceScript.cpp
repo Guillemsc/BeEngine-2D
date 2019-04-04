@@ -24,7 +24,15 @@ bool ResourceScript::ExistsOnLibrary(std::string uid, std::string & library_file
 {
 	bool ret = false;
 
-	return true;
+	std::string library_path = App->resource->GetLibraryPathFromResourceType(GetType());
+
+	std::string path = library_path + uid + ".bescript";
+
+	if (App->file_system->FileExists(path.c_str()))
+	{
+		library_filepath = path;
+		ret = true;
+	}
 
 	return ret;
 }
@@ -33,12 +41,38 @@ void ResourceScript::ExportToLibrary(std::string uid)
 {
 	App->scripting->compiler->AddScript(GetAssetFilepath().c_str());
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());
+
+	std::string library_path = App->resource->GetLibraryPathFromResourceType(GetType());
+
+	std::string filepath = library_path + uid + ".bescript";
+
+	if (App->file_system->FileExists(filepath))
+		App->file_system->FileDelete(filepath);
+	
+	JSON_Doc* doc = App->json->CreateJSON(filepath.c_str());
+	if (doc != nullptr)
+	{
+		doc->SetString("name", d_asset_filepath.file_name.c_str());
+		doc->Save();
+
+		App->json->UnloadJSON(doc);
+	}
 }
 
 void ResourceScript::ImportFromLibrary()
 {
 	App->scripting->solution_manager->AddScript(GetAssetFilepath().c_str());
 	App->scripting->compiler->AddScript(GetAssetFilepath().c_str());
+
+	std::string resource_filepath = GetLibraryFilepath();
+
+	JSON_Doc* doc = App->json->LoadJSON(resource_filepath.c_str());
+	if (doc != nullptr)
+	{
+		script_class_name = doc->GetString("name");
+
+		App->json->UnloadJSON(doc);
+	}
 }
 
 void ResourceScript::OnRemoveAsset()
@@ -51,6 +85,21 @@ void ResourceScript::OnRemoveAsset()
 
 void ResourceScript::OnRenameAsset(const char * new_name, const char * last_name)
 {
+	std::string resource_filepath = GetLibraryFilepath();
+
+	JSON_Doc* doc = App->json->LoadJSON(resource_filepath.c_str());
+
+	if (doc == nullptr)
+		doc = App->json->CreateJSON(resource_filepath.c_str());
+
+	if (doc != nullptr)
+	{
+		doc->SetString("name", new_name);
+		doc->Save();
+
+		App->json->UnloadJSON(doc);
+	}
+
 	std::string code = App->scripting->compiler->GetScriptCode(GetAssetFilepath().c_str());
 
 	code = TextReplace(code, last_name, new_name);
@@ -104,6 +153,11 @@ std::vector<ResourceScriptField> ResourceScript::GetFields()
 bool ResourceScript::GetInheritsFromBeengineScript() const
 {
 	return inherits_from_component_script;
+}
+
+std::string ResourceScript::GetScriptingClassName() const
+{
+	return script_class_name;
 }
 
 ScriptingClass ResourceScript::GetScriptingClass() const

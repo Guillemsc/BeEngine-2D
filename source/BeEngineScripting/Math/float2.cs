@@ -34,6 +34,11 @@ namespace BeEngine
             set { _y = value; }
         }
 
+        public static float2 operator + (float2 val1, float2 val2)
+        {
+            return new float2(val1.x + val2.x, val1.y + val2.y);
+        }
+
         public override string ToString()
         {
             return "x: " + x + " y: " + y;

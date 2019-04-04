@@ -148,10 +148,10 @@ void ModuleAssets::OnEvent(Event* ev)
 		}
 		else if (ett->GetTask() == time_sliced_task_load_build_resources)
 		{
-			EventResourcesLoaded* rl = new EventResourcesLoaded();
-			App->event->SendEvent(rl);
-
 			App->scripting->ForceCompileScripts();
+
+			//EventResourcesLoaded* rl = new EventResourcesLoaded();
+			//App->event->SendEvent(rl);
 		}
 
 		break;
@@ -707,10 +707,10 @@ void ModuleAssets::LoadUserScriptsInfo()
 
 					curr_script->ClearScriptFields();
 
-					std::string script_name = curr_script->GetDecomposedAssetFilepath().file_name;
+					std::string script_name = curr_script->GetScriptingClassName();
 
 					curr_script->inherits_from_component_script = false;
-
+					
 					ScriptingClass sc;
 					if (App->scripting->user_code_assembly->GetClass("", script_name.c_str(), sc))
 					{
@@ -720,18 +720,21 @@ void ModuleAssets::LoadUserScriptsInfo()
 						{
 							curr_script->script_class = sc;
 
-							std::vector<ScriptingClassField> fields = sc.GetFields();
-
-							for (std::vector<ScriptingClassField>::const_iterator it = fields.begin(); it != fields.end(); ++it)
+							if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
 							{
-								std::string type_name = mono_type_get_name((*it).GetType());
+								std::vector<ScriptingClassField> fields = sc.GetFields();
 
-								curr_script->AddScriptField((*it).GetName(), type_name);
+								for (std::vector<ScriptingClassField>::const_iterator it = fields.begin(); it != fields.end(); ++it)
+								{
+									std::string type_name = mono_type_get_name((*it).GetType());
+
+									curr_script->AddScriptField((*it).GetName(), type_name);
+								}
 							}
 						}
 					}
 				}
-
+				
 				EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
 				App->event->SendEvent(ersfc);
 			}

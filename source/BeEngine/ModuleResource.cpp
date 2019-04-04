@@ -51,6 +51,7 @@ bool ModuleResource::Awake()
 	AddLibraryExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "dds");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_SCRIPT, "cs");
+	AddLibraryExtension(ResourceType::RESOURCE_TYPE_SCRIPT, "bescript");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");
 	AddLibraryExtension(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");

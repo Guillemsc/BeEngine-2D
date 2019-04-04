@@ -121,6 +121,9 @@ bool Application::Awake()
 
 	window->GetWindowNamer()->AddNamePart("app_name", "");
 	window->GetWindowNamer()->AddNamePart("app_version", "");
+	window->GetWindowNamer()->AddNamePart("fps", "");
+
+	LoadConfig();
 
 	prof_app_awake->Start();
 
@@ -137,8 +140,6 @@ bool Application::Awake()
 		if (!ret) 
 			return false;
 	}
-
-	LoadConfig();
 
 	prof_app_awake->Finish();
 
@@ -173,6 +174,8 @@ bool Application::Start()
 bool Application::Update()
 {
 	bool ret = true;
+
+	window->GetWindowNamer()->UpdateNamePart("fps", std::to_string(profiler->GetFPS()));
 
 	prof_app_total_update->Start();
 

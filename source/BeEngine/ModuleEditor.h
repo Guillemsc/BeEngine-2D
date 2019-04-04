@@ -132,6 +132,7 @@ private:
 	EditorWindow* AddEditorWindow(const char* name, EditorWindow* window, bool full_screen = false, bool used_on_build = false);
 	void DestroyAllEditorWindows();
 	void DrawEditorWindows();
+	void DrawGameWindowInBuildMode();
 
 	void ImGuiInit();
 	void ImGuiStartFrame();

@@ -261,74 +261,100 @@ void ModuleEditor::DrawEditorWindows()
 {
 	prof_editor_windows_draw->Start();
 	
-	for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
+	if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
 	{
-		bool draw = true;
-
-		EditorWindow* curr_window = (*it);
-
-		if(App->state->GetEngineState() == EngineState::ENGINE_STATE_BUILD)
+		for (std::vector<EditorWindow*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it)
 		{
-			if (!curr_window->used_on_build)
-				draw = false;
-		}
-		
-		curr_window->prof_draw->Start();
+			EditorWindow* curr_window = (*it);
 
-		ImGuiWindowFlags flags = 0;
-		flags |= curr_window->GetWindowFlags();
+			curr_window->prof_draw->Start();
 
-		if (!curr_window->full_screen)
-		{
-			if (!draw)
-				curr_window->opened = draw;
+			ImGuiWindowFlags flags = 0;
+			flags |= curr_window->GetWindowFlags();
 
-			if (ImGui::BeginDock(curr_window->name.c_str(), &curr_window->opened, flags))
+			if (!curr_window->full_screen)
 			{
-				ImVec2 win_pos = ImGui::GetWindowPos();
-				ImVec2 win_size = ImGui::GetWindowSize();
+				if (ImGui::BeginDock(curr_window->name.c_str(), &curr_window->opened, flags))
+				{
+					ImVec2 win_pos = ImGui::GetWindowPos();
+					ImVec2 win_size = ImGui::GetWindowSize();
 
-				curr_window->window_pos = float2(win_pos.x, win_pos.y);
-				curr_window->window_size = float2(win_size.x, win_size.y);
+					curr_window->window_pos = float2(win_pos.x, win_pos.y);
+					curr_window->window_size = float2(win_size.x, win_size.y);
 
-				if (draw_editor)
-					curr_window->DrawEditor();
+					if (draw_editor)
+						curr_window->DrawEditor();
+				}
+
+				ImGui::EndDock();
 			}
 
-			ImGui::EndDock();
+			/*	else
+				{
+					flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
+						| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings
+						| ImGuiWindowFlags_NoTitleBar;
+
+					float2 screen_size = App->window->GetWindowSize();
+
+					float4 offset = float4(-8, -33, 16, 37);
+
+					ImGui::SetNextWindowPos(ImVec2(offset.x, offset.y));
+					ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y + offset.w));
+					if (ImGui::Begin(curr_window->name.c_str(), &curr_window->opened, flags))
+					{
+						ImVec2 win_pos = ImGui::GetWindowPos();
+						ImVec2 win_size = ImGui::GetWindowSize();
+
+						curr_window->window_pos = float2(win_pos.x, win_pos.y);
+						curr_window->window_size = float2(win_size.x, win_size.y);
+
+						if (draw_editor)
+							curr_window->DrawEditor();
+
+						ImGui::End();
+					}
+				}*/
+
+			(*it)->prof_draw->Finish();
 		}
-		else
-		{
-			flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
-				| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings
-				| ImGuiWindowFlags_NoTitleBar;
-
-			float2 screen_size = App->window->GetWindowSize();
-
-			float4 offset = float4(-8, -33, 16, 37);
-			
-			ImGui::SetNextWindowPos(ImVec2(offset.x, offset.y));
-			ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y + offset.w));
-			if (ImGui::Begin(curr_window->name.c_str(), &curr_window->opened, flags))
-			{
-				ImVec2 win_pos = ImGui::GetWindowPos();
-				ImVec2 win_size = ImGui::GetWindowSize();
-
-				curr_window->window_pos = float2(win_pos.x, win_pos.y);
-				curr_window->window_size = float2(win_size.x, win_size.y);
-
-				if (draw_editor)
-					curr_window->DrawEditor();
-
-				ImGui::End();
-			}
-		}
-
-		(*it)->prof_draw->Finish();
 	}
-	
+	else
+	{
+		DrawGameWindowInBuildMode();
+	}
 
 	prof_editor_windows_draw->Finish();
+}
+
+void ModuleEditor::DrawGameWindowInBuildMode()
+{
+	ImGuiWindowFlags flags = 0;
+
+	flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
+		| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings
+		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
+
+	float2 screen_size = App->window->GetWindowSize();
+
+	float4 offset = float4(-8, -23, 17, 23);
+
+	bool opened = true;
+
+	ImGui::SetNextWindowPos(ImVec2(offset.x, offset.y));
+	ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y + offset.w));
+	if (ImGui::Begin(game_window->name.c_str(), &opened, flags))
+	{
+		ImVec2 win_pos = ImGui::GetWindowPos();
+		ImVec2 win_size = ImGui::GetWindowSize();
+
+		game_window->window_pos = float2(win_pos.x, win_pos.y);
+		game_window->window_size = float2(win_size.x, win_size.y);
+
+		game_window->DrawEditor();
+
+		ImGui::End();
+	}
 }
 
 void ModuleEditor::SetEditorState(const EditorState & state)

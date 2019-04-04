@@ -13,6 +13,7 @@
 #include "ScriptingBridgeComponentScript.h"
 #include "ComponentScriptFields.h"
 #include "ModuleGameObject.h"
+#include "ModuleState.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -266,9 +267,12 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 
 		UpdateScriptInstance();
 
-		if (resource_script != nullptr)
+		if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
 		{
-			RecalculateFieldsValues(resource_script->GetFields());
+			if (resource_script != nullptr)
+			{
+				RecalculateFieldsValues(resource_script->GetFields());
+			}
 		}
 	}
 }

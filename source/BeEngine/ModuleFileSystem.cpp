@@ -560,6 +560,8 @@ bool FileSystem::FolderCopyPaste(const std::string & folderpath, const std::stri
 	{
 		std::cout << e.what();
 
+		CONSOLE_ERROR(e.what());
+
 		ret = false;
 	}
 

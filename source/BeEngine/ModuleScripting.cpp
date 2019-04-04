@@ -830,20 +830,18 @@ void ModuleScripting::ManageScriptsToCompile()
 {
 	bool update = false;
 
-	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
+	if (needs_to_compile_user_scripts && compile_user_scripts_timer.ReadSec() > 1.5)
 	{
-		if (needs_to_compile_user_scripts && compile_user_scripts_timer.ReadSec() > 1.5)
-		{
-			update = true;
-			needs_to_compile_user_scripts = false;
-		}
-
-		if (force_compile_scripts)
-		{
-			update = true;
-			force_compile_scripts = false;
-		}
+		update = true;
+		needs_to_compile_user_scripts = false;
 	}
+
+	if (force_compile_scripts)
+	{
+		update = true;
+		force_compile_scripts = false;
+	}
+	
 
 	if (update)
 	{
@@ -855,12 +853,12 @@ void ModuleScripting::ManageScriptsToCompile()
 		scripting_user_assembly_filepath = App->resource->GetLibraryPathFromResourceType(ResourceType::RESOURCE_TYPE_SCRIPT);
 		scripting_user_assembly_filepath += "user_scripting.dll";
 
-		std::vector<std::string> compile_errors;
-		std::vector<std::string> compile_warnings;
-		user_code_compiles = compiler->CompileScripts(scripting_user_assembly_filepath, compile_errors, compile_warnings);
-
 		if (!is_build)
 		{
+			std::vector<std::string> compile_errors;
+			std::vector<std::string> compile_warnings;
+			user_code_compiles = compiler->CompileScripts(scripting_user_assembly_filepath, compile_errors, compile_warnings);
+
 			App->editor->console_window->ClearPesonalLogs("scripting");
 			for (std::vector<std::string>::iterator it = compile_errors.begin(); it != compile_errors.end(); ++it)
 			{
@@ -872,27 +870,36 @@ void ModuleScripting::ManageScriptsToCompile()
 				App->editor->console_window->AddPersonalLog("scripting", (*it).c_str(), ConsoleLogType::INTERNAL_LOG_WARNING);
 			}
 		}
+		else
+			user_code_compiles = true;
 
 		if (user_code_compiles)
 		{
-			std::vector<std::string> scripts = compiler->GetScripts();
+			std::vector<std::string> scripts;
+
+			if (!is_build)
+				scripts = compiler->GetScripts();
 
 			DestroyBaseDomainAndAssemblys();
 			CreateBaseDomainAndAssemblys();
 
-			for (std::vector<std::string>::iterator it = scripts.begin(); it != scripts.end(); ++it)
-			{
-				compiler->AddScript((*it).c_str());
-			}
-
 			if (!is_build)
+			{
+				for (std::vector<std::string>::iterator it = scripts.begin(); it != scripts.end(); ++it)
+				{
+					compiler->AddScript((*it).c_str());
+				}
+
 				solution_manager->CreateSolutionManagerInstance();
+			}
 		}
 
-		App->assets->StartWatchingFolders();
+		if (!is_build)
+			App->assets->StartWatchingFolders();
 
 		EventScriptsCompiled* esc = new EventScriptsCompiled(user_code_compiles);
 		App->event->SendEvent(esc);
+		
 
 		needs_to_compile_user_scripts = false;
 	}

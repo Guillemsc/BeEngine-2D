@@ -12,6 +12,7 @@
 #include "ModuleGameObject.h"
 #include "ModuleEditor.h"
 #include "GameWindow.h"
+#include "ModuleWindow.h"
 
 ModuleBuild::ModuleBuild()
 {
@@ -34,7 +35,7 @@ bool ModuleBuild::Start()
 {
 	bool ret = true;
 
-	App->event->Suscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCES_LOADED);
+	App->event->Suscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 	App->event->Suscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	return ret;
@@ -44,7 +45,7 @@ bool ModuleBuild::CleanUp()
 {
 	bool ret = true;
 
-	App->event->UnSuscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCES_LOADED);
+	App->event->UnSuscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 	App->event->UnSuscribe(std::bind(&ModuleBuild::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	return ret;
@@ -249,7 +250,7 @@ bool ModuleBuild::GenerateBuild(const std::string & folder, std::vector<std::str
 
 void ModuleBuild::OnEvent(Event * ev)
 {
-	if (ev->GetType() == EventType::RESOURCES_LOADED)
+	if (ev->GetType() == EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED)
 	{
 		if (scene_to_load.compare("") != 0)
 		{
@@ -261,6 +262,8 @@ void ModuleBuild::OnEvent(Event * ev)
 				{
 					App->gameobject->DestroyScene(App->gameobject->GetRootScene());
 					resource_scene_to_load->LoadToScene(App->gameobject->GetRootScene());
+
+					App->state->SetEditorUpdateState(EditorUpdateState::EDITOR_UPDATE_STATE_PLAY);
 				}
 			}
 		}
@@ -319,7 +322,9 @@ void ModuleBuild::TryLoadBuildProject()
 	{
 		App->state->SetEngineState(EngineState::ENGINE_STATE_BUILD);
 
-		App->editor->game_window->full_screen = true;
+		App->window->GetWindowNamer()->RemoveNamePart("app_version");
+
+		App->SetAppName(build_name.c_str());
 
 		std::string data_path = App->file_system->GetWorkingDirectory() + "data\\";
 

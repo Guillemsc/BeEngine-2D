@@ -415,6 +415,20 @@ void WindowNaming::UpdateNamePart(std::string identifier, std::string value)
 	UpdateWindowName();
 }
 
+void WindowNaming::RemoveNamePart(std::string identifier)
+{
+	for (std::vector<NamePart>::iterator it = name_parts.begin(); it != name_parts.end(); ++it)
+	{
+		if ((*it).identifier.compare(identifier) == 0)
+		{
+			name_parts.erase(it);
+			break;
+		}
+	}
+
+	UpdateWindowName();
+}
+
 void WindowNaming::UpdateWindowName()
 {
 	std::string name;

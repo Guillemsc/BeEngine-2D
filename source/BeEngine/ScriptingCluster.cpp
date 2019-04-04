@@ -8,6 +8,7 @@
 #include "ComponentTransfrom.h"
 #include "GameObject.h"
 #include "ScriptingBridgeInput.h"
+#include "ScriptingBridgeTime.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -21,9 +22,14 @@ void ScriptingCluster::RegisterInternalCalls()
 
 		// Input ------------------------------------
 		mono_add_internal_call("BeEngine.Input::GetKeyDown", (const void*)ScriptingBridgeInput::GetKeyDown);
-		mono_add_internal_call("BeEngine.Input::KeyRepeat", (const void*)ScriptingBridgeInput::GetKeyRepeat);
-		mono_add_internal_call("BeEngine.Input::KeyUp", (const void*)ScriptingBridgeInput::GetKeyUp);
+		mono_add_internal_call("BeEngine.Input::GetKeyRepeat", (const void*)ScriptingBridgeInput::GetKeyRepeat);
+		mono_add_internal_call("BeEngine.Input::GetKeyUp", (const void*)ScriptingBridgeInput::GetKeyUp);
 		// ------------------------------------ Input
+
+		// Time ------------------------------------
+		mono_add_internal_call("BeEngine.Time::GetDeltaTime", (const void*)ScriptingBridgeTime::GetDeltaTime);
+
+		// ------------------------------------- Time
 
 		// GameObject -------------------------------
 		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
@@ -57,6 +63,9 @@ void ScriptingCluster::RebuildClasses()
 		// Input
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Input", input_class);
 
+		// Time
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Time", time_class);
+
 		// Math
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "float2", float2_class);
 
@@ -86,6 +95,7 @@ void ScriptingCluster::CleanUp()
 
 	RELEASE(debug_class);
 	RELEASE(input_class);
+	RELEASE(time_class);
 
 	RELEASE(float2_class);
 

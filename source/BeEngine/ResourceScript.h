@@ -53,11 +53,14 @@ public:
 	std::vector<ResourceScriptField> GetFields();
 
 	bool GetInheritsFromBeengineScript() const;
+	std::string GetScriptingClassName() const;
 	ScriptingClass GetScriptingClass() const;
 
 	bool DrawEditorExplorer();
 
 private:
+	std::string script_class_name;
+
 	bool compiles = false;
 
 	std::vector<std::string> compile_errors;

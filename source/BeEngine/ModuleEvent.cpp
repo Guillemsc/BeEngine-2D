@@ -27,10 +27,14 @@ void EventDelegate::RemoveListener(const std::function<void(Event*)>& function)
 
 void EventDelegate::CallListeners(Event* ev)
 {
+	int starting_size = listeners.size();
 	for (std::vector<std::function<void(Event*)>>::iterator it = listeners.begin(); it != listeners.end(); ++it)
 	{
 		if ((*it))
 			(*it)(ev);
+
+		if (starting_size != listeners.size())
+			break;
 	}
 }
 

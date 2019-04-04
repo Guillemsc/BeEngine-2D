@@ -45,6 +45,8 @@ public:
 
 	ScriptingClass* input_class = nullptr;
 
+	ScriptingClass* time_class = nullptr;
+
 	ScriptingClass* float2_class = nullptr;
 
 	ScriptingClass* game_object_class = nullptr;

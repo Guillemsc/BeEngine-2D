@@ -133,6 +133,9 @@
     <Filter Include="Sources\8. Scripting ==============\Bridges\Input">
       <UniqueIdentifier>{9ad19bb7-b6b7-497b-80e8-5dca02049701}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\8. Scripting ==============\Bridges\Time">
+      <UniqueIdentifier>{a8770939-5505-438c-9315-61c225f3fb87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -696,6 +699,9 @@
     <ClInclude Include="BuildWindow.h">
       <Filter>Sources\4. Editor ================\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingBridgeTime.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1158,6 +1164,9 @@
       <Filter>Sources\4. Editor ================\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="ScriptingBridgeTime.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Time</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
