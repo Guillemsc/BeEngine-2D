@@ -3,8 +3,12 @@
 
 #include "GeometryMath.h"
 
+class Profile;
+
 class Renderer
 {
+	friend class ModuleSceneRenderer;
+
 public:
 	Renderer() {};
 	~Renderer() {};
@@ -16,6 +20,9 @@ public:
 	void SetZPos(float set);
 
 	float z_pos = 0;
+
+private:
+	Profile* prof_scene_renderer_render = nullptr;
 };
 
 #endif // !__RENDERER_H__

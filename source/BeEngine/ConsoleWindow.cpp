@@ -131,7 +131,12 @@ void ConsoleWindow::AddLog(const ConsoleLogLine & log)
 	console_logs.push_back(log);
 
 	if (CanLogType(log.GetType()))
+	{
+		if (console_logs_shown.size() > 100)
+			console_logs_shown.erase(console_logs_shown.begin());
+
 		console_logs_shown.push_back(log);
+	}
 }
 
 void ConsoleWindow::AddLog(const char * message, const ConsoleLogType & type)

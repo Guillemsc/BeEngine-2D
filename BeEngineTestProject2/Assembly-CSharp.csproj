@@ -91,6 +91,9 @@
     <Reference Include="BeEngineScriptingInternal">
       <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\BeEngineScriptingInternal.dll</HintPath>
     </Reference>
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\BeEngineTestProject2\assets\Scripts\Player\PlayerMovement.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\BeEngineTestProject2\assets\Scripts\Ball\BallMovement.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\BeEngineTestProject2\assets\Scripts\GameManager.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\BeEngineTestProject2\assets\player_movement.cs" />
   </ItemGroup>
   <ItemGroup>
