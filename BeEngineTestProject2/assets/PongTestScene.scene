@@ -1,0 +1,512 @@
+{
+    "game_objects_count": 8,
+    "game_object_0": {
+        "uid": "3d0bcfee",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Camera",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 3,
+                "floats_count": 1,
+                "float_name_0": "size",
+                "float_value_0": 0.10000000149011612
+            }
+        ]
+    },
+    "game_object_1": {
+        "uid": "7054a50f",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Background",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    15.510000228881836,
+                    9.8999996185302734
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 0,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "7e0c919",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    10,
+                    10
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_2": {
+        "uid": "39e7567a",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 1,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Player1",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    -60.715217590332031,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_3": {
+        "uid": "4e86a8f",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 1,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Player2",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    57.811515808105469,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_4": {
+        "uid": "5305383c",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 1,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Ball",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_5": {
+        "uid": "580898f7",
+        "parent_uid": "39e7567a",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Sprite",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": 90.000007629394531,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    -54.907680511474609,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1.9999991655349731,
+                    0.99999964237213135
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "3c24833d",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    10,
+                    10
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_6": {
+        "uid": "f4a6932",
+        "parent_uid": "4e86a8f",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Sprite2",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -90.000007629394531,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    54.907302856445313,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1.9999173879623413,
+                    0.99997782707214355
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "2589d722",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    10,
+                    10
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_7": {
+        "uid": "73438a40",
+        "parent_uid": "5305383c",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Sprite",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    0.80000001192092896,
+                    0.80000001192092896
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "24665ed0",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    10,
+                    10
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "sub_scenes": []
+}

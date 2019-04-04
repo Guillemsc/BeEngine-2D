@@ -1,7 +1,7 @@
 {
     "game_objects_count": 8,
     "game_object_0": {
-        "uid": "4f886f3",
+        "uid": "5f802a7e",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -102,7 +102,7 @@
         ]
     },
     "game_object_1": {
-        "uid": "1ffd8c61",
+        "uid": "6e72634c",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -154,7 +154,7 @@
         ]
     },
     "game_object_2": {
-        "uid": "41df580d",
+        "uid": "67284373",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -209,7 +209,7 @@
         ]
     },
     "game_object_3": {
-        "uid": "720b2d1e",
+        "uid": "50f060a8",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -303,14 +303,16 @@
                 "string_name_7": "field_val_2",
                 "string_value_7": "",
                 "string_name_8": "field_val_6",
-                "string_value_8": "",
+                "string_value_8": "5f802a7e",
                 "string_name_9": "resource",
                 "string_value_9": "700a0216"
             },
             {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 1,
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 0,
+                "int_name_1": "type",
+                "int_value_1": 1,
                 "bools_count": 3,
                 "bool_name_0": "flip_x",
                 "bool_value_0": false,
@@ -336,8 +338,8 @@
         ]
     },
     "game_object_4": {
-        "uid": "1b162cdd",
-        "parent_uid": "1ffd8c61",
+        "uid": "488b1477",
+        "parent_uid": "6e72634c",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -372,7 +374,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -58.999996185302734,
-                    51.387660980224609
+                    47.328655242919922
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -411,9 +413,11 @@
                 ]
             },
             {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 1,
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 0,
+                "int_name_1": "type",
+                "int_value_1": 1,
                 "bools_count": 3,
                 "bool_name_0": "flip_x",
                 "bool_value_0": false,
@@ -439,8 +443,8 @@
         ]
     },
     "game_object_5": {
-        "uid": "1b162cdd",
-        "parent_uid": "1ffd8c61",
+        "uid": "385f0ff7",
+        "parent_uid": "6e72634c",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -475,7 +479,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     58.999996185302734,
-                    51.387660980224609
+                    47.328655242919922
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -514,9 +518,11 @@
                 ]
             },
             {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 1,
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 0,
+                "int_name_1": "type",
+                "int_value_1": 1,
                 "bools_count": 3,
                 "bool_name_0": "flip_x",
                 "bool_value_0": false,
@@ -542,8 +548,8 @@
         ]
     },
     "game_object_6": {
-        "uid": "1b162cdd",
-        "parent_uid": "1ffd8c61",
+        "uid": "1e6c600f",
+        "parent_uid": "6e72634c",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -578,7 +584,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     58.999996185302734,
-                    -51.387660980224609
+                    -47.328655242919922
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -617,9 +623,11 @@
                 ]
             },
             {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 1,
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 0,
+                "int_name_1": "type",
+                "int_value_1": 1,
                 "bools_count": 3,
                 "bool_name_0": "flip_x",
                 "bool_value_0": false,
@@ -645,8 +653,8 @@
         ]
     },
     "game_object_7": {
-        "uid": "1b162cdd",
-        "parent_uid": "1ffd8c61",
+        "uid": "3f29cbdc",
+        "parent_uid": "6e72634c",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -681,7 +689,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -58.999996185302734,
-                    -51.387660980224609
+                    -47.328655242919922
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -723,9 +731,11 @@
                 ]
             },
             {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 1,
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 0,
+                "int_name_1": "type",
+                "int_value_1": 1,
                 "bools_count": 3,
                 "bool_name_0": "flip_x",
                 "bool_value_0": false,

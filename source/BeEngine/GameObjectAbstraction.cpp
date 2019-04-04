@@ -7,6 +7,7 @@
 #include "ComponentTransfrom.h"
 #include "ModuleFileSystem.h"
 #include "Functions.h"
+#include "Functions.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -35,6 +36,8 @@ void GameObjectAbstraction::Abstract(const std::vector<GameObject*>& to_abstract
 	while (all_to_abstract.size() > 0)
 	{
 		GameObject* curr_go = *all_to_abstract.begin();
+
+		curr_go->uid = GetUIDRandomHexadecimal();
 
 		go_indexed.push_back(curr_go);
 

@@ -95,6 +95,8 @@ void ComponentSpriteRenderer::CleanUp()
 
 void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
 {
+	abs.AddInt("layer", layer);
+
 	abs.AddFloat2("size", size);
 
 	if(resource_texture != nullptr)
@@ -109,6 +111,8 @@ void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
 
 void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
 {
+	layer = abs.GetInt("layer");
+
 	size = abs.GetFloat2("size", float2(10, 10));
 
 	std::string resource_uid = abs.GetString("resource");

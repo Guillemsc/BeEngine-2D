@@ -22,6 +22,7 @@ class GameObject : public BeObject
 	friend class ScriptingItemGameObject;
 	friend class ResourcePrefab;
 	friend class Scene;
+	friend class GameObjectAbstraction;
 
 private:
 	void operator delete(void *) {}
