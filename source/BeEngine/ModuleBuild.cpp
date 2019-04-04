@@ -68,16 +68,16 @@ void ModuleBuild::SetResourceSceneToLoad(ResourceScene* scene)
 	
 	std::string project_file = App->project->GetCurrProjectFilePath();
 
-	std::string scene_uid = "";
+	scene_to_load = "";
 
 	if (scene != nullptr)
-		scene_uid = scene->GetUID();
+		scene_to_load = scene->GetUID();
 	
 	JSON_Doc* doc = App->json->LoadJSON(project_file.c_str());
 
 	if (doc != nullptr)
 	{
-		doc->SetString("build.scene", scene_uid.c_str());
+		doc->SetString("build.scene", scene_to_load.c_str());
 
 		doc->Save();
 

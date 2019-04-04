@@ -318,10 +318,13 @@ void Application::SaveConfig(Module* module)
 	{
 		config->MoveToRoot();
 
-		config->SetString("app.title", App->GetAppName());
-		config->SetString("app.organization", App->GetAppOrganization());
-		config->SetNumber("app.max_fps", App->GetMaxFps());
-		config->SetString("app.version", App->GetVersion());
+		if (state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
+		{
+			config->SetString("app.title", App->GetAppName());
+			config->SetString("app.organization", App->GetAppOrganization());
+			config->SetNumber("app.max_fps", App->GetMaxFps());
+			config->SetString("app.version", App->GetVersion());
+		}
 
 		for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend(); ++it)
 		{
