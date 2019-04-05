@@ -72,9 +72,6 @@ bool ModuleRenderer::Awake()
 		if (SDL_GL_SetSwapInterval(App->window->GetVsync()) < 0)
 			INTERNAL_LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
-		//fbo_texture = new FBO();
-		//fbo_texture->Create(App->window->GetWindowSize().x, App->window->GetWindowSize().y);
-
 		// Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();

@@ -37,12 +37,11 @@ void ResourcePrefab::ExportToLibrary(std::string uid)
 {
 	std::string library_path = App->resource->GetLibraryPathFromResourceType(GetType());
 
-	std::string filepath = library_path + uid + ".prefab";
-
 	std::string resultant_filepath;
 	if (App->file_system->FileCopyPaste(GetAssetFilepath(), library_path, true, resultant_filepath))
 	{
 		std::string new_filepath = library_path + uid + ".prefab";
+
 		if (App->file_system->FileExists(new_filepath))
 			App->file_system->FileDelete(new_filepath);
 

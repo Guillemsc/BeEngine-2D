@@ -45,6 +45,7 @@ bool ModuleResource::Awake()
 	AddResourceName(ResourceType::RESOURCE_TYPE_SCRIPT, "script");
 	AddResourceName(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");
 	AddResourceName(ResourceType::RESOURCE_TYPE_SCENE, "scene");
+	AddResourceName(ResourceType::RESOURCE_TYPE_FONT, "font");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "png");
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "jpg");
@@ -58,6 +59,9 @@ bool ModuleResource::Awake()
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_SCENE, "scene");
 	AddLibraryExtension(ResourceType::RESOURCE_TYPE_SCENE, "scene");
+
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_FONT, "ttf");
+	AddLibraryExtension(ResourceType::RESOURCE_TYPE_FONT, "ttf");
 
 	return ret;
 }

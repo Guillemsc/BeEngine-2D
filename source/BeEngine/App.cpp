@@ -24,6 +24,7 @@
 #include "ModulePhysics.h"
 #include "ModuleUI.h"
 #include "ModuleBuild.h"
+#include "ModuleText.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -68,6 +69,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	scene		   = new ModuleScene();
 	ui			   = new ModuleUI();
 	build		   = new ModuleBuild();
+	text		   = new ModuleText();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -97,6 +99,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(gameobject, "Module GameObject");
 	AddModule(scene, "Module Scene");
 	AddModule(guizmo, "Module Guizmo");
+	AddModule(text, "Module Text");
 	AddModule(state, "Module State");
 	AddModule(build, "Module Build");
 }

@@ -66,7 +66,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>Box2D\Box2D;..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>FreeType\include;Box2D\Box2D;..\Resources\mono\include\mono-2.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
@@ -143,6 +143,7 @@
     <ClInclude Include="ModuleSceneRenderer.h" />
     <ClInclude Include="ModuleScripting.h" />
     <ClInclude Include="ModuleState.h" />
+    <ClInclude Include="ModuleText.h" />
     <ClInclude Include="ModuleUI.h" />
     <ClInclude Include="PhysicsBody.h" />
     <ClInclude Include="PhysicsPolygonGuizmo.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceFont.h" />
     <ClInclude Include="ResourcePrefab.h" />
     <ClInclude Include="ResourceScene.h" />
     <ClInclude Include="ResourceScript.h" />
@@ -333,6 +335,7 @@
     <ClCompile Include="ModuleSceneRenderer.cpp" />
     <ClCompile Include="ModuleScripting.cpp" />
     <ClCompile Include="ModuleState.cpp" />
+    <ClCompile Include="ModuleText.cpp" />
     <ClCompile Include="ModuleUI.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsPolygonGuizmo.cpp" />
@@ -347,6 +350,7 @@
     <ClCompile Include="QuadRenderer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceFont.cpp" />
     <ClCompile Include="ResourcePrefab.cpp" />
     <ClCompile Include="ResourceScene.cpp" />
     <ClCompile Include="ResourceScript.cpp" />

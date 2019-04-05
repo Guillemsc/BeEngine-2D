@@ -32,6 +32,7 @@ class ModuleScene;
 class ModulePhysics;
 class ModuleUI;
 class ModuleBuild;
+class ModuleText;
 
 class Profiler;
 class Project;
@@ -119,6 +120,7 @@ public:
 	ModulePhysics*		  physics = nullptr;
 	ModuleUI*			  ui = nullptr;
 	ModuleBuild*		  build = nullptr;
+	ModuleText*		      text = nullptr;
 
 	Profiler*			  profiler = nullptr;
 

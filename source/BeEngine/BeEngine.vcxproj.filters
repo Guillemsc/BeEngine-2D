@@ -702,6 +702,12 @@
     <ClInclude Include="ScriptingBridgeTime.h">
       <Filter>Sources\8. Scripting ==============\Bridges\Time</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleText.h">
+      <Filter>Sources\3. Modules ==============</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceFont.h">
+      <Filter>Sources\7. Resources =============</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1165,6 +1171,12 @@
     </ClCompile>
     <ClCompile Include="ScriptingBridgeTime.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleText.cpp">
+      <Filter>Sources\3. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceFont.cpp">
+      <Filter>Sources\7. Resources =============</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
