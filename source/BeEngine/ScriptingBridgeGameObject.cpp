@@ -228,8 +228,13 @@ MonoObject* ScriptingBridgeGameObject::GetComponent(MonoObject * mono_object, Mo
 
 		ComponentType type = App->gameobject->GetComponentTypeByComponentScriptingName(type_name);
 
-		GameObjectComponent* comp = go->GetComponent(type, index);
-
+		GameObjectComponent* comp = nullptr;
+		
+		comp = go->GetComponent(type, index);
+		
+		if(comp == nullptr)
+			comp = (GameObjectComponent*)go->GetComponentScript(type_name, index);
+		
 		if (comp != nullptr)
 		{
 			ScriptingClassInstance* ins = comp->GetScriptingBridge()->GetInstance();

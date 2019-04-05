@@ -25,7 +25,7 @@ public:
 	void OnSaveConfig(JSON_Doc* config);
 
 	void RenderGuizmos();
-	void RenderSelectedGameObjectGuizmos(float relative_size);
+	void RenderGameObjectGuizmos(float relative_size);
 	void RenderAllPhysicsGuizmos(float relative_size);
 	void RenderAllUIHandlerGuizmos(float relative_size);
 

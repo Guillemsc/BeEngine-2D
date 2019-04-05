@@ -183,22 +183,27 @@ void ModuleGuizmo::RenderGuizmos()
 		}
 	}
 
-	RenderSelectedGameObjectGuizmos(relative_size);
+	RenderGameObjectGuizmos(relative_size);
 	RenderAllPhysicsGuizmos(relative_size);
 	RenderAllUIHandlerGuizmos(relative_size);
 }
 
-void ModuleGuizmo::RenderSelectedGameObjectGuizmos(float relative_size)
+void ModuleGuizmo::RenderGameObjectGuizmos(float relative_size)
 {
-	if (App->gameobject->GetSelectedGameObjectsCount() == 1)
+	std::vector<GameObject*> gos = App->gameobject->GetGameObjects();
+	
+	for (std::vector<GameObject*>::iterator it = gos.begin(); it != gos.end(); ++it)
 	{
-		GameObject* selected = App->gameobject->GetSelectedGameObjects()[0];
+		std::vector<GameObjectComponent*> components = (*it)->GetComponents();
 
-		std::vector<GameObjectComponent*> components = selected->GetComponents();
-
-		for (std::vector<GameObjectComponent*>::iterator it = components.begin(); it != components.end(); ++it)
+		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
 		{
-			(*it)->RenderGuizmos(relative_size);
+			(*co)->RenderGuizmos(relative_size);
+
+			if ((*it)->GetSelected())
+			{
+				(*co)->RenderSelectedGuizmos(relative_size);
+			}
 		}
 	}
 }
@@ -217,7 +222,7 @@ void ModuleGuizmo::RenderAllPhysicsGuizmos(float relative_size)
 			{
 				if ((*com)->GetGroup() == ComponentGroup::PHYSICS)
 				{
-					(*com)->RenderGuizmos(relative_size);
+					(*com)->RenderSelectedGuizmos(relative_size);
 				}
 			}
 		}

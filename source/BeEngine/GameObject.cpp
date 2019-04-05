@@ -438,6 +438,33 @@ GameObjectComponent * GameObject::GetComponent(ComponentType type, int index) co
 	return ret;
 }
 
+ComponentScript * GameObject::GetComponentScript(std::string script_name, int index)
+{
+	ComponentScript* ret = nullptr;
+
+	int counter = 0;
+	for (std::vector<GameObjectComponent*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		if ((*it)->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
+		{
+			ComponentScript* c_script = (ComponentScript*)(*it);
+
+			if (c_script->GetName().compare(script_name))
+			{
+				if (counter == index)
+				{
+					ret = c_script;
+					break;
+				}
+
+				++counter;
+			}
+		}
+	}
+
+	return ret;
+}
+
 bool GameObject::GetSelected() const
 {
 	return selected;

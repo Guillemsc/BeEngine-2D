@@ -4,33 +4,74 @@ using BeEngine;
 
 public class BallMovement : ComponentScript 
 {
+    public enum BallDirection
+    {
+        DIRECTION_LEFT,
+        DIRECTION_RIGHT,
+    }
+
 	public override void Start () 
 	{
         game_object.SuscribeToOnCollisionEnter(OnCollisionEnter);
 
-        curr_angle = Random.Range(0.0f, 180.0f);
-        curr_dir = 1;
-
+        ResetBall(BallDirection.DIRECTION_LEFT);
     }
 	
 	public override void Update () 
 	{
-        float speed = Time.DeltaTime * ball_speed;
-       
-       float angle_radiants = curr_angle * 0.0174532925199432957f;
+        if (can_move)
+        {
+            float speed = Time.DeltaTime * ball_speed;
 
-       float add_x = (float)System.Math.Sin(angle_radiants) * speed;
-       float add_y = (float)System.Math.Cos(angle_radiants) * speed;
+            float angle_radiants = curr_angle * 0.0174532925199432957f;
 
-       float2 position_addition = new float2(add_x, add_y);
+            float add_x = (float)System.Math.Sin(angle_radiants) * speed;
+            float add_y = (float)System.Math.Cos(angle_radiants) * speed;
 
-       Debug.LOG(curr_angle.ToString());
+            float2 position_addition = new float2(add_x, add_y);
 
-       game_object.Transform.Position = new float2(game_object.Transform.Position.x - position_addition.x, 
-           game_object.Transform.Position.y + position_addition.y);
-             
+            Debug.LOG(curr_angle.ToString());
 
-        Debug.LOG(curr_angle.ToString());
+            game_object.Transform.Position = new float2(game_object.Transform.Position.x - position_addition.x,
+                game_object.Transform.Position.y + position_addition.y);
+        }
+    }
+
+    public void SetSpeed(float speed)
+    {
+        ball_speed = speed;
+    }
+
+    public void ResetBall(BallDirection dir)
+    {
+        game_object.Transform.Position = new float2(0, 0);
+
+        switch (dir)
+        {
+            case BallDirection.DIRECTION_LEFT:
+                {
+                    curr_angle = Random.Range(30.0f, 150.0f);
+                    curr_dir = 1;
+
+                    break;
+                }
+            case BallDirection.DIRECTION_RIGHT:
+                {
+                    curr_angle = Random.Range(-30.0f, -150.0f);
+                    curr_dir = 2;
+                    break;
+                }
+        }
+    }
+
+    public void StartMoving()
+    {
+        can_move = true;
+    }
+
+    public void StopMoving()
+    {
+        can_move = false;
     }
 
     private void OnCollisionEnter(Collision coll)
@@ -39,7 +80,7 @@ public class BallMovement : ComponentScript
         {            
             if (curr_dir == 1)
             {
-                curr_angle = Random.Range(0.0f, -180.0f);
+                curr_angle = Random.Range(-40.0f, -140.0f);
                 curr_dir = 2;
 
                 bottom_disabled = false;
@@ -51,7 +92,7 @@ public class BallMovement : ComponentScript
         {           
            if (curr_dir == 2)
            {
-               curr_angle = Random.Range(0.0f, 180.0f);
+               curr_angle = Random.Range(40.0f, 140.0f);
                curr_dir = 1;
 
                bottom_disabled = false;
@@ -96,17 +137,19 @@ public class BallMovement : ComponentScript
         }
     }
 
-    public float ball_speed = 0.0f;
-
     public GameObject player_1;
     public GameObject player_2;
 
     public GameObject boundaries_up;
     public GameObject boundaries_down;
 
+    private float ball_speed = 0.0f;
+
     private int curr_dir = 1;
     private float curr_angle = 0;
 
     private bool top_disabled = false;
     private bool bottom_disabled = false;
+
+    private bool can_move = false;
 }

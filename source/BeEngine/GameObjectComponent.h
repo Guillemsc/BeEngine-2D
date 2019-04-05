@@ -66,6 +66,7 @@ public:
 	virtual void OnOwnerDeSelected() {};
 
 	virtual void RenderGuizmos(float relative_size) {};
+	virtual void RenderSelectedGuizmos(float relative_size) {}
 
 	GameObject* GetOwner() const;
 

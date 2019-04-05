@@ -282,39 +282,53 @@ void ModuleEditor::DrawEditorWindows()
 					curr_window->window_pos = float2(win_pos.x, win_pos.y);
 					curr_window->window_size = float2(win_size.x, win_size.y);
 
+					ImGui::SameLine();
+
+				/*	if (ImGui::Button("Maximize window"))
+					{
+						curr_window->full_screen = true;
+					}*/
+
 					if (draw_editor)
 						curr_window->DrawEditor();
 				}
 
 				ImGui::EndDock();
 			}
+			else
+			{
+				ImGuiWindowFlags flags = 0;
 
-			/*	else
+				flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
+					| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings
+					| ImGuiWindowFlags_NoTitleBar;
+
+				float2 screen_size = App->window->GetWindowSize();
+
+				float4 offset = float4(0, 0, 0, 0);
+
+				bool opened = true;
+
+				ImGui::SetNextWindowPos(ImVec2(offset.x, offset.y));
+				ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y + offset.w));
+				if (ImGui::BeginDock(curr_window->name.c_str(), &opened, flags, ImVec2(screen_size.x + offset.z, screen_size.y + offset.w)))
 				{
-					flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
-						| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings
-						| ImGuiWindowFlags_NoTitleBar;
-
-					float2 screen_size = App->window->GetWindowSize();
-
-					float4 offset = float4(-8, -33, 16, 37);
-
-					ImGui::SetNextWindowPos(ImVec2(offset.x, offset.y));
-					ImGui::SetNextWindowSize(ImVec2((screen_size.x + offset.z), screen_size.y + offset.w));
-					if (ImGui::Begin(curr_window->name.c_str(), &curr_window->opened, flags))
+					if (ImGui::Button("Minimize window"))
 					{
-						ImVec2 win_pos = ImGui::GetWindowPos();
-						ImVec2 win_size = ImGui::GetWindowSize();
-
-						curr_window->window_pos = float2(win_pos.x, win_pos.y);
-						curr_window->window_size = float2(win_size.x, win_size.y);
-
-						if (draw_editor)
-							curr_window->DrawEditor();
-
-						ImGui::End();
+						curr_window->full_screen = false;
 					}
-				}*/
+
+					ImVec2 win_pos = ImGui::GetWindowPos();
+					ImVec2 win_size = ImGui::GetWindowSize();
+
+					curr_window->window_pos = float2(win_pos.x, win_pos.y);
+					curr_window->window_size = float2(win_size.x, win_size.y);
+
+					curr_window->DrawEditor();
+				}
+
+				ImGui::EndDock();
+			}
 
 			(*it)->prof_draw->Finish();
 		}
@@ -333,11 +347,13 @@ void ModuleEditor::DrawGameWindowInBuildMode()
 
 	flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
 		| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings
-		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
+		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar 
+		| ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoInputs 
+		| ImGuiWindowFlags_NoScrollWithMouse;
 
 	float2 screen_size = App->window->GetWindowSize();
 
-	float4 offset = float4(-8, -23, 17, 23);
+	float4 offset = float4(-8, -26, 17, 27);
 
 	bool opened = true;
 

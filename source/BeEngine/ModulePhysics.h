@@ -57,6 +57,9 @@ private:
 	std::vector<PhysicsBody*> bodies;
 	std::vector<PhysicsShape*> shapes;
 
+	std::vector<b2Contact*> begin_contacts;
+	std::vector<b2Contact*> end_contacts;
+
 private:
 	b2World* b2world = nullptr;
 };

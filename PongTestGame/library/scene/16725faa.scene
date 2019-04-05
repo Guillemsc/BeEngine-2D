@@ -1,7 +1,7 @@
 {
-    "game_objects_count": 12,
+    "game_objects_count": 14,
     "game_object_0": {
-        "uid": "1b60805b",
+        "uid": "777b01af",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -56,7 +56,7 @@
         ]
     },
     "game_object_1": {
-        "uid": "409f7268",
+        "uid": "77c68468",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -115,7 +115,7 @@
                 "bool_value_2": true,
                 "strings_count": 1,
                 "string_name_0": "resource",
-                "string_value_0": "7e0c919",
+                "string_value_0": "5dc136d4",
                 "floats2_count": 1,
                 "float2_name_0": "size",
                 "float2_value_0": [
@@ -132,25 +132,44 @@
                 ]
             },
             {
-                "ints_count": 3,
+                "ints_count": 6,
                 "int_name_0": "field_type_0",
                 "int_value_0": 5,
-                "int_name_1": "fields_count",
-                "int_value_1": 1,
-                "int_name_2": "type",
-                "int_value_2": 2,
-                "strings_count": 3,
+                "int_name_1": "field_type_1",
+                "int_value_1": 2,
+                "int_name_2": "field_type_2",
+                "int_value_2": 5,
+                "int_name_3": "field_type_3",
+                "int_value_3": 5,
+                "int_name_4": "fields_count",
+                "int_value_4": 4,
+                "int_name_5": "type",
+                "int_value_5": 2,
+                "floats_count": 1,
+                "float_name_0": "field_val_1",
+                "float_value_0": 103,
+                "strings_count": 8,
                 "string_name_0": "field_name_0",
                 "string_value_0": "ball",
-                "string_name_1": "field_val_0",
-                "string_value_1": "218ee4ac",
-                "string_name_2": "resource",
-                "string_value_2": "325e15ba"
+                "string_name_1": "field_name_1",
+                "string_value_1": "wall_speed",
+                "string_name_2": "field_name_2",
+                "string_value_2": "left_score",
+                "string_name_3": "field_name_3",
+                "string_value_3": "right_score",
+                "string_name_4": "field_val_0",
+                "string_value_4": "7f23279e",
+                "string_name_5": "field_val_2",
+                "string_value_5": "2c9680f",
+                "string_name_6": "field_val_3",
+                "string_value_6": "528a1281",
+                "string_name_7": "resource",
+                "string_value_7": "4b905891"
             }
         ]
     },
     "game_object_2": {
-        "uid": "78f7ab99",
+        "uid": "6f1be40c",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -208,7 +227,7 @@
                 "int_value_4": 2,
                 "floats_count": 1,
                 "float_name_0": "field_val_0",
-                "float_value_0": 100,
+                "float_value_0": 50,
                 "strings_count": 6,
                 "string_name_0": "field_name_0",
                 "string_value_0": "player_speed",
@@ -217,11 +236,11 @@
                 "string_name_2": "field_name_2",
                 "string_value_2": "max_bottom_pos",
                 "string_name_3": "field_val_1",
-                "string_value_3": "13ede42a",
+                "string_value_3": "4897f842",
                 "string_name_4": "field_val_2",
-                "string_value_4": "5a6eafe5",
+                "string_value_4": "4d2d8e4b",
                 "string_name_5": "resource",
-                "string_value_5": "270291fd"
+                "string_value_5": "64842a9"
             },
             {
                 "ints_count": 1,
@@ -280,7 +299,7 @@
         ]
     },
     "game_object_3": {
-        "uid": "54663bb0",
+        "uid": "67ac0e9f",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -379,7 +398,7 @@
                 "int_value_4": 2,
                 "floats_count": 1,
                 "float_name_0": "field_val_0",
-                "float_value_0": 100,
+                "float_value_0": 50,
                 "strings_count": 6,
                 "string_name_0": "field_name_0",
                 "string_value_0": "player_speed",
@@ -388,16 +407,16 @@
                 "string_name_2": "field_name_2",
                 "string_value_2": "max_bottom_pos",
                 "string_name_3": "field_val_1",
-                "string_value_3": "13ede42a",
+                "string_value_3": "4897f842",
                 "string_name_4": "field_val_2",
-                "string_value_4": "5a6eafe5",
+                "string_value_4": "4d2d8e4b",
                 "string_name_5": "resource",
-                "string_value_5": "270291fd"
+                "string_value_5": "64842a9"
             }
         ]
     },
     "game_object_4": {
-        "uid": "218ee4ac",
+        "uid": "7f23279e",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -495,45 +514,38 @@
                 ]
             },
             {
-                "ints_count": 7,
+                "ints_count": 6,
                 "int_name_0": "field_type_0",
-                "int_value_0": 2,
+                "int_value_0": 5,
                 "int_name_1": "field_type_1",
                 "int_value_1": 5,
                 "int_name_2": "field_type_2",
                 "int_value_2": 5,
                 "int_name_3": "field_type_3",
                 "int_value_3": 5,
-                "int_name_4": "field_type_4",
-                "int_value_4": 5,
-                "int_name_5": "fields_count",
-                "int_value_5": 5,
-                "int_name_6": "type",
-                "int_value_6": 2,
-                "floats_count": 1,
-                "float_name_0": "field_val_0",
-                "float_value_0": 64,
-                "strings_count": 10,
+                "int_name_4": "fields_count",
+                "int_value_4": 4,
+                "int_name_5": "type",
+                "int_value_5": 2,
+                "strings_count": 9,
                 "string_name_0": "field_name_0",
-                "string_value_0": "ball_speed",
+                "string_value_0": "player_1",
                 "string_name_1": "field_name_1",
-                "string_value_1": "player_1",
+                "string_value_1": "player_2",
                 "string_name_2": "field_name_2",
-                "string_value_2": "player_2",
+                "string_value_2": "boundaries_up",
                 "string_name_3": "field_name_3",
-                "string_value_3": "boundaries_up",
-                "string_name_4": "field_name_4",
-                "string_value_4": "boundaries_down",
+                "string_value_3": "boundaries_down",
+                "string_name_4": "field_val_0",
+                "string_value_4": "6f1be40c",
                 "string_name_5": "field_val_1",
-                "string_value_5": "78f7ab99",
+                "string_value_5": "67ac0e9f",
                 "string_name_6": "field_val_2",
-                "string_value_6": "54663bb0",
+                "string_value_6": "566ee3f0",
                 "string_name_7": "field_val_3",
-                "string_value_7": "671bfa3",
-                "string_name_8": "field_val_4",
-                "string_value_8": "60a51ca8",
-                "string_name_9": "resource",
-                "string_value_9": "57afafa7"
+                "string_value_7": "55e8d628",
+                "string_name_8": "resource",
+                "string_value_8": "7268e010"
             },
             {
                 "ints_count": 2,
@@ -551,7 +563,7 @@
         ]
     },
     "game_object_5": {
-        "uid": "13ede42a",
+        "uid": "4897f842",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -587,7 +599,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     0,
-                    26
+                    24.481000900268555
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -598,7 +610,7 @@
         ]
     },
     "game_object_6": {
-        "uid": "5a6eafe5",
+        "uid": "4d2d8e4b",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -634,7 +646,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     0,
-                    -26
+                    -24.481000900268555
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -645,7 +657,7 @@
         ]
     },
     "game_object_7": {
-        "uid": "671bfa3",
+        "uid": "566ee3f0",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -733,7 +745,7 @@
         ]
     },
     "game_object_8": {
-        "uid": "60a51ca8",
+        "uid": "55e8d628",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -821,8 +833,184 @@
         ]
     },
     "game_object_9": {
-        "uid": "60d5f623",
-        "parent_uid": "78f7ab99",
+        "uid": "2c9680f",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "LeftScore",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    -73.647285461425781,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 5,
+                "bools_count": 1,
+                "bool_name_0": "is_sensor",
+                "bool_value_0": false,
+                "floats_count": 2,
+                "float_name_0": "density",
+                "float_value_0": 1,
+                "float_name_1": "friction",
+                "float_value_1": 0.30000001192092896,
+                "floats2_vector_count": 1,
+                "floats2_vector_name_0": "vertices",
+                "floats2_vector_value_0": [
+                    {
+                        "number2": [
+                            -5.9000000953674316,
+                            11.199999809265137
+                        ]
+                    },
+                    {
+                        "number2": [
+                            -6.5,
+                            -10.399999618530273
+                        ]
+                    },
+                    {
+                        "number2": [
+                            10,
+                            -51.5
+                        ]
+                    },
+                    {
+                        "number2": [
+                            10,
+                            51.799999237060547
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "game_object_10": {
+        "uid": "528a1281",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "RightScore",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    80.461105346679688,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 5,
+                "bools_count": 1,
+                "bool_name_0": "is_sensor",
+                "bool_value_0": false,
+                "floats_count": 2,
+                "float_name_0": "density",
+                "float_value_0": 1,
+                "float_name_1": "friction",
+                "float_value_1": 0.30000001192092896,
+                "floats2_vector_count": 1,
+                "floats2_vector_name_0": "vertices",
+                "floats2_vector_value_0": [
+                    {
+                        "number2": [
+                            -7.8000001907348633,
+                            11.199999809265137
+                        ]
+                    },
+                    {
+                        "number2": [
+                            -7.8000001907348633,
+                            -11.399999618530273
+                        ]
+                    },
+                    {
+                        "number2": [
+                            -16.700000762939453,
+                            -51.5
+                        ]
+                    },
+                    {
+                        "number2": [
+                            -16.700000762939453,
+                            51.799999237060547
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "game_object_11": {
+        "uid": "a4f1f77",
+        "parent_uid": "6f1be40c",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -861,8 +1049,8 @@
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
-                    1.9999574422836304,
-                    0.99997878074645996
+                    1.9999548196792603,
+                    0.9999774694442749
                 ]
             },
             {
@@ -880,7 +1068,7 @@
                 "bool_value_2": true,
                 "strings_count": 1,
                 "string_name_0": "resource",
-                "string_value_0": "3c24833d",
+                "string_value_0": "2d3d62ef",
                 "floats2_count": 1,
                 "float2_name_0": "size",
                 "float2_value_0": [
@@ -898,9 +1086,9 @@
             }
         ]
     },
-    "game_object_10": {
-        "uid": "7c49fc9d",
-        "parent_uid": "54663bb0",
+    "game_object_12": {
+        "uid": "26ec2680",
+        "parent_uid": "67ac0e9f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -939,8 +1127,8 @@
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
-                    1.9998756647109985,
-                    0.99995696544647217
+                    1.9998730421066284,
+                    0.99995565414428711
                 ]
             },
             {
@@ -958,7 +1146,7 @@
                 "bool_value_2": true,
                 "strings_count": 1,
                 "string_name_0": "resource",
-                "string_value_0": "2589d722",
+                "string_value_0": "204059f6",
                 "floats2_count": 1,
                 "float2_name_0": "size",
                 "float2_value_0": [
@@ -976,9 +1164,9 @@
             }
         ]
     },
-    "game_object_11": {
-        "uid": "500c66eb",
-        "parent_uid": "218ee4ac",
+    "game_object_13": {
+        "uid": "1a533008",
+        "parent_uid": "7f23279e",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1036,7 +1224,7 @@
                 "bool_value_2": true,
                 "strings_count": 1,
                 "string_name_0": "resource",
-                "string_value_0": "24665ed0",
+                "string_value_0": "20a7063d",
                 "floats2_count": 1,
                 "float2_name_0": "size",
                 "float2_value_0": [

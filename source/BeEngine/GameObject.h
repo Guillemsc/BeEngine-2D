@@ -13,6 +13,7 @@ class ScriptingBridgeGameObject;
 class ResourcePrefab;
 class Event;
 class Scene;
+class ComponentScript;
 
 class GameObject : public BeObject
 {
@@ -67,6 +68,7 @@ public:
 	std::vector<GameObjectComponent*> GetComponents() const;
 	GameObjectComponent* GetComponent(ComponentType type) const;
 	GameObjectComponent* GetComponent(ComponentType type, int index) const;
+	ComponentScript* GetComponentScript(std::string script_name, int index);
 
 	bool GetSelected() const;
 

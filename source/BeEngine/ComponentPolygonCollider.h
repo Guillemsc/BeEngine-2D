@@ -40,6 +40,7 @@ public:
 	void OnOwnerDeSelected();
 
 	void RenderGuizmos(float relative_size);
+	void RenderSelectedGuizmos(float relative_size);
 
 	PhysicsShapePolygon* GetPhysicsShapePolygon() const;
 

@@ -178,6 +178,11 @@ void ComponentPolygonCollider::OnOwnerDeSelected()
 
 void ComponentPolygonCollider::RenderGuizmos(float relative_size)
 {
+
+}
+
+void ComponentPolygonCollider::RenderSelectedGuizmos(float relative_size)
+{
 	if (App->guizmo->physics_polygon_guizmo->GetEditingComponent() != this)
 	{
 		App->scene_renderer->line_renderer->SetZPos(App->scene_renderer->layer_space_guizmos.GetLayerValue(99));

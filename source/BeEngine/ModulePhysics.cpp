@@ -94,17 +94,7 @@ void ModulePhysics::BeginContact(b2Contact * contact)
 {
 	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 	{
-		PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
-		PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
-
-		ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
-		ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
-
-		ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
-		ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
-
-		bridge_go1->CallOnCollisionEnter(pb2);
-		bridge_go2->CallOnCollisionEnter(pb1);
+		begin_contacts.push_back(contact);
 	}
 }
 
@@ -112,17 +102,7 @@ void ModulePhysics::EndContact(b2Contact * contact)
 {
 	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 	{
-		PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
-		PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
-
-		ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
-		ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
-
-		ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
-		ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
-
-		bridge_go1->CallOnCollisionExit(pb2);
-		bridge_go2->CallOnCollisionExit(pb1);
+		end_contacts.push_back(contact);
 	}
 }
 
@@ -131,6 +111,44 @@ void ModulePhysics::UpdateContacts()
 	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 	{
 		b2world->Step(App->GetDT(), 128, 128);
+
+		for (std::vector<b2Contact*>::iterator it = begin_contacts.begin(); it != begin_contacts.end(); ++it)
+		{
+			b2Contact* contact = (*it);
+
+			PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+			PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+			ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
+			ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
+
+			ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
+			ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
+
+			bridge_go1->CallOnCollisionEnter(pb2);
+			bridge_go2->CallOnCollisionEnter(pb1);
+		}
+
+		begin_contacts.clear();
+
+		for (std::vector<b2Contact*>::iterator it = begin_contacts.begin(); it != begin_contacts.end(); ++it)
+		{
+			b2Contact* contact = (*it);
+
+			PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+			PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+			ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
+			ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
+
+			ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
+			ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
+
+			bridge_go1->CallOnCollisionExit(pb2);
+			bridge_go2->CallOnCollisionExit(pb1);
+		}
+
+		begin_contacts.clear();
 
 		for (b2Contact* c = b2world->GetContactList(); c; c = c->GetNext())
 		{

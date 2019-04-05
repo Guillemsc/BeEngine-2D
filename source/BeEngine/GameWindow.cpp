@@ -2,6 +2,7 @@
 #include "App.h"
 #include "ModuleCamera.h"
 #include "ModuleEvent.h"
+#include "ModuleState.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -31,7 +32,7 @@ void GameWindow::DrawEditor()
 	float2 window_pos = GetWindowPos();
 
 	float2 image_pos = float2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y);
-	float2 image_size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+	float2 image_size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y - 5);
 
 	if (use_reference_size && !full_screen)
 	{
@@ -75,7 +76,7 @@ void GameWindow::DrawEditor()
 	if (game_camera != nullptr)
 	{
 		ImGui::SetCursorPos(ImVec2(image_pos.x, image_pos.y));
-		ImGui::Image((void*)game_camera->GetTextId(), { image_size.x, image_size.y }, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((void*)game_camera->GetTextId(), { image_size.x, image_size.y}, ImVec2(0, 1), ImVec2(1, 0));
 	}
 
 	last_game_camera = game_camera;
@@ -84,7 +85,7 @@ void GameWindow::DrawEditor()
 	{
 		if(ImGui::Button("Full Screen Debug"))
 		{
-			full_screen = true;
+			App->state->SetEngineState(EngineState::ENGINE_STATE_BUILD);
 		}
 
 		ImGui::Checkbox("Use reference size", &use_reference_size);
