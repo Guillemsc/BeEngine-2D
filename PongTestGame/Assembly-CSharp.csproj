@@ -94,6 +94,7 @@
     <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Ball\BallMovement.cs" />
     <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\GameManager.cs" />
+    <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Timer.cs" />
     <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\player_movement.cs" />
   </ItemGroup>
   <ItemGroup>

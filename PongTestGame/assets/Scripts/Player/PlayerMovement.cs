@@ -18,11 +18,11 @@ public class PlayerMovement : ComponentScript
     {
         float speed = Time.DeltaTime * player_speed;
 
-        if (Input.KeyRepeat("w"))
+        if (Input.KeyRepeat(move_up))
         {
             game_object.Transform.Position = new float2(game_object.Transform.Position.x, game_object.Transform.Position.y + speed);
         }
-        else if(Input.KeyRepeat("s"))
+        else if(Input.KeyRepeat(move_down))
         {
             game_object.Transform.Position = new float2(game_object.Transform.Position.x, game_object.Transform.Position.y - speed);
         }
@@ -43,4 +43,7 @@ public class PlayerMovement : ComponentScript
 
     public GameObject max_top_pos;
     public GameObject max_bottom_pos;
+
+    public string move_up;
+    public string move_down;
 }

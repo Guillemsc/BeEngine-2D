@@ -1,7 +1,7 @@
 {
     "game_objects_count": 14,
     "game_object_0": {
-        "uid": "777b01af",
+        "uid": "2a71cf53",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -56,7 +56,7 @@
         ]
     },
     "game_object_1": {
-        "uid": "77c68468",
+        "uid": "33b51c8e",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -147,7 +147,7 @@
                 "int_value_5": 2,
                 "floats_count": 1,
                 "float_name_0": "field_val_1",
-                "float_value_0": 103,
+                "float_value_0": 79,
                 "strings_count": 8,
                 "string_name_0": "field_name_0",
                 "string_value_0": "ball",
@@ -158,18 +158,18 @@
                 "string_name_3": "field_name_3",
                 "string_value_3": "right_score",
                 "string_name_4": "field_val_0",
-                "string_value_4": "7f23279e",
+                "string_value_4": "2c4bb3d4",
                 "string_name_5": "field_val_2",
-                "string_value_5": "2c9680f",
+                "string_value_5": "35e8c1d1",
                 "string_name_6": "field_val_3",
-                "string_value_6": "528a1281",
+                "string_value_6": "3468b980",
                 "string_name_7": "resource",
                 "string_value_7": "4b905891"
             }
         ]
     },
     "game_object_2": {
-        "uid": "6f1be40c",
+        "uid": "24ebd6ca",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -214,33 +214,45 @@
                 ]
             },
             {
-                "ints_count": 5,
+                "ints_count": 7,
                 "int_name_0": "field_type_0",
                 "int_value_0": 2,
                 "int_name_1": "field_type_1",
                 "int_value_1": 5,
                 "int_name_2": "field_type_2",
                 "int_value_2": 5,
-                "int_name_3": "fields_count",
+                "int_name_3": "field_type_3",
                 "int_value_3": 3,
-                "int_name_4": "type",
-                "int_value_4": 2,
+                "int_name_4": "field_type_4",
+                "int_value_4": 3,
+                "int_name_5": "fields_count",
+                "int_value_5": 5,
+                "int_name_6": "type",
+                "int_value_6": 2,
                 "floats_count": 1,
                 "float_name_0": "field_val_0",
                 "float_value_0": 50,
-                "strings_count": 6,
+                "strings_count": 10,
                 "string_name_0": "field_name_0",
                 "string_value_0": "player_speed",
                 "string_name_1": "field_name_1",
                 "string_value_1": "max_top_pos",
                 "string_name_2": "field_name_2",
                 "string_value_2": "max_bottom_pos",
-                "string_name_3": "field_val_1",
-                "string_value_3": "4897f842",
-                "string_name_4": "field_val_2",
-                "string_value_4": "4d2d8e4b",
-                "string_name_5": "resource",
-                "string_value_5": "64842a9"
+                "string_name_3": "field_name_3",
+                "string_value_3": "move_up",
+                "string_name_4": "field_name_4",
+                "string_value_4": "move_down",
+                "string_name_5": "field_val_1",
+                "string_value_5": "7414a870",
+                "string_name_6": "field_val_2",
+                "string_value_6": "53bbb136",
+                "string_name_7": "field_val_3",
+                "string_value_7": "w",
+                "string_name_8": "field_val_4",
+                "string_value_8": "s",
+                "string_name_9": "resource",
+                "string_value_9": "64842a9"
             },
             {
                 "ints_count": 1,
@@ -299,7 +311,7 @@
         ]
     },
     "game_object_3": {
-        "uid": "67ac0e9f",
+        "uid": "24fc5c58",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -385,38 +397,50 @@
                 ]
             },
             {
-                "ints_count": 5,
+                "ints_count": 7,
                 "int_name_0": "field_type_0",
                 "int_value_0": 2,
                 "int_name_1": "field_type_1",
                 "int_value_1": 5,
                 "int_name_2": "field_type_2",
                 "int_value_2": 5,
-                "int_name_3": "fields_count",
+                "int_name_3": "field_type_3",
                 "int_value_3": 3,
-                "int_name_4": "type",
-                "int_value_4": 2,
+                "int_name_4": "field_type_4",
+                "int_value_4": 3,
+                "int_name_5": "fields_count",
+                "int_value_5": 5,
+                "int_name_6": "type",
+                "int_value_6": 2,
                 "floats_count": 1,
                 "float_name_0": "field_val_0",
                 "float_value_0": 50,
-                "strings_count": 6,
+                "strings_count": 10,
                 "string_name_0": "field_name_0",
                 "string_value_0": "player_speed",
                 "string_name_1": "field_name_1",
                 "string_value_1": "max_top_pos",
                 "string_name_2": "field_name_2",
                 "string_value_2": "max_bottom_pos",
-                "string_name_3": "field_val_1",
-                "string_value_3": "4897f842",
-                "string_name_4": "field_val_2",
-                "string_value_4": "4d2d8e4b",
-                "string_name_5": "resource",
-                "string_value_5": "64842a9"
+                "string_name_3": "field_name_3",
+                "string_value_3": "move_up",
+                "string_name_4": "field_name_4",
+                "string_value_4": "move_down",
+                "string_name_5": "field_val_1",
+                "string_value_5": "7414a870",
+                "string_name_6": "field_val_2",
+                "string_value_6": "53bbb136",
+                "string_name_7": "field_val_3",
+                "string_value_7": "p",
+                "string_name_8": "field_val_4",
+                "string_value_8": "ñ",
+                "string_name_9": "resource",
+                "string_value_9": "64842a9"
             }
         ]
     },
     "game_object_4": {
-        "uid": "7f23279e",
+        "uid": "2c4bb3d4",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -537,13 +561,13 @@
                 "string_name_3": "field_name_3",
                 "string_value_3": "boundaries_down",
                 "string_name_4": "field_val_0",
-                "string_value_4": "6f1be40c",
+                "string_value_4": "24ebd6ca",
                 "string_name_5": "field_val_1",
-                "string_value_5": "67ac0e9f",
+                "string_value_5": "24fc5c58",
                 "string_name_6": "field_val_2",
-                "string_value_6": "566ee3f0",
+                "string_value_6": "53d29802",
                 "string_name_7": "field_val_3",
-                "string_value_7": "55e8d628",
+                "string_value_7": "96e59b8",
                 "string_name_8": "resource",
                 "string_value_8": "7268e010"
             },
@@ -563,7 +587,7 @@
         ]
     },
     "game_object_5": {
-        "uid": "4897f842",
+        "uid": "7414a870",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -610,7 +634,7 @@
         ]
     },
     "game_object_6": {
-        "uid": "4d2d8e4b",
+        "uid": "53bbb136",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -657,7 +681,7 @@
         ]
     },
     "game_object_7": {
-        "uid": "566ee3f0",
+        "uid": "53d29802",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -745,7 +769,7 @@
         ]
     },
     "game_object_8": {
-        "uid": "55e8d628",
+        "uid": "96e59b8",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -833,7 +857,7 @@
         ]
     },
     "game_object_9": {
-        "uid": "2c9680f",
+        "uid": "35e8c1d1",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -921,7 +945,7 @@
         ]
     },
     "game_object_10": {
-        "uid": "528a1281",
+        "uid": "3468b980",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -1009,8 +1033,8 @@
         ]
     },
     "game_object_11": {
-        "uid": "a4f1f77",
-        "parent_uid": "6f1be40c",
+        "uid": "37ad75b9",
+        "parent_uid": "24ebd6ca",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1049,8 +1073,8 @@
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
-                    1.9999548196792603,
-                    0.9999774694442749
+                    1.999953031539917,
+                    0.99997657537460327
                 ]
             },
             {
@@ -1087,8 +1111,8 @@
         ]
     },
     "game_object_12": {
-        "uid": "26ec2680",
-        "parent_uid": "67ac0e9f",
+        "uid": "6ef97d62",
+        "parent_uid": "24fc5c58",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1127,8 +1151,8 @@
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
-                    1.9998730421066284,
-                    0.99995565414428711
+                    1.9998712539672852,
+                    0.99995476007461548
                 ]
             },
             {
@@ -1165,8 +1189,8 @@
         ]
     },
     "game_object_13": {
-        "uid": "1a533008",
-        "parent_uid": "7f23279e",
+        "uid": "7e295183",
+        "parent_uid": "2c4bb3d4",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,

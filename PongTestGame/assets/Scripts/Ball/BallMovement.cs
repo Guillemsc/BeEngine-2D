@@ -30,8 +30,6 @@ public class BallMovement : ComponentScript
 
             float2 position_addition = new float2(add_x, add_y);
 
-            Debug.LOG(curr_angle.ToString());
-
             game_object.Transform.Position = new float2(game_object.Transform.Position.x - position_addition.x,
                 game_object.Transform.Position.y + position_addition.y);
         }
