@@ -17,7 +17,7 @@ void ScriptingCluster::RegisterInternalCalls()
 		rebuild_internal_calls = false;
 
 		// Debug ------------------------------------
-		mono_add_internal_call("BeEngine.Debug::Log", (const void*)ScriptingBridgeDebug::Log);
+		mono_add_internal_call("BeEngine.Debug::ConsoleLog", (const void*)ScriptingBridgeDebug::Log);
 		// ------------------------------------ Debug
 
 		// Input ------------------------------------
@@ -28,7 +28,7 @@ void ScriptingCluster::RegisterInternalCalls()
 
 		// Time ------------------------------------
 		mono_add_internal_call("BeEngine.Time::GetDeltaTime", (const void*)ScriptingBridgeTime::GetDeltaTime);
-
+		mono_add_internal_call("BeEngine.Time::GetTimeSinceStart", (const void*)ScriptingBridgeTime::GetTimeSinceStart);
 		// ------------------------------------- Time
 
 		// GameObject -------------------------------

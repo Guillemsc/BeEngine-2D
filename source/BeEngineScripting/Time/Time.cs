@@ -16,10 +16,21 @@ namespace BeEngine
             }
         }
 
+        public static float TimeSinceStart
+        {
+            get
+            {
+                return GetTimeSinceStart();
+            }
+        }
+
         // Internal Calls --------------------------------------
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetDeltaTime();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float GetTimeSinceStart();
 
         // -----------------------------------------------------
     }

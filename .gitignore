@@ -15,8 +15,6 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-!source/BeEngine/Box2D/libx86/Release/
-!source/BeEngine/Box2D/libx86/Debug/
 x64/
 x86/
 bld/
@@ -251,7 +249,9 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
-SuStoEngine/Resources/AssimpLog.txt
 
 # Custom BeEngine exceptions
 !source/Resources/mono/**/*
+!source/BeEngine/Box2D/libx86/Release/
+!source/BeEngine/Box2D/libx86/Debug/
+!source/BeEngineScripting/Debug/debug.cs

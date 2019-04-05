@@ -63,6 +63,11 @@ EngineState ModuleState::GetEngineState() const
 	return engine_state;
 }
 
+float ModuleState::GetTimeSinceStartPlaying() const
+{
+	return time_since_start_play.ReadSec();
+}
+
 void ModuleState::ActuallySetEditorState()
 {
 	bool can_update = true;
@@ -90,6 +95,9 @@ void ModuleState::ActuallySetEditorState()
 			{
 				EventEditorGoesToPlay* egp = new EventEditorGoesToPlay();
 				App->event->SendEvent(egp);
+
+				time_since_start_play.Start();
+
 				break;
 			}
 			case EDITOR_UPDATE_STATE_PAUSED:

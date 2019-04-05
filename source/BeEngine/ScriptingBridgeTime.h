@@ -33,6 +33,7 @@ private:
 	// Internal Calls
 
 	static float GetDeltaTime();
+	static float GetTimeSinceStart();
 
 	// --------------
 };

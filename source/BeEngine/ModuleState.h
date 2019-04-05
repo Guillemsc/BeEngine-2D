@@ -2,6 +2,7 @@
 #define __MODULE_STATE_H__
 
 #include "Module.h"
+#include "Timer.h"
 
 enum EditorUpdateState
 {
@@ -32,6 +33,8 @@ public:
 	void SetEngineState(EngineState state);
 	EngineState GetEngineState() const;
 
+	float GetTimeSinceStartPlaying() const;
+
 private:
 	void ActuallySetEditorState();
 
@@ -42,6 +45,8 @@ private:
 	bool needs_to_change_state = false;
 
 	EngineState engine_state = EngineState::ENGINE_STATE_EDITOR;
+
+	Timer time_since_start_play;
 };
 
 #endif // !__MODULE_STATE_H__
