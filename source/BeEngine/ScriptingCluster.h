@@ -58,6 +58,7 @@ public:
 	ScriptingClass* component_sprite_renderer_class = nullptr;
 	ScriptingClass* component_camera_class = nullptr;
 	ScriptingClass* component_canvas_class = nullptr;
+	ScriptingClass* component_text_class = nullptr;
 	ScriptingClass* component_physics_body_class = nullptr;
 	ScriptingClass* component_polygon_collider_class = nullptr;
 

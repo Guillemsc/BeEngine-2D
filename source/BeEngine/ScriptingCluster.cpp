@@ -83,6 +83,7 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentPhysicsBody", component_physics_body_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentPolygonCollider", component_polygon_collider_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentCanvas", component_canvas_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentText", component_text_class);
 
 		// Physics
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Collision", collision_class);
@@ -107,6 +108,8 @@ void ScriptingCluster::CleanUp()
 	RELEASE(component_button_class);
 	RELEASE(component_sprite_renderer_class);
 	RELEASE(component_camera_class);
+	RELEASE(component_text_class);
+	RELEASE(component_canvas_class);
 	RELEASE(component_physics_body_class);
 	RELEASE(component_polygon_collider_class);
 

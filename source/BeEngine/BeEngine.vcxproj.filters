@@ -708,6 +708,15 @@
     <ClInclude Include="ResourceFont.h">
       <Filter>Sources\7. Resources =============</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentText.h">
+      <Filter>Sources\10. SceneObjects ==========\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeComponentText.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticTextRenderer.h">
+      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1177,6 +1186,15 @@
     </ClCompile>
     <ClCompile Include="ResourceFont.cpp">
       <Filter>Sources\7. Resources =============</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentText.cpp">
+      <Filter>Sources\10. SceneObjects ==========\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeComponentText.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticTextRenderer.cpp">
+      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

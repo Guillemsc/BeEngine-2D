@@ -9,6 +9,7 @@
 #include "QuadRenderer.h"
 #include "DinamicTriangleRenderer.h"
 #include "StaticSpriteRenderer.h"
+#include "StaticTextRenderer.h"
 #include "DynamicGridRenderer.h"
 #include "ModuleWindow.h"
 #include "ModuleGuizmo.h"
@@ -36,6 +37,7 @@ bool ModuleSceneRenderer::Awake()
 	triangle_renderer = (DinamicTriangleRenderer*)AddRenderer(new DinamicTriangleRenderer());
 
 	static_sprite_renderer = (StaticSpriteRenderer*)AddRenderer(new StaticSpriteRenderer());
+	static_text_renderer = (StaticTextRenderer*)AddRenderer(new StaticTextRenderer());
 
 	grid_renderer = (DynamicGridRenderer*)AddRenderer(new DynamicGridRenderer());
 

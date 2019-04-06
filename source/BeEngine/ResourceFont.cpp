@@ -8,6 +8,7 @@ ResourceFont::ResourceFont() : Resource(ResourceType::RESOURCE_TYPE_FONT)
 
 void ResourceFont::CleanUp()
 {
+	App->text->UnloadFace(face);
 }
 
 bool ResourceFont::ExistsOnLibrary(std::string uid, std::string & library_filepath)
@@ -50,10 +51,6 @@ void ResourceFont::ImportFromLibrary()
 	if (App->file_system->FileExists(resource_filepath))
 	{
 		App->text->LoadFace(resource_filepath.c_str(), face);
-		if (FT_New_Face(face, "fonts/arial.ttf", 0, &face))
-		{
-
-		}
 	}
 }
 
@@ -72,4 +69,9 @@ void ResourceFont::OnMoveAsset(const char * new_asset_path, const char * last_as
 bool ResourceFont::DrawEditorExplorer()
 {
 	return false;
+}
+
+FT_Face ResourceFont::GetFace() const
+{
+	return face;
 }

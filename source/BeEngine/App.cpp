@@ -82,6 +82,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(thread, "Module Thread");
 	AddModule(time_sliced, "Module TimeSliced");
 	AddModule(json, "Module JSON");
+	AddModule(text, "Module Text");
 	AddModule(window, "Module Window");
 	AddModule(physics, "Module Physics");
 	AddModule(camera, "Module Camera");
@@ -99,7 +100,6 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(gameobject, "Module GameObject");
 	AddModule(scene, "Module Scene");
 	AddModule(guizmo, "Module Guizmo");
-	AddModule(text, "Module Text");
 	AddModule(state, "Module State");
 	AddModule(build, "Module Build");
 }

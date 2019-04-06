@@ -21,9 +21,6 @@ public:
 	void DrawRotatedQuad(const float2& pos, const float2& size, const float angle_degrees, const float3& colour, float alpha = 1.0f);
 
 private:
-
-
-private:
 	ShaderProgram* program = nullptr;
 
 	VertexBuffer quads_vb;

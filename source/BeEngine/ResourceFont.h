@@ -34,6 +34,8 @@ public:
 
 	bool DrawEditorExplorer();
 
+	FT_Face GetFace() const;
+
 private:
 	FT_Face face;
 

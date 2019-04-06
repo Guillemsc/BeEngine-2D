@@ -35,8 +35,9 @@ bool ModuleGameObject::Awake()
 	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer", "ComponentSpriteRenderer");
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script", "ComponentScript");
 	AddComponentType(ComponentType::COMPONENT_TYPE_CAMERA, "Camera", "ComponentCamera");
-	AddComponentType(ComponentType::COMPONENT_TYPE_CANVAS, "UI Canvas", "ComponentCanvas");
-	AddComponentType(ComponentType::COMPONENT_TYPE_BUTTON, "UI Button", "ComponentButton");
+	AddComponentType(ComponentType::COMPONENT_TYPE_CANVAS, "Canvas", "ComponentCanvas");
+	AddComponentType(ComponentType::COMPONENT_TYPE_BUTTON, "Button", "ComponentButton");
+	AddComponentType(ComponentType::COMPONENT_TYPE_TEXT, "Text", "ComponentText");
 	AddComponentType(ComponentType::COMPONENT_TYPE_PHYSICS_BODY, "Physics Body", "ComponentPhysicsBody");
 	AddComponentType(ComponentType::COMPONENT_TYPE_POLYGON_COLLIDER, "Polygon Collider", "ComponentPolygonCollider");
 

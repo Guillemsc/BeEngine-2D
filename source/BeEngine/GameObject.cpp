@@ -16,6 +16,7 @@
 #include "Scene.h"
 #include "ScriptingBridgeGameObject.h"
 #include "ComponentButton.h"
+#include "ComponentText.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -322,6 +323,10 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 
 	case ComponentType::COMPONENT_TYPE_BUTTON:
 		ret = new ComponentButton();
+		break;
+
+	case ComponentType::COMPONENT_TYPE_TEXT:
+		ret = new ComponentText();
 		break;
 
 	default:

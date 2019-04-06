@@ -19,6 +19,7 @@
 #include "ScriptingObjectSolutionManager.h"
 #include "Event.h"
 #include "ModuleAssets.h"
+#include "ResourceFont.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -151,6 +152,12 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 	case ResourceType::RESOURCE_TYPE_SCENE:
 
 		ret = new ResourceScene();
+
+		break;
+
+	case ResourceType::RESOURCE_TYPE_FONT:
+
+		ret = new ResourceFont();
 
 		break;
 

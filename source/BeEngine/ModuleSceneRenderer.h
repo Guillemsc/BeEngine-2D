@@ -9,6 +9,7 @@ class QuadRenderer;
 class DinamicTriangleRenderer;
 class DynamicGridRenderer;
 class StaticSpriteRenderer;
+class StaticTextRenderer;
 class Camera2D;
 
 class LayerSpace
@@ -45,6 +46,7 @@ public:
 	DynamicGridRenderer*	 grid_renderer = nullptr;
 
 	StaticSpriteRenderer*    static_sprite_renderer = nullptr;
+	StaticTextRenderer*      static_text_renderer = nullptr;
 
 public:
 	LayerSpace layer_space_grid;

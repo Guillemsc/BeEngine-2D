@@ -55,6 +55,7 @@
     <Compile Include="GameObject\Components\ComponentScript.cs" />
     <Compile Include="GameObject\Components\ComponentTransform.cs" />
     <Compile Include="GameObject\Components\ComponentSpriteRenderer.cs" />
+    <Compile Include="GameObject\Components\UI\ComponentText.cs" />
     <Compile Include="GameObject\GameObject.cs" />
     <Compile Include="Input\Input.cs" />
     <Compile Include="Math\float2.cs" />

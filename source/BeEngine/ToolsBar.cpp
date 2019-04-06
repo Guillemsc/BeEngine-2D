@@ -42,13 +42,6 @@ void ToolsBar::DrawEditor()
 	{
 		if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 		{
-			if (ImGui::Button("Build"))
-			{
-				App->editor->build_window->SetOpened(true);
-			}
-
-			ImGui::SameLine();
-
 			if(ImGui::Button("Play"))
 			{
 				App->state->SetEditorUpdateState(EditorUpdateState::EDITOR_UPDATE_STATE_PLAY);

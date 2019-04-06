@@ -50,52 +50,52 @@
     </Reference>
 	-->
     <Reference Include="mscorlib">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\mscorlib.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\mscorlib.dll</HintPath>
     </Reference>
     <Reference Include="System.Core">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Core.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Data">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Data.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Data.dll</HintPath>
     </Reference>
     <Reference Include="System">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.dll</HintPath>
     </Reference>
     <Reference Include="System.Json">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Json.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Runtime.Serialization.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Runtime.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.ServiceModel.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.ServiceModel.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel.Web">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.ServiceModel.Web.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.ServiceModel.Web.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Transactions.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Transactions.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Services">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Web.Services.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Web.Services.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Xml.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Xml.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Xml.Linq.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\base_libs\System.Xml.Linq.dll</HintPath>
     </Reference>
     <Reference Include="BeEngineScripting">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\BeEngineScripting.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\BeEngineScripting.dll</HintPath>
     </Reference>
     <Reference Include="BeEngineScriptingInternal">
-      <HintPath>C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\BeEngineScriptingInternal.dll</HintPath>
+      <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\BeEngineScriptingInternal.dll</HintPath>
     </Reference>
-    <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Player\PlayerMovement.cs" />
-    <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Ball\BallMovement.cs" />
-    <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\GameManager.cs" />
-    <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Timer.cs" />
-    <Compile Include="C:\Users\guillemsc1\Documents\GitHub\BeEngine-2D\PongTestGame\assets\player_movement.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Player\PlayerMovement.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Ball\BallMovement.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\GameManager.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongTestGame\assets\Scripts\Timer.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongTestGame\assets\player_movement.cs" />
   </ItemGroup>
   <ItemGroup>
     <!--

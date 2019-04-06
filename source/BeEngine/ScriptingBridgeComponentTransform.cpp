@@ -103,11 +103,7 @@ void ScriptingBridgeComponentTransform::SetRotationDegrees(MonoObject * mono_obj
 	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
 
 	if (component_trans != nullptr)
-	{
-		//float rot_degrees = App->scripting->UnboxFloat(mono_float);
-
 		component_trans->SetRotationDegrees(value);
-	}
 }
 
 float ScriptingBridgeComponentTransform::GetRotationDegrees(MonoObject * mono_object)

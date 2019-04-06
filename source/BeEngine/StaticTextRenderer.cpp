@@ -1,22 +1,21 @@
-#include "StaticSpriteRenderer.h"
+#include "StaticTextRenderer.h"
+#include "ComponentText.h"
 #include "App.h"
 #include "ModuleShader.h"
-#include "ComponentTransfrom.h"
 #include "GameObject.h"
+#include "ComponentTransfrom.h"
 #include "ModuleSceneRenderer.h"
+#include "ModuleText.h"
 
-#include "mmgr\nommgr.h"
-#include "mmgr\mmgr.h"
-
-StaticSpriteRenderer::StaticSpriteRenderer()
+StaticTextRenderer::StaticTextRenderer()
 {
 }
 
-StaticSpriteRenderer::~StaticSpriteRenderer()
+StaticTextRenderer::~StaticTextRenderer()
 {
 }
 
-void StaticSpriteRenderer::Start()
+void StaticTextRenderer::Start()
 {
 	VertexBuffer quad_vertex_buffer;
 
@@ -73,7 +72,8 @@ void StaticSpriteRenderer::Start()
 		{\
 			if(oHasTexture == 1)\
 			{\
-				finalColor = texture(tex, oUvs);\
+				vec4 sampled = vec4(1.0, 1.0, 1.0, texture(tex, oUvs).r); \
+				finalColor = oCol * sampled;\
 			}\
 			else\
 			{\
@@ -129,13 +129,13 @@ void StaticSpriteRenderer::Start()
 	quad_vertex_buffer.Clear();
 }
 
-void StaticSpriteRenderer::CleanUp()
+void StaticTextRenderer::CleanUp()
 {
 }
 
-void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & projection)
+void StaticTextRenderer::Render(const float4x4 & view, const float4x4 & projection)
 {
-	if (sprite_renderers.size() > 0)
+	if (text_renderers.size() > 0)
 	{
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
@@ -149,56 +149,77 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 		App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 		App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-		std::vector<ComponentSpriteRenderer*> sprites = sprite_renderers;
+		std::vector<ComponentText*> texts = text_renderers;
 
-		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprites.begin(); it != sprites.end(); ++it)
+		for (std::vector<ComponentText*>::iterator it = texts.begin(); it != texts.end(); ++it)
 		{
-			ComponentSpriteRenderer* curr_sprite = (*it);
-			float2 texture_size = curr_sprite->GetTextureSize();
+			ComponentText* curr_text = (*it);
+			Font* font = curr_text->GetCurrentFont();
 
-			float4 colour = curr_sprite->GetColour();
-
-			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
-
-			float z_pos = App->scene_renderer->layer_space_component_sprite.GetLayerValue(curr_sprite->GetLayer());
-
-			float4x4 size_mat = float4x4::identity;
-			
-			float2 size = transform->GetSize();
-
-			bool use_texture = curr_sprite->GetHasTexture() && curr_sprite->GetUseSprite();
-
-			size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(size.x, size.y, 1));
-
-			float4x4 world_transform = transform->GetWorldTransform() * size_mat;
-
-			if (curr_sprite->GetFlipX())
-				world_transform[0][0] = -world_transform[0][0];
-
-			if (curr_sprite->GetFlipY())
-				world_transform[1][1] = -world_transform[1][1];
-
-
-			App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
-
-			App->renderer->SetUniformVec4(program->GetID(), "col", colour);
-			App->renderer->SetUniformInt(program->GetID(), "hasTexture", use_texture);
-
-			App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
-
-			if(use_texture)
-				App->renderer->BindTexture(curr_sprite->GetTextureId());
-
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
-
-			GLenum error = glGetError();
-			if (error != GL_NO_ERROR)
+			if (font != nullptr)
 			{
-				INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
-			}
+				std::vector<Glyph> glyphs = curr_text->GetTextData();
 
-			if (curr_sprite->GetHasTexture())
-				App->renderer->UnbindTexture();
+				int font_size = font->GetSize();
+
+				float scale = (float)15 / (float)font_size;
+
+				float4 colour = float4(1, 1, 1, 1);
+
+				float ascender = font->GetAscender();
+
+				ComponentTransform* transform = curr_text->GetOwner()->transform;
+
+				float z_pos = App->scene_renderer->layer_space_component_sprite.GetLayerValue(1);
+
+				float curr_x = 0;
+
+				int counter = 0;
+				for (std::vector<Glyph>::iterator gl = glyphs.begin(); gl != glyphs.end(); ++gl, ++counter)
+				{
+					float4x4 size_mat = float4x4::identity;
+
+					float2 glyph_size = (*gl).GetSize();
+					float2 bearing = (*gl).GetBearing();
+
+					float2 final_size = glyph_size * scale;
+
+					float2 pos = float2::zero;
+
+					pos.x = (curr_x + (bearing.x * scale)) + (final_size.x * 0.5f);
+					pos.y = (-(glyph_size.y - bearing.y) * scale) + (final_size.y * 0.5f);
+
+					size_mat = float4x4::FromTRS(float3(pos.x, pos.y, 0), Quat::identity, float3(final_size.x, final_size.y, 1));
+
+					float4x4 world_transform = transform->GetWorldTransform() * size_mat;
+
+					world_transform[1][1] = -world_transform[1][1];
+
+					App->renderer->SetUniformInt(program->GetID(), "hasTexture", !curr_text->GetRenderQuads());
+
+					App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
+
+					App->renderer->SetUniformVec4(program->GetID(), "col", curr_text->GetColour());
+
+					App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
+
+					App->renderer->BindTexture((*gl).GetTextureId());
+
+					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+
+					GLenum error = glGetError();
+					if (error != GL_NO_ERROR)
+					{
+						INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
+					}
+
+					App->renderer->UnbindTexture();
+
+					float advance = (float)((*gl).GetAdvance() >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64)
+
+					curr_x += advance * scale;
+				}
+			}
 		}
 
 		App->renderer->UnbindVertexArrayBuffer();
@@ -208,12 +229,12 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 	}
 }
 
-void StaticSpriteRenderer::AddSpriteRenderer(ComponentSpriteRenderer * add)
+void StaticTextRenderer::AddTextRenderer(ComponentText * add)
 {
 	if (add != nullptr)
 	{
 		bool exists = false;
-		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprite_renderers.begin(); it != sprite_renderers.end(); ++it)
+		for (std::vector<ComponentText*>::iterator it = text_renderers.begin(); it != text_renderers.end(); ++it)
 		{
 			if ((*it) == add)
 			{
@@ -223,19 +244,19 @@ void StaticSpriteRenderer::AddSpriteRenderer(ComponentSpriteRenderer * add)
 		}
 
 		if (!exists)
-			sprite_renderers.push_back(add);
+			text_renderers.push_back(add);
 	}
 }
 
-void StaticSpriteRenderer::RemoveSpriteRenderer(ComponentSpriteRenderer * remove)
+void StaticTextRenderer::RemoveTextRenderer(ComponentText * remove)
 {
 	if (remove != nullptr)
 	{
-		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprite_renderers.begin(); it != sprite_renderers.end(); ++it)
+		for (std::vector<ComponentText*>::iterator it = text_renderers.begin(); it != text_renderers.end(); ++it)
 		{
 			if ((*it) == remove)
 			{
-				sprite_renderers.erase(it);
+				text_renderers.erase(it);
 				break;
 			}
 		}
