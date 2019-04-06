@@ -206,3 +206,8 @@ float Font::GetAscender() const
 {
 	return ascender;
 }
+
+float2 Font::GetFullSize() const
+{
+	return float2();
+}

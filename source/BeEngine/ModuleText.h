@@ -39,6 +39,7 @@ public:
 
 	int GetSize() const;
 	float GetAscender() const;
+	float2 GetFullSize() const;
 
 private:
 	std::string name;

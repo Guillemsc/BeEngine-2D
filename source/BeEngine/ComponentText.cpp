@@ -6,6 +6,7 @@
 #include "ModuleEvent.h"
 #include "ModuleSceneRenderer.h"
 #include "StaticTextRenderer.h"
+#include "ModuleResource.h"
 
 ComponentText::ComponentText() : GameObjectComponent(new ScriptingBridgeComponentText(this),
 	"Text", ComponentType::COMPONENT_TYPE_TEXT, ComponentGroup::UI, true)
@@ -71,10 +72,26 @@ void ComponentText::CleanUp()
 
 void ComponentText::OnSaveAbstraction(DataAbstraction & abs)
 {
+	if (resource_font != nullptr)
+		abs.AddString("resource", resource_font->GetUID());
+
+	abs.AddInt("text_size", text_size);
+	abs.AddFloat4("colour", colour);
+	abs.AddString("text", drawing_text);
 }
 
 void ComponentText::OnLoadAbstraction(DataAbstraction & abs)
 {
+	std::string resource_uid = abs.GetString("resource");
+
+	if (resource_uid.compare("") != 0)
+	{
+		resource_font = (ResourceFont*)App->resource->GetResourceFromUid(resource_uid, ResourceType::RESOURCE_TYPE_FONT);
+	}
+
+	colour = abs.GetFloat4("colour");
+	SetTextSize(abs.GetInt("text_size"));
+	SetText(abs.GetString("text"));
 }
 
 void ComponentText::OnEvent(Event * ev)
