@@ -32,9 +32,11 @@ public:
 
 	// Unboxing
 	float2 UnboxFloat2(MonoObject* obj);
+	float4 UnboxColour(MonoObject* obj);
 
 	// Boxing
 	MonoObject* BoxFloat2(const float2& val);
+	MonoObject* BoxColour(const float4& val);
 
 	MonoObject* BoxCollision(PhysicsBody* pb);
 
@@ -48,6 +50,8 @@ public:
 	ScriptingClass* time_class = nullptr;
 
 	ScriptingClass* float2_class = nullptr;
+
+	ScriptingClass* colour_class = nullptr;
 
 	ScriptingClass* game_object_class = nullptr;
 

@@ -8,7 +8,7 @@ namespace BeEngine
 {
     public class ComponentTransform : Component
     {
-        public float2 Position
+        public Float2 Position
         {
             get
             {
@@ -33,7 +33,7 @@ namespace BeEngine
             }
         }
 
-        public float2 Scale
+        public Float2 Scale
         {
             get
             {
@@ -50,10 +50,10 @@ namespace BeEngine
         // Internal Calls --------------------------------------
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void SetPosition(float2 value);
+        private extern void SetPosition(Float2 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern float2 GetPosition();
+        private extern Float2 GetPosition();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void SetRotationDegrees(float value);
@@ -62,10 +62,10 @@ namespace BeEngine
         private extern float GetRotationDegrees();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void SetScale(float2 value);
+        private extern void SetScale(Float2 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern float2 GetScale();
+        private extern Float2 GetScale();
 
         // -----------------------------------------------------
     }

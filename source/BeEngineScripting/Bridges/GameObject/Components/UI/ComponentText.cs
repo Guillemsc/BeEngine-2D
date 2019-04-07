@@ -20,6 +20,18 @@ namespace BeEngine
             }
         }
 
+        public Colour TextColour
+        {
+            get
+            {
+                return GetTextColour();
+            }
+            set
+            {
+                SetTextColour(value);
+            }
+        }
+
         // -----------------------------------------------------
 
         // Internal Calls --------------------------------------
@@ -29,6 +41,12 @@ namespace BeEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern string SetText(string text);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern Colour GetTextColour();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern string SetTextColour(Colour colour);
 
         // -----------------------------------------------------
 

@@ -34,6 +34,9 @@ private:
 	static void SetText(MonoObject* mono_object, MonoString* mono_string);
 	static MonoString* GetText(MonoObject* mono_object);
 
+	static void SetTextColour(MonoObject* mono_object, MonoObject* mono_object_colour);
+	static MonoObject* GetTextColour(MonoObject* mono_object);
+
 	// --------------
 
 private:

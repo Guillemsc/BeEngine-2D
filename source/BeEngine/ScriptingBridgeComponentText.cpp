@@ -90,3 +90,29 @@ MonoString* ScriptingBridgeComponentText::GetText(MonoObject * mono_object)
 
 	return ret;
 }
+
+void ScriptingBridgeComponentText::SetTextColour(MonoObject * mono_object, MonoObject * mono_object_colour)
+{
+	ComponentText* comp = GetComponentButtonFromMonoObject(mono_object);
+
+	if (comp != nullptr)
+	{
+		float4 new_colour = App->scripting->scripting_cluster->UnboxColour(mono_object_colour);
+
+		comp->SetColour(new_colour);
+	}
+}
+
+MonoObject * ScriptingBridgeComponentText::GetTextColour(MonoObject * mono_object)
+{
+	MonoObject* ret = nullptr;
+
+	ComponentText* comp = GetComponentButtonFromMonoObject(mono_object);
+
+	if (comp != nullptr)
+	{
+		ret = App->scripting->scripting_cluster->BoxColour(comp->GetColour());
+	}
+
+	return ret;
+}

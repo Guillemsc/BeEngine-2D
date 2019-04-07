@@ -28,9 +28,9 @@ public class BallMovement : ComponentScript
             float add_x = (float)System.Math.Sin(angle_radiants) * speed;
             float add_y = (float)System.Math.Cos(angle_radiants) * speed;
 
-            float2 position_addition = new float2(add_x, add_y);
+            Float2 position_addition = new Float2(add_x, add_y);
 
-            game_object.Transform.Position = new float2(game_object.Transform.Position.x - position_addition.x,
+            game_object.Transform.Position = new Float2(game_object.Transform.Position.x - position_addition.x,
                 game_object.Transform.Position.y + position_addition.y);
         }
     }
@@ -42,7 +42,7 @@ public class BallMovement : ComponentScript
 
     public void ResetBall(BallDirection dir)
     {
-        game_object.Transform.Position = new float2(0, 0);
+        game_object.Transform.Position = new Float2(0, 0);
 
         switch (dir)
         {

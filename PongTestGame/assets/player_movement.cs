@@ -15,17 +15,17 @@ public class player_movement : ComponentScript
 
         if (Input.KeyRepeat("as"))
         {
-            game_object.Transform.Position = new float2(game_object.Transform.Position.x - speed, game_object.Transform.Position.y);
+            game_object.Transform.Position = new Float2(game_object.Transform.Position.x - speed, game_object.Transform.Position.y);
         }
 
         if (Input.KeyRepeat("d"))
         {
-            game_object.Transform.Position = new float2(game_object.Transform.Position.x + speed, game_object.Transform.Position.y);
+            game_object.Transform.Position = new Float2(game_object.Transform.Position.x + speed, game_object.Transform.Position.y);
         }
 
         if (Input.KeyRepeat("s"))
         {
-            game_object.Transform.Position = new float2(game_object.Transform.Position.x, game_object.Transform.Position.y - speed);
+            game_object.Transform.Position = new Float2(game_object.Transform.Position.x, game_object.Transform.Position.y - speed);
         }
 
         //if (Input.KeyRepeat("w"))

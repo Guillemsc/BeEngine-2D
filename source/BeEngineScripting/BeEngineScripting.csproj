@@ -45,24 +45,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeEngineObject.cs" />
-    <Compile Include="Debug\Debug.cs" />
-    <Compile Include="GameObject\Components\Component.cs" />
-    <Compile Include="GameObject\Components\UI\ComponentButton.cs" />
-    <Compile Include="GameObject\Components\ComponentCamera.cs" />
-    <Compile Include="GameObject\Components\UI\ComponentCanvas.cs" />
-    <Compile Include="GameObject\Components\Physics\ComponentPhysicsBody.cs" />
-    <Compile Include="GameObject\Components\Physics\ComponentPolygonCollider.cs" />
-    <Compile Include="GameObject\Components\ComponentScript.cs" />
-    <Compile Include="GameObject\Components\ComponentTransform.cs" />
-    <Compile Include="GameObject\Components\ComponentSpriteRenderer.cs" />
-    <Compile Include="GameObject\Components\UI\ComponentText.cs" />
-    <Compile Include="GameObject\GameObject.cs" />
-    <Compile Include="Input\Input.cs" />
-    <Compile Include="Math\float2.cs" />
-    <Compile Include="Physics\Collision.cs" />
+    <Compile Include="Bridges\Debug\Debug.cs" />
+    <Compile Include="Bridges\GameObject\Components\Component.cs" />
+    <Compile Include="Bridges\GameObject\Components\UI\ComponentButton.cs" />
+    <Compile Include="Bridges\GameObject\Components\ComponentCamera.cs" />
+    <Compile Include="Bridges\GameObject\Components\UI\ComponentCanvas.cs" />
+    <Compile Include="Bridges\GameObject\Components\Physics\ComponentPhysicsBody.cs" />
+    <Compile Include="Bridges\GameObject\Components\Physics\ComponentPolygonCollider.cs" />
+    <Compile Include="Bridges\GameObject\Components\ComponentScript.cs" />
+    <Compile Include="Bridges\GameObject\Components\ComponentTransform.cs" />
+    <Compile Include="Bridges\GameObject\Components\ComponentSpriteRenderer.cs" />
+    <Compile Include="Bridges\GameObject\Components\UI\ComponentText.cs" />
+    <Compile Include="Bridges\GameObject\GameObject.cs" />
+    <Compile Include="Bridges\Input\Input.cs" />
+    <Compile Include="Implementation\Colour\Colour.cs" />
+    <Compile Include="Implementation\Math\Float2.cs" />
+    <Compile Include="Bridges\Physics\Collision.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Random\Random.cs" />
-    <Compile Include="Time\Time.cs" />
+    <Compile Include="Implementation\Random\Random.cs" />
+    <Compile Include="Bridges\Time\Time.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

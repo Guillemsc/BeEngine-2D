@@ -51,6 +51,8 @@ void ScriptingCluster::RegisterInternalCalls()
 	    // ComponentText -----------------------
 		mono_add_internal_call("BeEngine.ComponentText::SetText", (const void*)ScriptingBridgeComponentText::SetText);
 		mono_add_internal_call("BeEngine.ComponentText::GetText", (const void*)ScriptingBridgeComponentText::GetText);
+		mono_add_internal_call("BeEngine.ComponentText::SetTextColour", (const void*)ScriptingBridgeComponentText::SetTextColour);
+		mono_add_internal_call("BeEngine.ComponentText::GetTextColour", (const void*)ScriptingBridgeComponentText::GetTextColour);
 		// ----------------------- ComponentText
 	}
 }
@@ -72,7 +74,10 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Time", time_class);
 
 		// Math
-		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "float2", float2_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Float2", float2_class);
+
+		// Colour
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Colour", colour_class);
 
 		// GameObject
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "GameObject", game_object_class);
@@ -104,6 +109,7 @@ void ScriptingCluster::CleanUp()
 	RELEASE(time_class);
 
 	RELEASE(float2_class);
+	RELEASE(colour_class);
 
 	RELEASE(game_object_class);
 
@@ -168,6 +174,29 @@ float2 ScriptingCluster::UnboxFloat2(MonoObject* obj)
 	return ret;
 }
 
+float4 ScriptingCluster::UnboxColour(MonoObject * obj)
+{
+	float4 ret = float4::zero;
+
+	if (obj != nullptr)
+	{
+		MonoObject* r_val = App->scripting->GetFieldValue(obj, colour_class->GetMonoClass(), "_r");
+		MonoObject* g_val = App->scripting->GetFieldValue(obj, colour_class->GetMonoClass(), "_g");
+		MonoObject* b_val = App->scripting->GetFieldValue(obj, colour_class->GetMonoClass(), "_b");
+		MonoObject* a_val = App->scripting->GetFieldValue(obj, colour_class->GetMonoClass(), "_a");
+
+		if (r_val != nullptr && g_val != nullptr && b_val != nullptr && a_val != nullptr)
+		{
+			ret.x = App->scripting->UnboxFloat(r_val) / 255.0f;
+			ret.y = App->scripting->UnboxFloat(g_val) / 255.0f;
+			ret.w = App->scripting->UnboxFloat(b_val) / 255.0f;
+			ret.z = App->scripting->UnboxFloat(a_val) / 255.0f;
+		}
+	}
+
+	return ret;
+}
+
 MonoObject * ScriptingCluster::BoxFloat2(const float2 & val)
 {
 	MonoObject* ret = nullptr;
@@ -178,6 +207,27 @@ MonoObject * ScriptingCluster::BoxFloat2(const float2 & val)
 
 		ins.SetFieldValue("_x", &(float)val.x);
 		ins.SetFieldValue("_y", &(float)val.y);
+
+		ret = ins.GetMonoObject();
+	}
+
+	return ret;
+}
+
+MonoObject * ScriptingCluster::BoxColour(const float4 & val)
+{
+	MonoObject* ret = nullptr;
+
+	if (colour_class != nullptr)
+	{
+		ScriptingClassInstance ins = colour_class->CreateWeakInstance();
+
+		float4 to_255 = float4(val.x * 255, val.y * 255, val.z * 255, val.w * 255);
+
+		ins.SetFieldValue("_r", &(float)to_255.x);
+		ins.SetFieldValue("_g", &(float)to_255.y);
+		ins.SetFieldValue("_b", &(float)to_255.w);
+		ins.SetFieldValue("_a", &(float)to_255.z);
 
 		ret = ins.GetMonoObject();
 	}

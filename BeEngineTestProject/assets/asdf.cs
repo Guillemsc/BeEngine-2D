@@ -10,6 +10,10 @@ public class asdf : ComponentScript
 
         Debug.Log(game_object.GetComponent<ComponentText>().Text);
 
+        game_object.GetComponent<ComponentText>().TextColour = new Colour(255, 255, 0);
+
+        Debug.Log(game_object.GetComponent<ComponentText>().TextColour.ToString());
+
         //game_object.GetComponent<ComponentText>().Text =;
     }
 	

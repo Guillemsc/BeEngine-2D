@@ -40,6 +40,7 @@ public:
 
 	void SetText(const std::string& text);
 	void SetTextSize(int size);
+	void SetColour(const float4 colour);
 
 	TextData GetTextData() const;
 	Font* GetCurrentFont() const;

@@ -149,6 +149,11 @@ void ComponentText::SetTextSize(int size)
 	UpdateFont();
 }
 
+void ComponentText::SetColour(const float4 col)
+{
+	colour = col;
+}
+
 TextData ComponentText::GetTextData() const
 {
 	return text_data;
