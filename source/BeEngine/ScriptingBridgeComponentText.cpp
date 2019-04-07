@@ -6,7 +6,7 @@
 #include "GameObject.h"
 
 ScriptingBridgeComponentText::ScriptingBridgeComponentText(ComponentText * component_text) :
-	ScriptingBridgeObject(App->scripting->scripting_cluster->component_button_class)
+	ScriptingBridgeObject(App->scripting->scripting_cluster->component_text_class)
 {
 	component_text_ref = component_text;
 }
@@ -47,5 +47,46 @@ void ScriptingBridgeComponentText::CleanUp()
 
 ComponentText * ScriptingBridgeComponentText::GetComponentButtonFromMonoObject(MonoObject * mono_object)
 {
-	return nullptr;
+	ComponentText* ret = nullptr;
+
+	if (mono_object != nullptr)
+	{
+		MonoObject* obj_ret = nullptr;
+		if (App->scripting->InvokeMonoMethod(mono_object,
+			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
+		{
+			if (obj_ret != nullptr)
+			{
+				ret = (ComponentText*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
+			}
+		}
+	}
+
+	return ret;
+}
+
+void ScriptingBridgeComponentText::SetText(MonoObject * mono_object, MonoString * mono_string)
+{
+	ComponentText* comp = GetComponentButtonFromMonoObject(mono_object);
+
+	if (comp != nullptr)
+	{
+		std::string new_text = App->scripting->UnboxString(mono_string);
+
+		comp->SetText(new_text);
+	}
+}
+
+MonoString* ScriptingBridgeComponentText::GetText(MonoObject * mono_object)
+{
+	MonoString* ret = nullptr;
+
+	ComponentText* comp = GetComponentButtonFromMonoObject(mono_object);
+
+	if (comp != nullptr)
+	{
+		ret = App->scripting->BoxString(comp->GetTextData().GetText().c_str());
+	}
+
+	return ret;
 }

@@ -41,9 +41,10 @@ public:
 	void SetText(const std::string& text);
 	void SetTextSize(int size);
 
-	std::vector<Glyph> GetTextData() const;
+	TextData GetTextData() const;
 	Font* GetCurrentFont() const;
 	float4 GetColour() const;
+	int GetLayer() const;
 
 	bool GetRenderQuads() const;
 
@@ -60,9 +61,11 @@ private:
 	int text_size = 12;
 	float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	std::vector<Glyph> text_glyphs;
+	TextData text_data;
 
 	bool render_quads = false;
+
+	int layer = 0;
 
 	ResourceSelectorWidget selector_widget;
 };

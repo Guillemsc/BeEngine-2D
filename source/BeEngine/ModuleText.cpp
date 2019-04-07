@@ -85,24 +85,27 @@ Font* ModuleText::GenerateFont(FT_Face face, int size)
 
 	SetFaceSize(face, size);
 
-	ret->ascender = face->ascender / 32;
-
-	for (int i = 0; i < amount_glyphs; ++i)
+	if (LoadFaceChar(face, '@'))
 	{
-		if (LoadFaceChar(face, i))
+		ret->height = face->glyph->bitmap_top;
+
+		for (int i = 0; i < amount_glyphs; ++i)
 		{
-			uint texture_id = App->renderer->LoadTextureToVRAM(face->glyph->bitmap.width, 
-				face->glyph->bitmap.rows, face->glyph->bitmap.buffer, GL_RED);
-
-			if (texture_id > 0)
+			if (LoadFaceChar(face, i))
 			{
-				Glyph curr_glyph;
-				curr_glyph.texture_id = texture_id;
-				curr_glyph.size = float2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
-				curr_glyph.bearing = float2(face->glyph->bitmap_left, face->glyph->bitmap_top);
-				curr_glyph.advance = face->glyph->advance.x;
+				uint texture_id = App->renderer->LoadTextureToVRAM(face->glyph->bitmap.width,
+					face->glyph->bitmap.rows, face->glyph->bitmap.buffer, GL_RED);
 
-				ret->glyphs[i] = curr_glyph;
+				if (texture_id > 0)
+				{
+					Glyph curr_glyph;
+					curr_glyph.texture_id = texture_id;
+					curr_glyph.size = float2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
+					curr_glyph.bearing = float2(face->glyph->bitmap_left, face->glyph->bitmap_top);
+					curr_glyph.advance = (face->glyph->advance.x >> 6);
+
+					ret->glyphs[i] = curr_glyph;
+				}
 			}
 		}
 	}
@@ -174,7 +177,7 @@ float2 Glyph::GetBearing() const
 	return bearing;
 }
 
-uint Glyph::GetAdvance() const
+float Glyph::GetAdvance() const
 {
 	return advance;
 }
@@ -183,16 +186,25 @@ Font::Font()
 {
 }
 
-std::vector<Glyph> Font::GetTextGlyphs(const std::string& text)
+TextData Font::GetTextGlyphs(const std::string& text)
 {
-	std::vector<Glyph> ret;
+	TextData ret;
+
+	ret.text = text;
+	ret.size = size;
 
 	for (int i = 0; i < text.size(); ++i)
 	{
 		char curr_char = text[i];
 
-		ret.push_back(glyphs[curr_char]);
+		Glyph curr_glyph = glyphs[curr_char];
+
+		ret.glyphs.push_back(curr_glyph);
+
+		ret.full_size.x += curr_glyph.GetAdvance();
  	}
+
+	ret.full_size.y = height;
 
 	return ret;
 }
@@ -202,12 +214,27 @@ int Font::GetSize() const
 	return size;
 }
 
-float Font::GetAscender() const
+float Font::GetHeight() const
 {
-	return ascender;
+	return height;
 }
 
-float2 Font::GetFullSize() const
+std::string TextData::GetText() const
 {
-	return float2();
+	return text;
+}
+
+int TextData::GetFontSize() const
+{
+	return size;
+}
+
+std::vector<Glyph> TextData::GetGlyphs() const
+{
+	return glyphs;
+}
+
+float2 TextData::GetFullSize() const
+{
+	return full_size;
 }

@@ -85,6 +85,9 @@ public:
 	float GetGravityScale() const;
 
 	void SetBullet(bool set);
+	bool GetBullet() const;
+
+
 	void SetCanSleep(bool set);
 
 	float2 LocalPointToWorldPoint(const float2& local_point) const;

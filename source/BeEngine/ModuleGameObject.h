@@ -122,6 +122,8 @@ private:
 
 	GameObjectAbstraction editor_play_scene_abs;
 	std::vector<GameObjectAbstraction> editor_play_sub_scenes_abs;
+
+	std::string last_scene_resource;
 };
 
 #endif // !__MODULE_GAME_OBJECT_H__

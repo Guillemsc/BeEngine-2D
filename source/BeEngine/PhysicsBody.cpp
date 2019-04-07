@@ -294,6 +294,11 @@ void PhysicsBody::SetBullet(bool set)
 	b2body->SetBullet(set);
 }
 
+bool PhysicsBody::GetBullet() const
+{
+	return b2body->IsBullet();
+}
+
 void PhysicsBody::SetCanSleep(bool set)
 {
 	b2body->SetSleepingAllowed(set);

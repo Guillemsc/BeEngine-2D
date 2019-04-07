@@ -52,6 +52,13 @@ void ComponentPhysicsBody::EditorDraw()
 			pb->SetFixedRotation(fixed_rotaton);
 		}
 
+		bool bullet = pb->GetBullet();
+
+		if (ImGui::Checkbox("Bullet", &bullet))
+		{
+			pb->SetBullet(bullet);
+		}
+
 		break;
 	}
 
@@ -67,7 +74,6 @@ void ComponentPhysicsBody::EditorDraw()
 		break;
 	}
 	}
-
 }
 
 void ComponentPhysicsBody::Start()
@@ -97,6 +103,7 @@ void ComponentPhysicsBody::OnSaveAbstraction(DataAbstraction & abs)
 	abs.AddInt("body_type", pb->GetType());
 	abs.AddFloat("gravity_scale", pb->GetGravityScale());
 	abs.AddBool("fixed_rotation", pb->GetFixedRotation());
+	abs.AddBool("bullet", pb->GetBullet());
 }
 
 void ComponentPhysicsBody::OnLoadAbstraction(DataAbstraction & abs)
@@ -106,6 +113,7 @@ void ComponentPhysicsBody::OnLoadAbstraction(DataAbstraction & abs)
 	pb->SetType(static_cast<PhysicsBodyType>(abs.GetInt("body_type")));
 	pb->SetGravityScale(abs.GetFloat("gravity_scale"));
 	pb->SetFixedRotation(abs.GetBool("fixed_rotation"));
+	pb->SetBullet(abs.GetBool("bullet"));
 }
 
 void ComponentPhysicsBody::OnEvent(Event * ev)

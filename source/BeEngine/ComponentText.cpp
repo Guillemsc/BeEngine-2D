@@ -19,6 +19,8 @@ ComponentText::~ComponentText()
 
 void ComponentText::EditorDraw()
 {
+	ImGui::DragInt("Layer", &layer, 1, 0, 9999);
+
 	ImGui::Checkbox("Render quads", &render_quads);
 
 	char name_arr[999];
@@ -50,7 +52,7 @@ void ComponentText::Start()
 {
 	InitBeObject();
 
-	SetTextSize(40);
+	SetTextSize(80);
 
 	App->scene_renderer->static_text_renderer->AddTextRenderer(this);
 
@@ -78,6 +80,7 @@ void ComponentText::OnSaveAbstraction(DataAbstraction & abs)
 	abs.AddInt("text_size", text_size);
 	abs.AddFloat4("colour", colour);
 	abs.AddString("text", drawing_text);
+	abs.AddInt("layer", layer);
 }
 
 void ComponentText::OnLoadAbstraction(DataAbstraction & abs)
@@ -92,6 +95,7 @@ void ComponentText::OnLoadAbstraction(DataAbstraction & abs)
 	colour = abs.GetFloat4("colour");
 	SetTextSize(abs.GetInt("text_size"));
 	SetText(abs.GetString("text"));
+	layer = abs.GetInt("layer");
 }
 
 void ComponentText::OnEvent(Event * ev)
@@ -145,9 +149,9 @@ void ComponentText::SetTextSize(int size)
 	UpdateFont();
 }
 
-std::vector<Glyph> ComponentText::GetTextData() const
+TextData ComponentText::GetTextData() const
 {
-	return text_glyphs;
+	return text_data;
 }
 
 Font * ComponentText::GetCurrentFont() const
@@ -158,6 +162,11 @@ Font * ComponentText::GetCurrentFont() const
 float4 ComponentText::GetColour() const
 {
 	return colour;
+}
+
+int ComponentText::GetLayer() const
+{
+	return layer;
 }
 
 bool ComponentText::GetRenderQuads() const
@@ -186,10 +195,10 @@ void ComponentText::UpdateFont()
 
 void ComponentText::UpdateTextGlyphs()
 {
-	text_glyphs.clear();
+	text_data = TextData();
 
 	if (font != nullptr)
 	{
-		text_glyphs = font->GetTextGlyphs(drawing_text);
+		text_data = font->GetTextGlyphs(drawing_text);
 	}
 }

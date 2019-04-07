@@ -1,7 +1,11 @@
 {
-    "projects_count": 1,
+    "projects_count": 2,
     "project_0": {
         "name": "PongTestGame",
         "path": "C:\\Users\\Guillem\\Documents\\GitHub\\BeEngine-2D\\PongTestGame\\"
+    },
+    "project_1": {
+        "name": "BeEngineTestProject",
+        "path": "C:\\Users\\Guillem\\Documents\\GitHub\\BeEngine-2D\\BeEngineTestProject\\"
     }
 }

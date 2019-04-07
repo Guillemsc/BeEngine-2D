@@ -28,11 +28,11 @@ public:
 
 private:
 	static ComponentText* GetComponentButtonFromMonoObject(MonoObject* mono_object);
-	//static GameObjectComponent* CreateGameObjectComponentFromComponentType(GameObject* go, MonoType* type);
 
 	// Internal Calls
 
-	//static void AddComponent(MonoObject* mono_object, MonoType* component_type);
+	static void SetText(MonoObject* mono_object, MonoString* mono_string);
+	static MonoString* GetText(MonoObject* mono_object);
 
 	// --------------
 

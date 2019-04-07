@@ -9,6 +9,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H  
 
+class TextData;
+
 class Glyph
 {
 	friend class ModuleText;
@@ -19,13 +21,13 @@ public:
 	uint GetTextureId() const;
 	float2 GetSize() const;
 	float2 GetBearing() const;
-	uint GetAdvance() const;
+	float GetAdvance() const;
 
 private:
 	uint texture_id = 0;
 	float2 size = float2::zero;
 	float2 bearing = float2::zero; // Offset from baseline to left/top of glyph
-	uint advance = 0; // Offset to advance to next glyph
+	float advance = 0; // Offset to advance to next glyph
 };
 
 class Font
@@ -35,25 +37,32 @@ class Font
 public:
 	Font();
 
-	std::vector<Glyph> GetTextGlyphs(const std::string& text);
+	TextData GetTextGlyphs(const std::string& text);
 
 	int GetSize() const;
-	float GetAscender() const;
-	float2 GetFullSize() const;
+	float GetHeight() const;
 
 private:
 	std::string name;
 	uint size = 0;
-	float ascender = 0;
+	uint height = 0;
 
 	std::map<char, Glyph> glyphs;
 };
 
 class TextData
 {
+	friend class Font;
+
+public:
+	std::string GetText() const;
+	int GetFontSize() const;
+	std::vector<Glyph> GetGlyphs() const;
+	float2 GetFullSize() const;
 
 private:
-	std::string text;
+	std::string text = "";
+	int size = 0;
 	std::vector<Glyph> glyphs;
 	float2 full_size = float2::zero;
 };

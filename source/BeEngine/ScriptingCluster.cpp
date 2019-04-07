@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "ScriptingBridgeInput.h"
 #include "ScriptingBridgeTime.h"
+#include "ScriptingBridgeComponentText.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -47,6 +48,10 @@ void ScriptingCluster::RegisterInternalCalls()
 		mono_add_internal_call("BeEngine.ComponentTransform::GetScale", (const void*)ScriptingBridgeComponentTransform::GetScale);
 		// ----------------------- ComponentTransform
 
+	    // ComponentText -----------------------
+		mono_add_internal_call("BeEngine.ComponentText::SetText", (const void*)ScriptingBridgeComponentText::SetText);
+		mono_add_internal_call("BeEngine.ComponentText::GetText", (const void*)ScriptingBridgeComponentText::GetText);
+		// ----------------------- ComponentText
 	}
 }
 
