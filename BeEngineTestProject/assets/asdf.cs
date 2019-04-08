@@ -6,6 +6,8 @@ public class asdf : ComponentScript
 {
 	public override void Start () 
 	{
+        game_object.Name = "Pene";
+
         game_object.GetComponent<ComponentText>().Text = "This is a text";
 
         Debug.Log(game_object.GetComponent<ComponentText>().Text);
@@ -19,7 +21,13 @@ public class asdf : ComponentScript
 	
 	public override void Update () 
 	{
+        for (int i = 0; i < 160; ++i)
+        {
+            game_object.GetComponent<ComponentText>();
 
+            //Debug.Log("Clicka");
+        }
+     
     }
 
     public void OnClick(ComponentButton but)

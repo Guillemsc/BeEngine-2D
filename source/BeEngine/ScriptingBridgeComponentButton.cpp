@@ -24,7 +24,7 @@ void ScriptingBridgeComponentButton::OnRebuildInstances()
 {
 	if (class_instance != nullptr)
 	{
-		MonoArray* mono_pointer = App->scripting->BoxPointer(component_button_ref);
+		MonoString* mono_pointer = App->scripting->BoxPointer(component_button_ref);
 
 		void* args[1] = { mono_pointer };
 
@@ -67,7 +67,7 @@ ComponentButton * ScriptingBridgeComponentButton::GetComponentButtonFromMonoObje
 		{
 			if (obj_ret != nullptr)
 			{
-				ret = (ComponentButton*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
+				ret = (ComponentButton*)App->scripting->UnboxPointer((MonoString*)obj_ret);
 			}
 		}
 	}

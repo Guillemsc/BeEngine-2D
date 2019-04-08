@@ -33,7 +33,7 @@ void ScriptingBridgeGameObject::OnRebuildInstances()
 {
 	if (class_instance != nullptr)
 	{
-		MonoArray* mono_pointer = App->scripting->BoxPointer(go_ref);
+		MonoString* mono_pointer = App->scripting->BoxPointer(go_ref);
 	
 		void* args[1] = { mono_pointer };
 	
@@ -130,7 +130,7 @@ GameObject* ScriptingBridgeGameObject::GetGameObjectFromMonoObject(MonoObject * 
 		{
 			if (obj_ret != nullptr)
 			{
-				ret = (GameObject*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
+				ret = (GameObject*)App->scripting->UnboxPointer((MonoString*)obj_ret);
 			}
 		}
 	}

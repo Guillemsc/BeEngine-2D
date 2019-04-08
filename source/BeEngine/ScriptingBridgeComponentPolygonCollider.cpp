@@ -23,7 +23,7 @@ void ScriptingBridgeComponentPolygonCollider::OnRebuildInstances()
 {
 	if (class_instance != nullptr)
 	{
-		MonoArray* mono_pointer = App->scripting->BoxPointer(component_ref);
+		MonoString* mono_pointer = App->scripting->BoxPointer(component_ref);
 
 		void* args[1] = { mono_pointer };
 

@@ -458,7 +458,7 @@ MonoArray* ModuleScripting::BoxBuffer(const char* buffer, uint buffer_size)
 		{
 			for (int i = 0; i < buffer_size; ++i)
 			{
-				char ch = buffer[i];
+				int ch = buffer[i];
 				MonoObject* boxed_char = App->scripting->BoxInt(ch);
 
 				mono_array_set(ret, MonoObject*, i, boxed_char);
@@ -469,21 +469,20 @@ MonoArray* ModuleScripting::BoxBuffer(const char* buffer, uint buffer_size)
 	return ret;
 }
 
-MonoArray * ModuleScripting::BoxPointer(void * pointer)
+MonoString * ModuleScripting::BoxPointer(void * pointer)
 {
-	MonoArray* ret = nullptr;
+	MonoString* ret = nullptr;
 
 	if (pointer != nullptr)
 	{
-		int size = sizeof(pointer);
-		char* pointer_data = new char[size + 1];
-		memcpy(pointer_data, &pointer, size);
+		std::string address;
+		{
+			std::ostringstream ostm;
+			ostm << reinterpret_cast<std::uintptr_t>(pointer);
+			address = ostm.str();
+		}
 
-		pointer_data[size] = '\0';
-
-		ret = App->scripting->BoxBuffer(pointer_data, size);
-
-		RELEASE_ARRAY(pointer_data);
+		ret = App->scripting->BoxString(address.c_str());
 	}
 
 	return ret;
@@ -644,18 +643,21 @@ char* ModuleScripting::UnboxBuffer(MonoArray * val, uint& buffer_size)
 	return ret;
 }
 
-void * ModuleScripting::UnboxPointer(MonoArray * val)
+void* ModuleScripting::UnboxPointer(MonoString * val)
 {
 	void* ret = nullptr;
 
 	if (val != nullptr)
 	{
-		uint buffer_size = 0;
-		const char* ret_str = App->scripting->UnboxBuffer((MonoArray*)val, buffer_size);
+		std::string address = App->scripting->UnboxString(val);
 
-		memcpy(&ret, ret_str, 4);
+		std::uintptr_t n;
+		{
+			std::istringstream istm(address);
+			istm >> n;
+		}
 
-		RELEASE_ARRAY(ret_str);
+		ret = (void*)n;
 	}
 
 	return ret;
@@ -785,11 +787,13 @@ void ModuleScripting::CreateBaseDomainAndAssemblys()
 	solution_manager = (ScriptingObjectSolutionManager*)AddScriptingObject(new ScriptingObjectSolutionManager());
 	file_watcher = (ScriptingObjectFileWatcher*)AddScriptingObject(new ScriptingObjectFileWatcher());
 
-	RebuildScriptingBridgeObjects();
+	RebuildScriptingBridgeObjectsInstances();
 }
 
 void ModuleScripting::DestroyBaseDomainAndAssemblys()
 {
+	DestroyScriptingBridgeObjectsInstances();
+
 	DestroyAllScriptingObjects();
 	DestroyAllAssemblys();
 
@@ -913,7 +917,15 @@ void ModuleScripting::UpdateScriptingObjects()
 	}
 }
 
-void ModuleScripting::RebuildScriptingBridgeObjects()
+void ModuleScripting::DestroyScriptingBridgeObjectsInstances()
+{
+	for (std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
+	{
+		(*it)->DestroyInstance();
+	}
+}
+
+void ModuleScripting::RebuildScriptingBridgeObjectsInstances()
 {
 	for (std::vector<ScriptingBridgeObject*>::iterator it = scripting_bridge_objects.begin(); it != scripting_bridge_objects.end(); ++it)
 	{

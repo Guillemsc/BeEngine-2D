@@ -189,7 +189,7 @@ public:
 	MonoObject* BoxChar(char val);
 	MonoArray* BoxArray(MonoClass* objects_mono_class, const std::vector<MonoObject*>& vec);
 	MonoArray* BoxBuffer(const char* buffer, uint buffer_size);
-	MonoArray* BoxPointer(void* pointer);
+	MonoString* BoxPointer(void* pointer);
 	MonoType* BoxType(MonoClass* val);
 
 	// Unboxing
@@ -203,7 +203,7 @@ public:
 	std::vector<MonoObject*> UnboxArray(MonoArray* val);
 	uint UnboxArrayCount(MonoArray* val);
 	char* UnboxBuffer(MonoArray* val, uint& buffer_size);
-	void* UnboxPointer(MonoArray* val);
+	void* UnboxPointer(MonoString* val);
 	MonoClass* UnboxType(MonoType* val);
 
 	bool InvokeMonoMethod(MonoObject* mono_object_ins, MonoClass* mono_class, const char* method_name,
@@ -227,7 +227,8 @@ private:
 	void ManageScriptsToCompile();
 
 	void UpdateScriptingObjects();
-	void RebuildScriptingBridgeObjects();
+	void DestroyScriptingBridgeObjectsInstances();
+	void RebuildScriptingBridgeObjectsInstances();
 
 	void DestroyAllAssemblys();
 	void DestroyAllScriptingObjects();

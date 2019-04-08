@@ -37,7 +37,7 @@ void ScriptingBridgeComponentScript::OnRebuildInstances()
 
 			if (class_instance != nullptr)
 			{
-				MonoArray* mono_pointer = App->scripting->BoxPointer(component_script_ref);
+				MonoString* mono_pointer = App->scripting->BoxPointer(component_script_ref);
 
 				void* args[1] = { mono_pointer };
 

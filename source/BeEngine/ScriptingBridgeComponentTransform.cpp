@@ -28,7 +28,7 @@ void ScriptingBridgeComponentTransform::OnRebuildInstances()
 	{
 		ScriptingBridgeGameObject* bridge_go = (ScriptingBridgeGameObject*)component_transform_ref->GetOwner()->GetScriptingBridge();
 
-		MonoArray* mono_pointer = App->scripting->BoxPointer(component_transform_ref);
+		MonoString* mono_pointer = App->scripting->BoxPointer(component_transform_ref);
 
 		void* args[1] = { mono_pointer };
 
@@ -64,7 +64,7 @@ ComponentTransform * ScriptingBridgeComponentTransform::GetComponentTransformFro
 		{
 			if (obj_ret != nullptr)
 			{
-				ret = (ComponentTransform*)App->scripting->UnboxPointer((MonoArray*)obj_ret);
+				ret = (ComponentTransform*)App->scripting->UnboxPointer((MonoString*)obj_ret);
 			}
 		}
 	}
