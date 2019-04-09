@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "ScriptingBridgeGameObject.h"
 #include "ComponentTransfrom.h"
+#include "ScriptingBridgeBeObject.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -26,16 +27,9 @@ void ScriptingBridgeComponentTransform::OnRebuildInstances()
 {
 	if (class_instance != nullptr)
 	{
+		ScriptingBridgeBeObject::SetBeObjectRefPointer(class_instance->GetMonoObject(), component_transform_ref);
+
 		ScriptingBridgeGameObject* bridge_go = (ScriptingBridgeGameObject*)component_transform_ref->GetOwner()->GetScriptingBridge();
-
-		MonoString* mono_pointer = App->scripting->BoxPointer(component_transform_ref);
-
-		void* args[1] = { mono_pointer };
-
-		MonoObject* ret_obj = nullptr;
-		class_instance->InvokeMonoMethodOnParentClass(
-			*App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
-
 		MonoObject* owner_go_mono_object = bridge_go->GetInstance()->GetMonoObject();
 
 		void* args2[1] = { owner_go_mono_object };
@@ -50,31 +44,15 @@ void ScriptingBridgeComponentTransform::OnRebuildInstances()
 
 void ScriptingBridgeComponentTransform::CleanUp()
 {
-}
-
-ComponentTransform * ScriptingBridgeComponentTransform::GetComponentTransformFromMonoObject(MonoObject * mono_object)
-{
-	ComponentTransform* ret = nullptr;
-
-	if (mono_object != nullptr)
+	if (class_instance != nullptr)
 	{
-		MonoObject* obj_ret = nullptr;
-		if (App->scripting->InvokeMonoMethod(mono_object,
-			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
-		{
-			if (obj_ret != nullptr)
-			{
-				ret = (ComponentTransform*)App->scripting->UnboxPointer((MonoString*)obj_ret);
-			}
-		}
+		ScriptingBridgeBeObject::ClearBeObjectRefPointer(class_instance->GetMonoObject());
 	}
-
-	return ret;
 }
 
 void ScriptingBridgeComponentTransform::SetPosition(MonoObject * mono_object, MonoObject * mono_float2)
 {
-	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+	ComponentTransform* component_trans = (ComponentTransform*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (component_trans != nullptr)
 	{
@@ -88,7 +66,7 @@ MonoObject * ScriptingBridgeComponentTransform::GetPosition(MonoObject * mono_ob
 {
 	MonoObject* ret = nullptr;
 
-	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+	ComponentTransform* component_trans = (ComponentTransform*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (component_trans != nullptr)
 	{
@@ -100,17 +78,19 @@ MonoObject * ScriptingBridgeComponentTransform::GetPosition(MonoObject * mono_ob
 
 void ScriptingBridgeComponentTransform::SetRotationDegrees(MonoObject * mono_object, float value)
 {
-	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+	ComponentTransform* component_trans = (ComponentTransform*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (component_trans != nullptr)
+	{
 		component_trans->SetRotationDegrees(value);
+	}
 }
 
 float ScriptingBridgeComponentTransform::GetRotationDegrees(MonoObject * mono_object)
 {
 	float ret = 0.0f;
 
-	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+	ComponentTransform* component_trans = (ComponentTransform*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (component_trans != nullptr)
 	{
@@ -122,7 +102,7 @@ float ScriptingBridgeComponentTransform::GetRotationDegrees(MonoObject * mono_ob
 
 void ScriptingBridgeComponentTransform::SetScale(MonoObject * mono_object, MonoObject * mono_float2)
 {
-	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+	ComponentTransform* component_trans = (ComponentTransform*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (component_trans != nullptr)
 	{
@@ -136,7 +116,7 @@ MonoObject * ScriptingBridgeComponentTransform::GetScale(MonoObject * mono_objec
 {
 	MonoObject* ret = nullptr;
 
-	ComponentTransform* component_trans = GetComponentTransformFromMonoObject(mono_object);
+	ComponentTransform* component_trans = (ComponentTransform*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (component_trans != nullptr)
 	{

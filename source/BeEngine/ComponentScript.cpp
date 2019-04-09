@@ -87,8 +87,6 @@ void ComponentScript::EditorDraw()
 
 void ComponentScript::Start()
 {
-	InitBeObject();
-
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 
@@ -103,8 +101,6 @@ void ComponentScript::CleanUp()
 
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
-
-	CleanUpBeObject();
 }
 
 void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)

@@ -54,8 +54,6 @@ void GameObject::OnLoadAbstraction(DataAbstraction & abs)
 
 void GameObject::Start()
 {
-	InitBeObject();
-
 	transform = (ComponentTransform*)CreateComponent(ComponentType::COMPONENT_TYPE_TRANSFORM);
 
 	App->event->Suscribe(std::bind(&GameObject::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
@@ -69,8 +67,6 @@ void GameObject::Update()
 void GameObject::CleanUp()
 {
 	ActuallyDestroyComponents();
-
-	CleanUpBeObject();
 }
 
 void GameObject::OnEvent(Event * ev)
@@ -349,6 +345,8 @@ GameObjectComponent* GameObject::CreateComponent(const ComponentType & type)
 			ret->owner = this;
 			ret->uid = App->resource->GetNewUID();
 			components.push_back(ret);
+
+			ret->InitBeObject();
 			ret->Start();
 
 			CallOnAddComponent(ret);
@@ -388,6 +386,8 @@ void GameObject::DestroyComponent(GameObjectComponent * component, bool check_ca
 				component->OnDestroy();
 
 				CallOnRemoveComponent(component);
+
+				component->CleanUpBeObject();
 
 				components_to_destroy.push_back(component);
 			}
@@ -454,6 +454,8 @@ ComponentScript* GameObject::CreateComponentScript(const std::string & script_na
 		ret = (ComponentScript*)CreateComponent(ComponentType::COMPONENT_TYPE_SCRIPT);
 
 		ret->SetResourceScript(script);
+
+		ret->UpdateScriptInstance();
 	}
 
 	return ret;

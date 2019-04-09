@@ -112,8 +112,6 @@ void ComponentPolygonCollider::EditorDraw()
 
 void ComponentPolygonCollider::Start()
 {
-	InitBeObject();
-
 	physics_shape = (PhysicsShapePolygon*)App->physics->CreatePhysicsShape(PhysicsShapeType::PHYSICS_SHAPE_POLYGON);
 	GetOwner()->transform->base_physics_body->AddShape(physics_shape);
 }
@@ -126,8 +124,6 @@ void ComponentPolygonCollider::CleanUp()
 {
 	GetOwner()->transform->base_physics_body->RemoveShape(physics_shape);
 	App->physics->DestroyPhysicsShape(physics_shape);
-
-	CleanUpBeObject();
 }
 
 void ComponentPolygonCollider::OnSaveAbstraction(DataAbstraction & abs)

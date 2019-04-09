@@ -40,7 +40,10 @@ void ScriptingBridgeGameObject::OnRebuildInstances()
 
 void ScriptingBridgeGameObject::CleanUp()
 {
-
+	if (class_instance != nullptr)
+	{
+		ScriptingBridgeBeObject::ClearBeObjectRefPointer(class_instance->GetMonoObject());
+	}
 }
 
 void ScriptingBridgeGameObject::SetComponentTransform(ComponentTransform * trans)

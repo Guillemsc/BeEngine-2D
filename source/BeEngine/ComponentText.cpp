@@ -50,8 +50,6 @@ void ComponentText::EditorDraw()
 
 void ComponentText::Start()
 {
-	InitBeObject();
-
 	SetTextSize(80);
 
 	App->scene_renderer->static_text_renderer->AddTextRenderer(this);
@@ -68,8 +66,6 @@ void ComponentText::CleanUp()
 	App->scene_renderer->static_text_renderer->RemoveTextRenderer(this);
 
 	App->event->UnSuscribe(std::bind(&ComponentText::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
-
-	CleanUpBeObject();
 }
 
 void ComponentText::OnSaveAbstraction(DataAbstraction & abs)

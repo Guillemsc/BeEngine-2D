@@ -29,7 +29,6 @@ public:
 	void CallOnClick();
 
 private:
-	static ComponentButton* GetComponentButtonFromMonoObject(MonoObject* mono_object);
 	//static GameObjectComponent* CreateGameObjectComponentFromComponentType(GameObject* go, MonoType* type);
 
 	// Internal Calls

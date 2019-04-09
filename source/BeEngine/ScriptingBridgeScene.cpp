@@ -44,38 +44,17 @@ void ScriptingBridgeScene::DestroyGameObject(MonoObject * mono_object)
 
 	if (go != nullptr)
 	{
-		MonoObject* obj_ret = nullptr;
-		if (App->scripting->InvokeMonoMethod(mono_object,
-			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "ClearPointerRef", nullptr, 0, obj_ret));
-
 		App->gameobject->DestroyGameObject(go);
 	}
 }
 
 void ScriptingBridgeScene::DestroyComponent(MonoObject * mono_object)
-{
-	if (mono_object != nullptr)
+{	
+	GameObjectComponent* comp = (GameObjectComponent*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);;
+
+	if (comp != nullptr)
 	{
-		GameObjectComponent* comp = nullptr;
-
-		MonoObject* obj_ret = nullptr;
-		if (App->scripting->InvokeMonoMethod(mono_object,
-			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
-		{
-			MonoObject* obj_ret = nullptr;
-			if (App->scripting->InvokeMonoMethod(mono_object,
-				App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "ClearPointerRef", nullptr, 0, obj_ret));
-
-			if (obj_ret != nullptr)
-			{
-				comp = (GameObjectComponent*)App->scripting->UnboxPointer((MonoString*)obj_ret);
-
-				if (comp != nullptr)
-				{
-					comp->GetOwner()->DestroyComponent(comp);
-				}
-			}
-		}
+		comp->GetOwner()->DestroyComponent(comp);
 	}
 }
 

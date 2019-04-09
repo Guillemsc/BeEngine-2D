@@ -27,7 +27,7 @@ void ComponentCanvas::EditorDraw()
 
 void ComponentCanvas::Start()
 {
-	InitBeObject();
+
 }
 
 void ComponentCanvas::Update()
@@ -39,7 +39,7 @@ void ComponentCanvas::Update()
 
 void ComponentCanvas::CleanUp()
 {
-	CleanUpBeObject();
+
 }
 
 void ComponentCanvas::OnSaveAbstraction(DataAbstraction & abs)

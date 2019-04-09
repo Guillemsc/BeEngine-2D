@@ -53,8 +53,6 @@ void ComponentCamera::EditorDraw()
 
 void ComponentCamera::Start()
 {
-	InitBeObject();
-
 	camera = App->camera->CreateCamera();
 	camera->SetComponentCamera(this);
 
@@ -79,8 +77,6 @@ void ComponentCamera::CleanUp()
 		App->camera->SetGameCamera(nullptr);
 
 	App->camera->DestroyCamera(camera);
-
-	CleanUpBeObject();
 }
 
 void ComponentCamera::OnSaveAbstraction(DataAbstraction & abs)

@@ -13,7 +13,7 @@ namespace BeEngine
             return SceneCreateGameObject();
         }
 
-        public static void DestroyGameObject(ref GameObject go)
+        public static void DestroyGameObject(GameObject go)
         {
             if (go != null)
             {
@@ -23,7 +23,7 @@ namespace BeEngine
             }
         }
 
-        public static void DestroyComponent(ref Component component)
+        public static void DestroyComponent(Component component)
         {
             if (component != null)
             {

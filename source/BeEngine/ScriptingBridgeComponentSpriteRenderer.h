@@ -27,8 +27,6 @@ public:
 	void CleanUp();
 
 private:
-	static ComponentSpriteRenderer* GetComponentSpriteRendererFromMonoObject(MonoObject* mono_object);
-
 	// Internal Calls
 
 

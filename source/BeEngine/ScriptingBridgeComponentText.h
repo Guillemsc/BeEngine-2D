@@ -27,8 +27,6 @@ public:
 	void CleanUp();
 
 private:
-	static ComponentText* GetComponentButtonFromMonoObject(MonoObject* mono_object);
-
 	// Internal Calls
 
 	static void SetText(MonoObject* mono_object, MonoString* mono_string);

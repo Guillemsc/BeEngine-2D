@@ -16,20 +16,16 @@ public class asdf : ComponentScript
 
         Debug.Log(game_object.GetComponent<ComponentText>().TextColour.ToString());
 
-        game_object.AddComponent<asdf>();
+        comp = game_object.AddComponent<asdf>();
 
         new_go = Scene.CreateGameObject();
-
-        other_go = new_go;
 
         new_go.Name = "New";
     }
 	
 	public override void Update () 
 	{
-        Scene.DestroyGameObject(ref new_go);
-
-        Scene.DestroyGameObject(ref other_go);
+        Scene.DestroyComponent(game_object.GetComponent<ComponentText>());
     }
 
     public void OnClick(ComponentButton but)
@@ -39,5 +35,5 @@ public class asdf : ComponentScript
 
     GameObject new_go;
 
-    GameObject other_go;
+    asdf comp;
 }

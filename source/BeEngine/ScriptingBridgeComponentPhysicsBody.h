@@ -27,8 +27,6 @@ public:
 	void CleanUp();
 
 private:
-	static ComponentPhysicsBody* GetComponentPhysicsBodyFromMonoObject(MonoObject* mono_object);
-
 	// Internal Calls
 
 

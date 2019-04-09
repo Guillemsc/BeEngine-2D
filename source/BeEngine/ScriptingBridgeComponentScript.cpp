@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "ScriptingBridgeGameObject.h"
 #include "ComponentScriptFields.h"
+#include "ScriptingBridgeBeObject.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -37,13 +38,7 @@ void ScriptingBridgeComponentScript::OnRebuildInstances()
 
 			if (class_instance != nullptr)
 			{
-				MonoString* mono_pointer = App->scripting->BoxPointer(component_script_ref);
-
-				void* args[1] = { mono_pointer };
-
-				MonoObject* ret_obj = nullptr;
-				class_instance->InvokeMonoMethodOnParentClass(
-					*App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
+				ScriptingBridgeBeObject::SetBeObjectRefPointer(class_instance->GetMonoObject(), component_script_ref);
 
 				MonoObject* owner_go_mono_object = component_script_ref->GetOwner()->GetScriptingBridge()->GetInstance()->GetMonoObject();
 
@@ -59,7 +54,10 @@ void ScriptingBridgeComponentScript::OnRebuildInstances()
 
 void ScriptingBridgeComponentScript::CleanUp()
 {
-
+	if (class_instance != nullptr)
+	{
+		ScriptingBridgeBeObject::ClearBeObjectRefPointer(class_instance->GetMonoObject());
+	}
 }
 
 void ScriptingBridgeComponentScript::SetGeneratedClass(const ScriptingClass & g_class)

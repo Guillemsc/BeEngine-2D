@@ -27,8 +27,6 @@ public:
 	void CleanUp();
 
 private:
-	static ComponentPolygonCollider* GetComponentPolygonColliderFromMonoObject(MonoObject* mono_object);
-
 	// Internal Calls
 
 

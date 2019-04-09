@@ -5,6 +5,7 @@
 #include "ComponentButton.h"
 #include "ModuleGameObject.h"
 #include "ScriptingBridgeGameObject.h"
+#include "ScriptingBridgeBeObject.h"
 
 ScriptingBridgeComponentButton::ScriptingBridgeComponentButton(ComponentButton * component_button) 
 	: ScriptingBridgeObject(App->scripting->scripting_cluster->component_button_class)
@@ -24,13 +25,7 @@ void ScriptingBridgeComponentButton::OnRebuildInstances()
 {
 	if (class_instance != nullptr)
 	{
-		MonoString* mono_pointer = App->scripting->BoxPointer(component_button_ref);
-
-		void* args[1] = { mono_pointer };
-
-		MonoObject* ret_obj = nullptr;
-		class_instance->InvokeMonoMethodOnParentClass(
-			*App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
+		ScriptingBridgeBeObject::SetBeObjectRefPointer(class_instance->GetMonoObject(), component_button_ref);
 
 		MonoObject* owner_go_mono_object = component_button_ref->GetOwner()->GetScriptingBridge()->GetInstance()->GetMonoObject();
 
@@ -44,6 +39,10 @@ void ScriptingBridgeComponentButton::OnRebuildInstances()
 
 void ScriptingBridgeComponentButton::CleanUp()
 {
+	if (class_instance != nullptr)
+	{
+		ScriptingBridgeBeObject::ClearBeObjectRefPointer(class_instance->GetMonoObject());
+	}
 }
 
 void ScriptingBridgeComponentButton::CallOnClick()
@@ -53,24 +52,4 @@ void ScriptingBridgeComponentButton::CallOnClick()
 		MonoObject* ret_obj = nullptr;
 		class_instance->InvokeMonoMethod("CallOnClick", nullptr, 0, ret_obj);
 	}
-}
-
-ComponentButton * ScriptingBridgeComponentButton::GetComponentButtonFromMonoObject(MonoObject * mono_object)
-{
-	ComponentButton* ret = nullptr;
-
-	if (mono_object != nullptr)
-	{
-		MonoObject* obj_ret = nullptr;
-		if (App->scripting->InvokeMonoMethod(mono_object,
-			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
-		{
-			if (obj_ret != nullptr)
-			{
-				ret = (ComponentButton*)App->scripting->UnboxPointer((MonoString*)obj_ret);
-			}
-		}
-	}
-
-	return ret;
 }

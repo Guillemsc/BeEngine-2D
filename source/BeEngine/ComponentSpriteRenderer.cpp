@@ -72,8 +72,6 @@ void ComponentSpriteRenderer::EditorDraw()
 
 void ComponentSpriteRenderer::Start()
 {
-	InitBeObject();
-
 	App->event->Suscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
@@ -89,8 +87,6 @@ void ComponentSpriteRenderer::CleanUp()
 	App->scene_renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
 
 	App->event->UnSuscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
-
-	CleanUpBeObject();
 }
 
 void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)

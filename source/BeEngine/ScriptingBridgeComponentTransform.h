@@ -26,8 +26,6 @@ public:
 	void CleanUp();
 
 private:
-	static ComponentTransform* GetComponentTransformFromMonoObject(MonoObject* mono_object);
-
 	// Internal Calls
 
 	static void SetPosition(MonoObject* mono_object, MonoObject* mono_float2);

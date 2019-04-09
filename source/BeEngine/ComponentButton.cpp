@@ -73,8 +73,6 @@ void ComponentButton::EditorDraw()
 
 void ComponentButton::Start()
 {
-	InitBeObject();
-
 	App->event->Suscribe(std::bind(&ComponentButton::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	ui_element = App->ui->CreateUIElement();
@@ -95,8 +93,6 @@ void ComponentButton::CleanUp()
 	ui_element = nullptr;
 
 	App->event->UnSuscribe(std::bind(&ComponentButton::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
-
-	CleanUpBeObject();
 }
 
 void ComponentButton::OnSaveAbstraction(DataAbstraction & abs)

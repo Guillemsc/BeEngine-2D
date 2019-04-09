@@ -77,8 +77,6 @@ void ComponentTransform::EditorDraw()
 
 void ComponentTransform::Start()
 {
-	InitBeObject();
-
 	local_transform = float4x4::identity;
 	local_transform[0][3] = 1;
 	local_transform[1][3] = 1;
@@ -105,8 +103,6 @@ void ComponentTransform::Update()
 void ComponentTransform::CleanUp()
 {
 	App->physics->DestroyPhysicsBody(base_physics_body);
-
-	CleanUpBeObject();
 }
 
 void ComponentTransform::RenderGuizmos(float relative_size)

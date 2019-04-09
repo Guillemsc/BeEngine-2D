@@ -27,8 +27,6 @@ public:
 	void CleanUp();
 
 private:
-	static ComponentCamera* GetComponentCameraFromMonoObject(MonoObject* mono_object);
-
 	// Internal Calls
 
 

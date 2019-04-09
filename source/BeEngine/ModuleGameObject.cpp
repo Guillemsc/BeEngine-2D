@@ -143,6 +143,7 @@ GameObject * ModuleGameObject::CreateGameObject(Scene* scene, const std::string 
 	SetGameObjectScene(scene, ret);
 	AddGameObjectToRoot(ret);
 
+	ret->InitBeObject();
 	ret->Start();
 
 	EventGameObjectCreated* e_go = new EventGameObjectCreated(ret);
@@ -191,6 +192,8 @@ void ModuleGameObject::DestroyGameObject(GameObject * go)
 			{
 				curr->DestroyAllComponents();
 
+				curr->CleanUpBeObject();
+
 				game_objects_to_destroy.push_back(curr);
 			}
 
@@ -199,6 +202,8 @@ void ModuleGameObject::DestroyGameObject(GameObject * go)
 
 			if (curr->GetParent() == nullptr)
 				RemoveGameObjectFromRoot(curr);
+
+
 
 			to_check.erase(to_check.begin());
 

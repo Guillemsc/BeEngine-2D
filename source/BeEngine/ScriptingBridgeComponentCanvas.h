@@ -27,8 +27,6 @@ public:
 	void CleanUp();
 
 private:
-	static ComponentCanvas* GetComponentCanvasFromMonoObject(MonoObject* mono_object);
-
 	// Internal Calls
 
 
