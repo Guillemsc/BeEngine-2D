@@ -83,6 +83,9 @@ public:
 	std::vector<GameObjectComponentData> GetComponentsData() const;
 	ComponentType GetComponentTypeByComponentScriptingName(const std::string& name);
 
+	void AddComponentScript(ComponentScript* sc);
+	void RemoveComponentScript(ComponentScript* sc);
+
 private:
 	void AddComponentType(const ComponentType& type, const std::string& name, const std::string& scripting_name);
 
@@ -119,6 +122,9 @@ private:
 
 	bool needs_to_start_logic = false;
 	bool needs_to_stop_logic = false;
+
+	std::vector<ComponentScript*> component_scripts;
+	std::vector<ComponentScript*> component_scripts_to_add;
 
 	GameObjectAbstraction editor_play_scene_abs;
 	std::vector<GameObjectAbstraction> editor_play_sub_scenes_abs;

@@ -10,6 +10,7 @@
 #include "ScriptingBridgeInput.h"
 #include "ScriptingBridgeTime.h"
 #include "ScriptingBridgeComponentText.h"
+#include "ScriptingBridgeScene.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -31,6 +32,13 @@ void ScriptingCluster::RegisterInternalCalls()
 		mono_add_internal_call("BeEngine.Time::GetDeltaTime", (const void*)ScriptingBridgeTime::GetDeltaTime);
 		mono_add_internal_call("BeEngine.Time::GetTimeSinceStart", (const void*)ScriptingBridgeTime::GetTimeSinceStart);
 		// ------------------------------------- Time
+
+		// Scene -----------------------------------
+		mono_add_internal_call("BeEngine.Scene::SceneCreateGameObject", (const void*)ScriptingBridgeScene::CreateGameObject);
+		mono_add_internal_call("BeEngine.Scene::SceneDestroyGameObject", (const void*)ScriptingBridgeScene::DestroyGameObject);
+		mono_add_internal_call("BeEngine.Scene::SceneDestroyComponent", (const void*)ScriptingBridgeScene::DestroyComponent);
+		mono_add_internal_call("BeEngine.Scene::SceneLoadScene", (const void*)ScriptingBridgeScene::LoadScene);
+		// ----------------------------------- Scene
 
 		// GameObject -------------------------------
 		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
@@ -73,6 +81,9 @@ void ScriptingCluster::RebuildClasses()
 		// Time
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Time", time_class);
 
+		// Scene
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Scene", scene_class);
+
 		// Math
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Float2", float2_class);
 
@@ -107,6 +118,7 @@ void ScriptingCluster::CleanUp()
 	RELEASE(debug_class);
 	RELEASE(input_class);
 	RELEASE(time_class);
+	RELEASE(scene_class);
 
 	RELEASE(float2_class);
 	RELEASE(colour_class);

@@ -91,10 +91,14 @@ void ComponentScript::Start()
 
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
+
+	App->gameobject->AddComponentScript(this);
 }
 
 void ComponentScript::CleanUp()
 {
+	App->gameobject->RemoveComponentScript(this);
+
 	RemoveAllFieldValues();
 
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);

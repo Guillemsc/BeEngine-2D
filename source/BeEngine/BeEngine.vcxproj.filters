@@ -136,6 +136,12 @@
     <Filter Include="Sources\8. Scripting ==============\Bridges\Time">
       <UniqueIdentifier>{a8770939-5505-438c-9315-61c225f3fb87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\8. Scripting ==============\Bridges\Scene">
+      <UniqueIdentifier>{20ce37d0-4b37-45d3-adb6-67447341b5e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\8. Scripting ==============\Bridges\Debug">
+      <UniqueIdentifier>{805eb3b3-01a4-4407-8c79-2d20b6c77892}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -651,9 +657,6 @@
     <ClInclude Include="ComponentScriptFields.h">
       <Filter>Sources\10. SceneObjects ==========\GameObject\Components\Script</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptingBridgeDebug.h">
-      <Filter>Sources\8. Scripting ==============\Bridges</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptableObject.h">
       <Filter>Sources\8. Scripting ==============</Filter>
     </ClInclude>
@@ -716,6 +719,15 @@
     </ClInclude>
     <ClInclude Include="StaticTextRenderer.h">
       <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeDebug.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeScene.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeBeObject.h">
+      <Filter>Sources\8. Scripting ==============\Bridges</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1130,9 +1142,6 @@
     <ClCompile Include="ComponentScriptFields.cpp">
       <Filter>Sources\10. SceneObjects ==========\GameObject\Components\Script</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptingBridgeDebug.cpp">
-      <Filter>Sources\8. Scripting ==============\Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptableObject.cpp">
       <Filter>Sources\8. Scripting ==============</Filter>
     </ClCompile>
@@ -1195,6 +1204,15 @@
     </ClCompile>
     <ClCompile Include="StaticTextRenderer.cpp">
       <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeDebug.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeScene.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeBeObject.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

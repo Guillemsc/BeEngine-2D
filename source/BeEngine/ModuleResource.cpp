@@ -291,6 +291,26 @@ std::vector<Resource*> ModuleResource::GetResourcesFromResourceType(const Resour
 	return ret;
 }
 
+ResourceScript* ModuleResource::GetResourceScriptFromScriptName(const std::string & name)
+{
+	ResourceScript* ret = nullptr;
+
+	std::vector<Resource*> scripts = resources[ResourceType::RESOURCE_TYPE_SCRIPT];
+
+	for (std::vector<Resource*>::iterator it = scripts.begin(); it != scripts.end(); ++it)
+	{
+		ResourceScript* res = (ResourceScript*)(*it);
+
+		if(res->GetScriptingClassName().compare(name) == 0)
+		{
+			ret = res;
+			break;
+		}
+	}
+
+	return ret;
+}
+
 std::map<ResourceType, std::vector<Resource*>> ModuleResource::GetAllResources() const
 {
 	return resources;

@@ -16,22 +16,28 @@ public class asdf : ComponentScript
 
         Debug.Log(game_object.GetComponent<ComponentText>().TextColour.ToString());
 
-        //game_object.GetComponent<ComponentText>().Text =;
+        game_object.AddComponent<asdf>();
+
+        new_go = Scene.CreateGameObject();
+
+        other_go = new_go;
+
+        new_go.Name = "New";
     }
 	
 	public override void Update () 
 	{
-        for (int i = 0; i < 160; ++i)
-        {
-            game_object.GetComponent<ComponentText>();
+        Scene.DestroyGameObject(ref new_go);
 
-            //Debug.Log("Clicka");
-        }
-     
+        Scene.DestroyGameObject(ref other_go);
     }
 
     public void OnClick(ComponentButton but)
     {
         //Debug.LOG("Click");
     }
+
+    GameObject new_go;
+
+    GameObject other_go;
 }

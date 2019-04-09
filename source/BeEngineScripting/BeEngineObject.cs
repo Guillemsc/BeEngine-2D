@@ -10,6 +10,8 @@ namespace BeEngine
         private void SetPointerRef(string pointer_ref)
         {
             this.pointer_ref = pointer_ref;
+
+            valid = true;
         }
 
         private string GetPointerRef()
@@ -17,6 +19,17 @@ namespace BeEngine
             return pointer_ref;
         }
 
+        private void ClearPointerRef()
+        {
+            valid = false;
+        }
+
+        private bool GetPointerRefValid()
+        {
+            return valid;
+        }
+
         private string pointer_ref = null;
+        private bool valid = false;
     }
 }

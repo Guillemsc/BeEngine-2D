@@ -645,6 +645,87 @@ ComponentType ModuleGameObject::GetComponentTypeByComponentScriptingName(const s
 	return ret;
 }
 
+void ModuleGameObject::AddComponentScript(ComponentScript * sc)
+{
+	if (sc != nullptr)
+	{
+		bool exists = false;
+
+		for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
+		{
+			if ((*it) == sc)
+			{
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists)
+		{
+			bool exists_to_add = false;
+
+			for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
+			{
+				if ((*it) == sc)
+				{
+					exists_to_add = true;
+					break;
+				}
+			}
+
+			if (!exists_to_add)
+			{
+				component_scripts_to_add.push_back(sc);
+
+				if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
+				{
+					sc->CallAwake();
+					sc->CallStart();
+				}
+			}
+		}
+	}
+}
+
+void ModuleGameObject::RemoveComponentScript(ComponentScript * sc)
+{
+	if (sc != nullptr)
+	{
+		bool exists = false;
+
+		for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
+		{
+			if ((*it) == sc)
+			{
+				component_scripts.erase(it);
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists)
+		{
+			for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
+			{
+				if ((*it) == sc)
+				{
+					component_scripts_to_add.erase(it);
+					exists = true;
+					break;
+				}
+			}
+		}
+
+		if (exists)
+		{
+			if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
+			{
+				sc->CallOnDestroy();
+			}
+		}
+	}
+}
+
 void ModuleGameObject::AddComponentType(const ComponentType & type, const std::string & name, const std::string & scripting_name)
 {
 	GameObjectComponentData data(name, type, scripting_name);
@@ -767,65 +848,38 @@ void ModuleGameObject::UpdateGameObjectsLogic()
 
 void ModuleGameObject::GameObjectsLogicStart()
 {
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
+		component_scripts.push_back((*it));
+	
+	component_scripts_to_add.clear();
+
+	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
 	{
-		GameObject* curr_go = *it;
-
-		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
-
-		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
-		{
-			GameObjectComponent* curr_component = *co;
-
-			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)curr_component;
-
-				script->InitFields();
-				script->CallAwake();
-			}
-		}
+		(*it)->InitFields();
+		(*it)->CallAwake();
 	}
 
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
+		component_scripts.push_back((*it));
+
+	component_scripts_to_add.clear();
+
+	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
 	{
-		GameObject* curr_go = *it;
-
-		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
-
-		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
-		{
-			GameObjectComponent* curr_component = *co;
-
-			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)curr_component;
-
-				script->CallStart();
-			}
-		}
+		(*it)->CallStart();
 	}
 }
 
 void ModuleGameObject::GameObjectsLogicUpdate()
 {
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
+		component_scripts.push_back((*it));
+
+	component_scripts_to_add.clear();
+
+	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
 	{
-		GameObject* curr_go = *it;
-
-		std::vector<GameObjectComponent*> components = curr_go->GetComponents();
-
-		for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
-		{
-			GameObjectComponent* curr_component = *co;
-
-			if (curr_component->GetType() == ComponentType::COMPONENT_TYPE_SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)curr_component;
-
-				script->CallUpdate();
-			}
-		}
+		(*it)->CallUpdate();
 	}
 }
 

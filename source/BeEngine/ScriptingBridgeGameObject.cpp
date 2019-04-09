@@ -10,6 +10,7 @@
 #include "ScriptingBridgeComponentTransform.h"
 #include "ComponentButton.h"
 #include "ScriptingBridgeComponentButton.h"
+#include "ScriptingBridgeBeObject.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -33,13 +34,7 @@ void ScriptingBridgeGameObject::OnRebuildInstances()
 {
 	if (class_instance != nullptr)
 	{
-		MonoString* mono_pointer = App->scripting->BoxPointer(go_ref);
-	
-		void* args[1] = { mono_pointer };
-	
-		MonoObject* ret_obj = nullptr;
-		class_instance->InvokeMonoMethodOnParentClass(
-			*App->scripting->scripting_cluster->beengine_object_class, "SetPointerRef", args, 1, ret_obj);
+		ScriptingBridgeBeObject::SetBeObjectRefPointer(class_instance->GetMonoObject(), go_ref);
 	}
 }
 
@@ -118,26 +113,6 @@ void ScriptingBridgeGameObject::CallOnCollisionExit(PhysicsBody * pb)
 	}
 }
 
-GameObject* ScriptingBridgeGameObject::GetGameObjectFromMonoObject(MonoObject * mono_object)
-{
-	GameObject* ret = nullptr;
-
-	if (mono_object != nullptr)
-	{		
-		MonoObject* obj_ret = nullptr;
-		if (App->scripting->InvokeMonoMethod(mono_object, 
-			App->scripting->scripting_cluster->beengine_object_class->GetMonoClass(), "GetPointerRef", nullptr, 0, obj_ret))
-		{
-			if (obj_ret != nullptr)
-			{
-				ret = (GameObject*)App->scripting->UnboxPointer((MonoString*)obj_ret);
-			}
-		}
-	}
-
-	return ret;
-}
-
 GameObjectComponent * ScriptingBridgeGameObject::CreateGameObjectComponentFromComponentType(GameObject* go, MonoType * type)
 {
 	GameObjectComponent * ret = nullptr;
@@ -157,9 +132,7 @@ GameObjectComponent * ScriptingBridgeGameObject::CreateGameObjectComponentFromCo
 
 void ScriptingBridgeGameObject::SetName(MonoObject * mono_object, MonoString * mono_string)
 {
-	GameObject* go = GetGameObjectFromMonoObject(mono_object);
-
-	std::string new_name = App->scripting->UnboxString(mono_string);
+	GameObject* go = (GameObject*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (go != nullptr)
 	{
@@ -173,7 +146,7 @@ MonoString* ScriptingBridgeGameObject::GetName(MonoObject * mono_object)
 {
 	MonoString* ret = nullptr;
 
-	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+	GameObject* go = (GameObject*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (go != nullptr)
 	{
@@ -187,7 +160,7 @@ MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, Mo
 {
 	MonoObject* ret = nullptr;
 
-	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+	GameObject* go = (GameObject*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (go != nullptr)
 	{
@@ -195,19 +168,24 @@ MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, Mo
 
 		ComponentType type = App->gameobject->GetComponentTypeByComponentScriptingName(type_name);
 		
+		GameObjectComponent* comp = nullptr;
+
 		if (type != ComponentType::COMPONENT_TYPE_UNDEFINED)
 		{
-			GameObjectComponent* comp = go->CreateComponent(type);
-
-			if (comp != nullptr)
-			{
-				ScriptingClassInstance* ins = comp->GetScriptingBridge()->GetInstance();
-
-				if (ins != nullptr)
-					ret = ins->GetMonoObject();
-			}
+			comp = go->CreateComponent(type);
+		}
+		else
+		{
+			comp = (GameObjectComponent*)go->CreateComponentScript(type_name);
 		}
 
+		if (comp != nullptr)
+		{
+			ScriptingClassInstance* ins = comp->GetScriptingBridge()->GetInstance();
+
+			if (ins != nullptr)
+				ret = ins->GetMonoObject();
+		}
 
 		if (ret == nullptr)
 			CONSOLE_ERROR("Component %s could not be created, as it does not exist on Bridge Code", type_name.c_str());
@@ -220,7 +198,7 @@ MonoObject* ScriptingBridgeGameObject::GetComponent(MonoObject * mono_object, Mo
 {
 	MonoObject* ret = nullptr;
 
-	GameObject* go = GetGameObjectFromMonoObject(mono_object);
+	GameObject* go = (GameObject*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (go != nullptr)
 	{
@@ -230,10 +208,14 @@ MonoObject* ScriptingBridgeGameObject::GetComponent(MonoObject * mono_object, Mo
 
 		GameObjectComponent* comp = nullptr;
 		
-		comp = go->GetComponent(type, index);
-		
-		if(comp == nullptr)
+		if (type != ComponentType::COMPONENT_TYPE_UNDEFINED)
+		{
+			comp = go->GetComponent(type, index);
+		}
+		else
+		{
 			comp = (GameObjectComponent*)go->GetComponentScript(type_name, index);
+		}
 		
 		if (comp != nullptr)
 		{

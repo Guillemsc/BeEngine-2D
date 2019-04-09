@@ -34,7 +34,6 @@ public:
 	void CallOnCollisionExit(PhysicsBody* pb);
 
 private:
-	static GameObject* GetGameObjectFromMonoObject(MonoObject* mono_object);
 	static GameObjectComponent* CreateGameObjectComponentFromComponentType(GameObject* go, MonoType* type);
 
 	// Internal Calls
@@ -44,6 +43,7 @@ private:
 
 	static MonoObject* AddComponent(MonoObject* mono_object, MonoString* component_type);
 	static MonoObject* GetComponent(MonoObject* mono_object, MonoString* component_type, int index);
+
 
 	// --------------
 

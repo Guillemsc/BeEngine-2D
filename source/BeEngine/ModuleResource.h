@@ -35,6 +35,7 @@ public:
 	Resource* GetResourceFromAssetFile(const char* filepath);
 	Resource* GetResourceFromUid(std::string uid, ResourceType type = ResourceType::RESOURCE_TYPE_UNKWNOWN);
 	std::vector<Resource*> GetResourcesFromResourceType(const ResourceType type);
+	ResourceScript* GetResourceScriptFromScriptName(const std::string& name);
 	std::map<ResourceType, std::vector<Resource*>> GetAllResources() const;
 	std::map<ResourceType, std::string> GetAllResourcesNames() const;
 	std::vector<Resource*> GetResourcesOnAssetsPath(const std::string& path);

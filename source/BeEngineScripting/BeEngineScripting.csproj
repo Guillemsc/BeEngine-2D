@@ -58,6 +58,7 @@
     <Compile Include="Bridges\GameObject\Components\UI\ComponentText.cs" />
     <Compile Include="Bridges\GameObject\GameObject.cs" />
     <Compile Include="Bridges\Input\Input.cs" />
+    <Compile Include="Bridges\Scene\Scene.cs" />
     <Compile Include="Implementation\Colour\Colour.cs" />
     <Compile Include="Implementation\Math\Float2.cs" />
     <Compile Include="Bridges\Physics\Collision.cs" />

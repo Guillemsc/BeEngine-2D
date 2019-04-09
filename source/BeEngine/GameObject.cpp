@@ -443,7 +443,23 @@ GameObjectComponent * GameObject::GetComponent(ComponentType type, int index) co
 	return ret;
 }
 
-ComponentScript * GameObject::GetComponentScript(std::string script_name, int index)
+ComponentScript* GameObject::CreateComponentScript(const std::string & script_name)
+{
+	ComponentScript* ret = nullptr;
+
+	ResourceScript* script = App->resource->GetResourceScriptFromScriptName(script_name);
+
+	if (script != nullptr)
+	{
+		ret = (ComponentScript*)CreateComponent(ComponentType::COMPONENT_TYPE_SCRIPT);
+
+		ret->SetResourceScript(script);
+	}
+
+	return ret;
+}
+
+ComponentScript* GameObject::GetComponentScript(const std::string& script_name, int index)
 {
 	ComponentScript* ret = nullptr;
 

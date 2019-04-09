@@ -49,6 +49,8 @@ public:
 
 	ScriptingClass* time_class = nullptr;
 
+	ScriptingClass* scene_class = nullptr;
+
 	ScriptingClass* float2_class = nullptr;
 
 	ScriptingClass* colour_class = nullptr;
