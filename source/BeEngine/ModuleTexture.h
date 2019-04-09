@@ -18,6 +18,9 @@ public:
 	uint GetId() const;
 	float2 GetSize() const;
 
+	float GetWidthHeightRatio();
+	float GetHeightWidthRatio();
+
 private:
 	uint id = 0;
 	float2 size = float2::zero;

@@ -3,6 +3,8 @@
 
 #include "ModuleEditor.h"
 
+class Texture;
+
 class MenuBar : public EditorElement
 {
 	friend class ModuleEditor;

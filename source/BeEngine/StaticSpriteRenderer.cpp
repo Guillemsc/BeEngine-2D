@@ -20,16 +20,16 @@ void StaticSpriteRenderer::Start()
 {
 	VertexBuffer quad_vertex_buffer;
 
-	quad_vertex_buffer.AddFloat3(float3(-0.5f, -0.5f, 0));
+	quad_vertex_buffer.AddFloat3(float3(-0.5f, 0.5f, 0));
 	quad_vertex_buffer.AddFloat2(float2(0.0f, 0.0f));
 
-	quad_vertex_buffer.AddFloat3(float3(0.5f, -0.5f, 0));
+	quad_vertex_buffer.AddFloat3(float3(0.5f, 0.5f, 0));
 	quad_vertex_buffer.AddFloat2(float2(1.0f, 0.0f));
 
-	quad_vertex_buffer.AddFloat3(float3(0.5f, 0.5f, 0));
+	quad_vertex_buffer.AddFloat3(float3(0.5f, -0.5f, 0));
 	quad_vertex_buffer.AddFloat2(float2(1.0f, 1.0f));
 
-	quad_vertex_buffer.AddFloat3(float3(-0.5f, 0.5f, 0));
+	quad_vertex_buffer.AddFloat3(float3(-0.5f, -0.5f, 0));
 	quad_vertex_buffer.AddFloat2(float2(0.0f, 1.0f));
 
 	uint indices[] =

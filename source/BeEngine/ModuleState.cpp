@@ -72,7 +72,7 @@ void ModuleState::ActuallySetEditorState()
 {
 	bool can_update = true;
 
-	if (App->scripting->GetNeedsToCompileScripts())
+	if (App->scripting->GetNeedsToCompileScripts() || !App->scripting->GetScriptsCompile())
 		can_update = false;
 
 	if (can_update)
@@ -98,12 +98,6 @@ void ModuleState::ActuallySetEditorState()
 
 				time_since_start_play.Start();
 
-				break;
-			}
-			case EDITOR_UPDATE_STATE_PAUSED:
-			{
-				EventEditorGoesToPaused* egp = new EventEditorGoesToPaused();
-				App->event->SendEvent(egp);
 				break;
 			}
 			}

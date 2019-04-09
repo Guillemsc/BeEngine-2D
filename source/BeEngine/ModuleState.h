@@ -8,7 +8,6 @@ enum EditorUpdateState
 {
 	EDITOR_UPDATE_STATE_IDLE,
 	EDITOR_UPDATE_STATE_PLAY,
-	EDITOR_UPDATE_STATE_PAUSED,
 };
 
 enum EngineState

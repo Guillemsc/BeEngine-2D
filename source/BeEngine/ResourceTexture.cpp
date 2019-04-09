@@ -92,10 +92,7 @@ float ResourceTexture::GetWidthHeightRatio()
 
 	if (texture != nullptr)
 	{
-		float2 size = texture->GetSize();
-
-		if (size.y != 0)
-			ret = size.x / size.y;
+		ret = texture->GetWidthHeightRatio();
 	}
 
 	return ret;
@@ -107,10 +104,7 @@ float ResourceTexture::GetHeightWidthRatio()
 
 	if (texture != nullptr)
 	{
-		float2 size = texture->GetSize();
-
-		if (size.x != 0)
-			ret = size.y / size.x;
+		ret = texture->GetHeightWidthRatio();
 	}
 
 	return ret;
@@ -144,4 +138,20 @@ bool ResourceTexture::DrawEditorExplorer()
 	}
 
 	return ret;
+}
+
+void ResourceTexture::DrawEditorInspector()
+{
+	if (texture != nullptr)
+	{
+		ImVec2 size = ImGui::GetWindowSize();
+
+		size.x -= 15;
+
+		float ratio = texture->GetHeightWidthRatio();
+
+		float2 image_size = float2(size.x, size.x * ratio);
+
+		ImGui::Image((ImTextureID)texture->GetId(), ImVec2(image_size.x, image_size.y));
+	}
 }

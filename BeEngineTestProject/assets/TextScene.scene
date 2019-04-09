@@ -1,17 +1,17 @@
 {
     "game_objects_count": 1,
     "game_object_0": {
-        "uid": "62492dc0",
+        "uid": "5c3765e",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
-        "int_value_0": 3,
+        "int_value_0": 2,
         "bools_count": 1,
         "bool_name_0": "active",
         "bool_value_0": true,
         "strings_count": 1,
         "string_name_0": "name",
-        "string_value_0": "GameObject0",
+        "string_value_0": "15228_original",
         "components": [
             {
                 "ints_count": 1,
@@ -46,36 +46,35 @@
                 ]
             },
             {
-                "ints_count": 3,
+                "ints_count": 2,
                 "int_name_0": "layer",
                 "int_value_0": 0,
-                "int_name_1": "text_size",
-                "int_value_1": 80,
-                "int_name_2": "type",
-                "int_value_2": 8,
-                "strings_count": 2,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
                 "string_name_0": "resource",
-                "string_value_0": "627d6105",
-                "string_name_1": "text",
-                "string_value_1": "Text",
+                "string_value_0": "7ce6b6c6",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    168,
+                    89
+                ],
                 "floats4_count": 1,
                 "float4_name_0": "colour",
                 "float4_value_0": [
                     1,
-                    1,
+                    0,
                     1,
                     1
                 ]
-            },
-            {
-                "ints_count": 2,
-                "int_name_0": "fields_count",
-                "int_value_0": 0,
-                "int_name_1": "type",
-                "int_value_1": 2,
-                "strings_count": 1,
-                "string_name_0": "resource",
-                "string_value_0": "700a0216"
             }
         ]
     },

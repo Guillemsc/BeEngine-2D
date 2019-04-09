@@ -52,7 +52,8 @@ public:
 
 	virtual void CleanUp();
 
-	virtual bool DrawEditorExplorer();
+	virtual bool DrawEditorExplorer() { return false; };
+	virtual void DrawEditorInspector() {};
 
 protected:
 	void SetAssetFilepath(const std::string& set);

@@ -4,6 +4,8 @@
 #include "ModuleEditor.h"
 #include <string>
 
+class Texture;
+
 enum ProjectManagerState
 {
 	SELECTING_PROJECT,
@@ -42,6 +44,8 @@ private:
 	char project_creation_name[100];
 
 	std::string project_creation_location;
+
+	Texture* logo_texture = nullptr;
 };
 
 #endif // !__PROJECT_MANAGER_H__

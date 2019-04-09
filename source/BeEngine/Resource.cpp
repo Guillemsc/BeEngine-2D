@@ -259,11 +259,6 @@ void Resource::CleanUp()
 {
 }
 
-bool Resource::DrawEditorExplorer()
-{
-	return false;
-}
-
 void Resource::SetAssetFilepath(const std::string & set)
 {
 	asset_filepath = set;

@@ -20,7 +20,7 @@ public class asdf : ComponentScript
 
         new_go = Scene.CreateGameObject();
 
-        new_go.Name = "New";
+        new_go.Name = "Newua";
     }
 	
 	public override void Update () 

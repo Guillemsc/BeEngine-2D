@@ -5,6 +5,7 @@
 #include "ModuleFileSystem.h"
 #include "Event.h"
 #include "ModuleEvent.h"
+#include "ModuleTexture.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -22,10 +23,14 @@ void ProjectManager::Start()
 	big_font = App->editor->GetLoadedFont("RobotoMedium_60");
 	medium_font = App->editor->GetLoadedFont("RobotoMedium_30");
 	small_font = App->editor->GetLoadedFont("RobotoMedium_18");
+
+	std::string logo_path = std::string("images\\BeEngineNoBack.png");
+	logo_texture = App->texture->LoadTexture(logo_path);
 }
 
 void ProjectManager::CleanUp()
 {
+
 }
 
 void ProjectManager::DrawEditor()
@@ -50,13 +55,17 @@ void ProjectManager::DrawEditor()
 	{
 		ImGui::SetCursorScreenPos(ImVec2(margins, 40));
 
-		ImGui::Text("BeEngine - Project Manager");
+		if (logo_texture != nullptr)
+		{
+			float2 size = logo_texture->GetSize() * 0.3f;
+			ImGui::Image((ImTextureID)logo_texture->GetId(), ImVec2(size.x, size.y));
+		}
 
 		ImGui::PopFont();
 
 		if (App->project->GetProjectsLoaded())
 		{
-			ImGui::SetCursorScreenPos(ImVec2(margins, 120));
+			ImGui::SetCursorScreenPos(ImVec2(margins, 140));
 
 			if (state == ProjectManagerState::SELECTING_PROJECT)
 			{
@@ -101,7 +110,7 @@ void ProjectManager::DrawProjectSelector()
 		}
 	}
 
-	ImGui::SetCursorScreenPos(ImVec2(margins, 175));
+	ImGui::SetCursorScreenPos(ImVec2(margins, 195));
 	ImGui::Separator();
 
 	ImGui::BeginGroup();
@@ -123,7 +132,7 @@ void ProjectManager::DrawProjectSelector()
 
 			ImGui::PushID(count);
 
-			ImGui::SetCursorPosY(20 + (count * 100));
+			ImGui::SetCursorPosY(40 + (count * 100));
 
 			if (ImGui::Button((*it)->GetName().c_str()))
 			{
@@ -158,7 +167,7 @@ void ProjectManager::DrawProjectSelector()
 
 			ImGui::PopID();
 
-			ImGui::SetCursorPosY(90 + (count * 100));
+			ImGui::SetCursorPosY(110 + (count * 100));
 
 			ImGui::Separator();
 
@@ -187,10 +196,10 @@ void ProjectManager::DrawProjectCreator()
 
 	ImGui::Text("Create new project");
 
-	ImGui::SetCursorScreenPos(ImVec2(margins, 175));
+	ImGui::SetCursorScreenPos(ImVec2(margins, 195));
 	ImGui::Separator();
 
-	ImGui::SetCursorScreenPos(ImVec2(margins, 200));
+	ImGui::SetCursorScreenPos(ImVec2(margins, 220));
 
 	ImGui::SetCursorPosX(margins);
 
@@ -202,7 +211,7 @@ void ProjectManager::DrawProjectCreator()
 
 	ImGui::SetCursorPosX(margins);
 
-	ImGui::SetCursorScreenPos(ImVec2(margins, 295));
+	ImGui::SetCursorScreenPos(ImVec2(margins, 315));
 
 	ImGui::Text("Location:");
 
@@ -223,7 +232,7 @@ void ProjectManager::DrawProjectCreator()
 		}
 	}
 
-	ImGui::SetCursorScreenPos(ImVec2(margins, 395));
+	ImGui::SetCursorScreenPos(ImVec2(margins, 415));
 
 	if(ImGui::Button("Create project"))
 	{

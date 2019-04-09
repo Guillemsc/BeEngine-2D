@@ -237,7 +237,10 @@ EditorWindow* ModuleEditor::AddEditorWindow(const char * name, EditorWindow * wi
 			window->prof_draw = prof_editor_windows_draw->AddProfileChild(window->name.c_str());
 			editor_windows.push_back(window);
 
-			window->Start();
+			if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
+			{
+				window->Start();
+			}
 
 			ret = window;
 		}

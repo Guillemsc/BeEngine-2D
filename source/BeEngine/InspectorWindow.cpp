@@ -5,6 +5,9 @@
 #include "imgui.h"
 #include "ModuleEvent.h"
 #include "Event.h"
+#include "Resource.h"
+#include "ModuleResource.h"
+#include "Functions.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -21,15 +24,129 @@ void InspectorWindow::Start()
 {
 	App->event->Suscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_DESTROYED);
 	App->event->Suscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_CREATED);
+	App->event->Suscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }
 
 void InspectorWindow::CleanUp()
 {
 	App->event->UnSuscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_DESTROYED);
 	App->event->UnSuscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_CREATED);
+	App->event->UnSuscribe(std::bind(&InspectorWindow::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }
 
 void InspectorWindow::DrawEditor()
+{
+	switch (showing)
+	{
+	case SHOWING_GAMEOBJECTS:
+		DrawGameObjects();
+		break;
+	case SHOWING_RESOURCES:
+		DrawResources();
+		break;
+	default:
+		break;
+	}
+}
+
+ImGuiWindowFlags InspectorWindow::GetWindowFlags()
+{
+	return ImGuiWindowFlags();
+}
+
+void InspectorWindow::SetShowingGos(const std::vector<GameObject*>& gos)
+{
+	showing_gos.clear();
+
+	showing_gos = gos;
+
+	showing = InspectorWindowShowing::SHOWING_GAMEOBJECTS;
+}
+
+void InspectorWindow::SetShowingGos(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		std::vector<GameObject*> gos;
+		gos.push_back(go);
+
+		SetShowingGos(gos);
+	}
+}
+
+void InspectorWindow::RemoveFromShowingGos(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::vector<GameObject*>::iterator it = showing_gos.begin(); it != showing_gos.end(); ++it)
+		{
+			if ((*it) == go)
+			{
+				showing_gos.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+void InspectorWindow::SetShowingResources(const std::vector<Resource*>& res)
+{
+	showing_resources.clear();
+
+	showing_resources = res;
+
+	showing = InspectorWindowShowing::SHOWING_RESOURCES;
+}
+
+void InspectorWindow::SetShowingResource(Resource * res)
+{
+	if (res != nullptr)
+	{
+		std::vector<Resource*> reso;
+		reso.push_back(res);
+
+		SetShowingResources(reso);
+	}
+}
+
+void InspectorWindow::RemoveFromShowingResources(Resource * res)
+{
+	if (res != nullptr)
+	{
+		for (std::vector<Resource*>::iterator it = showing_resources.begin(); it != showing_resources.end(); ++it)
+		{
+			if ((*it) == res)
+			{
+				showing_resources.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+void InspectorWindow::OnEvent(Event * ev)
+{
+	if (ev->GetType() == EventType::GAME_OBJECT_DESTROYED)
+	{
+		EventGameObjectDestroyed* evd = (EventGameObjectDestroyed*)ev;
+
+		RemoveFromShowingGos(evd->GetGameObject());
+	}
+	else if (ev->GetType() == EventType::GAME_OBJECT_CREATED)
+	{
+		EventGameObjectCreated* evc = (EventGameObjectCreated*)ev;
+
+		SetShowingGos(evc->GetGameObject());
+	}
+	else if (ev->GetType() == EventType::RESOURCE_DESTROYED)
+	{
+		EventResourceDestroyed* evd = (EventResourceDestroyed*)ev;
+
+		RemoveFromShowingResources(evd->GetResource());
+	}
+}
+
+void InspectorWindow::DrawGameObjects()
 {
 	float2 win_size = GetWindowSize();
 
@@ -40,7 +157,7 @@ void InspectorWindow::DrawEditor()
 		std::string name = selected_go->GetName();
 		if (name.size() > 99)
 			name = name.substr(0, 98);
-		
+
 		char name_arr[99];
 		strcpy_s(name_arr, 99, name.c_str());
 		if (ImGui::InputText("", name_arr, 50, ImGuiInputTextFlags_AutoSelectAll))
@@ -52,7 +169,7 @@ void InspectorWindow::DrawEditor()
 
 		if (ImGui::Checkbox("Active", &active))
 			selected_go->SetActive(active);
-		
+
 		ImGui::Separator();
 
 	}
@@ -145,57 +262,25 @@ void InspectorWindow::DrawEditor()
 	DrawComponentsPopup(showing_gos);
 }
 
-ImGuiWindowFlags InspectorWindow::GetWindowFlags()
+void InspectorWindow::DrawResources()
 {
-	return ImGuiWindowFlags();
-}
-
-void InspectorWindow::SetShowingGos(const std::vector<GameObject*>& gos)
-{
-	showing_gos.clear();
-
-	showing_gos = gos;
-}
-
-void InspectorWindow::SetShowingGos(GameObject * go)
-{
-	if (go != nullptr)
+	if (showing_resources.size() == 1)
 	{
-		std::vector<GameObject*> gos;
-		gos.push_back(go);
+		Resource* res = showing_resources[0];
 
-		SetShowingGos(gos);
-	}
-}
+		std::string type = App->resource->GetResourceNameFromResourceType(res->GetType());
 
-void InspectorWindow::RemoveFromShowingGos(GameObject * go)
-{
-	if (go != nullptr)
-	{
-		for (std::vector<GameObject*>::iterator it = showing_gos.begin(); it != showing_gos.end(); ++it)
-		{
-			if ((*it) == go)
-			{
-				showing_gos.erase(it);
-				break;
-			}
-		}
-	}
-}
+		type = ToUpperCase(type);
 
-void InspectorWindow::OnEvent(Event * ev)
-{
-	if (ev->GetType() == EventType::GAME_OBJECT_DESTROYED)
-	{
-		EventGameObjectDestroyed* evd = (EventGameObjectDestroyed*)ev;
+		ImGui::Text(type.c_str());
 
-		RemoveFromShowingGos(evd->GetGameObject());
-	}
-	else if (ev->GetType() == EventType::GAME_OBJECT_CREATED)
-	{
-		EventGameObjectCreated* evc = (EventGameObjectCreated*)ev;
+		ImGui::SameLine();
 
-		SetShowingGos(evc->GetGameObject());
+		ImGui::Text(res->GetDecomposedAssetFilepath().file_name.c_str());
+
+		ImGui::Separator();
+
+		res->DrawEditorInspector();
 	}
 }
 

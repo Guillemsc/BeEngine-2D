@@ -41,7 +41,6 @@ enum EventType
 
 	EDITOR_GOES_TO_PLAY,
 	EDITOR_GOES_TO_IDLE,
-	EDITOR_GOES_TO_PAUSED,
 
 	ENGINE_IS_BUILD,
 
@@ -287,14 +286,6 @@ public:
 	EventEditorGoesToPlay() : Event(EventType::EDITOR_GOES_TO_PLAY)
 	{
 
-	}
-};
-
-class EventEditorGoesToPaused : public Event
-{
-public:
-	EventEditorGoesToPaused() : Event(EventType::EDITOR_GOES_TO_PAUSED)
-	{
 	}
 };
 

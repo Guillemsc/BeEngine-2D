@@ -9,6 +9,7 @@
 #include "ScriptingObjectSolutionManager.h"
 #include "ScriptingObjectCompiler.h"
 #include "ModuleAssets.h"
+#include "InspectorWindow.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -678,9 +679,13 @@ void ExplorerWindow::FilesInput(ExplorerFile * file, bool left_clicked, bool rig
 	if ((App->input->GetKeyRepeat(SDL_SCANCODE_LCTRL) || App->input->GetKeyRepeat(SDL_SCANCODE_RCTRL)) && ImGui::IsItemClicked(0))
 	{
 		if (!file->selected)
+		{
 			AddToSelectedFiles(file);
+		}
 		else
+		{
 			RemoveFromSelectedFiles(file);
+		}
 
 		disable_button_up = true;
 	}
@@ -697,6 +702,8 @@ void ExplorerWindow::FilesInput(ExplorerFile * file, bool left_clicked, bool rig
 		{
 			RemoveAllFromSelectedFiles();
 			AddToSelectedFiles(file);
+
+			App->editor->inspector_window->SetShowingResource(file->resource);
 
 			disable_button_up = true;
 		}

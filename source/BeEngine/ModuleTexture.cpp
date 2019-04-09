@@ -24,6 +24,26 @@ float2 Texture::GetSize() const
 	return size;
 }
 
+float Texture::GetWidthHeightRatio()
+{
+	float ret = 0.0f;
+	
+	if (size.y != 0)
+		ret = size.x / size.y;
+	
+	return ret;
+}
+
+float Texture::GetHeightWidthRatio()
+{
+	float ret = 0.0f;
+
+	if (size.x != 0)
+		ret = size.y / size.x;
+
+	return ret;
+}
+
 ModuleTexture::ModuleTexture()
 {
 	ilInit();
@@ -142,15 +162,22 @@ bool ModuleTexture::SaveTexture(Texture* texture, ILenum format, const std::stri
 {
 	bool ret = false;
 
-	if (texture->texture_data_size > 0)
+	if (texture != nullptr)
 	{
-		uint size = ilSaveL(format, NULL, 0);
-		byte* data = new byte[size];
+		ilBindImage(texture->texture_data_id);
 
-		if (ilSaveL(format, data, size) > 0)
+		if (texture->texture_data_size > 0)
 		{
-			App->file_system->FileSave(path, name, extension, (char*)texture->texture_data, size);
+			uint size = ilSaveL(format, NULL, 0);
+			byte* data = new byte[size];
+
+			if (ilSaveL(format, data, size) > 0)
+			{
+				App->file_system->FileSave(path, name, extension, (char*)data, size);
+			}
 		}
+
+		ilBindImage(0);
 	}
 
 	return ret;

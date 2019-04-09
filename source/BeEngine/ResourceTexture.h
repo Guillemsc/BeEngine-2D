@@ -33,6 +33,7 @@ public:
 	float2 GetSize() const;
 
 	bool DrawEditorExplorer();
+	void DrawEditorInspector();
 
 private:
 	Texture* texture = nullptr;

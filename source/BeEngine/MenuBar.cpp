@@ -2,6 +2,7 @@
 #include "App.h"
 #include "ModuleEditor.h"
 #include "imgui.h"
+#include "ModuleTexture.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
