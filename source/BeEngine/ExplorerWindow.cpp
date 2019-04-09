@@ -703,8 +703,6 @@ void ExplorerWindow::FilesInput(ExplorerFile * file, bool left_clicked, bool rig
 			RemoveAllFromSelectedFiles();
 			AddToSelectedFiles(file);
 
-			App->editor->inspector_window->SetShowingResource(file->resource);
-
 			disable_button_up = true;
 		}
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && ImGui::IsItemHovered() && file->selected && selected_files_count == 1)
@@ -734,6 +732,9 @@ void ExplorerWindow::FilesInput(ExplorerFile * file, bool left_clicked, bool rig
 		{
 			RemoveAllFromSelectedFiles();
 		}
+
+		if(left_clicked || right_clicked)
+			App->editor->inspector_window->SetShowingResource(file->resource);
 	}
 }
 

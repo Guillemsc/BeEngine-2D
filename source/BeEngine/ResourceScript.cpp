@@ -67,12 +67,15 @@ void ResourceScript::ImportFromLibrary()
 	std::string resource_filepath = GetLibraryFilepath();
 
 	JSON_Doc* doc = App->json->LoadJSON(resource_filepath.c_str());
+
 	if (doc != nullptr)
 	{
 		script_class_name = doc->GetString("name");
 
 		App->json->UnloadJSON(doc);
 	}
+
+	script_code = App->scripting->compiler->GetScriptCode(GetAssetFilepath().c_str());
 }
 
 void ResourceScript::OnRemoveAsset()
@@ -177,6 +180,11 @@ bool ResourceScript::DrawEditorExplorer()
 	}
 
 	return ret;
+}
+
+void ResourceScript::DrawEditorInspector()
+{
+	ImGui::TextWrapped(script_code.c_str());
 }
 
 ResourceScriptField::ResourceScriptField(ScriptFieldType t, const std::string& f)

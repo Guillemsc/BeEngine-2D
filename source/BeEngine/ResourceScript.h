@@ -57,9 +57,12 @@ public:
 	ScriptingClass GetScriptingClass() const;
 
 	bool DrawEditorExplorer();
+	void DrawEditorInspector();
 
 private:
 	std::string script_class_name;
+
+	std::string script_code;
 
 	bool compiles = false;
 
