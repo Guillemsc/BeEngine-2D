@@ -8,6 +8,7 @@
 #include "ModuleGameObject.h"
 #include "GameObject.h"
 #include "ComponentSpriteRenderer.h"
+#include "ModuleTexture.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -18,7 +19,7 @@ ResourceTexture::ResourceTexture() : Resource(ResourceType::RESOURCE_TYPE_TEXTUR
 
 void ResourceTexture::CleanUp()
 {
-	ilDeleteImages(1, &texture_data_id);
+	App->texture->UnloadTexture(texture);
 }
 
 bool ResourceTexture::ExistsOnLibrary(std::string uid, std::string & library_filepath)
@@ -42,50 +43,13 @@ void ResourceTexture::ExportToLibrary(std::string uid)
 {
 	std::string library_path = App->resource->GetLibraryPathFromResourceType(GetType());
 
-	std::string filepath = library_path + uid + ".dds";
+	Texture* temp_texture = App->texture->LoadTexture(GetAssetFilepath());
 
-	ILuint image;
-	ilGenImages(1, &image);
-	ilBindImage(image);
-
-	if (ilLoad(IL_TYPE_UNKNOWN, GetAssetFilepath().c_str()))
+	if (temp_texture != nullptr)
 	{
-		// Get texture info
-		ILinfo ImageInfo;
-		iluGetImageInfo(&ImageInfo);
+		App->texture->SaveTexture(temp_texture, IL_DDS, library_path, uid, "dds");
 
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-		{
-			iluFlipImage();
-		}
-
-		// Convert image to rgb and a byte chain
-		ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-
-		ILubyte* data = ilGetData();
-		uint data_id = ImageInfo.Id;
-		uint data_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-		uint image_width = ilGetInteger(IL_IMAGE_WIDTH);
-		uint image_height = ilGetInteger(IL_IMAGE_HEIGHT);
-		uint format = ilGetInteger(IL_IMAGE_FORMAT);
-		uint type = ilGetInteger(IL_IMAGE_TYPE);
-
-		if (data_size > 0)
-		{
-			uint size = ilSaveL(IL_DDS, NULL, 0);
-			byte* data = new byte[size];
-
-			if (ilSaveL(IL_DDS, data, size) > 0)
-			{
-				App->file_system->FileSave(library_path.c_str(), uid.c_str(), "dds", (char*)data, size);
-			}
-
-			RELEASE_ARRAY(data);
-
-		}
-
-		ilDeleteImages(1, &data_id);
-		ilBindImage(0);
+		App->texture->UnloadTexture(temp_texture);
 	}
 }
 
@@ -93,58 +57,15 @@ void ResourceTexture::ImportFromLibrary()
 {
 	std::string resource_filepath = GetLibraryFilepath();
 
-	if (App->file_system->FileExists(resource_filepath.c_str()))
-	{
-		ILuint image;
-		ilGenImages(1, &image);
-		ilBindImage(image);
+	if (texture != nullptr)
+		App->texture->UnloadTexture(texture);
 
-		if (ilLoad(IL_TYPE_UNKNOWN, resource_filepath.c_str()))
-		{
-			// Get texture info
-			ILinfo ImageInfo;
-			iluGetImageInfo(&ImageInfo);
-
-			if (ImageInfo.Origin != IL_ORIGIN_UPPER_LEFT)
-			{
-				iluFlipImage();
-			}
-
-			// Convert image to rgb and a byte chain
-			ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-
-			ILubyte* data = ilGetData();
-			uint data_id = ImageInfo.Id;
-			uint data_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-			uint image_width = ilGetInteger(IL_IMAGE_WIDTH);
-			uint image_height = ilGetInteger(IL_IMAGE_HEIGHT);
-			uint format = ilGetInteger(IL_IMAGE_FORMAT);
-			uint type = ilGetInteger(IL_IMAGE_TYPE);
-
-			if (texture_id != 0)
-				App->renderer->DeleteTexture(texture_id);
-
-			texture_id = App->renderer->LoadTextureToVRAM(image_width, image_height, data, format);
-
-			if (data_size > 0)
-			{
-				texture_data_id = data_id;
-				texture_data = data;
-				texture_data_size = data_size;
-
-				texture_width = image_width;
-				texture_height = image_height;
-			}
-
-			ilBindImage(0);
-		}
-	}
+	texture = App->texture->LoadTexture(resource_filepath);
 }
 
 void ResourceTexture::OnRemoveAsset()
 {
-	if (texture_id != 0)
-		App->renderer->DeleteTexture(texture_id);
+	
 }
 
 void ResourceTexture::OnRenameAsset(const char * new_name, const char * last_name)
@@ -157,15 +78,25 @@ void ResourceTexture::OnMoveAsset(const char * new_asset_path, const char* last_
 
 uint ResourceTexture::GetTextureId() const
 {
-	return texture_id;
+	uint ret = 0;
+
+	if (texture != nullptr)
+		ret = texture->GetId();
+
+	return ret;
 }
 
 float ResourceTexture::GetWidthHeightRatio()
 {
 	float ret = 0.0f;
 
-	if(texture_height != 0)
-		ret = (float)texture_width / (float)texture_height;
+	if (texture != nullptr)
+	{
+		float2 size = texture->GetSize();
+
+		if (size.y != 0)
+			ret = size.x / size.y;
+	}
 
 	return ret;
 }
@@ -174,30 +105,25 @@ float ResourceTexture::GetHeightWidthRatio()
 {
 	float ret = 0.0f;
 
-	if (texture_width != 0)
-		ret = (float)texture_height / (float)texture_width;
+	if (texture != nullptr)
+	{
+		float2 size = texture->GetSize();
+
+		if (size.x != 0)
+			ret = size.y / size.x;
+	}
 
 	return ret;
 }
 
 float2 ResourceTexture::GetSize() const
 {
-	return float2(texture_width, texture_height);
-}
+	float2 ret = float2::zero;
 
-uint ResourceTexture::GetDataId() const
-{
-	return texture_data_id;
-}
+	if (texture != nullptr)
+		ret = texture->GetSize();
 
-byte * ResourceTexture::GetData() const
-{
-	return texture_data;
-}
-
-uint ResourceTexture::GetDataSize() const
-{
-	return texture_data_size;
+	return ret;
 }
 
 bool ResourceTexture::DrawEditorExplorer()

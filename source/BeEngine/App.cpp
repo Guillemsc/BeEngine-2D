@@ -25,6 +25,7 @@
 #include "ModuleUI.h"
 #include "ModuleBuild.h"
 #include "ModuleText.h"
+#include "ModuleTexture.h"
 #include "imgui.h"
 
 #include "mmgr\nommgr.h"
@@ -70,6 +71,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	ui			   = new ModuleUI();
 	build		   = new ModuleBuild();
 	text		   = new ModuleText();
+	texture		   = new ModuleTexture();
 
 	// The order of calls is very important!
 	// Modules will Awake() Start() and Update in this order
@@ -90,6 +92,7 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	AddModule(audio, "Module Audio");
 	AddModule(renderer, "Module Renderer");
 	AddModule(scene_renderer, "Module SceneRenderer");
+	AddModule(texture, "Module Texture");
 	AddModule(editor, "Module Editor");
 	AddModule(shader, "Module Shader");
 	AddModule(project, "Module Project");

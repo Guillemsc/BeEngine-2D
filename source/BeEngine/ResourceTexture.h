@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "GeometryMath.h"
 
+class Texture;
+
 class ResourceTexture : public Resource
 {
 	friend class ModuleResource;
@@ -30,22 +32,11 @@ public:
 	float GetHeightWidthRatio();
 	float2 GetSize() const;
 
-	uint GetDataId() const;
-	byte* GetData() const;
-	uint GetDataSize() const;
-
 	bool DrawEditorExplorer();
 
 private:
-	byte*  texture_data = nullptr;
-	uint   texture_data_size = 0;
-	uint   texture_data_id = 0;
-	uint   texture_width = 0;
-	uint   texture_height = 0;
+	Texture* texture = nullptr;
 
-	uint   texture_id = 0;
-
-	bool   flipped = false;
 };
 
 #endif // !__RESOURCE_TEXTURE_H__

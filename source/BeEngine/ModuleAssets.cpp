@@ -31,15 +31,12 @@
 
 ModuleAssets::ModuleAssets() : Module()
 {
-	ilInit();
-	iluInit();
-	ilutInit();
-	ilutRenderer(ILUT_OPENGL);
+	
 }
 
 ModuleAssets::~ModuleAssets()
 {
-	ilShutDown();
+
 }
 
 bool ModuleAssets::Awake()

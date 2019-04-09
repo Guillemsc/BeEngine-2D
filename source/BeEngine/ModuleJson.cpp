@@ -18,17 +18,6 @@ bool ModuleJson::Awake()
 {
 	bool ret = true;
 
-	JSON_Doc* doc = CreateJSON("C://Users//Guillem//Desktop//test.json");
-
-	if (doc != nullptr)
-	{
-		doc->SetArray("array");
-
-		doc->AddNumber2ToArray("array", float2(3, 4));
-
-		doc->Save();
-	}
-
 	return ret;
 }
 

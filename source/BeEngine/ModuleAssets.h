@@ -1,10 +1,6 @@
 #ifndef __MODULE_ASSETS_H__
 #define __MODULE_ASSETS_H__
 
-#include "Devil\include\il.h"
-#include "Devil\include\ilu.h"
-#include "Devil\include\ilut.h"
-
 #include <map>
 #include <vector>
 
