@@ -50,6 +50,7 @@ bool ModuleResource::Awake()
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "png");
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "jpg");
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "psd");
 	AddLibraryExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "dds");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_SCRIPT, "cs");

@@ -331,4 +331,11 @@ void ModuleBuild::TryLoadBuildProject()
 		EventEngineIsBuild* ev = new EventEngineIsBuild(data_path);
 		App->event->SendEvent(ev);
 	}
+	else
+	{
+		App->state->SetEngineState(EngineState::ENGINE_STATE_EDITOR);
+
+		EventEngineIsEditor* ev = new EventEngineIsEditor();
+		App->event->SendEvent(ev);
+	}
 }

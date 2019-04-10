@@ -131,8 +131,12 @@ bool ResourceTexture::DrawEditorExplorer()
 
 		ComponentSpriteRenderer* cs = (ComponentSpriteRenderer*)go->CreateComponent(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER);
 
-		if (cs != nullptr)
+		if (cs != nullptr && texture != nullptr)
+		{
 			cs->SetResourceTexture(this);
+
+			cs->SetSize(texture->GetSize() * 0.1f);
+		}
 
 		ret = true;
 	}

@@ -4,6 +4,7 @@
 #include "ModuleRenderer.h"
 #include "Cursor.h"
 #include "ModuleJson.h"
+#include "ModuleState.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -98,14 +99,30 @@ bool ModuleWindow::Awake()
 
 		window = GenerateWindow(window, screen_surface, App->GetAppName(), flags, float2(SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED), float2(1280, 720), brightness);
 
-		SetWindowIcon("spooky.bmp");
-
 		if (window == nullptr)
 			ret = false;
+
+		SetWindowIcon("images//Icon.bmp");
 	}
 	
 	// Create cursor
 	cursor = new Cursor();
+
+	return ret;
+}
+
+bool ModuleWindow::Start()
+{
+	bool ret = true;
+
+	if (App->state->GetEngineState() == EngineState::ENGINE_STATE_BUILD)
+	{
+
+	}
+	else
+	{
+		SetWindowIcon("images//Icon.bmp");
+	}
 
 	return ret;
 }
@@ -348,7 +365,7 @@ const bool ModuleWindow::GetVsync() const
 
 void ModuleWindow::SetWindowIcon(const char * filepath)
 {
-	SDL_Surface* icon = SDL_LoadBMP("spooky.bmp");
+	SDL_Surface* icon = SDL_LoadBMP(filepath);
 	SDL_SetWindowIcon(window, icon);
 }
 

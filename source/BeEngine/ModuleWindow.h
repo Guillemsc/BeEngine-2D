@@ -43,6 +43,7 @@ public:
 	void OnLoadConfig(JSON_Doc* config);
 	void OnSaveConfig(JSON_Doc* config);
 	bool Awake();
+	bool Start();
 	bool Update();
 	bool PostUpdate();
 	bool CleanUp();

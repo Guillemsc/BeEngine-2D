@@ -42,6 +42,7 @@ enum EventType
 	EDITOR_GOES_TO_PLAY,
 	EDITOR_GOES_TO_IDLE,
 
+	ENGINE_IS_EDITOR,
 	ENGINE_IS_BUILD,
 
 	WATCH_FILE_FOLDER,
@@ -286,6 +287,14 @@ public:
 	EventEditorGoesToPlay() : Event(EventType::EDITOR_GOES_TO_PLAY)
 	{
 
+	}
+};
+
+class EventEngineIsEditor : public Event
+{
+public:
+	EventEngineIsEditor() : Event(EventType::ENGINE_IS_EDITOR)
+	{
 	}
 };
 
