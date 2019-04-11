@@ -43,8 +43,8 @@ public:
 	void UpdateScriptInstance();
 
 	void InitFields();
-	void CallAwake();
-	void CallStart();
+	bool CallAwake();
+	bool CallStart();
 	void CallUpdate();
 	void CallOnDestroy();
 
@@ -54,6 +54,9 @@ private:
 	void RecalculateFieldsValues(const std::vector<ResourceScriptField>& fields);
 	void RemoveFieldValues(const std::vector<ComponentScriptField*>& vals);
 	void RemoveAllFieldValues();
+
+	void CheckFieldGameObjectDestroyed(GameObject* go);
+	void CheckFieldResourceDestroyed(Resource* res);
 
 private:
 	ResourceScript* resource_script = nullptr;

@@ -38,9 +38,9 @@ namespace BeEngine
             return SceneLoadPrefab(prefab);
         }
 
-        public static void LoadScene(string name)
+        public static void LoadScene(ResourceScene scene)
         {
-            SceneLoadScene(name);
+            SceneLoadScene(scene);
         }
 
         // Internal Calls --------------------------------------
@@ -58,7 +58,7 @@ namespace BeEngine
         private static extern GameObject SceneLoadPrefab(ResourcePrefab prefab);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void SceneLoadScene(string name);
+        private static extern void SceneLoadScene(ResourceScene scene);
 
         // -----------------------------------------------------
     }

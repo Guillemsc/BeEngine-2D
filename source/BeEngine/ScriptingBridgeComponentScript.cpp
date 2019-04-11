@@ -78,22 +78,34 @@ void ScriptingBridgeComponentScript::SetField(ComponentScriptField * field)
 	}
 }
 
-void ScriptingBridgeComponentScript::CallAwake()
+bool ScriptingBridgeComponentScript::CallAwake()
 {
+	bool ret = false;
+
 	if (class_instance != nullptr)
 	{
+		ret = true;
+
 		MonoObject* ret_obj = nullptr;
 		class_instance->InvokeMonoMethod("Awake", nullptr, 0, ret_obj);
 	}
+
+	return ret;
 }
 
-void ScriptingBridgeComponentScript::CallStart()
+bool ScriptingBridgeComponentScript::CallStart()
 {
+	bool ret = false;
+
 	if (class_instance != nullptr)
 	{
+		ret = true;
+
 		MonoObject* ret_obj = nullptr;
 		class_instance->InvokeMonoMethod("Start", nullptr, 0, ret_obj);
 	}
+
+	return ret;
 }
 
 void ScriptingBridgeComponentScript::CallUpdate()

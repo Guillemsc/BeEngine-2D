@@ -183,6 +183,10 @@ ScriptFieldType ScriptingCluster::GetScriptFieldTypeFromName(const std::string &
 	{
 		ret = ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB;
 	}
+	else if (name.compare("BeEngine.ResourceScene") == 0)
+	{
+		ret = ScriptFieldType::SCRIPT_FIELD_RESOURCE_SCENE;
+	}
 
 	return ret;
 }

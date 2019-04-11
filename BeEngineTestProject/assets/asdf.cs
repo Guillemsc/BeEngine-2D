@@ -6,14 +6,12 @@ public class asdf : ComponentScript
 {
 	public override void Start () 
 	{
-        GameObject go = Scene.LoadPrefab(pref);
-
-        go.Name = "This is a prefab";
+        Scene.LoadScene(scene);
     }
 	
 	public override void Update () 
 	{
-        Scene.DestroyComponent(game_object.GetComponent<ComponentText>());
+       
     }
 
     public void OnClick(ComponentButton but)
@@ -23,7 +21,7 @@ public class asdf : ComponentScript
 
     GameObject new_go;
 
-    public ResourcePrefab pref;
+    public ResourceScene scene;
 
     asdf comp;
 }

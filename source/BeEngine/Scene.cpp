@@ -58,6 +58,11 @@ bool Scene::GetSelected() const
 void Scene::SetResourceScene(ResourceScene * set)
 {
 	resource = set;
+
+	if (resource != nullptr)
+	{
+		SetName(resource->GetDecomposedAssetFilepath().file_name.c_str());
+	}
 }
 
 ResourceScene * Scene::GetResourceScene() const

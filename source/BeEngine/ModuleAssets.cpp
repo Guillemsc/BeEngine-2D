@@ -469,7 +469,7 @@ bool ModuleAssets::CreatePrefab(GameObject * go)
 	return ret;
 }
 
-bool ModuleAssets::CreateScene()
+bool ModuleAssets::CreateScene(bool as_new)
 {
 	bool ret = false;
 
@@ -497,7 +497,7 @@ bool ModuleAssets::CreateScene()
 
 		ResourceScene* rs = curr_scene->GetResourceScene();
 
-		if (rs == nullptr)
+		if (rs == nullptr || as_new)
 		{
 			GameObjectAbstraction abs;
 			abs.Abstract(curr_scene->GetRootGameObjects());
@@ -529,7 +529,7 @@ bool ModuleAssets::CreateScene()
 
 	ResourceScene* root_rs = root->GetResourceScene();
 
-	if (root_rs == nullptr)
+	if (root_rs == nullptr || as_new)
 	{
 		ret = abs.Serialize(curr_path, dfp.file_name, "scene");
 

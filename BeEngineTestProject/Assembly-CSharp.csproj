@@ -92,6 +92,7 @@
       <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\BeEngineScriptingInternal.dll</HintPath>
     </Reference>
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\BeEngineTestProject\assets\asdf.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\BeEngineTestProject\assets\TestInitScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <!--

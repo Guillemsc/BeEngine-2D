@@ -6,6 +6,7 @@
 #include "ScriptingCluster.h"
 #include "ScriptingBridgeBeObject.h"
 #include "ResourcePrefab.h"
+#include "ResourceScene.h"
 
 ScriptingBridgeScene::ScriptingBridgeScene()
 	: ScriptingBridgeObject(nullptr)
@@ -78,6 +79,14 @@ MonoObject* ScriptingBridgeScene::LoadPrefab(MonoObject * mono_object)
 	return ret;
 }
 
-void ScriptingBridgeScene::LoadScene(MonoString * mono_string)
+void ScriptingBridgeScene::LoadScene(MonoObject * mono_object)
 {
+	ResourceScene* res = (ResourceScene*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (res != nullptr)
+	{
+		App->gameobject->DestroyScene(App->gameobject->GetRootScene());
+
+		res->LoadToScene(App->gameobject->GetRootScene());
+	}
 }

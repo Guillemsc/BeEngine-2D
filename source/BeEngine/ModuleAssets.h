@@ -59,7 +59,7 @@ public:
 
 	bool CreateScript(const char* filepath, const char* name);
 	bool CreatePrefab(GameObject* go);
-	bool CreateScene();
+	bool CreateScene(bool as_new = false);
 
 	// --------------------------
 

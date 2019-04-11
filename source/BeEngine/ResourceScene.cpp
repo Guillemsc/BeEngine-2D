@@ -145,7 +145,6 @@ std::vector<GameObject*> ResourceScene::LoadToScene(Scene* sc)
 		ret = abstraction.DeAbstract();
 
 		sc->SetResourceScene(this);
-		sc->SetName(GetDecomposedAssetFilepath().file_name.c_str());
 
 		for (std::vector<GameObject*>::iterator it = ret.begin(); it != ret.end(); ++it)
 		{

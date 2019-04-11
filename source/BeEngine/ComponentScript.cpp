@@ -91,6 +91,7 @@ void ComponentScript::EditorDraw()
 void ComponentScript::Start()
 {
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_DESTROYED);
 	App->event->Suscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 
 	App->gameobject->AddComponentScript(this);
@@ -103,6 +104,7 @@ void ComponentScript::CleanUp()
 	RemoveAllFieldValues();
 
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::GAME_OBJECT_DESTROYED);
 	App->event->UnSuscribe(std::bind(&ComponentScript::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED);
 }
 
@@ -176,6 +178,21 @@ void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)
 			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB:
 			{
 				ComponentScriptFieldResourcePrefab* field = (ComponentScriptFieldResourcePrefab*)(*it);
+
+				std::string uid = "";
+
+				Resource* res_to_save = (Resource*)field->GetValue();
+
+				if (res_to_save != nullptr)
+					uid = res_to_save->GetUID();
+
+				abs.AddString(field_val_name, uid);
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_SCENE:
+			{
+				ComponentScriptFieldResourceScene* field = (ComponentScriptFieldResourceScene*)(*it);
 
 				std::string uid = "";
 
@@ -285,6 +302,21 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 				break;
 			}
 
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_SCENE:
+			{
+				std::string uid = abs.GetString(field_val_name);
+
+				Resource* value = nullptr;
+
+				if (uid.compare("") != 0)
+					value = App->resource->GetResourceFromUid(uid, ResourceType::RESOURCE_TYPE_SCENE);
+
+				field_obj = new ComponentScriptFieldResourceScene(name);
+				((ComponentScriptFieldResourceScene*)field_obj)->SetValue((ResourceScene*)value);
+
+				break;
+			}
+
 			}
 
 			if (field_obj != nullptr)
@@ -310,6 +342,8 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 			}
 		}
 	}
+
+	App->gameobject->AddComponentScript(this);
 }
 
 void ComponentScript::OnEvent(Event * ev)
@@ -328,9 +362,23 @@ void ComponentScript::OnEvent(Event * ev)
 
 			UpdateScriptInstance();
 		}
+		else
+		{
+			CheckFieldResourceDestroyed(erd->GetResource());
+		}
 
 		break;
 	}
+
+	case EventType::GAME_OBJECT_DESTROYED:
+	{
+		EventGameObjectDestroyed* egd = (EventGameObjectDestroyed*)ev;
+
+		CheckFieldGameObjectDestroyed(egd->GetGameObject());
+
+		break;
+	}
+
 	case EventType::RESOURCE_SCRIPTS_FIELDS_CHANGED:
 	{
 		if (resource_script != nullptr)
@@ -397,16 +445,16 @@ void ComponentScript::InitFields()
 		bridge->SetField(*it);
 }
 
-void ComponentScript::CallAwake()
+bool ComponentScript::CallAwake()
 {
 	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
-	bridge->CallAwake();
+	return bridge->CallAwake();
 }
 
-void ComponentScript::CallStart()
+bool ComponentScript::CallStart()
 {
 	ScriptingBridgeComponentScript* bridge = (ScriptingBridgeComponentScript*)GetScriptingBridge();
-	bridge->CallStart();
+	return bridge->CallStart();
 }
 
 void ComponentScript::CallUpdate()
@@ -503,6 +551,18 @@ void ComponentScript::DrawFieldValue(ComponentScriptField* field_value)
 		break;
 	}
 
+	case ScriptFieldType::SCRIPT_FIELD_RESOURCE_SCENE:
+	{
+		ComponentScriptFieldResourceScene* field_obj = (ComponentScriptFieldResourceScene*)field_value;
+
+		Resource* val = (Resource*)field_obj->GetValue();
+
+		if (resource_selector_widget.Draw(field_name.c_str(), ResourceType::RESOURCE_TYPE_SCENE, val))
+			field_obj->SetValue((ResourceScene*)val);
+
+		break;
+	}
+
 	}
 }
 
@@ -571,6 +631,12 @@ void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptFi
 				break;
 			}
 
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_SCENE:
+			{
+				field = new ComponentScriptFieldResourceScene((*fi).GetName());
+				break;
+			}
+
 			}
 		}
 
@@ -607,4 +673,82 @@ void ComponentScript::RemoveAllFieldValues()
 	}
 
 	fields_values.clear();
+}
+
+void ComponentScript::CheckFieldGameObjectDestroyed(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::vector<ComponentScriptField*>::iterator fi = fields_values.begin(); fi != fields_values.end();)
+		{
+			bool to_delete = false;
+
+			if ((*fi)->GetType() == ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT)
+			{
+				ComponentScriptFieldGameObject* field_go = (ComponentScriptFieldGameObject*)(*fi);
+
+				if (field_go->GetValue() == go)
+				{
+					to_delete = true;
+				}
+			}
+
+			if (to_delete)
+			{
+				RELEASE(*fi);
+				fi = fields_values.erase(fi);
+			}
+			else
+				++fi;
+		}
+	}
+}
+
+void ComponentScript::CheckFieldResourceDestroyed(Resource * res)
+{
+	if (res != nullptr)
+	{
+		for (std::vector<ComponentScriptField*>::iterator fi = fields_values.begin(); fi != fields_values.end();)
+		{
+			bool to_delete = false;
+
+			switch ((*fi)->GetType())
+			{
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB:
+			{
+				ComponentScriptFieldResourcePrefab* pref = (ComponentScriptFieldResourcePrefab*)(*fi);
+
+				if (res == (Resource*)pref->GetValue())
+				{
+					to_delete = true;
+				}
+
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_SCENE:
+			{
+				ComponentScriptFieldResourceScene* scen = (ComponentScriptFieldResourceScene*)(*fi);
+
+				if (res == (Resource*)scen->GetValue())
+				{
+					to_delete = true;
+				}
+
+				break;
+			}
+
+			default:
+				break;
+			}
+
+			if (to_delete)
+			{
+				RELEASE(*fi);
+				fi = fields_values.erase(fi);
+			}
+			else
+				++fi;
+		}
+	}
 }

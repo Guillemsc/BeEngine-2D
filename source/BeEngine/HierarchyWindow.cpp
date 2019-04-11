@@ -268,9 +268,19 @@ void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count,
 			std::string curr_scene_text = "Current scene: " + scene->GetName();
 			ImGui::Text(curr_scene_text.c_str());
 
-			if (ImGui::SmallButton("Save"))
+			if (scene->GetResourceScene() != nullptr)
 			{
-				App->assets->CreateScene();
+				if (ImGui::SmallButton("Save"))
+				{
+					App->assets->CreateScene();
+				}
+
+				ImGui::SameLine();
+			}
+
+			if (ImGui::SmallButton("Save as new"))
+			{
+				App->assets->CreateScene(true);
 			}
 
 			bool open_scene_rename = false;

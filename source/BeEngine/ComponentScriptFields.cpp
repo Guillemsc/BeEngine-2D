@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "ScriptingBridgeGameObject.h"
 #include "ResourcePrefab.h"
+#include "ResourceScene.h"
 
 ComponentScriptField::ComponentScriptField(ScriptFieldType t, const std::string & n)
 {
@@ -147,3 +148,25 @@ void * ComponentScriptFieldResourcePrefab::VoidValue()
 	return nullptr;
 }
 
+ComponentScriptFieldResourceScene::ComponentScriptFieldResourceScene(const std::string & name)
+	: ComponentScriptField(ScriptFieldType::SCRIPT_FIELD_RESOURCE_SCENE, name)
+{
+}
+
+void ComponentScriptFieldResourceScene::SetValue(ResourceScene * val)
+{
+	value = val;
+}
+
+ResourceScene * ComponentScriptFieldResourceScene::GetValue() const
+{
+	return value;
+}
+
+void * ComponentScriptFieldResourceScene::VoidValue()
+{
+	if (value != nullptr)
+		return value->GetScriptingBridge()->GetInstance()->GetMonoObject();
+
+	return nullptr;
+}

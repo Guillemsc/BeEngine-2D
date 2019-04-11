@@ -31,8 +31,8 @@ public:
 
 	void SetField(ComponentScriptField* field);
 
-	void CallAwake();
-	void CallStart();
+	bool CallAwake();
+	bool CallStart();
 	void CallUpdate();
 	void CallOnDestroy();
 

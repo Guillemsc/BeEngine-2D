@@ -11,9 +11,9 @@ class Event;
 class ResourceScriptFieldValue;
 class ResourceScriptField;
 class ResourcePrefab;
+class ResourceScene;
 
 enum ScriptFieldType;
-
 
 class ComponentScriptField
 {
@@ -114,5 +114,21 @@ public:
 private:
 	ResourcePrefab* value = false;
 };
+
+class ComponentScriptFieldResourceScene : public ComponentScriptField
+{
+public:
+	ComponentScriptFieldResourceScene(const std::string& name);
+
+	void SetValue(ResourceScene* val);
+	ResourceScene* GetValue() const;
+
+	void* VoidValue();
+
+private:
+	ResourceScene* value = false;
+};
+
+
 
 #endif // !__COMPONENT_SCRIPT_FIELDS_H__
