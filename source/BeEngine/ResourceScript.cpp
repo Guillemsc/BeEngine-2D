@@ -7,11 +7,13 @@
 #include "Functions.h"
 #include "ModuleJson.h"
 #include "imgui.h"
+#include "ScriptingBridgeResourceScript.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-ResourceScript::ResourceScript() : Resource(ResourceType::RESOURCE_TYPE_SCRIPT)
+ResourceScript::ResourceScript() 
+	: Resource(new ScriptingBridgeResourceScript(this), ResourceType::RESOURCE_TYPE_SCRIPT)
 {
 }
 

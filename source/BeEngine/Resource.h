@@ -5,6 +5,9 @@
 #include <vector>
 
 #include "ModuleFileSystem.h"
+#include "BeObject.h"
+
+class ScriptingBridgeObject;
 
 enum ResourceType
 {
@@ -17,7 +20,7 @@ enum ResourceType
 	RESOURCE_TYPE_FONT,
 };
 
-class Resource
+class Resource : public BeObject
 {
 	friend class ResourceLoader;
 	friend class ModuleResource;
@@ -26,7 +29,7 @@ private:
 	void operator delete(void *) {}
 
 public:
-	Resource(ResourceType resource_type);
+	Resource(ScriptingBridgeObject* scripting_bridge, ResourceType resource_type);
 
 	// Assets and library management (Editor Mode)
 	void EM_InitResource(const char* asset_filepath);

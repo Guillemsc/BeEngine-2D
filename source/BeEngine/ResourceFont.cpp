@@ -1,8 +1,10 @@
 #include "ResourceFont.h"
 #include "App.h"
 #include "ModuleResource.h"
+#include "ScriptingBridgeResourceFont.h"
 
-ResourceFont::ResourceFont() : Resource(ResourceType::RESOURCE_TYPE_FONT)
+ResourceFont::ResourceFont() 
+	: Resource(new ScriptingBridgeResourceFont(this), ResourceType::RESOURCE_TYPE_FONT)
 {
 }
 

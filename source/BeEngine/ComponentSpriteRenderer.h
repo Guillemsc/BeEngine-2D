@@ -75,7 +75,7 @@ private:
 	bool flip_x = false;
 	bool flip_y = false;
 
-	float2 size = float2(10, 10);
+	float2 size = float2(20, 20);
 
 	int layer = 0;
 

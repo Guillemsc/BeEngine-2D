@@ -25,6 +25,7 @@
 #include "ModuleGameObject.h"
 #include "ScriptingCluster.h"
 #include "Scene.h"
+#include "ModuleTexture.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -55,6 +56,8 @@ bool ModuleAssets::Awake()
 bool ModuleAssets::Start()
 {
 	bool ret = true;
+
+	default_texture = App->texture->LoadTexture("images//DefaultTexture.png");
 
 	return ret;
 }
@@ -200,6 +203,11 @@ std::string ModuleAssets::GetLibraryPath()
 std::string ModuleAssets::GetAssetsPath()
 {
 	return assets_folder;
+}
+
+Texture * ModuleAssets::GetDefaultTexture() const
+{
+	return default_texture;
 }
 
 bool ModuleAssets::LoadFileToEngine(const char * filepath)

@@ -11,6 +11,8 @@
 #include "ModuleGameObject.h"
 #include "ComponentTransfrom.h"
 #include "ScriptingBridgeComponentSpriteRenderer.h"
+#include "ModuleAssets.h"
+#include "ModuleTexture.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -183,7 +185,13 @@ uint ComponentSpriteRenderer::GetTextureId() const
 	uint ret = 0;
 
 	if (resource_texture != nullptr)
+	{
 		ret = resource_texture->GetTextureId();
+	}
+	else
+	{
+		ret = App->assets->GetDefaultTexture()->GetId();
+	}
 
 	return ret;
 }

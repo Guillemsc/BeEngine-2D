@@ -35,6 +35,7 @@ private:
 	static MonoObject* CreateGameObject();
 	static void DestroyGameObject(MonoObject* mono_object);
 	static void DestroyComponent(MonoObject* mono_object);
+	static MonoObject* LoadPrefab(MonoObject* mono_object);
 	static void LoadScene(MonoString* mono_string);
 
 	// --------------

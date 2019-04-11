@@ -9,11 +9,13 @@
 #include "GameObject.h"
 #include "ComponentSpriteRenderer.h"
 #include "ModuleTexture.h"
+#include "ScriptingBridgeResourceTexture.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-ResourceTexture::ResourceTexture() : Resource(ResourceType::RESOURCE_TYPE_TEXTURE)
+ResourceTexture::ResourceTexture() 
+	: Resource(new ScriptingBridgeResourceTexture(this), ResourceType::RESOURCE_TYPE_TEXTURE)
 {
 }
 

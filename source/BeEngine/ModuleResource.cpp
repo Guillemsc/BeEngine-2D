@@ -181,6 +181,8 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 
 			resources[type] = new_vec;
 		}
+
+		ret->InitBeObject();
 	}
 
 	return ret;
@@ -188,28 +190,37 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 
 void ModuleResource::DestroyResource(Resource * res)
 {
-	for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
+	if (res != nullptr)
 	{
 		bool found = false;
-		for (std::vector<Resource*>::iterator t = (*it).second.begin(); t != (*it).second.end(); ++t)
+
+		for (std::map<ResourceType, std::vector<Resource*>>::iterator it = resources.begin(); it != resources.end(); ++it)
 		{
-			if ((*t) == res)
+			for (std::vector<Resource*>::iterator t = (*it).second.begin(); t != (*it).second.end(); ++t)
 			{
-				EventResourceDestroyed* event_res_destroyed = new EventResourceDestroyed(res);
-				App->event->SendEvent(event_res_destroyed);
+				if ((*t) == res)
+				{
+					(*it).second.erase(t);
 
-				res->CleanUp();
-
-				RELEASE(res);
-				(*it).second.erase(t);
-
-				found = true;
-				break;
+					found = true;
+					break;
+				}
 			}
+
+			if (found)
+				break;
 		}
 
 		if (found)
-			break;
+		{
+			EventResourceDestroyed* event_res_destroyed = new EventResourceDestroyed(res);
+			App->event->SendEvent(event_res_destroyed);
+
+			res->CleanUpBeObject();
+			res->CleanUp();
+
+			RELEASE(res);
+		}
 	}
 }
 

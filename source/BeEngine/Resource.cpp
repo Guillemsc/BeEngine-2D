@@ -4,7 +4,8 @@
 #include "ModuleJson.h"
 #include "ModuleAssets.h"
 
-Resource::Resource(ResourceType resource_type)
+Resource::Resource(ScriptingBridgeObject* scripting_bridge, ResourceType resource_type) : 
+	BeObject(scripting_bridge)
 {
 	type = resource_type;
 }

@@ -164,6 +164,19 @@ void ExplorerWindow::DrawFilesMenuBar()
 {
 	if (ImGui::BeginMenuBar())
 	{
+		bool canceled = false;
+
+		if (ImGui::Button("Import Asset"))
+		{
+			const char* filter[1] = { "" };
+			std::string file = App->file_system->SelectFileDilog(canceled, filter);
+
+			if (!canceled)
+			{
+				App->assets->LoadFileToEngine(file.c_str());
+			}
+		}
+
 		ImGui::Text(files_curr_path.c_str());
 
 		ImGui::EndMenuBar();

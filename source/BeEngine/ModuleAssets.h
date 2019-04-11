@@ -15,6 +15,7 @@ class ManageModifiedAssetsTimeSlicedTask;
 class LoadBuildResourcesTimeSlicedTask;
 class ResourceScript;
 class GameObject;
+class Texture;
 
 class ModuleAssets : public Module
 {
@@ -37,6 +38,8 @@ public:
 	std::string GetCurrentAssetsPath();
 	std::string GetLibraryPath();
 	std::string GetAssetsPath();
+
+	Texture* GetDefaultTexture() const;
 
 	// Asset management ---------
 
@@ -102,6 +105,8 @@ private:
 	bool force_update_folders = false;
 
 	int rising_watching_events_index = 0;
+
+	Texture* default_texture = nullptr;
 
 	LoadResourcesTimeSlicedTask* time_sliced_task_loading_resources = nullptr;
 	ManageModifiedAssetsTimeSlicedTask* time_sliced_task_manage_modified_assets = nullptr;

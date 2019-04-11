@@ -122,6 +122,7 @@
     <ClInclude Include="DragDropCluster.h" />
     <ClInclude Include="DragDropGameObjectWidget.h" />
     <ClInclude Include="DynamicGridRenderer.h" />
+    <ClInclude Include="EditorUtils.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="ExplorerWindow.h" />
     <ClInclude Include="FBO.h" />
@@ -278,6 +279,11 @@
     <ClInclude Include="ScriptingBridgeInput.h" />
     <ClInclude Include="ScriptingBridgeObject.h" />
     <ClInclude Include="ScriptingBridgeGameObject.h" />
+    <ClInclude Include="ScriptingBridgeResourceFont.h" />
+    <ClInclude Include="ScriptingBridgeResourcePrefab.h" />
+    <ClInclude Include="ScriptingBridgeResourceScene.h" />
+    <ClInclude Include="ScriptingBridgeResourceScript.h" />
+    <ClInclude Include="ScriptingBridgeResourceTexture.h" />
     <ClInclude Include="ScriptingBridgeScene.h" />
     <ClInclude Include="ScriptingBridgeTime.h" />
     <ClInclude Include="ScriptingCluster.h" />
@@ -318,6 +324,7 @@
     <ClCompile Include="DragDropCluster.cpp" />
     <ClCompile Include="DragDropGameObjectWidget.cpp" />
     <ClCompile Include="DynamicGridRenderer.cpp" />
+    <ClCompile Include="EditorUtils.cpp" />
     <ClCompile Include="ExplorerWindow.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Functions.cpp" />
@@ -441,6 +448,11 @@
     <ClCompile Include="ScriptingBridgeInput.cpp" />
     <ClCompile Include="ScriptingBridgeObject.cpp" />
     <ClCompile Include="ScriptingBridgeGameObject.cpp" />
+    <ClCompile Include="ScriptingBridgeResourceFont.cpp" />
+    <ClCompile Include="ScriptingBridgeResourcePrefab.cpp" />
+    <ClCompile Include="ScriptingBridgeResourceScene.cpp" />
+    <ClCompile Include="ScriptingBridgeResourceScript.cpp" />
+    <ClCompile Include="ScriptingBridgeResourceTexture.cpp" />
     <ClCompile Include="ScriptingBridgeScene.cpp" />
     <ClCompile Include="ScriptingBridgeTime.cpp" />
     <ClCompile Include="ScriptingCluster.cpp" />

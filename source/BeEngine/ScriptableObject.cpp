@@ -7,6 +7,10 @@ ScriptableObject::ScriptableObject(ScriptingBridgeObject * scripting_brige_objec
 	scripting_bridge = scripting_brige_object;
 }
 
+ScriptableObject::~ScriptableObject()
+{
+}
+
 void ScriptableObject::StartScriptableObject()
 {
 	App->scripting->AddScriptingBridgeObject(scripting_bridge);

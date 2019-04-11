@@ -142,6 +142,9 @@
     <Filter Include="Sources\8. Scripting ==============\Bridges\Debug">
       <UniqueIdentifier>{805eb3b3-01a4-4407-8c79-2d20b6c77892}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\8. Scripting ==============\Bridges\Resources">
+      <UniqueIdentifier>{4f0c489b-f44c-4be7-9bd6-623f3278cfcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -732,6 +735,24 @@
     <ClInclude Include="ModuleTexture.h">
       <Filter>Sources\3. Modules ==============</Filter>
     </ClInclude>
+    <ClInclude Include="EditorUtils.h">
+      <Filter>Sources\4. Editor ================\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeResourceTexture.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeResourceScript.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeResourceScene.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeResourcePrefab.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeResourceFont.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1219,6 +1240,24 @@
     </ClCompile>
     <ClCompile Include="ModuleTexture.cpp">
       <Filter>Sources\3. Modules ==============</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUtils.cpp">
+      <Filter>Sources\4. Editor ================\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeResourceTexture.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeResourceScript.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeResourceScene.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeResourcePrefab.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeResourceFont.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

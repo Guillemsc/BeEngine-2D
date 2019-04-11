@@ -32,7 +32,7 @@ public:
 	void OnMoveAsset(const char* new_asset_path, const char* last_asset_path);
 
 	void UpdatePrefab(const GameObjectAbstraction& abstraction);
-	void LoadToScene();
+	GameObject* LoadToScene();
 
 	bool DrawEditorExplorer();
 

@@ -6,21 +6,9 @@ public class asdf : ComponentScript
 {
 	public override void Start () 
 	{
-        game_object.Name = "Pene";
+        GameObject go = Scene.LoadPrefab(pref);
 
-        game_object.GetComponent<ComponentText>().Text = "This is a text";
-
-        Debug.Log(game_object.GetComponent<ComponentText>().Text);
-
-        game_object.GetComponent<ComponentText>().TextColour = new Colour(255, 255, 0);
-
-        Debug.Log(game_object.GetComponent<ComponentText>().TextColour.ToString());
-
-        comp = game_object.AddComponent<asdf>();
-
-        new_go = Scene.CreateGameObject();
-
-        new_go.Name = "Newua";
+        go.Name = "This is a prefab";
     }
 	
 	public override void Update () 
@@ -34,6 +22,8 @@ public class asdf : ComponentScript
     }
 
     GameObject new_go;
+
+    public ResourcePrefab pref;
 
     asdf comp;
 }

@@ -4,11 +4,13 @@
 #include "ModuleAssets.h"
 #include "imgui.h"
 #include "GameObject.h"
+#include "ScriptingBridgeResourcePrefab.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-ResourcePrefab::ResourcePrefab() : Resource(ResourceType::RESOURCE_TYPE_PREFAB)
+ResourcePrefab::ResourcePrefab() 
+	: Resource(new ScriptingBridgeResourcePrefab(this), ResourceType::RESOURCE_TYPE_PREFAB)
 {
 }
 
@@ -84,14 +86,19 @@ void ResourcePrefab::UpdatePrefab(const GameObjectAbstraction & abs)
 	App->assets->StartRisingWatchingEvents();
 }
 
-void ResourcePrefab::LoadToScene()
+GameObject* ResourcePrefab::LoadToScene()
 {
+	GameObject* ret = nullptr;
+
 	std::vector<GameObject*> gos = abstraction.DeAbstract();
 
-	for (std::vector<GameObject*>::iterator it = gos.begin(); it != gos.end(); ++it)
+	if (gos.size() > 0)
 	{
-		(*it)->resource_prefab = this;
+		ret = gos[0];
+		ret->resource_prefab = this;
 	}
+
+	return ret;
 }
 
 bool ResourcePrefab::DrawEditorExplorer()

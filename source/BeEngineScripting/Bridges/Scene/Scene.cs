@@ -33,6 +33,11 @@ namespace BeEngine
             }
         }
 
+        public static GameObject LoadPrefab(ResourcePrefab prefab)
+        {
+            return SceneLoadPrefab(prefab);
+        }
+
         public static void LoadScene(string name)
         {
             SceneLoadScene(name);
@@ -48,6 +53,9 @@ namespace BeEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void SceneDestroyComponent(Component component);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern GameObject SceneLoadPrefab(ResourcePrefab prefab);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void SceneLoadScene(string name);

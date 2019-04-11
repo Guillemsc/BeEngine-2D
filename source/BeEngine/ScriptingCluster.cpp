@@ -37,6 +37,7 @@ void ScriptingCluster::RegisterInternalCalls()
 		mono_add_internal_call("BeEngine.Scene::SceneCreateGameObject", (const void*)ScriptingBridgeScene::CreateGameObject);
 		mono_add_internal_call("BeEngine.Scene::SceneDestroyGameObject", (const void*)ScriptingBridgeScene::DestroyGameObject);
 		mono_add_internal_call("BeEngine.Scene::SceneDestroyComponent", (const void*)ScriptingBridgeScene::DestroyComponent);
+		mono_add_internal_call("BeEngine.Scene::SceneLoadPrefab", (const void*)ScriptingBridgeScene::LoadPrefab);
 		mono_add_internal_call("BeEngine.Scene::SceneLoadScene", (const void*)ScriptingBridgeScene::LoadScene);
 		// ----------------------------------- Scene
 
@@ -90,6 +91,9 @@ void ScriptingCluster::RebuildClasses()
 		// Colour
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Colour", colour_class);
 
+		// Physics
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Collision", collision_class);
+
 		// GameObject
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "GameObject", game_object_class);
 
@@ -106,8 +110,13 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentCanvas", component_canvas_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ComponentText", component_text_class);
 
-		// Physics
-		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Collision", collision_class);
+		// Resources
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Resource", resource_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceTexture", resource_texture_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceScript", resource_script_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceScene", resource_scene_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourcePrefab", resource_prefab_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceFont", resource_font_class);
 	}
 }
 
@@ -136,6 +145,13 @@ void ScriptingCluster::CleanUp()
 	RELEASE(component_physics_body_class);
 	RELEASE(component_polygon_collider_class);
 
+	RELEASE(resource_class);
+	RELEASE(resource_texture_class);
+	RELEASE(resource_script_class);
+	RELEASE(resource_scene_class);
+	RELEASE(resource_prefab_class);
+	RELEASE(resource_font_class);
+
 	RELEASE(collision_class);
 }
 
@@ -162,6 +178,10 @@ ScriptFieldType ScriptingCluster::GetScriptFieldTypeFromName(const std::string &
 	else if (name.compare("BeEngine.GameObject") == 0)
 	{
 		ret = ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT;
+	}
+	else if (name.compare("BeEngine.ResourcePrefab") == 0)
+	{
+		ret = ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB;
 	}
 
 	return ret;

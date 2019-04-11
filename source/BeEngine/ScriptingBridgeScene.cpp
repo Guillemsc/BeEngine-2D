@@ -5,6 +5,7 @@
 #include "ModuleScripting.h"
 #include "ScriptingCluster.h"
 #include "ScriptingBridgeBeObject.h"
+#include "ResourcePrefab.h"
 
 ScriptingBridgeScene::ScriptingBridgeScene()
 	: ScriptingBridgeObject(nullptr)
@@ -50,12 +51,31 @@ void ScriptingBridgeScene::DestroyGameObject(MonoObject * mono_object)
 
 void ScriptingBridgeScene::DestroyComponent(MonoObject * mono_object)
 {	
-	GameObjectComponent* comp = (GameObjectComponent*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);;
+	GameObjectComponent* comp = (GameObjectComponent*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
 
 	if (comp != nullptr)
 	{
 		comp->GetOwner()->DestroyComponent(comp);
 	}
+}
+
+MonoObject* ScriptingBridgeScene::LoadPrefab(MonoObject * mono_object)
+{
+	MonoObject* ret = nullptr;
+
+	ResourcePrefab* res = (ResourcePrefab*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (res != nullptr)
+	{
+		GameObject* go = res->LoadToScene();
+
+		if (go != nullptr)
+		{
+			ret = go->GetScriptingBridge()->GetInstance()->GetMonoObject();
+		}
+	}
+
+	return ret;
 }
 
 void ScriptingBridgeScene::LoadScene(MonoString * mono_string)

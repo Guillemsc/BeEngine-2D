@@ -166,7 +166,7 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 			
 			float2 size = transform->GetSize();
 
-			bool use_texture = curr_sprite->GetHasTexture() && curr_sprite->GetUseSprite();
+			bool use_texture = curr_sprite->GetUseSprite();
 
 			size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(size.x, size.y, 1));
 
@@ -177,7 +177,6 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 
 			if (curr_sprite->GetFlipY())
 				world_transform[1][1] = -world_transform[1][1];
-
 
 			App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
 
@@ -223,7 +222,7 @@ void StaticSpriteRenderer::AddSpriteRenderer(ComponentSpriteRenderer * add)
 		}
 
 		if (!exists)
-			sprite_renderers.push_back(add);
+			sprite_renderers.insert(sprite_renderers.begin(), add);
 	}
 }
 

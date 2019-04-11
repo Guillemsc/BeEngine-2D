@@ -10,6 +10,11 @@ namespace BeEngine
 
     public class GameObject : BeEngineObject
     {
+        private GameObject()
+        {
+
+        }
+
         /// <summary>
         ///   <para>Sets or gets the GameObject name</para>
         /// </summary>

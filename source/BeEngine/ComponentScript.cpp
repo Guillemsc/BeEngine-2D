@@ -78,6 +78,9 @@ void ComponentScript::EditorDraw()
 
 	if (resource_script != nullptr)
 	{
+		if (fields_values.size() > 0)
+			ImGui::Separator();
+
 		for (std::vector<ComponentScriptField*>::iterator it = fields_values.begin(); it != fields_values.end(); ++it)
 		{
 			DrawFieldValue((*it));
@@ -169,6 +172,22 @@ void ComponentScript::OnSaveAbstraction(DataAbstraction & abs)
 				abs.AddString(field_val_name, uid);
 				break;
 			}
+
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB:
+			{
+				ComponentScriptFieldResourcePrefab* field = (ComponentScriptFieldResourcePrefab*)(*it);
+
+				std::string uid = "";
+
+				Resource* res_to_save = (Resource*)field->GetValue();
+
+				if (res_to_save != nullptr)
+					uid = res_to_save->GetUID();
+
+				abs.AddString(field_val_name, uid);
+				break;
+			}
+
 		default:
 			break;
 		}
@@ -250,6 +269,22 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 
 				break;
 			}
+
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB:
+			{
+				std::string uid = abs.GetString(field_val_name);
+
+				Resource* value = nullptr;
+
+				if (uid.compare("") != 0)
+					value = App->resource->GetResourceFromUid(uid, ResourceType::RESOURCE_TYPE_PREFAB);
+
+				field_obj = new ComponentScriptFieldResourcePrefab(name);
+				((ComponentScriptFieldResourcePrefab*)field_obj)->SetValue((ResourcePrefab*)value);
+
+				break;
+			}
+
 			}
 
 			if (field_obj != nullptr)
@@ -456,6 +491,18 @@ void ComponentScript::DrawFieldValue(ComponentScriptField* field_value)
 		break;
 	}
 
+	case ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB:
+	{
+		ComponentScriptFieldResourcePrefab* field_obj = (ComponentScriptFieldResourcePrefab*)field_value;
+
+		Resource* val = (Resource*)field_obj->GetValue();
+
+		if(resource_selector_widget.Draw(field_name.c_str(), ResourceType::RESOURCE_TYPE_PREFAB, val))
+			field_obj->SetValue((ResourcePrefab*)val);
+
+		break;
+	}
+
 	}
 }
 
@@ -515,6 +562,12 @@ void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptFi
 			case ScriptFieldType::SCRIPT_FIELD_GAMEOBJECT:
 			{
 				field = new ComponentScriptFieldGameObject((*fi).GetName());
+				break;
+			}
+
+			case ScriptFieldType::SCRIPT_FIELD_RESOURCE_PREFAB:
+			{
+				field = new ComponentScriptFieldResourcePrefab((*fi).GetName());
 				break;
 			}
 

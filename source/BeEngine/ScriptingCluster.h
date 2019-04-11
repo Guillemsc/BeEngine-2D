@@ -13,6 +13,7 @@ enum ScriptFieldType
 	SCRIPT_FIELD_STRING,
 	SCRIPT_FIELD_BOOL,
 	SCRIPT_FIELD_GAMEOBJECT,
+	SCRIPT_FIELD_RESOURCE_PREFAB,
 };
 
 class ScriptingCluster 
@@ -55,6 +56,8 @@ public:
 
 	ScriptingClass* colour_class = nullptr;
 
+	ScriptingClass* collision_class = nullptr;
+
 	ScriptingClass* game_object_class = nullptr;
 
 	ScriptingClass* component_class = nullptr;
@@ -68,7 +71,12 @@ public:
 	ScriptingClass* component_physics_body_class = nullptr;
 	ScriptingClass* component_polygon_collider_class = nullptr;
 
-	ScriptingClass* collision_class = nullptr;
+	ScriptingClass* resource_class = nullptr;
+	ScriptingClass* resource_texture_class = nullptr;
+	ScriptingClass* resource_script_class = nullptr;
+	ScriptingClass* resource_scene_class = nullptr;
+	ScriptingClass* resource_prefab_class = nullptr;
+	ScriptingClass* resource_font_class = nullptr;
 
 private:
 	bool rebuild_internal_calls = true;
