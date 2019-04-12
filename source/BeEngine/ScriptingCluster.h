@@ -79,6 +79,8 @@ public:
 	ScriptingClass* resource_prefab_class = nullptr;
 	ScriptingClass* resource_font_class = nullptr;
 
+	ScriptingClass* show_on_inspector_attribute_class = nullptr;
+
 private:
 	bool rebuild_internal_calls = true;
 };

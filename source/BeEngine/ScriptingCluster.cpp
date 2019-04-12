@@ -117,6 +117,9 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceScene", resource_scene_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourcePrefab", resource_prefab_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceFont", resource_font_class);
+
+		// Attributes
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ShowOnInspector", show_on_inspector_attribute_class);
 	}
 }
 
@@ -131,6 +134,7 @@ void ScriptingCluster::CleanUp()
 
 	RELEASE(float2_class);
 	RELEASE(colour_class);
+	RELEASE(collision_class);
 
 	RELEASE(game_object_class);
 
@@ -152,7 +156,7 @@ void ScriptingCluster::CleanUp()
 	RELEASE(resource_prefab_class);
 	RELEASE(resource_font_class);
 
-	RELEASE(collision_class);
+	RELEASE(show_on_inspector_attribute_class);
 }
 
 ScriptFieldType ScriptingCluster::GetScriptFieldTypeFromName(const std::string & name)

@@ -19,9 +19,7 @@ public class asdf : ComponentScript
         //Debug.LOG("Click");
     }
 
-    GameObject new_go;
+    [ShowOnInspector]
+    private ResourceScene scene;
 
-    public ResourceScene scene;
-
-    asdf comp;
 }

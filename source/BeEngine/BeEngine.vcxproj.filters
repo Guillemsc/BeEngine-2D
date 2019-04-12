@@ -753,6 +753,9 @@
     <ClInclude Include="ScriptingBridgeResourceFont.h">
       <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="DragDropResourceWidget.h">
+      <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1258,6 +1261,9 @@
     </ClCompile>
     <ClCompile Include="ScriptingBridgeResourceFont.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="DragDropResourceWidget.cpp">
+      <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

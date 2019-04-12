@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeEngineObject.cs" />
+    <Compile Include="BeAttributes.cs" />
     <Compile Include="Bridges\Debug\Debug.cs" />
     <Compile Include="Bridges\GameObject\Components\Component.cs" />
     <Compile Include="Bridges\GameObject\Components\UI\ComponentButton.cs" />

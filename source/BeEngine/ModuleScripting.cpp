@@ -362,6 +362,34 @@ MonoObject* ModuleScripting::GetFieldValue(MonoObject * field_object, MonoClass 
 	return ret;
 }
 
+std::vector<ScriptingClass> ModuleScripting::GetFieldAttributes(MonoClassField* field_object, MonoClass* field_object_class)
+{
+	std::vector<ScriptingClass> ret;
+
+	MonoReflectionField* curr_refl_field = mono_field_get_object(mono_domain_get(), field_object_class, field_object);
+
+	if (curr_refl_field != nullptr)
+	{
+		MonoArray* arr = mono_reflection_get_custom_attrs((MonoObject*)curr_refl_field);
+
+		if (arr != nullptr)
+		{
+			std::vector<MonoObject*> atrs = UnboxArray(arr);
+
+			for (std::vector<MonoObject*>::iterator it = atrs.begin(); it != atrs.end(); ++it)
+			{
+				MonoClass* mono_class = App->scripting->GetMonoClass((*it));
+
+				ScriptingClass sc(mono_class);
+
+				ret.push_back(sc);
+			}
+		}
+	}
+
+	return ret;
+}
+
 MonoString* ModuleScripting::BoxString(const char * val)
 {
 	MonoString* ret = nullptr;
@@ -1170,7 +1198,7 @@ bool ScriptingClass::GetIsInheritedFrom(const ScriptingClass & class_parent)
 
 std::vector<ScriptingClassField> ScriptingClass::GetFields()
 {
-	std::vector<ScriptingClassField > ret;
+	std::vector<ScriptingClassField> ret;
 
 	if (mono_class != nullptr)
 	{
@@ -1184,11 +1212,20 @@ std::vector<ScriptingClassField> ScriptingClass::GetFields()
 
 			if (curr_field != nullptr)
 			{
-				if (!(mono_field_get_flags(curr_field) & MONO_METHOD_ATTR_PUBLIC))
+				bool show_on_inspector = false;
+
+				std::vector<ScriptingClass> field_attributes = App->scripting->GetFieldAttributes(curr_field, mono_class);
+
+				for (std::vector<ScriptingClass>::iterator it = field_attributes.begin(); it != field_attributes.end(); ++it)
 				{
-					continue;
+					if ((*it).GetMonoClass() == App->scripting->scripting_cluster->show_on_inspector_attribute_class->GetMonoClass())
+					{
+						show_on_inspector = true;
+						break;
+					}
 				}
-				else
+
+				if(show_on_inspector)
 				{
 					std::string property_name = mono_field_get_name(curr_field);
 					MonoType* property_type = mono_field_get_type(curr_field);
@@ -1441,4 +1478,9 @@ MonoType * ScriptingClassField::GetType() const
 std::string ScriptingClassField::GetName() const
 {
 	return name;
+}
+
+std::vector<ScriptingClass> ScriptingClassField::GetAttributes() const
+{
+	return attributes;
 }

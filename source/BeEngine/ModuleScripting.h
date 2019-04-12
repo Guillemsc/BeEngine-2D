@@ -65,10 +65,13 @@ public:
 
 	MonoType* GetType() const;
 	std::string GetName() const;
+	std::vector<ScriptingClass> GetAttributes() const;
 
 private:
 	MonoType* type = nullptr;
 	std::string name;
+
+	std::vector<ScriptingClass> attributes;
 };
 
 class ScriptingClass
@@ -178,6 +181,7 @@ public:
 	// Fields
 	bool SetFieldValue(MonoObject* field_object, MonoClass* field_object_class, const char* field_name, void* new_field_value);
 	MonoObject* GetFieldValue(MonoObject* field_object, MonoClass* field_object_class, const char* field_name);
+	std::vector<ScriptingClass> GetFieldAttributes(MonoClassField* field_object, MonoClass* field_object_class);
 
 	// Boxing
 	MonoString* BoxString(const char* val);
