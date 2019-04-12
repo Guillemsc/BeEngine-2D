@@ -1,0 +1,692 @@
+{
+    "game_objects_count": 9,
+    "game_object_0": {
+        "uid": "72872a2f",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Camera",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 3,
+                "floats_count": 1,
+                "float_name_0": "size",
+                "float_value_0": 0.20000000298023224
+            }
+        ]
+    },
+    "game_object_1": {
+        "uid": "298625c1",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Background",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 0,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": false,
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    9999,
+                    9999
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.14634537696838379,
+                    0.14239168167114258,
+                    0.18143457174301147,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_2": {
+        "uid": "2b2f261d",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Canvas",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 6
+            }
+        ]
+    },
+    "game_object_3": {
+        "uid": "7bbcc00c",
+        "parent_uid": "2b2f261d",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "MainTitle",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": true,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    2.2031495571136475,
+                    29.995994567871094
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    2.2031495571136475,
+                    29.995992660522461
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    3.2999999523162842,
+                    3.2999999523162842
+                ]
+            },
+            {
+                "ints_count": 3,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "text_size",
+                "int_value_1": 275,
+                "int_name_2": "type",
+                "int_value_2": 8,
+                "strings_count": 2,
+                "string_name_0": "resource",
+                "string_value_0": "64b719a2",
+                "string_name_1": "text",
+                "string_value_1": "Be pong",
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_4": {
+        "uid": "5af81552",
+        "parent_uid": "2b2f261d",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 3,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "PlayButton",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    -10.126912117004395
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -10.126912117004395
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 7,
+                "bools_count": 1,
+                "bool_name_0": "use_sprites",
+                "bool_value_0": true,
+                "strings_count": 3,
+                "string_name_0": "resource_hover",
+                "string_value_0": "332e1d55",
+                "string_name_1": "resource_idle",
+                "string_value_1": "70fe026a",
+                "string_name_2": "resource_pressed",
+                "string_value_2": "57880ca4",
+                "floats4_count": 3,
+                "float4_name_0": "colour_hover",
+                "float4_value_0": [
+                    0.69999998807907104,
+                    0,
+                    1,
+                    1
+                ],
+                "float4_name_1": "colour_idle",
+                "float4_value_1": [
+                    1,
+                    0,
+                    1,
+                    1
+                ],
+                "float4_name_2": "colour_pressed",
+                "float4_value_2": [
+                    1,
+                    0,
+                    0,
+                    1
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "70fe026a",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    58,
+                    15
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_5": {
+        "uid": "7c85a55b",
+        "parent_uid": "2b2f261d",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 3,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "CreditsButton",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    -0.74610733985900879,
+                    -34.002372741699219
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0.0058289635926485062,
+                    0.041450407356023788
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -30.938104629516602
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 7,
+                "bools_count": 1,
+                "bool_name_0": "use_sprites",
+                "bool_value_0": true,
+                "strings_count": 3,
+                "string_name_0": "resource_hover",
+                "string_value_0": "332e1d55",
+                "string_name_1": "resource_idle",
+                "string_value_1": "70fe026a",
+                "string_name_2": "resource_pressed",
+                "string_value_2": "57880ca4",
+                "floats4_count": 3,
+                "float4_name_0": "colour_hover",
+                "float4_value_0": [
+                    0.69999998807907104,
+                    0,
+                    1,
+                    1
+                ],
+                "float4_name_1": "colour_idle",
+                "float4_value_1": [
+                    1,
+                    0,
+                    1,
+                    1
+                ],
+                "float4_name_2": "colour_pressed",
+                "float4_value_2": [
+                    1,
+                    0,
+                    0,
+                    1
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "70fe026a",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    58,
+                    15
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_6": {
+        "uid": "174bf518",
+        "parent_uid": "7bbcc00c",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "SampleProjectText",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": true,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    16.800725936889648,
+                    7.3323488235473633
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    15.844470024108887,
+                    9.5937919616699219
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    0.70999997854232788,
+                    0.70999997854232788
+                ]
+            },
+            {
+                "ints_count": 3,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "text_size",
+                "int_value_1": 80,
+                "int_name_2": "type",
+                "int_value_2": 8,
+                "strings_count": 2,
+                "string_name_0": "resource",
+                "string_value_0": "64b719a2",
+                "string_name_1": "text",
+                "string_value_1": "Be engine sample project",
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_7": {
+        "uid": "6c283e8c",
+        "parent_uid": "5af81552",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Text",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": true,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -9.7908163070678711
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    0.89999997615814209,
+                    0.89999997615814209
+                ]
+            },
+            {
+                "ints_count": 3,
+                "int_name_0": "layer",
+                "int_value_0": 2,
+                "int_name_1": "text_size",
+                "int_value_1": 80,
+                "int_name_2": "type",
+                "int_value_2": 8,
+                "strings_count": 2,
+                "string_name_0": "resource",
+                "string_value_0": "64b719a2",
+                "string_name_1": "text",
+                "string_value_1": "Play",
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_8": {
+        "uid": "22028b76",
+        "parent_uid": "7c85a55b",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "Text",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": true,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -30.602008819580078
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    0.89999997615814209,
+                    0.89999997615814209
+                ]
+            },
+            {
+                "ints_count": 3,
+                "int_name_0": "layer",
+                "int_value_0": 2,
+                "int_name_1": "text_size",
+                "int_value_1": 80,
+                "int_name_2": "type",
+                "int_value_2": 8,
+                "strings_count": 2,
+                "string_name_0": "resource",
+                "string_value_0": "64b719a2",
+                "string_name_1": "text",
+                "string_value_1": "Credits",
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "sub_scenes": []
+}

@@ -43,7 +43,8 @@ void ProjectManager::DrawEditor()
 	float2 docking_size = float2(window_size.x, window_size.y );
 
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove
-		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus;
+		| ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus
+		| ImGuiWindowFlags_NoScrollbar;
 
 	bool opened = true;
 

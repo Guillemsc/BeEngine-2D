@@ -739,13 +739,13 @@ void ModuleAssets::LoadUserScriptsInfo()
 						}
 					}
 				}
-				
-				EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
-				App->event->SendEvent(ersfc);
 			}
 			
 		}
 	}
+
+	EventResourceScriptsFieldsChanged* ersfc = new EventResourceScriptsFieldsChanged();
+	App->event->SendEvent(ersfc);
 }
 
 bool ModuleAssets::CanLoadAssetFile(const char * filepath)

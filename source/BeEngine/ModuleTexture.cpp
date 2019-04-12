@@ -166,6 +166,9 @@ bool ModuleTexture::SaveTexture(Texture* texture, ILenum format, const std::stri
 	{
 		ilBindImage(texture->texture_data_id);
 
+		// Convert image to rgb and a byte chain
+		ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
 		if (texture->texture_data_size > 0)
 		{
 			uint size = ilSaveL(format, NULL, 0);

@@ -78,9 +78,9 @@ Application::Application(int _argc, char* _args[]) : argc(argc), args(args)
 	// They will CleanUp() in reverse order
 
 	// Add modules
+	AddModule(event, "Module Event");
 	AddModule(file_system, "Module FileSystem");
 	AddModule(action, "Module Action");
-	AddModule(event, "Module Event");
 	AddModule(thread, "Module Thread");
 	AddModule(time_sliced, "Module TimeSliced");
 	AddModule(json, "Module JSON");

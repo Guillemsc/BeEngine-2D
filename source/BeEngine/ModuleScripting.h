@@ -61,7 +61,7 @@ private:
 class ScriptingClassField
 {
 public:
-	ScriptingClassField(const std::string& name, MonoType* type);
+	ScriptingClassField(const std::string& name, MonoType* type, const std::vector<ScriptingClass>& attributes);
 
 	MonoType* GetType() const;
 	std::string GetName() const;

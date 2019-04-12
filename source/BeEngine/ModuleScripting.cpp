@@ -1230,7 +1230,7 @@ std::vector<ScriptingClassField> ScriptingClass::GetFields()
 					std::string property_name = mono_field_get_name(curr_field);
 					MonoType* property_type = mono_field_get_type(curr_field);
 
-					ScriptingClassField scf(property_name, property_type);
+					ScriptingClassField scf(property_name, property_type, field_attributes);
 					ret.push_back(scf);
 				}
 			}
@@ -1464,10 +1464,11 @@ MonoObject * ScriptingClassInstance::GetMonoObject() const
 	return mono_gchandle_get_target(id);
 }
 
-ScriptingClassField::ScriptingClassField(const std::string & n, MonoType * t)
+ScriptingClassField::ScriptingClassField(const std::string & n, MonoType * t, const std::vector<ScriptingClass>& attr)
 {
 	name = n;
 	type = t;
+	attributes = attr;
 }
 
 MonoType * ScriptingClassField::GetType() const

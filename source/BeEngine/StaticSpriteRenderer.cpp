@@ -222,7 +222,7 @@ void StaticSpriteRenderer::AddSpriteRenderer(ComponentSpriteRenderer * add)
 		}
 
 		if (!exists)
-			sprite_renderers.insert(sprite_renderers.begin(), add);
+			sprite_renderers.push_back(add);
 	}
 }
 

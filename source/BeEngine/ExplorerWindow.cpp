@@ -300,7 +300,7 @@ void ExplorerWindow::DrawFoldersRecursive(ExplorerFolder* folder)
 		ImGui::SetNextTreeNodeOpen(true);
 	}
 
-	ImGui::PushID(folder->dfp.path.c_str());
+	ImGui::PushID(folder->dfp.file_path.c_str());
 	bool opened = ImGui::TreeNodeEx(folder->folder_name.c_str(), flags);
 
 	bool left_clicked = false;
