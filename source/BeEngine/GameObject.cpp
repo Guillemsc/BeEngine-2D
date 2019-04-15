@@ -66,6 +66,8 @@ void GameObject::Update()
 
 void GameObject::CleanUp()
 {
+	App->event->UnSuscribe(std::bind(&GameObject::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
+
 	ActuallyDestroyComponents();
 }
 

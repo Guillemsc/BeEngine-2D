@@ -45,8 +45,8 @@ bool ModuleShader::CleanUp()
 {
 	bool ret = true;
 
-	DestroyAllShaders();
 	DestroyAllShaderPrograms();
+	DestroyAllShaders();
 
 	return ret;
 }
@@ -139,7 +139,11 @@ Shader::Shader(ShaderType _type)
 void Shader::CleanUp()
 {
 	if (id > 0)
+	{
 		App->renderer->DeleteShader(id);
+
+		id = 0;
+	}
 }
 
 bool Shader::SetShaderCode(const char * code)
@@ -205,7 +209,11 @@ ShaderProgram::ShaderProgram()
 void ShaderProgram::CleanUp()
 {
 	if (id > 0)
+	{
 		App->renderer->DeleteProgram(id);
+
+		id = 0;
+	}
 }
 
 void ShaderProgram::AddShader(Shader * set)

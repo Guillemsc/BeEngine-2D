@@ -89,6 +89,7 @@ bool ModuleGameObject::CleanUp()
 	RELEASE(root_scene);
 
 	App->event->UnSuscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
+	App->event->UnSuscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
 
 	return ret;
 }

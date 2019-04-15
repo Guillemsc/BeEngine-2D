@@ -53,6 +53,9 @@ void ExplorerWindow::Start()
 
 void ExplorerWindow::CleanUp()
 {
+	App->event->UnSuscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::WATCH_FILE_FOLDER);
+	App->event->UnSuscribe(std::bind(&ExplorerWindow::OnEvent, this, std::placeholders::_1), EventType::PROJECT_SELECTED);
+
 	ClearFolders();
 	ClearFiles();
 }
