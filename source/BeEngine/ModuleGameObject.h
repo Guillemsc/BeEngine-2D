@@ -11,6 +11,7 @@
 class Event;
 class Scene;
 class ComponentCanvas;
+class ResourceScene;
 
 class GameObjectComponentData
 {
@@ -86,6 +87,8 @@ public:
 	void AddComponentScript(ComponentScript* sc);
 	void RemoveComponentScript(ComponentScript* sc);
 
+	void SetSceneToLoad(ResourceScene* rs);
+
 private:
 	void AddComponentType(const ComponentType& type, const std::string& name, const std::string& scripting_name);
 
@@ -102,6 +105,8 @@ private:
 	void GameObjectsLogicStart();
 	void GameObjectsLogicUpdate();
 	void GameObjectsLogicStop();
+
+	void CheckResourceSceneToLoad();
 
 	void SaveSceneEditorPlay();
 	void LoadSceneEditorPlay();
@@ -128,6 +133,8 @@ private:
 
 	GameObjectAbstraction editor_play_scene_abs;
 	std::vector<GameObjectAbstraction> editor_play_sub_scenes_abs;
+
+	ResourceScene* scene_to_load = nullptr;
 
 	std::string last_scene_resource;
 };

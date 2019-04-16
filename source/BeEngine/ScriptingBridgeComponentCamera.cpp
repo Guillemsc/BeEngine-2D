@@ -43,3 +43,59 @@ void ScriptingBridgeComponentCamera::CleanUp()
 		ScriptingBridgeBeObject::ClearBeObjectRefPointer(class_instance->GetMonoObject());
 	}
 }
+
+float ScriptingBridgeComponentCamera::GetViewUpPosition(MonoObject * mono_object)
+{
+	float ret = 0.0f;
+
+	ComponentCamera* comp = (ComponentCamera*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (comp != nullptr)
+	{
+		ret = comp->GetViewUpPosition();
+	}
+
+	return ret;
+}
+
+float ScriptingBridgeComponentCamera::GetViewDownPosition(MonoObject * mono_object)
+{
+	float ret = 0.0f;
+
+	ComponentCamera* comp = (ComponentCamera*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (comp != nullptr)
+	{
+		ret = comp->GetViewDownPosition();
+	}
+
+	return ret;
+}
+
+float ScriptingBridgeComponentCamera::GetViewLeftPosition(MonoObject * mono_object)
+{
+	float ret = 0.0f;
+
+	ComponentCamera* comp = (ComponentCamera*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (comp != nullptr)
+	{
+		ret = comp->GetViewLeftPosition();
+	}
+
+	return ret;
+}
+
+float ScriptingBridgeComponentCamera::GetViewRightPosition(MonoObject * mono_object)
+{
+	float ret = 0.0f;
+
+	ComponentCamera* comp = (ComponentCamera*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (comp != nullptr)
+	{
+		ret = comp->GetViewRightPosition();
+	}
+
+	return ret;
+}

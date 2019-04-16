@@ -1,7 +1,7 @@
 {
-    "game_objects_count": 9,
+    "game_objects_count": 10,
     "game_object_0": {
-        "uid": "72872a2f",
+        "uid": "4f2a40bf",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -56,7 +56,7 @@
         ]
     },
     "game_object_1": {
-        "uid": "298625c1",
+        "uid": "620deb05",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -131,7 +131,7 @@
         ]
     },
     "game_object_2": {
-        "uid": "2b2f261d",
+        "uid": "5435b411",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -183,8 +183,77 @@
         ]
     },
     "game_object_3": {
-        "uid": "7bbcc00c",
-        "parent_uid": "2b2f261d",
+        "uid": "268c242e",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "MainMenuManager",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 4,
+                "int_name_0": "field_type_0",
+                "int_value_0": 7,
+                "int_name_1": "field_type_1",
+                "int_value_1": 5,
+                "int_name_2": "fields_count",
+                "int_value_2": 2,
+                "int_name_3": "type",
+                "int_value_3": 2,
+                "strings_count": 5,
+                "string_name_0": "field_name_0",
+                "string_value_0": "game_scene_to_load",
+                "string_name_1": "field_name_1",
+                "string_value_1": "play_button_go",
+                "string_name_2": "field_val_0",
+                "string_value_2": "4ae0c37d",
+                "string_name_3": "field_val_1",
+                "string_value_3": "7eb46b2d",
+                "string_name_4": "resource",
+                "string_value_4": "62796b8f"
+            }
+        ]
+    },
+    "game_object_4": {
+        "uid": "51ef5820",
+        "parent_uid": "5435b411",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -208,8 +277,8 @@
                 "floats2_count": 4,
                 "float2_name_0": "anchor_offset",
                 "float2_value_0": [
-                    2.2031495571136475,
-                    29.995994567871094
+                    0,
+                    29.995992660522461
                 ],
                 "float2_name_1": "anchor_pos",
                 "float2_value_1": [
@@ -218,7 +287,7 @@
                 ],
                 "float2_name_2": "position",
                 "float2_value_2": [
-                    2.2031495571136475,
+                    0,
                     29.995992660522461
                 ],
                 "float2_name_3": "scale",
@@ -251,9 +320,9 @@
             }
         ]
     },
-    "game_object_4": {
-        "uid": "5af81552",
-        "parent_uid": "2b2f261d",
+    "game_object_5": {
+        "uid": "7eb46b2d",
+        "parent_uid": "5435b411",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -278,7 +347,7 @@
                 "float2_name_0": "anchor_offset",
                 "float2_value_0": [
                     0,
-                    -10.126912117004395
+                    -15.40887451171875
                 ],
                 "float2_name_1": "anchor_pos",
                 "float2_value_1": [
@@ -288,122 +357,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     0,
-                    -10.126912117004395
-                ],
-                "float2_name_3": "scale",
-                "float2_value_3": [
-                    1,
-                    1
-                ]
-            },
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 7,
-                "bools_count": 1,
-                "bool_name_0": "use_sprites",
-                "bool_value_0": true,
-                "strings_count": 3,
-                "string_name_0": "resource_hover",
-                "string_value_0": "332e1d55",
-                "string_name_1": "resource_idle",
-                "string_value_1": "70fe026a",
-                "string_name_2": "resource_pressed",
-                "string_value_2": "57880ca4",
-                "floats4_count": 3,
-                "float4_name_0": "colour_hover",
-                "float4_value_0": [
-                    0.69999998807907104,
-                    0,
-                    1,
-                    1
-                ],
-                "float4_name_1": "colour_idle",
-                "float4_value_1": [
-                    1,
-                    0,
-                    1,
-                    1
-                ],
-                "float4_name_2": "colour_pressed",
-                "float4_value_2": [
-                    1,
-                    0,
-                    0,
-                    1
-                ]
-            },
-            {
-                "ints_count": 2,
-                "int_name_0": "layer",
-                "int_value_0": 1,
-                "int_name_1": "type",
-                "int_value_1": 1,
-                "bools_count": 3,
-                "bool_name_0": "flip_x",
-                "bool_value_0": false,
-                "bool_name_1": "flip_y",
-                "bool_value_1": false,
-                "bool_name_2": "use_sprite",
-                "bool_value_2": true,
-                "strings_count": 1,
-                "string_name_0": "resource",
-                "string_value_0": "70fe026a",
-                "floats2_count": 1,
-                "float2_name_0": "size",
-                "float2_value_0": [
-                    58,
-                    15
-                ],
-                "floats4_count": 1,
-                "float4_name_0": "colour",
-                "float4_value_0": [
-                    1,
-                    0,
-                    1,
-                    1
-                ]
-            }
-        ]
-    },
-    "game_object_5": {
-        "uid": "7c85a55b",
-        "parent_uid": "2b2f261d",
-        "ints_count": 1,
-        "int_name_0": "components_count",
-        "int_value_0": 3,
-        "bools_count": 1,
-        "bool_name_0": "active",
-        "bool_value_0": true,
-        "strings_count": 1,
-        "string_name_0": "name",
-        "string_value_0": "CreditsButton",
-        "components": [
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 0,
-                "bools_count": 1,
-                "bool_name_0": "keep_ratio",
-                "bool_value_0": false,
-                "floats_count": 1,
-                "float_name_0": "rotation",
-                "float_value_0": -0,
-                "floats2_count": 4,
-                "float2_name_0": "anchor_offset",
-                "float2_value_0": [
-                    -0.74610733985900879,
-                    -34.002372741699219
-                ],
-                "float2_name_1": "anchor_pos",
-                "float2_value_1": [
-                    0.0058289635926485062,
-                    0.041450407356023788
-                ],
-                "float2_name_2": "position",
-                "float2_value_2": [
-                    0,
-                    -30.938104629516602
+                    -15.408873558044434
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -482,8 +436,123 @@
         ]
     },
     "game_object_6": {
-        "uid": "174bf518",
-        "parent_uid": "7bbcc00c",
+        "uid": "528d575f",
+        "parent_uid": "5435b411",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 3,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "CreditsButton",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    -1.8025000095367432,
+                    -34.002372741699219
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0.014082031324505806,
+                    0.0023247536737471819
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -33.830513000488281
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 7,
+                "bools_count": 1,
+                "bool_name_0": "use_sprites",
+                "bool_value_0": true,
+                "strings_count": 3,
+                "string_name_0": "resource_hover",
+                "string_value_0": "332e1d55",
+                "string_name_1": "resource_idle",
+                "string_value_1": "70fe026a",
+                "string_name_2": "resource_pressed",
+                "string_value_2": "57880ca4",
+                "floats4_count": 3,
+                "float4_name_0": "colour_hover",
+                "float4_value_0": [
+                    0.69999998807907104,
+                    0,
+                    1,
+                    1
+                ],
+                "float4_name_1": "colour_idle",
+                "float4_value_1": [
+                    1,
+                    0,
+                    1,
+                    1
+                ],
+                "float4_name_2": "colour_pressed",
+                "float4_value_2": [
+                    1,
+                    0,
+                    0,
+                    1
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "70fe026a",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    58,
+                    15
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_7": {
+        "uid": "57ff0a5e",
+        "parent_uid": "51ef5820",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -517,7 +586,7 @@
                 ],
                 "float2_name_2": "position",
                 "float2_value_2": [
-                    15.844470024108887,
+                    13.64132022857666,
                     9.5937919616699219
                 ],
                 "float2_name_3": "scale",
@@ -550,9 +619,9 @@
             }
         ]
     },
-    "game_object_7": {
-        "uid": "6c283e8c",
-        "parent_uid": "5af81552",
+    "game_object_8": {
+        "uid": "20005174",
+        "parent_uid": "7eb46b2d",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -587,7 +656,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     0,
-                    -9.7908163070678711
+                    -15.07277774810791
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -619,9 +688,9 @@
             }
         ]
     },
-    "game_object_8": {
-        "uid": "22028b76",
-        "parent_uid": "7c85a55b",
+    "game_object_9": {
+        "uid": "47e9473a",
+        "parent_uid": "528d575f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -656,7 +725,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     0,
-                    -30.602008819580078
+                    -33.494415283203125
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [

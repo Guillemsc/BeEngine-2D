@@ -8,6 +8,7 @@
 #include "ModuleState.h"
 #include "Scene.h"
 #include "ComponentTransfrom.h"
+#include "ResourceScene.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -31,6 +32,7 @@ bool ModuleGameObject::Awake()
 
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_IDLE);
+	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
 	AddComponentType(ComponentType::COMPONENT_TYPE_SPRITE_RENDERER, "Sprite Renderer", "ComponentSpriteRenderer");
 	AddComponentType(ComponentType::COMPONENT_TYPE_SCRIPT, "Script", "ComponentScript");
@@ -72,6 +74,8 @@ bool ModuleGameObject::Update()
 bool ModuleGameObject::PostUpdate()
 {
 	bool ret = true;
+
+	CheckResourceSceneToLoad();
 
 	ActuallyDestroyGameObjects();
 	ActuallyDestroyScenes();
@@ -119,6 +123,22 @@ void ModuleGameObject::OnEvent(Event * ev)
 
 		break;
 	}
+
+	case EventType::RESOURCE_DESTROYED:
+	{
+		EventResourceDestroyed* erd = (EventResourceDestroyed*)ev;
+
+		if (scene_to_load != nullptr)
+		{
+			if (erd->GetResource() == scene_to_load)
+			{
+				scene_to_load = nullptr;
+			}
+		}
+
+		break;
+	}
+
 	}
 }
 
@@ -737,6 +757,11 @@ void ModuleGameObject::RemoveComponentScript(ComponentScript * sc)
 	}
 }
 
+void ModuleGameObject::SetSceneToLoad(ResourceScene * rs)
+{
+	scene_to_load = rs;
+}
+
 void ModuleGameObject::AddComponentType(const ComponentType & type, const std::string & name, const std::string & scripting_name)
 {
 	GameObjectComponentData data(name, type, scripting_name);
@@ -756,7 +781,9 @@ void ModuleGameObject::MergeScenes()
 
 void ModuleGameObject::UpdateGameObjects()
 {
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	std::vector<GameObject*> to_update = game_objects;
+
+	for (std::vector<GameObject*>::iterator it = to_update.begin(); it != to_update.end(); ++it)
 	{
 		GameObject* curr_go = (*it);
 
@@ -764,7 +791,9 @@ void ModuleGameObject::UpdateGameObjects()
 		{
 			curr_go->Update();
 
-			for (std::vector<GameObjectComponent*>::iterator co = curr_go->components.begin(); co != curr_go->components.end(); ++co)
+			std::vector<GameObjectComponent*> components = curr_go->components;
+
+			for (std::vector<GameObjectComponent*>::iterator co = components.begin(); co != components.end(); ++co)
 			{
 				GameObjectComponent* curr_component = *co;
 
@@ -773,7 +802,7 @@ void ModuleGameObject::UpdateGameObjects()
 		}
 	}
 
-	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = to_update.begin(); it != to_update.end(); ++it)
 	{
 		(*it)->ActuallyDestroyComponents();
 	}
@@ -897,6 +926,18 @@ void ModuleGameObject::GameObjectsLogicUpdate()
 void ModuleGameObject::GameObjectsLogicStop()
 {
 
+}
+
+void ModuleGameObject::CheckResourceSceneToLoad()
+{
+	if (scene_to_load != nullptr)
+	{
+		App->gameobject->DestroyScene(App->gameobject->GetRootScene());
+
+		scene_to_load->LoadToScene(root_scene);
+
+		scene_to_load = nullptr;
+	}
 }
 
 void ModuleGameObject::SaveSceneEditorPlay()

@@ -39,6 +39,11 @@ public:
 
 	Camera2D* GetCamera();
 
+	float GetViewUpPosition();
+	float GetViewDownPosition();
+	float GetViewLeftPosition();
+	float GetViewRightPosition();
+
 private:
 	void UpdateCameraPos();
 

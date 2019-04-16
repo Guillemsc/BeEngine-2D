@@ -29,6 +29,10 @@ public:
 private:
 	// Internal Calls
 
+	static float GetViewUpPosition(MonoObject* mono_object);
+	static float GetViewDownPosition(MonoObject* mono_object);
+	static float GetViewLeftPosition(MonoObject* mono_object);
+	static float GetViewRightPosition(MonoObject* mono_object);
 
 	// --------------
 

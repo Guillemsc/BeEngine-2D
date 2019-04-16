@@ -125,10 +125,6 @@ bool Application::Awake()
 {
 	bool ret = true;
 
-	window->GetWindowNamer()->AddNamePart("app_name", "");
-	window->GetWindowNamer()->AddNamePart("app_version", "");
-	window->GetWindowNamer()->AddNamePart("fps", "");
-
 	LoadConfig();
 
 	prof_app_awake->Start();

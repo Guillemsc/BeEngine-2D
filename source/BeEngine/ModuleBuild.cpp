@@ -322,8 +322,6 @@ void ModuleBuild::TryLoadBuildProject()
 	{
 		App->state->SetEngineState(EngineState::ENGINE_STATE_BUILD);
 
-		App->window->GetWindowNamer()->RemoveNamePart("app_version");
-
 		App->SetAppName(build_name.c_str());
 
 		std::string data_path = App->file_system->GetWorkingDirectory() + "data\\";
@@ -334,6 +332,12 @@ void ModuleBuild::TryLoadBuildProject()
 	else
 	{
 		App->state->SetEngineState(EngineState::ENGINE_STATE_EDITOR);
+
+		App->window->GetWindowNamer()->AddNamePart("app_name", "");
+		App->window->GetWindowNamer()->AddNamePart("app_version", "");
+		App->window->GetWindowNamer()->AddNamePart("fps", "");
+
+		App->LoadConfig();
 
 		EventEngineIsEditor* ev = new EventEngineIsEditor();
 		App->event->SendEvent(ev);

@@ -85,8 +85,6 @@ void ScriptingBridgeScene::LoadScene(MonoObject * mono_object)
 
 	if (res != nullptr)
 	{
-		App->gameobject->DestroyScene(App->gameobject->GetRootScene());
-
-		res->LoadToScene(App->gameobject->GetRootScene());
+		App->gameobject->SetSceneToLoad(res);
 	}
 }

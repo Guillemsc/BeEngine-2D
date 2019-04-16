@@ -148,8 +148,7 @@ namespace BeEngine.Internal
                         watcher.Path = path;
                         watcher.NotifyFilter = NotifyFilters.Attributes |
                                                NotifyFilters.CreationTime |
-                                               NotifyFilters.FileName |
-                                               NotifyFilters.LastAccess |
+                                               NotifyFilters.FileName |   
                                                NotifyFilters.LastWrite |
                                                NotifyFilters.Size |
                                                NotifyFilters.Security |
@@ -180,6 +179,7 @@ namespace BeEngine.Internal
                     watcher.Created -= OnChangeInternal;
                     watcher.Deleted -= OnChangeInternal;
                     watcher.Renamed -= OnChangeInternal;
+
                     watcher.Dispose();
 
                     watcher = null;

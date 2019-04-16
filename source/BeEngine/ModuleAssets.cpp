@@ -222,9 +222,14 @@ bool ModuleAssets::LoadFileToEngine(const char * filepath)
 		{
 			std::string new_path = filepath;
 
+			StopRisingWatchingEvents();
+
 			App->file_system->FileCopyPaste(filepath, current_assets_folder.c_str(), true, new_path);
 
-			ForceUpdateFolders();
+			StartRisingWatchingEvents();
+
+			Resource* loaded_res = nullptr;
+			ret = ExportAssetToLibrary(new_path.c_str(), loaded_res);
 		}
 	}
 
@@ -817,23 +822,29 @@ void ModuleAssets::StopWatchingFolders()
 
 void ModuleAssets::StopRisingWatchingEvents()
 {
-	--rising_watching_events_index;
-
-	if (rising_watching_events_index < 0)
-		rising_watching_events_index = 0;
-
-	if (rising_watching_events_index == 0)
+	if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
 	{
-		App->scripting->file_watcher->SetRiseEvents(false);
+		--rising_watching_events_index;
+
+		if (rising_watching_events_index < 0)
+			rising_watching_events_index = 0;
+
+		if (rising_watching_events_index == 0)
+		{
+			App->scripting->file_watcher->SetRiseEvents(false);
+		}
 	}
 }
 
 void ModuleAssets::StartRisingWatchingEvents()
 {
-	if (rising_watching_events_index == 0)
-		App->scripting->file_watcher->SetRiseEvents(true);
+	if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
+	{
+		if (rising_watching_events_index == 0)
+			App->scripting->file_watcher->SetRiseEvents(true);
 
-	++rising_watching_events_index;
+		++rising_watching_events_index;
+	}
 }
 
 void ModuleAssets::CreateLibraryFolders()
@@ -887,6 +898,8 @@ void ModuleAssets::ManageFoldersToCheck()
 
 	if (update)
 	{
+		StopRisingWatchingEvents();
+
 		for (std::vector<std::string>::iterator it = folders_to_update.begin(); it != folders_to_update.end(); ++it)
 		{
 			std::string curr_folder = (*it);
@@ -895,6 +908,10 @@ void ModuleAssets::ManageFoldersToCheck()
 		}
 
 		folders_to_update.clear();
+
+		folders_to_update_timer.Stop();
+
+		StartRisingWatchingEvents();
 	}
 }
 
@@ -1090,11 +1107,11 @@ void LoadResourcesTimeSlicedTask::DeleteUnnecessaryFiles()
 
 		std::string curr_file = *files_to_delete.begin();
 
-		App->assets->StopWatchingFolders();
+		App->assets->StopRisingWatchingEvents();
 
 		App->file_system->FileDelete(curr_file.c_str());
 
-		App->assets->StartWatchingFolders();
+		App->assets->StartRisingWatchingEvents();
 
 		files_to_delete.erase(files_to_delete.begin());
 	}

@@ -91,6 +91,7 @@
     <Reference Include="BeEngineScriptingInternal">
       <HintPath>C:\Users\Guillem\Documents\GitHub\BeEngine-2D\source\Resources\mono_assembly\BeEngineScriptingInternal.dll</HintPath>
     </Reference>
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\MainMenu\MainMenuManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <!--

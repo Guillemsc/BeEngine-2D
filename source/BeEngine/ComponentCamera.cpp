@@ -132,6 +132,38 @@ Camera2D * ComponentCamera::GetCamera()
 	return camera;
 }
 
+float ComponentCamera::GetViewUpPosition()
+{
+	float ret = 0.0f;
+
+	if (camera != nullptr)
+	{
+		std::vector<float2> corners = camera->GetCorners();
+
+		ret = corners[0].y;
+		ret = corners[1].y;
+		ret = corners[2].y;
+		ret = corners[3].y;
+	}
+
+	return ret;
+}
+
+float ComponentCamera::GetViewDownPosition()
+{
+	return 0.0f;
+}
+
+float ComponentCamera::GetViewLeftPosition()
+{
+	return 0.0f;
+}
+
+float ComponentCamera::GetViewRightPosition()
+{
+	return 0.0f;
+}
+
 void ComponentCamera::UpdateCameraPos()
 {
 	camera->SetPosition(owner->transform->GetPosition());
