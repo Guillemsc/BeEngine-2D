@@ -76,7 +76,8 @@ void ComponentSpriteRenderer::Start()
 {
 	App->event->Suscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
-	App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
+	if(GetOwner()->GetActive())
+		App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
 }
 
 void ComponentSpriteRenderer::Update()
@@ -148,6 +149,18 @@ void ComponentSpriteRenderer::OnChildRemoved(GameObject * child)
 
 void ComponentSpriteRenderer::OnParentChanged(GameObject * new_parent)
 {
+}
+
+void ComponentSpriteRenderer::OnChangeActive(bool set)
+{
+	if (!set)
+	{
+		App->scene_renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
+	}
+	else
+	{
+		App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
+	}
 }
 
 void ComponentSpriteRenderer::SetResourceTexture(ResourceTexture* set)

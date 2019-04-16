@@ -7,6 +7,7 @@
 #include "ModuleSceneRenderer.h"
 #include "StaticTextRenderer.h"
 #include "ModuleResource.h"
+#include "GameObject.h"
 
 ComponentText::ComponentText() : GameObjectComponent(new ScriptingBridgeComponentText(this),
 	"Text", ComponentType::COMPONENT_TYPE_TEXT, ComponentGroup::UI, true)
@@ -52,7 +53,8 @@ void ComponentText::Start()
 {
 	SetTextSize(80);
 
-	App->scene_renderer->static_text_renderer->AddTextRenderer(this);
+	if (GetOwner()->GetActive())
+		App->scene_renderer->static_text_renderer->AddTextRenderer(this);
 
 	App->event->Suscribe(std::bind(&ComponentText::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }
@@ -119,6 +121,18 @@ void ComponentText::OnChildRemoved(GameObject * child)
 
 void ComponentText::OnParentChanged(GameObject * new_parent)
 {
+}
+
+void ComponentText::OnChangeActive(bool set)
+{
+	if (!set)
+	{
+		App->scene_renderer->static_text_renderer->RemoveTextRenderer(this);
+	}
+	else
+	{
+		App->scene_renderer->static_text_renderer->AddTextRenderer(this);
+	}
 }
 
 void ComponentText::RenderGuizmos(float relative_size)

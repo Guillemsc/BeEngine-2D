@@ -1,7 +1,76 @@
 {
-    "game_objects_count": 10,
+    "game_objects_count": 15,
     "game_object_0": {
-        "uid": "4f2a40bf",
+        "uid": "3f1c5489",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "MainMenuManager",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 4,
+                "int_name_0": "field_type_0",
+                "int_value_0": 7,
+                "int_name_1": "field_type_1",
+                "int_value_1": 5,
+                "int_name_2": "fields_count",
+                "int_value_2": 2,
+                "int_name_3": "type",
+                "int_value_3": 2,
+                "strings_count": 5,
+                "string_name_0": "field_name_0",
+                "string_value_0": "game_scene_to_load",
+                "string_name_1": "field_name_1",
+                "string_value_1": "play_button_go",
+                "string_name_2": "field_val_0",
+                "string_value_2": "4ae0c37d",
+                "string_name_3": "field_val_1",
+                "string_value_3": "2503d195",
+                "string_name_4": "resource",
+                "string_value_4": "62796b8f"
+            }
+        ]
+    },
+    "game_object_1": {
+        "uid": "695f7053",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -55,8 +124,8 @@
             }
         ]
     },
-    "game_object_1": {
-        "uid": "620deb05",
+    "game_object_2": {
+        "uid": "4005cdf5",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -130,8 +199,8 @@
             }
         ]
     },
-    "game_object_2": {
-        "uid": "5435b411",
+    "game_object_3": {
+        "uid": "266a2de6",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -141,7 +210,7 @@
         "bool_value_0": true,
         "strings_count": 1,
         "string_name_0": "name",
-        "string_value_0": "Canvas",
+        "string_value_0": "MainMenuCanvas",
         "components": [
             {
                 "ints_count": 1,
@@ -182,18 +251,18 @@
             }
         ]
     },
-    "game_object_3": {
-        "uid": "268c242e",
+    "game_object_4": {
+        "uid": "425b63d1",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
         "bools_count": 1,
         "bool_name_0": "active",
-        "bool_value_0": true,
+        "bool_value_0": false,
         "strings_count": 1,
         "string_name_0": "name",
-        "string_value_0": "MainMenuManager",
+        "string_value_0": "CreditsCanvas",
         "components": [
             {
                 "ints_count": 1,
@@ -228,32 +297,15 @@
                 ]
             },
             {
-                "ints_count": 4,
-                "int_name_0": "field_type_0",
-                "int_value_0": 7,
-                "int_name_1": "field_type_1",
-                "int_value_1": 5,
-                "int_name_2": "fields_count",
-                "int_value_2": 2,
-                "int_name_3": "type",
-                "int_value_3": 2,
-                "strings_count": 5,
-                "string_name_0": "field_name_0",
-                "string_value_0": "game_scene_to_load",
-                "string_name_1": "field_name_1",
-                "string_value_1": "play_button_go",
-                "string_name_2": "field_val_0",
-                "string_value_2": "4ae0c37d",
-                "string_name_3": "field_val_1",
-                "string_value_3": "7eb46b2d",
-                "string_name_4": "resource",
-                "string_value_4": "62796b8f"
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 6
             }
         ]
     },
-    "game_object_4": {
-        "uid": "51ef5820",
-        "parent_uid": "5435b411",
+    "game_object_5": {
+        "uid": "1fbb8002",
+        "parent_uid": "266a2de6",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -320,9 +372,9 @@
             }
         ]
     },
-    "game_object_5": {
-        "uid": "7eb46b2d",
-        "parent_uid": "5435b411",
+    "game_object_6": {
+        "uid": "2503d195",
+        "parent_uid": "266a2de6",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -435,9 +487,9 @@
             }
         ]
     },
-    "game_object_6": {
-        "uid": "528d575f",
-        "parent_uid": "5435b411",
+    "game_object_7": {
+        "uid": "31b50613",
+        "parent_uid": "266a2de6",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -472,7 +524,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     0,
-                    -33.830513000488281
+                    -33.834991455078125
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -550,9 +602,294 @@
             }
         ]
     },
-    "game_object_7": {
-        "uid": "57ff0a5e",
-        "parent_uid": "51ef5820",
+    "game_object_8": {
+        "uid": "7c0adc67",
+        "parent_uid": "425b63d1",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": false,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "CreatedByText",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    37.818885803222656
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    37.818885803222656
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 3,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "text_size",
+                "int_value_1": 80,
+                "int_name_2": "type",
+                "int_value_2": 8,
+                "strings_count": 2,
+                "string_name_0": "resource",
+                "string_value_0": "64b719a2",
+                "string_name_1": "text",
+                "string_value_1": "Created by:",
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.94092816114425659,
+                    0.94092828035354614,
+                    0.94091886281967163,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_9": {
+        "uid": "5854740",
+        "parent_uid": "425b63d1",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": false,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "CreatedByText_Copy",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": true,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    5.6579408645629883,
+                    17.806051254272461
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    5.6579408645629883,
+                    17.806049346923828
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    2.2999999523162842,
+                    2.2999999523162842
+                ]
+            },
+            {
+                "ints_count": 3,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "text_size",
+                "int_value_1": 80,
+                "int_name_2": "type",
+                "int_value_2": 8,
+                "strings_count": 2,
+                "string_name_0": "resource",
+                "string_value_0": "2d292334",
+                "string_name_1": "text",
+                "string_value_1": "Guillem sunyer ",
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.94092816114425659,
+                    0.94092828035354614,
+                    0.94091886281967163,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_10": {
+        "uid": "868208b",
+        "parent_uid": "425b63d1",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": false,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "TechText",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    -2.3822915554046631,
+                    -20.608402252197266
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0.01861165277659893,
+                    0.084591373801231384
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -14.517823219299316
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 3,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "text_size",
+                "int_value_1": 80,
+                "int_name_2": "type",
+                "int_value_2": 8,
+                "strings_count": 2,
+                "string_name_0": "resource",
+                "string_value_0": "64b719a2",
+                "string_name_1": "text",
+                "string_value_1": "With the thechnology of:",
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.94092816114425659,
+                    0.94092828035354614,
+                    0.94091886281967163,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_11": {
+        "uid": "1d74d869",
+        "parent_uid": "425b63d1",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": false,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "BeEngineImage",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    -35.436603546142578
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -35.436603546142578
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": true,
+                "strings_count": 1,
+                "string_name_0": "resource",
+                "string_value_0": "20f12dfe",
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    74,
+                    20
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    1,
+                    0,
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_12": {
+        "uid": "4b5c173c",
+        "parent_uid": "1fbb8002",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -619,9 +956,9 @@
             }
         ]
     },
-    "game_object_8": {
-        "uid": "20005174",
-        "parent_uid": "7eb46b2d",
+    "game_object_13": {
+        "uid": "5292585",
+        "parent_uid": "2503d195",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -688,9 +1025,9 @@
             }
         ]
     },
-    "game_object_9": {
-        "uid": "47e9473a",
-        "parent_uid": "528d575f",
+    "game_object_14": {
+        "uid": "298c52ca",
+        "parent_uid": "31b50613",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -725,7 +1062,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     0,
-                    -33.494415283203125
+                    -33.498893737792969
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [

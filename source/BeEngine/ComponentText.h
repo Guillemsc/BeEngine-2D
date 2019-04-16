@@ -35,6 +35,7 @@ public:
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
+	void OnChangeActive(bool set);
 
 	void RenderGuizmos(float relative_size);
 

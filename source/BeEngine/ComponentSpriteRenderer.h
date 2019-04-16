@@ -34,6 +34,7 @@ public:
 	void OnChildAdded(GameObject* child);
 	void OnChildRemoved(GameObject* child);
 	void OnParentChanged(GameObject* new_parent);
+	void OnChangeActive(bool set);
 
 	void SetResourceTexture(ResourceTexture* set);
 	ResourceTexture* GetResourceTexture() const;
