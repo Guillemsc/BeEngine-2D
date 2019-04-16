@@ -1151,15 +1151,16 @@ bool ScriptingClass::GetParentClass(ScriptingClass & returned_parent_class)
 	{
 		MonoClass* parent = mono_class_get_parent(mono_class);
 
-		if (parent != nullptr )
+		if (parent != nullptr)
 		{
-			if (parent != mono_get_object_class())
+			if (parent != mono_get_object_class() && parent != mono_class)
 			{
 				returned_parent_class = ScriptingClass(parent);
-
+				
 				ret = true;
 			}
 		}
+		
 	}
 
 	return ret;
@@ -1173,12 +1174,14 @@ bool ScriptingClass::GetIsInheritedFrom(const ScriptingClass & class_parent)
 	{
 		std::string class_parent_name = class_parent.GetName();
 
+		ScriptingClass checking_class = *this;
+
 		bool check = true;
 
 		while (check)
 		{
 			ScriptingClass parent_class_to_check;
-			check = GetParentClass(parent_class_to_check);
+			check = checking_class.GetParentClass(parent_class_to_check);
 
 			if (check)
 			{
@@ -1188,6 +1191,10 @@ bool ScriptingClass::GetIsInheritedFrom(const ScriptingClass & class_parent)
 				{
 					ret = true;
 					break;
+				}
+				else
+				{
+					checking_class = parent_class_to_check;
 				}
 			}
 		}

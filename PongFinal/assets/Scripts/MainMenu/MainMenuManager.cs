@@ -6,12 +6,14 @@ public class MainMenuManager : ComponentScript
 {
 	public override void Start () 
 	{
+        queue_event = QueueEventManager.Instance.CreateContext();
+
 		if(play_button_go != null)
         {
             ComponentButton but = play_button_go.GetComponent<ComponentButton>();
             but.SuscribeToOnClick(OnPlayButtonPressed);
         }
-	}
+    }
 
     private void OnPlayButtonPressed(ComponentButton button)
     {
@@ -23,4 +25,6 @@ public class MainMenuManager : ComponentScript
 
     [ShowOnInspector]
     private ResourceScene game_scene_to_load;
+
+    private QueueEventContext queue_event = null;
 }
