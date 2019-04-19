@@ -31,16 +31,16 @@ namespace BeEngine
         // Internal Calls --------------------------------------
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float GetViewUpPosition();
+        private extern float GetViewUpPosition();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float GetViewDownPosition();
+        private extern float GetViewDownPosition();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float GetViewLeftPosition();
+        private extern float GetViewLeftPosition();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float GetViewRightPosition();
+        private extern float GetViewRightPosition();
 
         // -----------------------------------------------------
 

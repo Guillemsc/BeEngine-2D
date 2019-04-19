@@ -9,7 +9,8 @@
 #include "ModuleResource.h"
 #include "GameObject.h"
 
-ComponentText::ComponentText() : GameObjectComponent(new ScriptingBridgeComponentText(this),
+ComponentText::ComponentText() 
+	: GameObjectComponent(new ScriptingBridgeComponentText(this),
 	"Text", ComponentType::COMPONENT_TYPE_TEXT, ComponentGroup::UI, true)
 {
 }

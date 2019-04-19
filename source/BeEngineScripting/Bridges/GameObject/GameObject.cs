@@ -30,6 +30,18 @@ namespace BeEngine
             }
         }
 
+        public bool Active
+        {
+            get
+            {
+                return GetActive();
+            }
+            set
+            {
+                SetActive(value);
+            }
+        }
+
         public T AddComponent<T>() where T : Component
         {
             T ret = null;
@@ -144,6 +156,12 @@ namespace BeEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern string GetName();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void SetActive(bool value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern bool GetActive();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern Component AddComponentTypeName(string name);

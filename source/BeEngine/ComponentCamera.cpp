@@ -141,9 +141,6 @@ float ComponentCamera::GetViewUpPosition()
 		std::vector<float2> corners = camera->GetCorners();
 
 		ret = corners[0].y;
-		ret = corners[1].y;
-		ret = corners[2].y;
-		ret = corners[3].y;
 	}
 
 	return ret;
@@ -151,17 +148,44 @@ float ComponentCamera::GetViewUpPosition()
 
 float ComponentCamera::GetViewDownPosition()
 {
-	return 0.0f;
+	float ret = 0.0f;
+
+	if (camera != nullptr)
+	{
+		std::vector<float2> corners = camera->GetCorners();
+
+		ret = corners[1].y;
+	}
+
+	return ret;
 }
 
 float ComponentCamera::GetViewLeftPosition()
 {
-	return 0.0f;
+	float ret = 0.0f;
+
+	if (camera != nullptr)
+	{
+		std::vector<float2> corners = camera->GetCorners();
+
+		ret = corners[0].x;
+	}
+
+	return ret;
 }
 
 float ComponentCamera::GetViewRightPosition()
 {
-	return 0.0f;
+	float ret = 0.0f;
+
+	if (camera != nullptr)
+	{
+		std::vector<float2> corners = camera->GetCorners();
+
+		ret = corners[2].x;
+	}
+
+	return ret;
 }
 
 void ComponentCamera::UpdateCameraPos()

@@ -159,6 +159,34 @@ MonoString* ScriptingBridgeGameObject::GetName(MonoObject * mono_object)
 	return ret;
 }
 
+void ScriptingBridgeGameObject::SetActive(MonoObject * mono_object, void* mono_value)
+{
+	GameObject* go = (GameObject*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (go != nullptr)
+	{
+		bool new_val = mono_value;
+
+		go->SetActive(new_val);
+	}
+}
+
+void* ScriptingBridgeGameObject::GetActive(MonoObject * mono_object)
+{
+	void* ret = nullptr;
+
+	GameObject* go = (GameObject*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (go != nullptr)
+	{
+		bool active = go->GetActive();
+
+		ret = &active;
+	}
+
+	return ret;
+}
+
 MonoObject* ScriptingBridgeGameObject::AddComponent(MonoObject * mono_object, MonoString * component_type)
 {
 	MonoObject* ret = nullptr;

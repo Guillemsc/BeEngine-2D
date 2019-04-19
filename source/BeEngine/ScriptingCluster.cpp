@@ -11,6 +11,7 @@
 #include "ScriptingBridgeTime.h"
 #include "ScriptingBridgeComponentText.h"
 #include "ScriptingBridgeScene.h"
+#include "ScriptingBridgeComponentCamera.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -44,6 +45,8 @@ void ScriptingCluster::RegisterInternalCalls()
 		// GameObject -------------------------------
 		mono_add_internal_call("BeEngine.GameObject::SetName", (const void*)ScriptingBridgeGameObject::SetName);
 		mono_add_internal_call("BeEngine.GameObject::GetName", (const void*)ScriptingBridgeGameObject::GetName);
+		mono_add_internal_call("BeEngine.GameObject::SetActive", (const void*)ScriptingBridgeGameObject::SetActive);
+		mono_add_internal_call("BeEngine.GameObject::GetActive", (const void*)ScriptingBridgeGameObject::GetActive);
 		mono_add_internal_call("BeEngine.GameObject::AddComponentTypeName", (const void*)ScriptingBridgeGameObject::AddComponent);
 		mono_add_internal_call("BeEngine.GameObject::GetComponentTypeName", (const void*)ScriptingBridgeGameObject::GetComponent);
 		// ------------------------------- GameObject
@@ -62,6 +65,13 @@ void ScriptingCluster::RegisterInternalCalls()
 		mono_add_internal_call("BeEngine.ComponentText::GetText", (const void*)ScriptingBridgeComponentText::GetText);
 		mono_add_internal_call("BeEngine.ComponentText::SetTextColour", (const void*)ScriptingBridgeComponentText::SetTextColour);
 		mono_add_internal_call("BeEngine.ComponentText::GetTextColour", (const void*)ScriptingBridgeComponentText::GetTextColour);
+		// ----------------------- ComponentText
+
+		// ComponentCamera -----------------------
+		mono_add_internal_call("BeEngine.ComponentCamera::GetViewUpPosition", (const void*)ScriptingBridgeComponentCamera::GetViewUpPosition);
+		mono_add_internal_call("BeEngine.ComponentCamera::GetViewDownPosition", (const void*)ScriptingBridgeComponentCamera::GetViewDownPosition);
+		mono_add_internal_call("BeEngine.ComponentCamera::GetViewLeftPosition", (const void*)ScriptingBridgeComponentCamera::GetViewLeftPosition);
+		mono_add_internal_call("BeEngine.ComponentCamera::GetViewRightPosition", (const void*)ScriptingBridgeComponentCamera::GetViewRightPosition);
 		// ----------------------- ComponentText
 	}
 }

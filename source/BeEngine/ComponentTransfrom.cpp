@@ -488,6 +488,8 @@ void ComponentTransform::UpdateWorldTransformFromValues()
 		Quat::FromEulerXYZ(0, 0, world_rotation * DEGTORAD),
 		float3(world_scale.x, world_scale.y, 1));
 
+	RecalculateAnchorOffset();
+
 	RecalculateLocalTransform();
 }
 
