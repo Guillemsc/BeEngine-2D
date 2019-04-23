@@ -266,6 +266,7 @@
     <ClInclude Include="Parson\parson.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Profiler.h" />
+    <ClInclude Include="ScriptingBridgeApplication.h" />
     <ClInclude Include="ScriptingBridgeBeObject.h" />
     <ClInclude Include="ScriptingBridgeComponentButton.h" />
     <ClInclude Include="ScriptingBridgeComponentCamera.h" />
@@ -436,6 +437,7 @@
     <ClCompile Include="Parson\parson.c" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Profiler.cpp" />
+    <ClCompile Include="ScriptingBridgeApplication.cpp" />
     <ClCompile Include="ScriptingBridgeBeObject.cpp" />
     <ClCompile Include="ScriptingBridgeComponentButton.cpp" />
     <ClCompile Include="ScriptingBridgeComponentCamera.cpp" />

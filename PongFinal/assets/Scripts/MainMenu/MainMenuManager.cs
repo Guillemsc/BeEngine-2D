@@ -26,6 +26,12 @@ public class MainMenuManager : ComponentScript
             but.SuscribeToOnClick(OnCreditsBackButtonPressed);
         }
 
+        if(quit_button_go != null)
+        {
+            ComponentButton but = quit_button_go.GetComponent<ComponentButton>();
+            but.SuscribeToOnClick(OnQuitButtonPressed);
+        }
+
         if(camera_go != null)
         {
             camera = camera_go.GetComponent<ComponentCamera>();
@@ -72,6 +78,11 @@ public class MainMenuManager : ComponentScript
         PlayEnterAnimation(credits_parent);
 
         credits_back_button_go.Active = true;
+    }
+
+    private void OnQuitButtonPressed(ComponentButton button)
+    {
+        Application.Quit();
     }
 
     private void OnCreditsBackButtonPressed(ComponentButton button)
@@ -124,6 +135,9 @@ public class MainMenuManager : ComponentScript
 
     [ShowOnInspector]
     private GameObject credits_button_go;
+
+    [ShowOnInspector]
+    private GameObject quit_button_go;
 
     [ShowOnInspector]
     private GameObject credits_back_button_go;

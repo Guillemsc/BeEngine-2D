@@ -47,6 +47,8 @@ public:
 
 	ScriptingClass* debug_class = nullptr;
 
+	ScriptingClass* application_class = nullptr;
+
 	ScriptingClass* input_class = nullptr;
 
 	ScriptingClass* time_class = nullptr;

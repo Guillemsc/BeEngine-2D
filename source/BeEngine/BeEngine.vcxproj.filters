@@ -145,6 +145,9 @@
     <Filter Include="Sources\8. Scripting ==============\Bridges\Resources">
       <UniqueIdentifier>{4f0c489b-f44c-4be7-9bd6-623f3278cfcb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\8. Scripting ==============\Bridges\Application">
+      <UniqueIdentifier>{93f0da34-2fd5-4615-9621-2fcd5b48427c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -756,6 +759,9 @@
     <ClInclude Include="DragDropResourceWidget.h">
       <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptingBridgeApplication.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1264,6 +1270,9 @@
     </ClCompile>
     <ClCompile Include="DragDropResourceWidget.cpp">
       <Filter>Sources\4. Editor ================\Widgets\DragDrop</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeApplication.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,7 @@
 #include "ScriptingBridgeComponentText.h"
 #include "ScriptingBridgeScene.h"
 #include "ScriptingBridgeComponentCamera.h"
+#include "ScriptingBridgeApplication.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -22,6 +23,10 @@ void ScriptingCluster::RegisterInternalCalls()
 		// Debug ------------------------------------
 		mono_add_internal_call("BeEngine.Debug::ConsoleLog", (const void*)ScriptingBridgeDebug::Log);
 		// ------------------------------------ Debug
+
+		// Application ------------------------------
+		mono_add_internal_call("BeEngine.Application::ApplicationQuit", (const void*)ScriptingBridgeApplication::ApplicationQuit);
+		// ------------------------------ Application
 
 		// Input ------------------------------------
 		mono_add_internal_call("BeEngine.Input::GetKeyDown", (const void*)ScriptingBridgeInput::GetKeyDown);
@@ -86,6 +91,9 @@ void ScriptingCluster::RebuildClasses()
 		// Debug
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Debug", debug_class);
 
+		// Application
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Application", application_class);
+
 		// Input
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "Input", input_class);
 
@@ -138,6 +146,7 @@ void ScriptingCluster::CleanUp()
 	RELEASE(beengine_object_class);
 
 	RELEASE(debug_class);
+	RELEASE(application_class);
 	RELEASE(input_class);
 	RELEASE(time_class);
 	RELEASE(scene_class);
