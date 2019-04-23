@@ -132,7 +132,9 @@ private:
 	std::vector<ComponentScript*> component_scripts_to_add;
 
 	GameObjectAbstraction editor_play_scene_abs;
+	ResourceScene* editor_play_scene_resource = nullptr;
 	std::vector<GameObjectAbstraction> editor_play_sub_scenes_abs;
+	std::vector<ResourceScene*> editor_play_sub_scenes_resources;
 
 	ResourceScene* scene_to_load = nullptr;
 

@@ -134,6 +134,21 @@ void ModuleGameObject::OnEvent(Event * ev)
 			{
 				scene_to_load = nullptr;
 			}
+			else
+			{
+				if (erd->GetResource() == editor_play_scene_resource)
+				{
+					editor_play_scene_resource == nullptr;
+				}
+
+				for (std::vector<ResourceScene*>::iterator it = editor_play_sub_scenes_resources.begin(); it != editor_play_sub_scenes_resources.end(); ++it)
+				{
+					if (erd->GetResource() == (*it))
+					{
+						(*it) = nullptr;
+					}
+				}
+			}
 		}
 
 		break;
@@ -943,8 +958,11 @@ void ModuleGameObject::CheckResourceSceneToLoad()
 void ModuleGameObject::SaveSceneEditorPlay()
 {
 	editor_play_sub_scenes_abs.clear();
+	editor_play_sub_scenes_resources.clear();
 
 	std::vector<GameObject*> root_gos = root_scene->GetRootGameObjects();
+
+	editor_play_scene_resource = root_scene->GetResourceScene();
 
 	editor_play_scene_abs.Abstract(root_gos);
 
@@ -957,6 +975,8 @@ void ModuleGameObject::SaveSceneEditorPlay()
 		sub_abs.Abstract(root_sub_gos);
 
 		editor_play_sub_scenes_abs.push_back(sub_abs);
+
+		editor_play_sub_scenes_resources.push_back((*it)->GetResourceScene());
 	}
 }
 
@@ -966,9 +986,14 @@ void ModuleGameObject::LoadSceneEditorPlay()
 
 	editor_play_scene_abs.DeAbstract();
 
-	for (std::vector<GameObjectAbstraction>::iterator it = editor_play_sub_scenes_abs.begin(); it != editor_play_sub_scenes_abs.end(); ++it)
+	root_scene->SetResourceScene(editor_play_scene_resource);
+
+	int counter = 0;
+	for (std::vector<GameObjectAbstraction>::iterator it = editor_play_sub_scenes_abs.begin(); it != editor_play_sub_scenes_abs.end(); ++it, ++counter)
 	{
 		Scene* new_scene = CreateSubScene();
+
+		new_scene->SetResourceScene(editor_play_sub_scenes_resources[counter]);
 
 		std::vector<GameObject*> new_gos = (*it).DeAbstract();
 

@@ -1,7 +1,7 @@
 {
     "game_objects_count": 25,
     "game_object_0": {
-        "uid": "7638beea",
+        "uid": "5e4b7180",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -95,30 +95,30 @@
                 "string_name_10": "field_val_0",
                 "string_value_10": "1f0707cb",
                 "string_name_11": "field_val_1",
-                "string_value_11": "206d7abd",
+                "string_value_11": "3ef2fb0",
                 "string_name_12": "field_val_2",
-                "string_value_12": "94b9024",
+                "string_value_12": "438204a3",
                 "string_name_13": "field_val_3",
-                "string_value_13": "49887eaf",
+                "string_value_13": "e74f36f",
                 "string_name_14": "field_val_4",
-                "string_value_14": "4dc44631",
+                "string_value_14": "301fa29b",
                 "string_name_15": "field_val_5",
-                "string_value_15": "628a483f",
+                "string_value_15": "6a0e80bf",
                 "string_name_16": "field_val_6",
-                "string_value_16": "7d136251",
+                "string_value_16": "dada877",
                 "string_name_17": "field_val_7",
-                "string_value_17": "514f6ea",
+                "string_value_17": "15ccf705",
                 "string_name_18": "field_val_8",
-                "string_value_18": "5e32d0c3",
+                "string_value_18": "320f2461",
                 "string_name_19": "field_val_9",
-                "string_value_19": "2be5b1f6",
+                "string_value_19": "4e6e554c",
                 "string_name_20": "resource",
                 "string_value_20": "62796b8f"
             }
         ]
     },
     "game_object_1": {
-        "uid": "64701c37",
+        "uid": "e1aef87",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -175,7 +175,7 @@
         ]
     },
     "game_object_2": {
-        "uid": "94b9024",
+        "uid": "438204a3",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -230,7 +230,7 @@
         ]
     },
     "game_object_3": {
-        "uid": "1600416c",
+        "uid": "2fc6dd6f",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -305,7 +305,7 @@
         ]
     },
     "game_object_4": {
-        "uid": "2c952cc8",
+        "uid": "bb27474",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -357,7 +357,7 @@
         ]
     },
     "game_object_5": {
-        "uid": "68e6d048",
+        "uid": "4c6cf0ec",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -409,7 +409,7 @@
         ]
     },
     "game_object_6": {
-        "uid": "4b3578d7",
+        "uid": "7a5dfe66",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -461,7 +461,7 @@
         ]
     },
     "game_object_7": {
-        "uid": "613e35fe",
+        "uid": "529e0072",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -513,8 +513,8 @@
         ]
     },
     "game_object_8": {
-        "uid": "49887eaf",
-        "parent_uid": "2c952cc8",
+        "uid": "e74f36f",
+        "parent_uid": "bb27474",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -560,8 +560,8 @@
         ]
     },
     "game_object_9": {
-        "uid": "514f6ea",
-        "parent_uid": "68e6d048",
+        "uid": "15ccf705",
+        "parent_uid": "4c6cf0ec",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -607,8 +607,8 @@
         ]
     },
     "game_object_10": {
-        "uid": "2be5b1f6",
-        "parent_uid": "68e6d048",
+        "uid": "4e6e554c",
+        "parent_uid": "4c6cf0ec",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -633,7 +633,7 @@
                 "float2_name_0": "anchor_offset",
                 "float2_value_0": [
                     13.668403625488281,
-                    -14.623237609863281
+                    -14.623241424560547
                 ],
                 "float2_name_1": "anchor_pos",
                 "float2_value_1": [
@@ -643,7 +643,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -113.90970611572266,
-                    56.954872131347656
+                    56.954868316650391
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -712,8 +712,8 @@
         ]
     },
     "game_object_11": {
-        "uid": "7d136251",
-        "parent_uid": "4b3578d7",
+        "uid": "dada877",
+        "parent_uid": "7a5dfe66",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -759,8 +759,8 @@
         ]
     },
     "game_object_12": {
-        "uid": "628a483f",
-        "parent_uid": "613e35fe",
+        "uid": "6a0e80bf",
+        "parent_uid": "529e0072",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -806,8 +806,8 @@
         ]
     },
     "game_object_13": {
-        "uid": "4dc44631",
-        "parent_uid": "613e35fe",
+        "uid": "301fa29b",
+        "parent_uid": "529e0072",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -853,8 +853,8 @@
         ]
     },
     "game_object_14": {
-        "uid": "5e32d0c3",
-        "parent_uid": "49887eaf",
+        "uid": "320f2461",
+        "parent_uid": "e74f36f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -968,8 +968,8 @@
         ]
     },
     "game_object_15": {
-        "uid": "206d7abd",
-        "parent_uid": "49887eaf",
+        "uid": "3ef2fb0",
+        "parent_uid": "e74f36f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -1083,8 +1083,8 @@
         ]
     },
     "game_object_16": {
-        "uid": "34249971",
-        "parent_uid": "49887eaf",
+        "uid": "6b1456ac",
+        "parent_uid": "e74f36f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1152,8 +1152,8 @@
         ]
     },
     "game_object_17": {
-        "uid": "235856d7",
-        "parent_uid": "514f6ea",
+        "uid": "189bd7d6",
+        "parent_uid": "15ccf705",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1221,8 +1221,8 @@
         ]
     },
     "game_object_18": {
-        "uid": "51c5f054",
-        "parent_uid": "514f6ea",
+        "uid": "735994bc",
+        "parent_uid": "15ccf705",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1290,8 +1290,8 @@
         ]
     },
     "game_object_19": {
-        "uid": "47daeb27",
-        "parent_uid": "514f6ea",
+        "uid": "366b44c4",
+        "parent_uid": "15ccf705",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1359,8 +1359,8 @@
         ]
     },
     "game_object_20": {
-        "uid": "331be2ea",
-        "parent_uid": "514f6ea",
+        "uid": "785709f0",
+        "parent_uid": "15ccf705",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1437,8 +1437,8 @@
         ]
     },
     "game_object_21": {
-        "uid": "7fc1a706",
-        "parent_uid": "7d136251",
+        "uid": "6efd30cb",
+        "parent_uid": "dada877",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1506,8 +1506,8 @@
         ]
     },
     "game_object_22": {
-        "uid": "2ab1d389",
-        "parent_uid": "5e32d0c3",
+        "uid": "417b091c",
+        "parent_uid": "320f2461",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1575,8 +1575,8 @@
         ]
     },
     "game_object_23": {
-        "uid": "33b7f6c7",
-        "parent_uid": "206d7abd",
+        "uid": "17772fb2",
+        "parent_uid": "3ef2fb0",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1644,8 +1644,8 @@
         ]
     },
     "game_object_24": {
-        "uid": "547c78d0",
-        "parent_uid": "34249971",
+        "uid": "237fb691",
+        "parent_uid": "6b1456ac",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
