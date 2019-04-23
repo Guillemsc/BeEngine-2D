@@ -49,11 +49,11 @@ public class MainMenuManager : ComponentScript
 
         PlayEnterAnimation(intro_parent);
 
-        queue_event.PushEvent(new QueueEventWaitTime(3));
+        queue_event.PushEvent(new QueueEventWaitTime(1.3f));
 
         PlayOutAnimation(intro_parent);
 
-        queue_event.PushEvent(new QueueEventWaitTime(0.2f));
+        queue_event.PushEvent(new QueueEventWaitTime(0.8f));
 
         PlayEnterAnimation(main_menu_parent);
     }
@@ -90,7 +90,7 @@ public class MainMenuManager : ComponentScript
             queue_event.PushEvent(new QueueEventActive(go, true));
 
             queue_event.PushEvent(new QueueEventPosition(go, enter_pos.Transform.Position,
-                camera_go.Transform.Position, 1.3f, EasingFunctionsType.QUAD_IN_OUT));
+                camera_go.Transform.Position, 1.3f, EasingFunctionsType.QUAD_OUT));
         }
     }
 
@@ -99,7 +99,7 @@ public class MainMenuManager : ComponentScript
         if (go != null)
         {
             queue_event.PushEvent(new QueueEventPosition(go, camera_go.Transform.Position,
-                out_pos.Transform.Position, 0.5f, EasingFunctionsType.QUAD_IN_OUT));
+                out_pos.Transform.Position, 0.5f, EasingFunctionsType.QUAD_IN));
 
             queue_event.PushEvent(new QueueEventActive(go, false));
         }

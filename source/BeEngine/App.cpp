@@ -237,10 +237,10 @@ bool Application::Update()
 
 	prof_app_postupdate->Finish();
 
+	prof_app_total_update->Finish();
+
 	if (input->GetWindowEvent(WE_QUIT) == true || to_quit)
 		ret = false;
-
-	prof_app_total_update->Finish();
 
 	return ret;
 }
