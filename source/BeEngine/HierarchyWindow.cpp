@@ -11,6 +11,7 @@
 #include "DragDropGameObjectWidget.h"
 #include "DragDropCluster.h"
 #include "InspectorWindow.h"
+#include "ModuleState.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -268,68 +269,75 @@ void HierarchyWindow::DrawScene(Scene* scene, uint scene_count, uint & go_count,
 			std::string curr_scene_text = "Current scene: " + scene->GetName();
 			ImGui::Text(curr_scene_text.c_str());
 
-			if (scene->GetResourceScene() != nullptr)
+			if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 			{
-				if (ImGui::SmallButton("Save"))
+				if (scene->GetResourceScene() != nullptr)
 				{
-					App->assets->CreateScene();
+					if (ImGui::SmallButton("Save"))
+					{
+						App->assets->CreateScene();
+					}
+
+					ImGui::SameLine();
 				}
 
-				ImGui::SameLine();
-			}
-
-			if (ImGui::SmallButton("Save as new"))
-			{
-				App->assets->CreateScene(true);
-			}
-
-			bool open_scene_rename = false;
-
-			ImGui::SameLine();
-
-			if (ImGui::SmallButton("Rename"))
-			{				
-				open_scene_rename = true;
-			}
-
-			if (open_scene_rename)
-			{
-				ImGui::OpenPopup("RenameScenePopup");
-				
-				int size = scene->GetName().size();
-
-				if (size > 98)
-					size = 98;
-
-				memset(change_name_tmp, 0, sizeof(char) * 99);
-
-				strcpy_s(change_name_tmp, sizeof(char) * size + 1, scene->GetName().c_str());
-				
-			}
-
-			if (ImGui::BeginPopup("RenameScenePopup"))
-			{
-				ImGui::Text("Name: ");
-
-				ImGui::SameLine();
-
-				ImGui::InputText("", change_name_tmp, sizeof(char) * 50, ImGuiInputTextFlags_AutoSelectAll);
-
-				if (ImGui::Button("Accept"))
+				if (ImGui::SmallButton("Save as new"))
 				{
-					scene->SetName(change_name_tmp);
+					App->assets->CreateScene(true);
+				}
+
+				bool open_scene_rename = false;
+
+				ImGui::SameLine();
+
+				if (ImGui::SmallButton("Rename"))
+				{				
+					open_scene_rename = true;
+				}
+
+				if (open_scene_rename)
+				{
+					ImGui::OpenPopup("RenameScenePopup");
 					
-					ImGui::CloseCurrentPopup();
+					int size = scene->GetName().size();
+
+					if (size > 98)
+						size = 98;
+
+					memset(change_name_tmp, 0, sizeof(char) * 99);
+
+					strcpy_s(change_name_tmp, sizeof(char) * size + 1, scene->GetName().c_str());
+					
 				}
 
-				ImGui::SameLine();
-
-				if (ImGui::Button("Cancel"))
+				if (ImGui::BeginPopup("RenameScenePopup"))
 				{
-					ImGui::CloseCurrentPopup();
-				}
+					ImGui::Text("Name: ");
 
-				ImGui::EndPopup();
+					ImGui::SameLine();
+
+					ImGui::InputText("", change_name_tmp, sizeof(char) * 50, ImGuiInputTextFlags_AutoSelectAll);
+
+					if (ImGui::Button("Accept"))
+					{
+						scene->SetName(change_name_tmp);
+						
+						ImGui::CloseCurrentPopup();
+					}
+
+					ImGui::SameLine();
+
+					if (ImGui::Button("Cancel"))
+					{
+						ImGui::CloseCurrentPopup();
+					}
+
+					ImGui::EndPopup();
+				}
+			}
+			else
+			{
+				ImGui::Text("Can't save scenes on play mode");
 			}
 
 			ImGui::PopFont();
