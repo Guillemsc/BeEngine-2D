@@ -718,18 +718,7 @@ void ModuleGameObject::AddComponentScript(ComponentScript * sc)
 
 			if (!exists_to_add)
 			{
-				bool can_add = true;
-
-				if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
-				{
-					can_add = sc->CallAwake();
-
-					if(can_add)
-						can_add = sc->CallStart();
-				}
-
-				if(can_add)
-					component_scripts_to_add.push_back(sc);
+				component_scripts_to_add.push_back(sc);
 			}
 		}
 	}
@@ -890,8 +879,6 @@ void ModuleGameObject::UpdateGameObjectsLogic()
 		if (App->state->GetEditorUpdateState() != EditorUpdateState::EDITOR_UPDATE_STATE_IDLE)
 		{
 			SaveSceneEditorPlay();
-
-			GameObjectsLogicStart();
 		}
 
 		needs_to_start_logic = false;
@@ -916,25 +903,28 @@ void ModuleGameObject::UpdateGameObjectsLogic()
 	
 }
 
-void ModuleGameObject::GameObjectsLogicStart()
+void ModuleGameObject::InitComponentsScripts()
 {
-	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
-		component_scripts.push_back((*it));
-	
-	component_scripts_to_add.clear();
+	std::vector<ComponentScript*> need_init;
 
 	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
 	{
-		(*it)->InitFields();
+		if ((*it)->needs_init)
+		{
+			(*it)->InitFields();
+
+			need_init.push_back((*it));
+
+			(*it)->needs_init = false;
+		}
+	}
+
+	for (std::vector<ComponentScript*>::iterator it = need_init.begin(); it != need_init.end(); ++it)
+	{
 		(*it)->CallAwake();
 	}
 
-	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
-		component_scripts.push_back((*it));
-
-	component_scripts_to_add.clear();
-
-	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
+	for (std::vector<ComponentScript*>::iterator it = need_init.begin(); it != need_init.end(); ++it)
 	{
 		(*it)->CallStart();
 	}
@@ -942,15 +932,17 @@ void ModuleGameObject::GameObjectsLogicStart()
 
 void ModuleGameObject::GameObjectsLogicUpdate()
 {
-	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
-		component_scripts.push_back((*it));
-
-	component_scripts_to_add.clear();
+	InitComponentsScripts();
 
 	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
 	{
 		(*it)->CallUpdate();
 	}
+
+	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
+		component_scripts.push_back((*it));
+
+	component_scripts_to_add.clear();
 }
 
 void ModuleGameObject::GameObjectsLogicStop()

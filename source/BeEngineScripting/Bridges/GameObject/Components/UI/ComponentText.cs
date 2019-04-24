@@ -20,7 +20,7 @@ namespace BeEngine
             }
         }
 
-        public Colour TextColour
+        public Colour Colour
         {
             get
             {

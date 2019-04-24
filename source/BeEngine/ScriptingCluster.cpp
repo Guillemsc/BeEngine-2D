@@ -13,6 +13,7 @@
 #include "ScriptingBridgeScene.h"
 #include "ScriptingBridgeComponentCamera.h"
 #include "ScriptingBridgeApplication.h"
+#include "ScriptingBridgeComponentSpriteRenderer.h"
 
 void ScriptingCluster::RegisterInternalCalls()
 {
@@ -64,6 +65,11 @@ void ScriptingCluster::RegisterInternalCalls()
 		mono_add_internal_call("BeEngine.ComponentTransform::SetScale", (const void*)ScriptingBridgeComponentTransform::SetScale);
 		mono_add_internal_call("BeEngine.ComponentTransform::GetScale", (const void*)ScriptingBridgeComponentTransform::GetScale);
 		// ----------------------- ComponentTransform
+
+		// ComponentSpriteRenderer -----------------------
+		mono_add_internal_call("BeEngine.ComponentSpriteRenderer::SetSpriteColour", (const void*)ScriptingBridgeComponentSpriteRenderer::SetSpriteColour);
+		mono_add_internal_call("BeEngine.ComponentSpriteRenderer::GetSpriteColour", (const void*)ScriptingBridgeComponentSpriteRenderer::GetSpriteColour);
+		// ----------------------- ComponentText
 
 	    // ComponentText -----------------------
 		mono_add_internal_call("BeEngine.ComponentText::SetText", (const void*)ScriptingBridgeComponentText::SetText);

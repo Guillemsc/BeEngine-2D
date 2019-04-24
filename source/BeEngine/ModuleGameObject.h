@@ -102,7 +102,7 @@ private:
 	void DestroyAllScenesNow();
 
 	void UpdateGameObjectsLogic();
-	void GameObjectsLogicStart();
+	void InitComponentsScripts();
 	void GameObjectsLogicUpdate();
 	void GameObjectsLogicStop();
 

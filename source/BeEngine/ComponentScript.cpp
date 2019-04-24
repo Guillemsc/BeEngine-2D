@@ -336,14 +336,17 @@ void ComponentScript::OnLoadAbstraction(DataAbstraction & abs)
 
 		if (App->state->GetEngineState() != EngineState::ENGINE_STATE_BUILD)
 		{
-			if (resource_script != nullptr)
+			if (App->state->GetEditorUpdateState() != EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 			{
-				RecalculateFieldsValues(resource_script->GetFields());
+				if (resource_script != nullptr)
+				{
+					RecalculateFieldsValues(resource_script->GetFields());
+				}
 			}
 		}
 	}
 
-	App->gameobject->AddComponentScript(this);
+	/*App->gameobject->AddComponentScript(this);*/
 }
 
 void ComponentScript::OnEvent(Event * ev)

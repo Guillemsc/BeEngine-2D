@@ -27,8 +27,11 @@ public:
 	void CleanUp();
 
 private:
+
 	// Internal Calls
 
+	static void SetSpriteColour(MonoObject* mono_object, MonoObject* mono_object_colour);
+	static MonoObject* GetSpriteColour(MonoObject* mono_object);
 
 	// --------------
 

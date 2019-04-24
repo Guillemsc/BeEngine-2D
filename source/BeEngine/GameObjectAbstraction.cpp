@@ -105,13 +105,24 @@ std::vector<GameObject*> GameObjectAbstraction::DeAbstract()
 		GameObject* go = nullptr;
 	};
 
+	class TmpComponentsReference
+	{
+	public:
+		DataAbstraction abstraction;
+		GameObjectComponent* comp = nullptr;
+	};
+
 	std::vector<TmpGameObjectReference> tmp_references;
 	tmp_references.reserve(relations.size());
+
+	std::vector<TmpComponentsReference> tmp_components_references;
+	tmp_components_references.reserve(relations.size());
 
 	if (abstracted)
 	{
 		for (std::vector<GameObjectAbstractionRelation>::iterator it = relations.begin(); it != relations.end(); ++it)
 		{
+			// Create go
 			GameObject* go = App->gameobject->CreateGameObject(nullptr, (*it).uid, instance_uid);
 			ret.push_back(go);
 
@@ -122,6 +133,34 @@ std::vector<GameObject*> GameObjectAbstraction::DeAbstract()
 			tmp_ref.abstraction = (*it);
 
 			tmp_references.push_back(tmp_ref);
+
+			// Create components
+			std::vector<DataAbstraction> components_abstractions = (*it).components_abstraction;
+
+			for (std::vector<DataAbstraction>::iterator c = components_abstractions.begin(); c != components_abstractions.end(); ++c)
+			{
+				int type = (*c).GetInt("type", -1);
+
+				if (type > -1)
+				{
+					GameObjectComponent* new_component = nullptr;
+
+					if (type == 0)
+					{
+						new_component = go->transform;
+					}
+					else
+					{
+						new_component = go->CreateComponent(static_cast<ComponentType>(type));
+					}
+
+					TmpComponentsReference tmp_ref;
+					tmp_ref.abstraction = (*c);
+					tmp_ref.comp = new_component;
+
+					tmp_components_references.push_back(tmp_ref);
+				}
+			}
 		}
 
 		for (std::vector<TmpGameObjectReference>::iterator it = tmp_references.begin(); it != tmp_references.end(); ++it)
@@ -139,26 +178,11 @@ std::vector<GameObject*> GameObjectAbstraction::DeAbstract()
 					}
 				}
 			}
+		}
 
-			std::vector<DataAbstraction> components_abstractions = (*it).abstraction.components_abstraction;
-
-			for (std::vector<DataAbstraction>::iterator c = components_abstractions.begin(); c != components_abstractions.end(); ++c)
-			{
-				int type = (*c).GetInt("type", -1);
-
-				if (type > -1)
-				{
-					if (type == 0)
-					{
-						curr_go->transform->OnLoadAbstraction((*c));
-					}
-					else
-					{
-						GameObjectComponent* new_component = curr_go->CreateComponent(static_cast<ComponentType>(type));
-						new_component->OnLoadAbstraction((*c));
-					}
-				}
-			}
+		for (std::vector<TmpComponentsReference>::iterator it = tmp_components_references.begin(); it != tmp_components_references.end(); ++it)
+		{
+			(*it).comp->OnLoadAbstraction((*it).abstraction);
 		}
 	}
 

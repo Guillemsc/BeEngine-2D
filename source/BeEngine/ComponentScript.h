@@ -16,6 +16,7 @@ class ScriptingBridgeComponentScript;
 class ComponentScript : public GameObjectComponent
 {
 	friend class GameObject;
+	friend class ModuleGameObject;
 
 private:
 	void operator delete(void *) {}
@@ -65,6 +66,8 @@ private:
 	GameObjectSelectorWidget go_selector_widget;
 
 	std::vector<ComponentScriptField*> fields_values;
+
+	bool needs_init = true;
 };
 
 #endif // !__COMPONENT_SCRIPT_H__

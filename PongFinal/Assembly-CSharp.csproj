@@ -93,11 +93,13 @@
     </Reference>
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\QueueEvent\QueueEventTypes\QueueEventActive.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\QueueEvent\QueueEventTypes\QueueEventPosition.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\QueueEvent\QueueEventTypes\QueueEventSpriteFade.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\QueueEvent\QueueEventTypes\QueueEventWaitTime.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\QueueEvent\QueueEvent.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\QueueEvent\QueueEventContext.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\QueueEvent\QueueEventManager.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\MainMenu\MainMenuManager.cs" />
+    <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\MainGame\MainGameManager.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\General\EasingFunctions.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\General\Singleton.cs" />
     <Compile Include="C:\Users\Guillem\Documents\GitHub\BeEngine-2D\PongFinal\assets\Scripts\General\Timer.cs" />

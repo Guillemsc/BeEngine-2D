@@ -43,3 +43,29 @@ void ScriptingBridgeComponentSpriteRenderer::CleanUp()
 		ScriptingBridgeBeObject::ClearBeObjectRefPointer(class_instance->GetMonoObject());
 	}
 }
+
+void ScriptingBridgeComponentSpriteRenderer::SetSpriteColour(MonoObject * mono_object, MonoObject * mono_object_colour)
+{
+	ComponentSpriteRenderer* comp = (ComponentSpriteRenderer*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (comp != nullptr)
+	{
+		float4 new_colour = App->scripting->scripting_cluster->UnboxColour(mono_object_colour);
+
+		comp->SetColour(new_colour);
+	}
+}
+
+MonoObject * ScriptingBridgeComponentSpriteRenderer::GetSpriteColour(MonoObject * mono_object)
+{
+	MonoObject* ret = nullptr;
+
+	ComponentSpriteRenderer* comp = (ComponentSpriteRenderer*)ScriptingBridgeBeObject::GetBeObjectRefPointer(mono_object);
+
+	if (comp != nullptr)
+	{
+		ret = App->scripting->scripting_cluster->BoxColour(comp->GetColour());
+	}
+
+	return ret;
+}
