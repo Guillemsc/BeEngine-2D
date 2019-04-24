@@ -1,7 +1,7 @@
 {
     "game_objects_count": 31,
     "game_object_0": {
-        "uid": "8eb041f",
+        "uid": "4298e69f",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -57,14 +57,14 @@
                 "string_name_0": "field_name_0",
                 "string_value_0": "foreground_go",
                 "string_name_1": "field_val_0",
-                "string_value_1": "d023924",
+                "string_value_1": "498d9513",
                 "string_name_2": "resource",
                 "string_value_2": "6cb76229"
             }
         ]
     },
     "game_object_1": {
-        "uid": "513eb293",
+        "uid": "7d61a9f0",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -121,7 +121,7 @@
         ]
     },
     "game_object_2": {
-        "uid": "f3acfb4",
+        "uid": "65616e8e",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -176,7 +176,7 @@
         ]
     },
     "game_object_3": {
-        "uid": "10da202f",
+        "uid": "1ad32f56",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -251,7 +251,7 @@
         ]
     },
     "game_object_4": {
-        "uid": "d023924",
+        "uid": "498d9513",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -326,7 +326,7 @@
         ]
     },
     "game_object_5": {
-        "uid": "a80b38b",
+        "uid": "3ea12f3a",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -361,8 +361,8 @@
                 ],
                 "float2_name_2": "position",
                 "float2_value_2": [
-                    -30.180973052978516,
-                    7.2446527481079102
+                    0,
+                    0
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -447,7 +447,7 @@
         ]
     },
     "game_object_6": {
-        "uid": "c791b5f",
+        "uid": "58cf735f",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -483,7 +483,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -115.493408203125,
-                    1.9144946336746216
+                    0
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -547,7 +547,7 @@
         ]
     },
     "game_object_7": {
-        "uid": "30193346",
+        "uid": "79228814",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -583,7 +583,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     115.49299621582031,
-                    1.9144946336746216
+                    0
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -647,7 +647,7 @@
         ]
     },
     "game_object_8": {
-        "uid": "397dfa2b",
+        "uid": "3d4af8d5",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -699,7 +699,7 @@
         ]
     },
     "game_object_9": {
-        "uid": "b6e4858",
+        "uid": "7185e347",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -746,7 +746,7 @@
         ]
     },
     "game_object_10": {
-        "uid": "53882c23",
+        "uid": "792f7291",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -793,8 +793,8 @@
         ]
     },
     "game_object_11": {
-        "uid": "58c6071a",
-        "parent_uid": "a80b38b",
+        "uid": "ddbbfcb",
+        "parent_uid": "3ea12f3a",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -828,8 +828,8 @@
                 ],
                 "float2_name_2": "position",
                 "float2_value_2": [
-                    -30.180973052978516,
-                    7.2446527481079102
+                    0,
+                    0
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -871,8 +871,8 @@
         ]
     },
     "game_object_12": {
-        "uid": "3d000b97",
-        "parent_uid": "c791b5f",
+        "uid": "390db565",
+        "parent_uid": "58cf735f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -907,7 +907,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -115.493408203125,
-                    16.755001068115234
+                    14.840505599975586
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -949,8 +949,8 @@
         ]
     },
     "game_object_13": {
-        "uid": "61fdd9b4",
-        "parent_uid": "c791b5f",
+        "uid": "76587d46",
+        "parent_uid": "58cf735f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -985,7 +985,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -115.493408203125,
-                    6.8756685256958008
+                    4.9611740112304688
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -1027,8 +1027,8 @@
         ]
     },
     "game_object_14": {
-        "uid": "ba7f034",
-        "parent_uid": "c791b5f",
+        "uid": "4df1bb0c",
+        "parent_uid": "58cf735f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1048,7 +1048,7 @@
                 "bool_value_0": false,
                 "floats_count": 1,
                 "float_name_0": "rotation",
-                "float_value_0": 180,
+                "float_value_0": -180,
                 "floats2_count": 4,
                 "float2_name_0": "anchor_offset",
                 "float2_value_0": [
@@ -1063,7 +1063,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -115.493408203125,
-                    -3.0238385200500488
+                    -4.9383330345153809
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -1105,8 +1105,8 @@
         ]
     },
     "game_object_15": {
-        "uid": "7e06a6dc",
-        "parent_uid": "c791b5f",
+        "uid": "6efd96f9",
+        "parent_uid": "58cf735f",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1126,7 +1126,7 @@
                 "bool_value_0": false,
                 "floats_count": 1,
                 "float_name_0": "rotation",
-                "float_value_0": 180,
+                "float_value_0": -180,
                 "floats2_count": 4,
                 "float2_name_0": "anchor_offset",
                 "float2_value_0": [
@@ -1141,7 +1141,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     -115.493408203125,
-                    -12.933845520019531
+                    -14.848339080810547
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -1183,8 +1183,8 @@
         ]
     },
     "game_object_16": {
-        "uid": "49652b7f",
-        "parent_uid": "30193346",
+        "uid": "7c870bd",
+        "parent_uid": "79228814",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1219,7 +1219,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     115.49299621582031,
-                    16.755001068115234
+                    14.840505599975586
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -1261,8 +1261,8 @@
         ]
     },
     "game_object_17": {
-        "uid": "bb4f798",
-        "parent_uid": "30193346",
+        "uid": "2777f266",
+        "parent_uid": "79228814",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1297,7 +1297,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     115.49299621582031,
-                    6.8756685256958008
+                    4.9611740112304688
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -1339,8 +1339,8 @@
         ]
     },
     "game_object_18": {
-        "uid": "2f073e51",
-        "parent_uid": "30193346",
+        "uid": "10fa153d",
+        "parent_uid": "79228814",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1360,7 +1360,7 @@
                 "bool_value_0": false,
                 "floats_count": 1,
                 "float_name_0": "rotation",
-                "float_value_0": -180,
+                "float_value_0": 180,
                 "floats2_count": 4,
                 "float2_name_0": "anchor_offset",
                 "float2_value_0": [
@@ -1375,7 +1375,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     115.49299621582031,
-                    -3.0238385200500488
+                    -4.9383330345153809
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -1417,8 +1417,8 @@
         ]
     },
     "game_object_19": {
-        "uid": "7f3d3fc5",
-        "parent_uid": "30193346",
+        "uid": "5a78506d",
+        "parent_uid": "79228814",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1438,7 +1438,7 @@
                 "bool_value_0": false,
                 "floats_count": 1,
                 "float_name_0": "rotation",
-                "float_value_0": -180,
+                "float_value_0": 180,
                 "floats2_count": 4,
                 "float2_name_0": "anchor_offset",
                 "float2_value_0": [
@@ -1453,7 +1453,7 @@
                 "float2_name_2": "position",
                 "float2_value_2": [
                     115.49299621582031,
-                    -12.933845520019531
+                    -14.848339080810547
                 ],
                 "float2_name_3": "scale",
                 "float2_value_3": [
@@ -1495,8 +1495,8 @@
         ]
     },
     "game_object_20": {
-        "uid": "1abf03c8",
-        "parent_uid": "397dfa2b",
+        "uid": "65a9b333",
+        "parent_uid": "3d4af8d5",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1564,8 +1564,8 @@
         ]
     },
     "game_object_21": {
-        "uid": "1b3f2f6b",
-        "parent_uid": "397dfa2b",
+        "uid": "421da688",
+        "parent_uid": "3d4af8d5",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1633,8 +1633,8 @@
         ]
     },
     "game_object_22": {
-        "uid": "246e3733",
-        "parent_uid": "b6e4858",
+        "uid": "70243466",
+        "parent_uid": "7185e347",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1708,8 +1708,8 @@
         ]
     },
     "game_object_23": {
-        "uid": "40280352",
-        "parent_uid": "b6e4858",
+        "uid": "5589537d",
+        "parent_uid": "7185e347",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1783,8 +1783,8 @@
         ]
     },
     "game_object_24": {
-        "uid": "1dfb217e",
-        "parent_uid": "b6e4858",
+        "uid": "348ee1f6",
+        "parent_uid": "7185e347",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1858,8 +1858,8 @@
         ]
     },
     "game_object_25": {
-        "uid": "5de6fdf1",
-        "parent_uid": "b6e4858",
+        "uid": "55f4c7b0",
+        "parent_uid": "7185e347",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1933,8 +1933,8 @@
         ]
     },
     "game_object_26": {
-        "uid": "4398511",
-        "parent_uid": "b6e4858",
+        "uid": "66ac4d46",
+        "parent_uid": "7185e347",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2008,8 +2008,8 @@
         ]
     },
     "game_object_27": {
-        "uid": "8981eea",
-        "parent_uid": "53882c23",
+        "uid": "3713410",
+        "parent_uid": "792f7291",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2096,8 +2096,8 @@
         ]
     },
     "game_object_28": {
-        "uid": "624ca689",
-        "parent_uid": "53882c23",
+        "uid": "50983a53",
+        "parent_uid": "792f7291",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2184,8 +2184,8 @@
         ]
     },
     "game_object_29": {
-        "uid": "658eb469",
-        "parent_uid": "1abf03c8",
+        "uid": "3821b044",
+        "parent_uid": "65a9b333",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2253,8 +2253,8 @@
         ]
     },
     "game_object_30": {
-        "uid": "3102d0d7",
-        "parent_uid": "1b3f2f6b",
+        "uid": "6e65c173",
+        "parent_uid": "421da688",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,

@@ -31,7 +31,7 @@ public class MainGameManager : ComponentScript
         if (foreground != null)
         {
             queue_event.PushEvent(new QueueEventSpriteFade(foreground, 255,
-             0, 5.3f, EasingFunctionsType.QUAD_IN));
+             0, 1.3f, EasingFunctionsType.QUAD_IN));
         }
     }
 

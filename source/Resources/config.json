@@ -27,9 +27,9 @@
             -16.242647171020508,
             -7.3213663101196289
         ],
-        "size": 0.35292187333106995
+        "size": 0.19921523332595825
     },
     "guizmos": {
-        "render_all_physics_guizmos": true
+        "render_all_physics_guizmos": false
     }
 }
