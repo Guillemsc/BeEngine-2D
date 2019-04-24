@@ -102,7 +102,7 @@ bool ModuleRenderer::Awake()
 		glClearDepth(1.0f);
 
 		// Initialize clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 0.f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.f);
 
 		// Check for error
 		error = glGetError();
@@ -112,18 +112,18 @@ bool ModuleRenderer::Awake()
 			ret = false;
 		}
 
-		GLfloat LightModelAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+		//GLfloat LightModelAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+		//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 
-		GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
+		//GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		//glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
-		GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		//GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		//glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
+		//glEnable(GL_DEPTH_TEST);
+		//glDisable(GL_LIGHTING);
+		//glEnable(GL_COLOR_MATERIAL);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glDisable(GL_CULL_FACE);
 	}

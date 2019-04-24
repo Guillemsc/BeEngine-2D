@@ -1,22 +1,15 @@
-#include "StaticSpriteRenderer.h"
+#include "SpriteRenderer.h"
 #include "App.h"
 #include "ModuleShader.h"
 #include "ComponentTransfrom.h"
 #include "GameObject.h"
 #include "ModuleSceneRenderer.h"
+#include "StaticSpriteRendererItem.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-StaticSpriteRenderer::StaticSpriteRenderer()
-{
-}
-
-StaticSpriteRenderer::~StaticSpriteRenderer()
-{
-}
-
-void StaticSpriteRenderer::Start()
+void SpriteRenderer::Start()
 {
 	VertexBuffer quad_vertex_buffer;
 
@@ -129,13 +122,13 @@ void StaticSpriteRenderer::Start()
 	quad_vertex_buffer.Clear();
 }
 
-void StaticSpriteRenderer::CleanUp()
+void SpriteRenderer::CleanUp()
 {
 }
 
-void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & projection)
+void SpriteRenderer::Render(StaticSpriteRendererItem* item, const float4x4& view, const float4x4& projection, int z_pos)
 {
-	if (sprite_renderers.size() > 0)
+	if (item != nullptr)
 	{
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
@@ -149,56 +142,50 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 		App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 		App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-		std::vector<ComponentSpriteRenderer*> sprites = sprite_renderers;
+		ComponentSpriteRenderer* curr_sprite = item->GetSpriteComponent();
 
-		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprites.begin(); it != sprites.end(); ++it)
+		float2 texture_size = curr_sprite->GetTextureSize();
+
+		float4 colour = curr_sprite->GetColour();
+
+		ComponentTransform* transform = curr_sprite->GetOwner()->transform;
+
+		float4x4 size_mat = float4x4::identity;
+
+		float2 size = transform->GetSize();
+
+		bool use_texture = curr_sprite->GetUseSprite();
+
+		size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(size.x, size.y, 1));
+
+		float4x4 world_transform = transform->GetWorldTransform() * size_mat;
+
+		if (curr_sprite->GetFlipX())
+			world_transform[0][0] = -world_transform[0][0];
+
+		if (curr_sprite->GetFlipY())
+			world_transform[1][1] = -world_transform[1][1];
+
+		App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
+
+		App->renderer->SetUniformVec4(program->GetID(), "col", colour);
+		App->renderer->SetUniformInt(program->GetID(), "hasTexture", use_texture);
+
+		App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
+
+		if (use_texture)
+			App->renderer->BindTexture(curr_sprite->GetTextureId());
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
 		{
-			ComponentSpriteRenderer* curr_sprite = (*it);
-			float2 texture_size = curr_sprite->GetTextureSize();
-
-			float4 colour = curr_sprite->GetColour();
-
-			ComponentTransform* transform = curr_sprite->GetOwner()->transform;
-
-			float z_pos = App->scene_renderer->layer_space_component_sprite.GetLayerValue(curr_sprite->GetLayer());
-
-			float4x4 size_mat = float4x4::identity;
-			
-			float2 size = transform->GetSize();
-
-			bool use_texture = curr_sprite->GetUseSprite();
-
-			size_mat = float4x4::FromTRS(float3::zero, Quat::identity, float3(size.x, size.y, 1));
-
-			float4x4 world_transform = transform->GetWorldTransform() * size_mat;
-
-			if (curr_sprite->GetFlipX())
-				world_transform[0][0] = -world_transform[0][0];
-
-			if (curr_sprite->GetFlipY())
-				world_transform[1][1] = -world_transform[1][1];
-
-			App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
-
-			App->renderer->SetUniformVec4(program->GetID(), "col", colour);
-			App->renderer->SetUniformInt(program->GetID(), "hasTexture", use_texture);
-
-			App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
-
-			if(use_texture)
-				App->renderer->BindTexture(curr_sprite->GetTextureId());
-
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
-
-			GLenum error = glGetError();
-			if (error != GL_NO_ERROR)
-			{
-				INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
-			}
-
-			if (curr_sprite->GetHasTexture())
-				App->renderer->UnbindTexture();
+			INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
 		}
+
+		if (curr_sprite->GetHasTexture())
+			App->renderer->UnbindTexture();		
 
 		App->renderer->UnbindVertexArrayBuffer();
 
@@ -207,36 +194,3 @@ void StaticSpriteRenderer::Render(const float4x4& view, const float4x4 & project
 	}
 }
 
-void StaticSpriteRenderer::AddSpriteRenderer(ComponentSpriteRenderer * add)
-{
-	if (add != nullptr)
-	{
-		bool exists = false;
-		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprite_renderers.begin(); it != sprite_renderers.end(); ++it)
-		{
-			if ((*it) == add)
-			{
-				exists = true;
-				break;
-			}
-		}
-
-		if (!exists)
-			sprite_renderers.push_back(add);
-	}
-}
-
-void StaticSpriteRenderer::RemoveSpriteRenderer(ComponentSpriteRenderer * remove)
-{
-	if (remove != nullptr)
-	{
-		for (std::vector<ComponentSpriteRenderer*>::iterator it = sprite_renderers.begin(); it != sprite_renderers.end(); ++it)
-		{
-			if ((*it) == remove)
-			{
-				sprite_renderers.erase(it);
-				break;
-			}
-		}
-	}
-}

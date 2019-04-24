@@ -9,6 +9,7 @@
 class GameObject;
 class Event;
 class ResourceFont;
+class StaticRendererItem;
 
 class ComponentText : public GameObjectComponent
 {
@@ -55,6 +56,8 @@ private:
 	void UpdateTextGlyphs();
 
 private:
+	StaticRendererItem* rendering_item = nullptr;
+
 	ResourceFont* resource_font = nullptr;
 
 	Font* font = nullptr;

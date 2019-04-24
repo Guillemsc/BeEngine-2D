@@ -8,8 +8,7 @@
 #include "LineRenderer.h"
 #include "QuadRenderer.h"
 #include "DinamicTriangleRenderer.h"
-#include "StaticSpriteRenderer.h"
-#include "StaticTextRenderer.h"
+#include "StaticRenderer.h"
 #include "DynamicGridRenderer.h"
 #include "ModuleWindow.h"
 #include "ModuleGuizmo.h"
@@ -36,14 +35,13 @@ bool ModuleSceneRenderer::Awake()
 	quad_renderer = (QuadRenderer*)AddRenderer(new QuadRenderer());
 	triangle_renderer = (DinamicTriangleRenderer*)AddRenderer(new DinamicTriangleRenderer());
 
-	static_sprite_renderer = (StaticSpriteRenderer*)AddRenderer(new StaticSpriteRenderer());
-	static_text_renderer = (StaticTextRenderer*)AddRenderer(new StaticTextRenderer());
+	static_renderer = (StaticRenderer*)AddRenderer(new StaticRenderer());
 
 	grid_renderer = (DynamicGridRenderer*)AddRenderer(new DynamicGridRenderer());
 
-	// Far plane 9999999
+	// Far plane 9 999 999
 	layer_space_guizmos = LayerSpace(110000, 100000, 10000);
-	layer_space_component_sprite = LayerSpace(5010000, 5000000, 10000);
+	layer_space_component_scene = LayerSpace(5010000, 5000000, 10000);
 	layer_space_grid = LayerSpace(4000001, 4000000, 1);
 
 	return ret;

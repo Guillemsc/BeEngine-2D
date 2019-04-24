@@ -2,7 +2,7 @@
 #include "App.h"
 #include "ResourceTexture.h"
 #include "ModuleRenderer.h"
-#include "StaticSpriteRenderer.h"
+#include "StaticRenderer.h"
 #include "ModuleResource.h"
 #include "imgui.h"
 #include "ModuleEvent.h"
@@ -30,7 +30,12 @@ ComponentSpriteRenderer::~ComponentSpriteRenderer()
 
 void ComponentSpriteRenderer::EditorDraw()
 {
-	ImGui::DragInt("Layer", &layer, 1, 0, 9999);
+	int lay = layer;
+
+	if (ImGui::DragInt("Layer", &lay, 1, 0, 9999))
+	{
+		SetLayer(lay);
+	}
 
 	ImGui::Checkbox("Use sprite", &use_sprite);
 
@@ -76,8 +81,8 @@ void ComponentSpriteRenderer::Start()
 {
 	App->event->Suscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 
-	if(GetOwner()->GetActive())
-		App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
+	if (GetOwner()->GetActive())
+		rendering_item = App->scene_renderer->static_renderer->CreateRendererItem(this);
 }
 
 void ComponentSpriteRenderer::Update()
@@ -87,7 +92,8 @@ void ComponentSpriteRenderer::Update()
 
 void ComponentSpriteRenderer::CleanUp()
 {
-	App->scene_renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
+	App->scene_renderer->static_renderer->DestroyRendererItem(rendering_item);
+	rendering_item = nullptr;
 
 	App->event->UnSuscribe(std::bind(&ComponentSpriteRenderer::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }
@@ -110,7 +116,7 @@ void ComponentSpriteRenderer::OnSaveAbstraction(DataAbstraction & abs)
 
 void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
 {
-	layer = abs.GetInt("layer");
+	SetLayer(abs.GetInt("layer"));
 
 	size = abs.GetFloat2("size", float2(10, 10));
 
@@ -155,11 +161,13 @@ void ComponentSpriteRenderer::OnChangeActive(bool set)
 {
 	if (!set)
 	{
-		App->scene_renderer->static_sprite_renderer->RemoveSpriteRenderer(this);
+		App->scene_renderer->static_renderer->DestroyRendererItem(rendering_item);
+		rendering_item = nullptr;
 	}
 	else
 	{
-		App->scene_renderer->static_sprite_renderer->AddSpriteRenderer(this);
+		if(rendering_item == nullptr)
+			rendering_item = App->scene_renderer->static_renderer->CreateRendererItem(this);
 	}
 }
 
@@ -242,6 +250,14 @@ float2 ComponentSpriteRenderer::GetTextureSize() const
 bool ComponentSpriteRenderer::GetHasTexture() const
 {
 	return resource_texture != nullptr;
+}
+
+void ComponentSpriteRenderer::SetLayer(int lay)
+{
+	layer = lay;
+
+	if (layer < 0)
+		layer = 0;
 }
 
 int ComponentSpriteRenderer::GetLayer() const

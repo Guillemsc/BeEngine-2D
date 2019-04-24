@@ -148,6 +148,12 @@
     <Filter Include="Sources\8. Scripting ==============\Bridges\Application">
       <UniqueIdentifier>{93f0da34-2fd5-4615-9621-2fcd5b48427c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\5. Rendering =============\StaticRenderers\Renderers">
+      <UniqueIdentifier>{4a933611-c782-4123-b257-2d6869e865cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\5. Rendering =============\StaticRenderers\Items">
+      <UniqueIdentifier>{017fa47a-7408-4cce-a765-0ad23c94e6e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleAudio.h">
@@ -543,9 +549,6 @@
     <ClInclude Include="DinamicTriangleRenderer.h">
       <Filter>Sources\5. Rendering =============\DynamicRenderers</Filter>
     </ClInclude>
-    <ClInclude Include="StaticSpriteRenderer.h">
-      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptingObjectCompiler.h">
       <Filter>Sources\8. Scripting ==============\ScriptingInternal</Filter>
     </ClInclude>
@@ -723,9 +726,6 @@
     <ClInclude Include="ScriptingBridgeComponentText.h">
       <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="StaticTextRenderer.h">
-      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptingBridgeDebug.h">
       <Filter>Sources\8. Scripting ==============\Bridges\Debug</Filter>
     </ClInclude>
@@ -761,6 +761,24 @@
     </ClInclude>
     <ClInclude Include="ScriptingBridgeApplication.h">
       <Filter>Sources\8. Scripting ==============\Bridges\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticRendererItem.h">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticSpriteRendererItem.h">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticRenderer.h">
+      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticTextRendererItem.h">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1058,9 +1076,6 @@
     <ClCompile Include="HierarchyWindow.cpp">
       <Filter>Sources\4. Editor ================\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="StaticSpriteRenderer.cpp">
-      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptingObjectCompiler.cpp">
       <Filter>Sources\8. Scripting ==============\ScriptingInternal</Filter>
     </ClCompile>
@@ -1235,9 +1250,6 @@
     <ClCompile Include="ScriptingBridgeComponentText.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="StaticTextRenderer.cpp">
-      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptingBridgeDebug.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges\Debug</Filter>
     </ClCompile>
@@ -1273,6 +1285,24 @@
     </ClCompile>
     <ClCompile Include="ScriptingBridgeApplication.cpp">
       <Filter>Sources\8. Scripting ==============\Bridges\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticRendererItem.cpp">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticSpriteRendererItem.cpp">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticRenderer.cpp">
+      <Filter>Sources\5. Rendering =============\StaticRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticTextRendererItem.cpp">
+      <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -205,6 +205,8 @@ void ComponentTransform::SetLocalTransform(const float4x4 & local)
 	local_transform = local;
 
 	RecalculateWorldTransform();
+
+	UpdateChildrensTransforms();
 }
 
 void ComponentTransform::SetWorldTransform(const float4x4 & world)
@@ -214,6 +216,8 @@ void ComponentTransform::SetWorldTransform(const float4x4 & world)
 	RecalculateLocalTransform();
 
 	RecalculateAnchorOffset();
+
+	UpdateChildrensTransforms();
 }
 
 void ComponentTransform::SetLocalPosition(const float2 & pos)
@@ -223,6 +227,8 @@ void ComponentTransform::SetLocalPosition(const float2 & pos)
 		local_pos = pos;
 
 		UpdateLocalTransformFromValues();
+
+		UpdateChildrensTransforms();
 	}
 }
 
@@ -235,6 +241,8 @@ void ComponentTransform::SetLocalRotationDegrees(float rotation)
 		local_rotation = rotation;
 
 		UpdateLocalTransformFromValues();
+
+		UpdateChildrensTransforms();
 	}
 }
 
@@ -271,6 +279,8 @@ void ComponentTransform::SetLocalScale(const float2 & scale)
 			local_scale.y = 0.01f;
 
 		UpdateLocalTransformFromValues();
+
+		UpdateChildrensTransforms();
 	}
 }
 
@@ -279,6 +289,8 @@ void ComponentTransform::SetPosition(const float2 & pos)
 	base_physics_body->SetPosition(pos);
 
 	UpdateWorldTransformFromValues();
+
+	UpdateChildrensTransforms();
 }
 
 void ComponentTransform::SetRotationDegrees(float rotation)
@@ -290,6 +302,8 @@ void ComponentTransform::SetRotationDegrees(float rotation)
 		base_physics_body->SetRotationDegrees(rotation);
 
 		UpdateWorldTransformFromValues();
+
+		UpdateChildrensTransforms();
 	}
 }
 
@@ -326,68 +340,50 @@ void ComponentTransform::SetScale(const float2 & scale)
 			world_scale.y = 0.01f;
 
 		UpdateWorldTransformFromValues();
+
+		UpdateChildrensTransforms();
 	}
 }
 
 float2 ComponentTransform::GetLocalPosition()
 {
-	RecalculateLocalTransform();
-
 	return local_pos;
 }
 
 float ComponentTransform::GetLocalRotationDegrees()
 {
-	RecalculateLocalTransform();
-
 	return local_rotation * RADTODEG;
 }
 
 float2 ComponentTransform::GetLocalScale()
 {
-	RecalculateLocalTransform();
-
 	return local_scale;
 }
 
 float2 ComponentTransform::GetPosition()
 {
-	float2 ret = base_physics_body->GetPosition();
-
-	RecalculateWorldTransform();
-
-	return ret;
+	return base_physics_body->GetPosition();
 }
 
 float ComponentTransform::GetRotationDegrees()
 {
 	float ret = base_physics_body->GetRotationDegrees();
 
-	RecalculateWorldTransform();
-
 	return ret;
 }
 
 float2 ComponentTransform::GetScale()
 {
-	float2 ret = world_scale;
-
-	RecalculateWorldTransform();
-
-	return ret;
+	return world_scale;
 }
 
 float4x4 ComponentTransform::GetLocalTransform()
 {
-	RecalculateLocalTransform();
-
 	return local_transform;
 }
 
 float4x4 ComponentTransform::GetWorldTransform()
 {
-	RecalculateWorldTransform();
-
 	return world_transform;
 }
 
@@ -541,19 +537,41 @@ void ComponentTransform::RecalculateCanvasLayout()
 
 void ComponentTransform::RecalculateAnchorOffset()
 {
-	float3 pos = float3::zero;
-	Quat rot = Quat::identity;
-	float3 scal = float3::zero;
-
-	world_transform.Decompose(pos, rot, scal);
-
 	if (parent_used_canvas != nullptr)
 	{
+		float3 pos = float3::zero;
+		Quat rot = Quat::identity;
+		float3 scal = float3::zero;
+
+		world_transform.Decompose(pos, rot, scal);
+
 		float2 world_pos = float2(pos.x, pos.y);
 
 		float2 anchor_world_pos = parent_used_canvas->GetPositionFromAnchorPoint(anchor_pos);
 
 		anchor_offset_pos = world_pos - anchor_world_pos;
+	}
+}
+
+void ComponentTransform::UpdateChildrensTransforms()
+{
+	std::vector<GameObject*> to_update;
+
+	to_update.push_back(GetOwner());
+
+	while (to_update.size() > 0)
+	{
+		GameObject* curr_go = *to_update.begin();
+
+		to_update.erase(to_update.begin());
+
+		std::vector<GameObject*> childs = curr_go->GetChilds();
+
+		to_update.insert(to_update.end(), childs.begin(), childs.end());
+
+		ComponentTransform* curr_trans = curr_go->transform;
+
+		curr_trans->RecalculateWorldTransform();
 	}
 }
 

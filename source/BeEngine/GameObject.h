@@ -76,6 +76,8 @@ public:
 	bool GetHasPrefab() const;
 	ResourcePrefab* GetPrefab() const;
 
+	int GetHierarcyLayer() const;
+
 private:
 	void DestroyAllComponents();
 	void ActuallyDestroyComponents();
@@ -96,6 +98,8 @@ private:
 	std::string uid_plus_instance_uid;
 
 	bool active = true;
+
+	int hierarchy_layer = 0;
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> childs;

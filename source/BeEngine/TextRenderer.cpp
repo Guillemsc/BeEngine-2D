@@ -1,4 +1,4 @@
-#include "StaticTextRenderer.h"
+#include "TextRenderer.h"
 #include "ComponentText.h"
 #include "App.h"
 #include "ModuleShader.h"
@@ -6,16 +6,18 @@
 #include "ComponentTransfrom.h"
 #include "ModuleSceneRenderer.h"
 #include "ModuleText.h"
+#include "TextRenderer.h"
+#include "StaticTextRendererItem.h"
 
-StaticTextRenderer::StaticTextRenderer()
+TextRenderer::TextRenderer()
 {
 }
 
-StaticTextRenderer::~StaticTextRenderer()
+TextRenderer::~TextRenderer()
 {
 }
 
-void StaticTextRenderer::Start()
+void TextRenderer::Start()
 {
 	VertexBuffer quad_vertex_buffer;
 
@@ -129,13 +131,13 @@ void StaticTextRenderer::Start()
 	quad_vertex_buffer.Clear();
 }
 
-void StaticTextRenderer::CleanUp()
+void TextRenderer::CleanUp()
 {
 }
 
-void StaticTextRenderer::Render(const float4x4 & view, const float4x4 & projection)
+void TextRenderer::Render(StaticTextRendererItem * item, const float4x4 & view, const float4x4 & projection, int z_pos)
 {
-	if (text_renderers.size() > 0)
+	if (item != nullptr)
 	{
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
@@ -149,73 +151,66 @@ void StaticTextRenderer::Render(const float4x4 & view, const float4x4 & projecti
 		App->renderer->SetUniformMatrix(program->GetID(), "View", view.ptr());
 		App->renderer->SetUniformMatrix(program->GetID(), "Projection", projection.ptr());
 
-		std::vector<ComponentText*> texts = text_renderers;
+		ComponentText* curr_text = item->GetTextComponent();
+		Font* font = curr_text->GetCurrentFont();
 
-		for (std::vector<ComponentText*>::iterator it = texts.begin(); it != texts.end(); ++it)
+		if (font != nullptr)
 		{
-			ComponentText* curr_text = (*it);
-			Font* font = curr_text->GetCurrentFont();
+			TextData text_data = curr_text->GetTextData();
 
-			if (font != nullptr)
+			float scale = (float)15 / (float)text_data.GetFontSize();
+
+			float4 colour = float4(1, 1, 1, 1);
+
+			ComponentTransform* transform = curr_text->GetOwner()->transform;
+
+			std::vector<Glyph> glyphs = text_data.GetGlyphs();
+
+			float curr_x = -text_data.GetFullSize().x * 0.5f * scale;
+			float curr_y = -text_data.GetFullSize().y * 0.5f * scale;
+
+			int counter = 0;
+			for (std::vector<Glyph>::iterator gl = glyphs.begin(); gl != glyphs.end(); ++gl, ++counter)
 			{
-				TextData text_data = curr_text->GetTextData();
+				float4x4 size_mat = float4x4::identity;
 
-				float scale = (float)15 / (float)text_data.GetFontSize();
+				float2 glyph_size = (*gl).GetSize();
+				float2 bearing = (*gl).GetBearing();
 
-				float4 colour = float4(1, 1, 1, 1);
+				float2 final_size = glyph_size * scale;
 
-				ComponentTransform* transform = curr_text->GetOwner()->transform;
+				float2 pos = float2::zero;
 
-				float z_pos = App->scene_renderer->layer_space_component_sprite.GetLayerValue(curr_text->GetLayer());
+				pos.x = (curr_x + (bearing.x * scale)) + (final_size.x * 0.5f);
+				pos.y = (-(glyph_size.y - bearing.y) * scale) + (final_size.y * 0.5f) + curr_y;
 
-				std::vector<Glyph> glyphs = text_data.GetGlyphs();
+				size_mat = float4x4::FromTRS(float3(pos.x, pos.y, 0), Quat::identity, float3(final_size.x, final_size.y, 1));
 
-				float curr_x = -text_data.GetFullSize().x * 0.5f * scale;
-				float curr_y = -text_data.GetFullSize().y * 0.5f * scale;
+				float4x4 world_transform = transform->GetWorldTransform() * size_mat;
 
-				int counter = 0;
-				for (std::vector<Glyph>::iterator gl = glyphs.begin(); gl != glyphs.end(); ++gl, ++counter)
+				world_transform[1][1] = -world_transform[1][1];
+
+				App->renderer->SetUniformInt(program->GetID(), "hasTexture", !curr_text->GetRenderQuads());
+
+				App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
+
+				App->renderer->SetUniformVec4(program->GetID(), "col", curr_text->GetColour());
+
+				App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
+
+				App->renderer->BindTexture((*gl).GetTextureId());
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+
+				GLenum error = glGetError();
+				if (error != GL_NO_ERROR)
 				{
-					float4x4 size_mat = float4x4::identity;
-
-					float2 glyph_size = (*gl).GetSize();
-					float2 bearing = (*gl).GetBearing();
-
-					float2 final_size = glyph_size * scale;
-
-					float2 pos = float2::zero;
-
-					pos.x = (curr_x + (bearing.x * scale)) + (final_size.x * 0.5f);
-					pos.y = (-(glyph_size.y - bearing.y) * scale) + (final_size.y * 0.5f) + curr_y;
-
-					size_mat = float4x4::FromTRS(float3(pos.x, pos.y, 0), Quat::identity, float3(final_size.x, final_size.y, 1));
-
-					float4x4 world_transform = transform->GetWorldTransform() * size_mat;
-
-					world_transform[1][1] = -world_transform[1][1];
-
-					App->renderer->SetUniformInt(program->GetID(), "hasTexture", !curr_text->GetRenderQuads());
-
-					App->renderer->SetUniformFloat(program->GetID(), "z_pos", z_pos);
-
-					App->renderer->SetUniformVec4(program->GetID(), "col", curr_text->GetColour());
-
-					App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
-
-					App->renderer->BindTexture((*gl).GetTextureId());
-
-					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
-
-					GLenum error = glGetError();
-					if (error != GL_NO_ERROR)
-					{
-						INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
-					}
-
-					App->renderer->UnbindTexture();
-
-					curr_x += (*gl).GetAdvance() * scale;
+					INTERNAL_LOG("Error drawing %s\n", gluErrorString(error));
 				}
+
+				App->renderer->UnbindTexture();
+
+				curr_x += (*gl).GetAdvance() * scale;
 			}
 		}
 
@@ -223,39 +218,5 @@ void StaticTextRenderer::Render(const float4x4 & view, const float4x4 & projecti
 
 		glDisable(GL_BLEND);
 		glDisable(GL_DEPTH_TEST);
-	}
-}
-
-void StaticTextRenderer::AddTextRenderer(ComponentText * add)
-{
-	if (add != nullptr)
-	{
-		bool exists = false;
-		for (std::vector<ComponentText*>::iterator it = text_renderers.begin(); it != text_renderers.end(); ++it)
-		{
-			if ((*it) == add)
-			{
-				exists = true;
-				break;
-			}
-		}
-
-		if (!exists)
-			text_renderers.push_back(add);
-	}
-}
-
-void StaticTextRenderer::RemoveTextRenderer(ComponentText * remove)
-{
-	if (remove != nullptr)
-	{
-		for (std::vector<ComponentText*>::iterator it = text_renderers.begin(); it != text_renderers.end(); ++it)
-		{
-			if ((*it) == remove)
-			{
-				text_renderers.erase(it);
-				break;
-			}
-		}
 	}
 }

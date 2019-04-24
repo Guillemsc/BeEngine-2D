@@ -8,6 +8,7 @@
 class GameObject;
 class ResourceTexture;
 class Event;
+class StaticRendererItem;
 
 class ComponentSpriteRenderer : public GameObjectComponent
 {
@@ -51,6 +52,7 @@ public:
 	float2 GetTextureSize() const;
 	bool GetHasTexture() const;
 
+	void SetLayer(int layer);
 	int GetLayer() const;
 
 	void SetSize(const float2& size);
@@ -66,6 +68,8 @@ private:
 	void SetComponentTransformSize();
 
 private:
+	StaticRendererItem* rendering_item = nullptr;
+
 	ResourceTexture* resource_texture = nullptr;
 	float4 colour = float4(1.0f, 0.0f, 1.0f, 1.0f);
 

@@ -505,6 +505,11 @@ ResourcePrefab * GameObject::GetPrefab() const
 	return resource_prefab;
 }
 
+int GameObject::GetHierarcyLayer() const
+{
+	return hierarchy_layer;
+}
+
 void GameObject::DestroyAllComponents()
 {
 	std::vector<GameObjectComponent*> all_components = components;

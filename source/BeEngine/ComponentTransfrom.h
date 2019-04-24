@@ -97,6 +97,8 @@ private:
 	void RecalculateCanvasLayout();
 	void RecalculateAnchorOffset();
 
+	void UpdateChildrensTransforms();
+
 private:
 	float4x4 local_transform;
 	float4x4 world_transform;

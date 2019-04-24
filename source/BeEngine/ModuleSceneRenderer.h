@@ -8,8 +8,7 @@ class LineRenderer;
 class QuadRenderer;
 class DinamicTriangleRenderer;
 class DynamicGridRenderer;
-class StaticSpriteRenderer;
-class StaticTextRenderer;
+class StaticRenderer;
 class Camera2D;
 
 class LayerSpace
@@ -45,13 +44,12 @@ public:
 	DinamicTriangleRenderer* triangle_renderer = nullptr;
 	DynamicGridRenderer*	 grid_renderer = nullptr;
 
-	StaticSpriteRenderer*    static_sprite_renderer = nullptr;
-	StaticTextRenderer*      static_text_renderer = nullptr;
+	StaticRenderer*          static_renderer = nullptr;
 
 public:
 	LayerSpace layer_space_grid;
 	LayerSpace layer_space_guizmos;
-	LayerSpace layer_space_component_sprite;
+	LayerSpace layer_space_component_scene;
 
 private:
 	Renderer* AddRenderer(Renderer* gm);

@@ -5,7 +5,7 @@
 #include "ResourceFont.h"
 #include "ModuleEvent.h"
 #include "ModuleSceneRenderer.h"
-#include "StaticTextRenderer.h"
+#include "StaticRenderer.h"
 #include "ModuleResource.h"
 #include "GameObject.h"
 
@@ -55,7 +55,7 @@ void ComponentText::Start()
 	SetTextSize(80);
 
 	if (GetOwner()->GetActive())
-		App->scene_renderer->static_text_renderer->AddTextRenderer(this);
+		rendering_item = App->scene_renderer->static_renderer->CreateRendererItem(this);
 
 	App->event->Suscribe(std::bind(&ComponentText::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }
@@ -66,7 +66,8 @@ void ComponentText::Update()
 
 void ComponentText::CleanUp()
 {
-	App->scene_renderer->static_text_renderer->RemoveTextRenderer(this);
+	App->scene_renderer->static_renderer->DestroyRendererItem(rendering_item);
+	rendering_item = nullptr;
 
 	App->event->UnSuscribe(std::bind(&ComponentText::OnEvent, this, std::placeholders::_1), EventType::RESOURCE_DESTROYED);
 }
@@ -128,11 +129,13 @@ void ComponentText::OnChangeActive(bool set)
 {
 	if (!set)
 	{
-		App->scene_renderer->static_text_renderer->RemoveTextRenderer(this);
+		App->scene_renderer->static_renderer->DestroyRendererItem(rendering_item);
+		rendering_item = nullptr;
 	}
 	else
 	{
-		App->scene_renderer->static_text_renderer->AddTextRenderer(this);
+		if(rendering_item == nullptr)
+			rendering_item = App->scene_renderer->static_renderer->CreateRendererItem(this);
 	}
 }
 

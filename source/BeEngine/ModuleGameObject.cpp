@@ -28,6 +28,8 @@ bool ModuleGameObject::Awake()
 
 	base_instance_uid = GetUIDRandomHexadecimal();
 
+	game_objects.reserve(100);
+
 	CreateRootScene();
 
 	App->event->Suscribe(std::bind(&ModuleGameObject::OnEvent, this, std::placeholders::_1), EventType::EDITOR_GOES_TO_PLAY);
@@ -796,14 +798,23 @@ void ModuleGameObject::MergeScenes()
 
 void ModuleGameObject::UpdateGameObjects()
 {
-	std::vector<GameObject*> to_update = game_objects;
+	std::vector<Scene*> scenes_to_update;
+	scenes_to_update.push_back(root_scene);
+	scenes_to_update.insert(scenes_to_update.end(), sub_scenes.begin(), sub_scenes.end());
 
-	for (std::vector<GameObject*>::iterator it = to_update.begin(); it != to_update.end(); ++it)
+	for (std::vector<Scene*>::iterator it = scenes_to_update.begin(); it != scenes_to_update.end(); ++it)
 	{
-		GameObject* curr_go = (*it);
+		std::vector<GameObject*> to_update = (*it)->GetRootGameObjects();
 
-		if (curr_go->GetActive())
+		int counter = 0;
+		while (to_update.size() > 0)
 		{
+			GameObject* curr_go = *to_update.begin();
+
+			curr_go->hierarchy_layer = counter++;
+
+			to_update.erase(to_update.begin());
+
 			curr_go->Update();
 
 			std::vector<GameObjectComponent*> components = curr_go->components;
@@ -814,10 +825,14 @@ void ModuleGameObject::UpdateGameObjects()
 
 				curr_component->Update();
 			}
+
+			std::vector<GameObject*> childs = curr_go->GetChilds();
+
+			to_update.insert(to_update.begin(), childs.begin(), childs.end());
 		}
 	}
 
-	for (std::vector<GameObject*>::iterator it = to_update.begin(); it != to_update.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = game_objects.begin(); it != game_objects.end(); ++it)
 	{
 		(*it)->ActuallyDestroyComponents();
 	}
