@@ -20,6 +20,7 @@
 #include "Event.h"
 #include "ModuleAssets.h"
 #include "ResourceFont.h"
+#include "ResourceAudio.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
@@ -47,6 +48,7 @@ bool ModuleResource::Awake()
 	AddResourceName(ResourceType::RESOURCE_TYPE_PREFAB, "prefab");
 	AddResourceName(ResourceType::RESOURCE_TYPE_SCENE, "scene");
 	AddResourceName(ResourceType::RESOURCE_TYPE_FONT, "font");
+	AddResourceName(ResourceType::RESOURCE_TYPE_AUDIO, "audio");
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "png");
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_TEXTURE, "jpg");
@@ -64,6 +66,11 @@ bool ModuleResource::Awake()
 
 	AddAssetExtension(ResourceType::RESOURCE_TYPE_FONT, "ttf");
 	AddLibraryExtension(ResourceType::RESOURCE_TYPE_FONT, "ttf");
+
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_AUDIO, "mp3");
+	AddAssetExtension(ResourceType::RESOURCE_TYPE_AUDIO, "ogg");
+	AddLibraryExtension(ResourceType::RESOURCE_TYPE_FONT, "mp3");
+	AddLibraryExtension(ResourceType::RESOURCE_TYPE_FONT, "ogg");
 
 	return ret;
 }
@@ -159,6 +166,12 @@ Resource* ModuleResource::CreateResource(const ResourceType type)
 	case ResourceType::RESOURCE_TYPE_FONT:
 
 		ret = new ResourceFont();
+
+		break;
+
+	case ResourceType::RESOURCE_TYPE_AUDIO:
+
+		ret = new ResourceAudio();
 
 		break;
 

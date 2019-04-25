@@ -4,7 +4,6 @@
 #include "Resource.h"
 #include "Globals.h"
 #include "ModuleScripting.h"
-#include "GameObjectAbstraction.h"
 #include "ModuleText.h"
 
 class ResourceScript;

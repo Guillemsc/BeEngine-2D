@@ -1,15 +1,16 @@
 #include "Globals.h"
 #include "App.h"
 #include "ModuleAudio.h"
+#include "ModuleInput.h"
 
 #include "mmgr\nommgr.h"
 #include "mmgr\mmgr.h"
 
-#pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
+#pragma comment( lib, "FMod/Lib/fmod_vc.lib")
+#pragma comment( lib, "FMod/Lib/fmodL_vc.lib")
 
 ModuleAudio::ModuleAudio() : Module()
 {
-
 }
 
 // Destructor
@@ -23,30 +24,42 @@ bool ModuleAudio::Awake()
 
 	INTERNAL_LOG("Loading Audio Mixer");
 
-	SDL_Init(0);
-
-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+	if (FMOD::System_Create(&fmod_system) != FMOD_OK)
 	{
-		INTERNAL_LOG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		INTERNAL_LOG("Error creating FMod system");
+
 		ret = false;
 	}
-
-	// load support for the OGG format
-	int flags = MIX_INIT_OGG;
-	int init = Mix_Init(flags);
-
-	if ((init & flags) != flags)
+	else
 	{
-		INTERNAL_LOG("Could not initialize Mixer lib. Mix_Init: %s", Mix_GetError());
-		ret = false;
+		int driverCount = 0;
+		fmod_system->getNumDrivers(&driverCount);
+
+		if (driverCount == 0)
+		{
+			INTERNAL_LOG("Error creating FMod system, no drivers found!");
+
+			ret = false;
+		}
+		else
+		{
+			fmod_system->init(36, FMOD_INIT_NORMAL, NULL);
+		}
 	}
 
-	//Initialize SDL_mixer
-	if (Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 1024) < 0)
-	{
-		INTERNAL_LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-		ret = false;
-	}
+	return ret;
+}
+
+bool ModuleAudio::Start()
+{
+	bool ret = true;
+
+	return ret;
+}
+
+bool ModuleAudio::Update()
+{
+	bool ret = true;
 
 	return ret;
 }
@@ -58,110 +71,95 @@ bool ModuleAudio::CleanUp()
 
 	INTERNAL_LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if (music != nullptr)
-	{
-		Mix_FreeMusic(music);
-	}
-
-	for (std::list<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); it++)
-	{
-		Mix_FreeChunk((*it));
-	}
-
-	fx.clear();
-	Mix_CloseAudio();
-	Mix_Quit();
-	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	return ret;
 }
 
-// Play a music file
-bool ModuleAudio::PlayMusic(const char* path, float fade_time)
+AudioSound* ModuleAudio::CreateSound(const std::string path)
 {
-	bool ret = true;
+	AudioSound* ret = nullptr;
 
-	if (music != NULL)
+	FMOD::Sound* sound = nullptr;
+	if (fmod_system->createSound(path.c_str(), FMOD_DEFAULT, 0, &sound) == FMOD_OK)
 	{
-		if (fade_time > 0.0f)
-		{
-			Mix_FadeOutMusic((int)(fade_time * 1000.0f));
-		}
-		else
-		{
-			Mix_HaltMusic();
-		}
+		ret = new AudioSound();
 
-		// this call blocks until fade out is done
-		Mix_FreeMusic(music);
+		ret->path = path;
+		ret->sound = sound;
+
+		ret->sound->setMode(FMOD_LOOP_OFF);
+
+		sounds.push_back(ret);
 	}
 
-	music = Mix_LoadMUS(path);
-
-	if (music == NULL)
-	{
-		INTERNAL_LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-		ret = false;
-	}
-	else
-	{
-		if (fade_time > 0.0f)
-		{
-			if (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) < 0)
-			{
-				INTERNAL_LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
-		}
-		else
-		{
-			if (Mix_PlayMusic(music, -1) < 0)
-			{
-				INTERNAL_LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
-		}
-	}
-
-	INTERNAL_LOG("Successfully playing %s", path);
 	return ret;
 }
 
-// Load WAV
-unsigned int ModuleAudio::LoadFx(const char* path)
+void ModuleAudio::PlayAudioSound(AudioSound * sound)
 {
-	unsigned int ret = 0;
-
-	Mix_Chunk* chunk = Mix_LoadWAV(path);
-
-	if (chunk == NULL)
+	if (sound != nullptr)
 	{
-		INTERNAL_LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+		fmod_system->playSound(sound->sound, 0, false, &sound->chanel);
 	}
-	else
-	{
-		fx.push_back(chunk);
-		ret = fx.size();
-	}
-
-	return ret;
 }
 
-// Play WAV
-bool ModuleAudio::PlayFx(unsigned int id, int repeat, int channel)
+void ModuleAudio::StopAudioSound(AudioSound * sound)
+{
+	if (sound != nullptr)
+	{
+		if (sound->chanel != nullptr)
+		{
+			sound->chanel->stop();
+
+			sound->chanel = nullptr;
+		}
+	}
+}
+
+void ModuleAudio::SetPausedAudioSound(AudioSound * sound, bool paused)
+{
+	if (sound != nullptr)
+	{
+		if (sound->chanel != nullptr)
+		{
+			sound->chanel->setPaused(paused);
+		}
+	}
+}
+
+void AudioSound::Play()
+{
+	App->audio->PlayAudioSound(this);
+}
+
+void AudioSound::Stop()
+{
+	App->audio->StopAudioSound(this);
+}
+
+void AudioSound::SetPaused(bool set)
+{
+	App->audio->SetPausedAudioSound(this, set);
+}
+
+bool AudioSound::GetPlaying()
 {
 	bool ret = false;
 
-	Mix_Chunk* chunk = NULL;
-
-	int count = 0;
-	for (std::list<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); it++)
+	if (chanel != nullptr)
 	{
-		if (count == id - 1)
-		{
-			Mix_PlayChannel(channel, chunk, repeat);
-			break;
-		}
-		count++;
+		chanel->isPlaying(&ret);
+	}
+
+	return ret;
+}
+
+bool AudioSound::GetPaused()
+{
+	bool ret = false;
+
+	if (chanel != nullptr)
+	{
+		chanel->getPaused(&ret);
 	}
 
 	return ret;

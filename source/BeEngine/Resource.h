@@ -18,6 +18,7 @@ enum ResourceType
 	RESOURCE_TYPE_PREFAB,
 	RESOURCE_TYPE_SCENE,
 	RESOURCE_TYPE_FONT,
+	RESOURCE_TYPE_AUDIO,
 };
 
 class Resource : public BeObject

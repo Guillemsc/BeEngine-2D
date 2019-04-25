@@ -780,6 +780,12 @@
     <ClInclude Include="StaticTextRendererItem.h">
       <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceAudio.h">
+      <Filter>Sources\7. Resources =============</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingBridgeResourceAudio.h">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1303,6 +1309,12 @@
     </ClCompile>
     <ClCompile Include="StaticTextRendererItem.cpp">
       <Filter>Sources\5. Rendering =============\StaticRenderers\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceAudio.cpp">
+      <Filter>Sources\7. Resources =============</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingBridgeResourceAudio.cpp">
+      <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

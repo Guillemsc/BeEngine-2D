@@ -141,6 +141,7 @@ void ScriptingCluster::RebuildClasses()
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceScene", resource_scene_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourcePrefab", resource_prefab_class);
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceFont", resource_font_class);
+		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ResourceAudio", resource_audio_class);
 
 		// Attributes
 		App->scripting->scripting_assembly->UpdateClassPointer("BeEngine", "ShowOnInspector", show_on_inspector_attribute_class);

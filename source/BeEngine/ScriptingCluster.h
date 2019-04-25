@@ -80,6 +80,7 @@ public:
 	ScriptingClass* resource_scene_class = nullptr;
 	ScriptingClass* resource_prefab_class = nullptr;
 	ScriptingClass* resource_font_class = nullptr;
+	ScriptingClass* resource_audio_class = nullptr;
 
 	ScriptingClass* show_on_inspector_attribute_class = nullptr;
 

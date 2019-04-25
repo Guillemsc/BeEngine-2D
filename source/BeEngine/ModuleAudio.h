@@ -2,9 +2,27 @@
 #define __MODULE_AUDIO_H__
 
 #include "Module.h"
-#include "SDL_mixer\include\SDL_mixer.h"
 
-#define DEFAULT_MUSIC_FADE_TIME 2.0f
+#include <fmod.hpp>
+#include <fmod_errors.h>
+
+class AudioSound
+{
+	friend class ModuleAudio;
+
+public:
+	void Play();
+	void Stop();
+	void SetPaused(bool set);
+
+	bool GetPlaying();
+	bool GetPaused();
+
+private:
+	std::string path;
+	FMOD::Sound* sound = nullptr;
+	FMOD::Channel* chanel = nullptr;
+};
 
 class ModuleAudio : public Module
 {
@@ -13,20 +31,22 @@ public:
 	~ModuleAudio();
 
 	bool Awake();
+	bool Start();
+	bool Update();
 	bool CleanUp();
 
-	// Play a music file
-	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
+	AudioSound* CreateSound(const std::string path);
 
-	// Load a WAV in memory
-	unsigned int LoadFx(const char* path);
-
-	// Play a previously loaded WAV
-	bool PlayFx(unsigned int fx, int repeat = 0, int channel = -1);
+	void PlayAudioSound(AudioSound* sound);
+	void StopAudioSound(AudioSound* sound);
+	void SetPausedAudioSound(AudioSound* sound, bool paused);
 
 private:
-	Mix_Music*			music = nullptr;
-	std::list<Mix_Chunk*>	fx;
+	FMOD::System* fmod_system = nullptr;
+
+	std::vector<AudioSound*> sounds;
+
+	AudioSound* sound = nullptr;
 };
 
 #endif // !__MODULE_AUDIO_H__

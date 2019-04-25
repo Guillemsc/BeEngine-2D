@@ -8,6 +8,7 @@
 #include "StaticRenderer.h"
 #include "ModuleResource.h"
 #include "GameObject.h"
+#include "ModuleJson.h"
 
 ComponentText::ComponentText() 
 	: GameObjectComponent(new ScriptingBridgeComponentText(this),

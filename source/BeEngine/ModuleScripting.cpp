@@ -1466,7 +1466,7 @@ bool ScriptingClassInstance::InvokeMonoMethodUnmanagedOnParentClass(ScriptingCla
 	return ret;
 }
 
-MonoObject * ScriptingClassInstance::GetMonoObject() const
+MonoObject* ScriptingClassInstance::GetMonoObject() const
 {
 	return mono_gchandle_get_target(id);
 }
