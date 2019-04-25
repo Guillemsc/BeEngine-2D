@@ -58,6 +58,8 @@ public class MainGameManager : Singleton<MainGameManager>
 
         countdown_go.Active = false;
 
+        controls_go.Active = true;
+
         PlayFadeInAnimation();
     }
 	
@@ -89,6 +91,7 @@ public class MainGameManager : Singleton<MainGameManager>
                 left_player_movement.SetCanMove(true);
                 right_player_movement.SetCanMove(true);
 
+                controls_go.Active = false;
 
                 ball_speed = ball_starting_speed;
                 ball_movement.SetCanMove(true);
@@ -154,32 +157,96 @@ public class MainGameManager : Singleton<MainGameManager>
 
     public void AddPointLeft()
     {
-        ++points_left;
-
-        left_score.Text = points_left.ToString();
-
-        ball_movement.ResetBall(BallMovement.BallDirection.DIRECTION_LEFT);
-        ball_movement.SetCanMove(false);
-
-        ball_speed = ball_starting_speed;
-
-        goal_timer.Start();
-        waiting_for_goal = true;
-    }
-
-    public void AddPointRight()
-    {
         ++points_right;
 
         right_score.Text = points_right.ToString();
 
+        ball_movement.ResetBall(BallMovement.BallDirection.DIRECTION_LEFT);
+        ball_movement.SetCanMove(false);
+        
+        if (!CheckWin())
+        {
+            ball_speed = ball_starting_speed;
+
+            goal_timer.Start();
+            waiting_for_goal = true;
+        }
+    }
+
+    public void AddPointRight()
+    {
+        ++points_left;
+
+        left_score.Text = points_left.ToString();
+
         ball_movement.ResetBall(BallMovement.BallDirection.DIRECTION_RIGHT);
         ball_movement.SetCanMove(false);
+       
+        if (!CheckWin())
+        {
+            ball_speed = ball_starting_speed;
 
-        ball_speed = ball_starting_speed;
+            goal_timer.Start();
+            waiting_for_goal = true;
+        }
+    }
 
-        goal_timer.Start();
-        waiting_for_goal = true;
+    private bool CheckWin()
+    {
+        bool ret = false;
+
+        if(points_right >= 3)
+        {
+            PlayerWinsAnimation();
+
+            ComponentText t = winner_text_go.GetComponent<ComponentText>();
+            t.Text = "Player 2 wins";
+
+            ret = true;
+        }
+        else if (points_left >= 3)
+        {
+            PlayerWinsAnimation();
+
+            ComponentText t = winner_text_go.GetComponent<ComponentText>();
+            t.Text = "Player 1 wins";
+
+            ret = true;
+        }
+
+        return ret;
+    }
+    
+    private void PlayerWinsAnimation()
+    {
+        ComponentSpriteRenderer background = player_wins_background_go.GetComponent<ComponentSpriteRenderer>();
+
+        player_wins_text_go.Transform.Position = new Float2(enter_pos.Transform.Position.x, player_wins_text_go.Transform.Position.y);
+
+        player_wins_parent.Active = true;
+
+        Colour new_col = new Colour(background.Colour.r, background.Colour.g, background.Colour.b, 0);
+        background.Colour = new_col;
+        queue_event.PushEvent(new QueueEventSpriteFade(background, 0,
+            230, 0.6f, EasingFunctionsType.QUAD_IN));
+
+        queue_event.PushEvent(new QueueEventPosition(player_wins_text_go, new Float2(enter_pos.Transform.Position.x, player_wins_text_go.Transform.Position.y),
+            new Float2(camera_go.Transform.Position.x, player_wins_text_go.Transform.Position.y), 0.8f, EasingFunctionsType.QUAD_OUT));
+
+        queue_event.PushEvent(new QueueEventWaitTime(3));
+
+        queue_event.PushEvent(new QueueEventPosition(player_wins_text_go, new Float2(camera_go.Transform.Position.x, player_wins_text_go.Transform.Position.y),
+            new Float2(out_pos.Transform.Position.x, player_wins_text_go.Transform.Position.y), 0.8f, EasingFunctionsType.QUAD_IN));
+
+        queue_event.PushEvent(new QueueEventSpriteFade(foreground, 0,
+            255, 1.3f, EasingFunctionsType.QUAD_OUT));
+
+        queue_event.LastPushedEventOnFinish(OnWinnerAnimationFinished);
+    }
+
+    private void OnWinnerAnimationFinished(QueueEvent ev)
+    {
+        Scene.LoadScene(main_menu_scene);
     }
 
     public float GetBallSpeed()
@@ -223,6 +290,15 @@ public class MainGameManager : Singleton<MainGameManager>
     }
 
     [ShowOnInspector]
+    private GameObject enter_pos;
+
+    [ShowOnInspector]
+    private GameObject out_pos;
+
+    [ShowOnInspector]
+    private GameObject camera_go = null;
+
+    [ShowOnInspector]
     private GameObject foreground_go = null;
 
     [ShowOnInspector]
@@ -233,6 +309,9 @@ public class MainGameManager : Singleton<MainGameManager>
 
     [ShowOnInspector]
     private int countdown_time = 0;
+
+    [ShowOnInspector]
+    private GameObject controls_go = null;
 
     [ShowOnInspector]
     private GameObject left_score_go = null;
@@ -272,6 +351,21 @@ public class MainGameManager : Singleton<MainGameManager>
 
     [ShowOnInspector]
     private float increment_speed = 0.0f;
+
+    [ShowOnInspector]
+    private GameObject player_wins_parent = null;
+
+    [ShowOnInspector]
+    private GameObject player_wins_background_go = null;
+
+    [ShowOnInspector]
+    private GameObject player_wins_text_go = null;
+
+    [ShowOnInspector]
+    private GameObject winner_text_go = null;
+
+    [ShowOnInspector]
+    private ResourceScene main_menu_scene = null;
 
     private ComponentSpriteRenderer foreground = null;
 
