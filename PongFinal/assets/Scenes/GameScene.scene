@@ -1,7 +1,7 @@
 {
     "game_objects_count": 59,
     "game_object_0": {
-        "uid": "339cf1b7",
+        "uid": "1f74dad2",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -168,54 +168,54 @@
                 "string_name_25": "field_name_9",
                 "string_value_25": "boundaries_down",
                 "string_name_26": "field_val_0",
-                "string_value_26": "3e380711",
+                "string_value_26": "7f57ecf5",
                 "string_name_27": "field_val_1",
-                "string_value_27": "28e6fddd",
+                "string_value_27": "3dcee044",
                 "string_name_28": "field_val_10",
-                "string_value_28": "6acbcd2c",
+                "string_value_28": "5cff4385",
                 "string_name_29": "field_val_11",
-                "string_value_29": "75cc00b9",
+                "string_value_29": "395c8318",
                 "string_name_30": "field_val_12",
-                "string_value_30": "53f639d6",
+                "string_value_30": "3a22e926",
                 "string_name_31": "field_val_17",
-                "string_value_31": "6dd76906",
+                "string_value_31": "490cb190",
                 "string_name_32": "field_val_18",
-                "string_value_32": "216b751a",
+                "string_value_32": "395cad62",
                 "string_name_33": "field_val_19",
-                "string_value_33": "41353901",
+                "string_value_33": "302e09d3",
                 "string_name_34": "field_val_2",
-                "string_value_34": "1c5cf10a",
+                "string_value_34": "70d03398",
                 "string_name_35": "field_val_20",
-                "string_value_35": "30c4f959",
+                "string_value_35": "4137dfc0",
                 "string_name_36": "field_val_21",
-                "string_value_36": "4f86bb17",
+                "string_value_36": "6e540fef",
                 "string_name_37": "field_val_22",
-                "string_value_37": "22f00e77",
+                "string_value_37": "244ad8fa",
                 "string_name_38": "field_val_23",
-                "string_value_38": "53bdcffe",
+                "string_value_38": "18745191",
                 "string_name_39": "field_val_24",
                 "string_value_39": "3f03c8c8",
                 "string_name_40": "field_val_25",
-                "string_value_40": "d715e42",
+                "string_value_40": "2870c6f0",
                 "string_name_41": "field_val_4",
-                "string_value_41": "33cf49b7",
+                "string_value_41": "9bedfbb",
                 "string_name_42": "field_val_5",
-                "string_value_42": "4c0044ba",
+                "string_value_42": "3af3958e",
                 "string_name_43": "field_val_6",
-                "string_value_43": "39b5c2de",
+                "string_value_43": "6c2dc087",
                 "string_name_44": "field_val_7",
-                "string_value_44": "18511bf8",
+                "string_value_44": "25c95175",
                 "string_name_45": "field_val_8",
-                "string_value_45": "6adbc586",
+                "string_value_45": "2515a120",
                 "string_name_46": "field_val_9",
-                "string_value_46": "49f7d989",
+                "string_value_46": "632faae2",
                 "string_name_47": "resource",
                 "string_value_47": "6cb76229"
             }
         ]
     },
     "game_object_1": {
-        "uid": "43451cca",
+        "uid": "5eb2c98a",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -272,7 +272,7 @@
         ]
     },
     "game_object_2": {
-        "uid": "4f86bb17",
+        "uid": "6e540fef",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -327,7 +327,7 @@
         ]
     },
     "game_object_3": {
-        "uid": "3e9ce21a",
+        "uid": "717982cb",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -402,7 +402,7 @@
         ]
     },
     "game_object_4": {
-        "uid": "3e380711",
+        "uid": "7f57ecf5",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -477,7 +477,54 @@
         ]
     },
     "game_object_5": {
-        "uid": "6acbcd2c",
+        "uid": "36b1528c",
+        "parent_uid": "",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 1,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "FieldArt",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    1,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_6": {
+        "uid": "5cff4385",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -607,8 +654,8 @@
             }
         ]
     },
-    "game_object_6": {
-        "uid": "39b5c2de",
+    "game_object_7": {
+        "uid": "6c2dc087",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -736,9 +783,9 @@
                 "string_name_4": "field_name_4",
                 "string_value_4": "move_down_key",
                 "string_name_5": "field_val_1",
-                "string_value_5": "79010fc5",
+                "string_value_5": "5b7f68ae",
                 "string_name_6": "field_val_2",
-                "string_value_6": "69ec75b1",
+                "string_value_6": "59818cd2",
                 "string_name_7": "field_val_3",
                 "string_value_7": "q",
                 "string_name_8": "field_val_4",
@@ -748,8 +795,8 @@
             }
         ]
     },
-    "game_object_7": {
-        "uid": "18511bf8",
+    "game_object_8": {
+        "uid": "25c95175",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -877,9 +924,9 @@
                 "string_name_4": "field_name_4",
                 "string_value_4": "move_down_key",
                 "string_name_5": "field_val_1",
-                "string_value_5": "79010fc5",
+                "string_value_5": "5b7f68ae",
                 "string_name_6": "field_val_2",
-                "string_value_6": "69ec75b1",
+                "string_value_6": "59818cd2",
                 "string_name_7": "field_val_3",
                 "string_value_7": "o",
                 "string_name_8": "field_val_4",
@@ -889,8 +936,8 @@
             }
         ]
     },
-    "game_object_8": {
-        "uid": "f9d857c",
+    "game_object_9": {
+        "uid": "5b02d7ec",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -941,55 +988,8 @@
             }
         ]
     },
-    "game_object_9": {
-        "uid": "3ce380a2",
-        "parent_uid": "",
-        "ints_count": 1,
-        "int_name_0": "components_count",
-        "int_value_0": 1,
-        "bools_count": 1,
-        "bool_name_0": "active",
-        "bool_value_0": true,
-        "strings_count": 1,
-        "string_name_0": "name",
-        "string_value_0": "FieldArt",
-        "components": [
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 0,
-                "bools_count": 1,
-                "bool_name_0": "keep_ratio",
-                "bool_value_0": false,
-                "floats_count": 1,
-                "float_name_0": "rotation",
-                "float_value_0": -0,
-                "floats2_count": 4,
-                "float2_name_0": "anchor_offset",
-                "float2_value_0": [
-                    0,
-                    0
-                ],
-                "float2_name_1": "anchor_pos",
-                "float2_value_1": [
-                    0,
-                    0
-                ],
-                "float2_name_2": "position",
-                "float2_value_2": [
-                    0,
-                    0
-                ],
-                "float2_name_3": "scale",
-                "float2_value_3": [
-                    1,
-                    1
-                ]
-            }
-        ]
-    },
     "game_object_10": {
-        "uid": "2ceba2f8",
+        "uid": "411bafe9",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -1036,7 +1036,7 @@
         ]
     },
     "game_object_11": {
-        "uid": "22b52abf",
+        "uid": "67220685",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -1083,7 +1083,7 @@
         ]
     },
     "game_object_12": {
-        "uid": "ded1b93",
+        "uid": "32b67a4a",
         "parent_uid": "",
         "ints_count": 1,
         "int_name_0": "components_count",
@@ -1135,8 +1135,383 @@
         ]
     },
     "game_object_13": {
-        "uid": "6c4eb30b",
-        "parent_uid": "6acbcd2c",
+        "uid": "75f747c9",
+        "parent_uid": "36b1528c",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "CentralLine",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    0.05000000074505806,
+                    999
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": false,
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    20,
+                    20
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.90196079015731812,
+                    0.90196079015731812,
+                    0.90196079015731812,
+                    0.93333333730697632
+                ]
+            }
+        ]
+    },
+    "game_object_14": {
+        "uid": "99a76be",
+        "parent_uid": "36b1528c",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "GoalLineP1",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    -127.70534515380859,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    0.15000000596046448,
+                    999
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": false,
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    20,
+                    20
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.18823529779911041,
+                    0.70588237047195435,
+                    0.92156863212585449,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_15": {
+        "uid": "5b697ba6",
+        "parent_uid": "36b1528c",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "GoalLineP2",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    127.70500183105469,
+                    0
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    0.15000000596046448,
+                    999
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": false,
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    20,
+                    20
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.93333333730697632,
+                    0.90980392694473267,
+                    0.29019609093666077,
+                    1
+                ]
+            }
+        ]
+    },
+    "game_object_16": {
+        "uid": "72e174e8",
+        "parent_uid": "36b1528c",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "LateralLineDown",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    -71.973915100097656
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    99,
+                    0.20000000298023224
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": false,
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    20,
+                    20
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.90196079015731812,
+                    0.90196079015731812,
+                    0.90196079015731812,
+                    0.93333333730697632
+                ]
+            }
+        ]
+    },
+    "game_object_17": {
+        "uid": "6cccb576",
+        "parent_uid": "36b1528c",
+        "ints_count": 1,
+        "int_name_0": "components_count",
+        "int_value_0": 2,
+        "bools_count": 1,
+        "bool_name_0": "active",
+        "bool_value_0": true,
+        "strings_count": 1,
+        "string_name_0": "name",
+        "string_value_0": "LateralLineUp",
+        "components": [
+            {
+                "ints_count": 1,
+                "int_name_0": "type",
+                "int_value_0": 0,
+                "bools_count": 1,
+                "bool_name_0": "keep_ratio",
+                "bool_value_0": false,
+                "floats_count": 1,
+                "float_name_0": "rotation",
+                "float_value_0": -0,
+                "floats2_count": 4,
+                "float2_name_0": "anchor_offset",
+                "float2_value_0": [
+                    0,
+                    0
+                ],
+                "float2_name_1": "anchor_pos",
+                "float2_value_1": [
+                    0,
+                    0
+                ],
+                "float2_name_2": "position",
+                "float2_value_2": [
+                    0,
+                    71.9739990234375
+                ],
+                "float2_name_3": "scale",
+                "float2_value_3": [
+                    99,
+                    0.20000000298023224
+                ]
+            },
+            {
+                "ints_count": 2,
+                "int_name_0": "layer",
+                "int_value_0": 1,
+                "int_name_1": "type",
+                "int_value_1": 1,
+                "bools_count": 3,
+                "bool_name_0": "flip_x",
+                "bool_value_0": false,
+                "bool_name_1": "flip_y",
+                "bool_value_1": false,
+                "bool_name_2": "use_sprite",
+                "bool_value_2": false,
+                "floats2_count": 1,
+                "float2_name_0": "size",
+                "float2_value_0": [
+                    20,
+                    20
+                ],
+                "floats4_count": 1,
+                "float4_name_0": "colour",
+                "float4_value_0": [
+                    0.90196079015731812,
+                    0.90196079015731812,
+                    0.90196079015731812,
+                    0.93333333730697632
+                ]
+            }
+        ]
+    },
+    "game_object_18": {
+        "uid": "1318eaa9",
+        "parent_uid": "5cff4385",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 3,
@@ -1229,9 +1604,9 @@
             }
         ]
     },
-    "game_object_14": {
-        "uid": "5598e8ed",
-        "parent_uid": "39b5c2de",
+    "game_object_19": {
+        "uid": "307c22df",
+        "parent_uid": "6c2dc087",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1307,9 +1682,9 @@
             }
         ]
     },
-    "game_object_15": {
-        "uid": "369a1b14",
-        "parent_uid": "39b5c2de",
+    "game_object_20": {
+        "uid": "531f852",
+        "parent_uid": "6c2dc087",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1385,9 +1760,9 @@
             }
         ]
     },
-    "game_object_16": {
-        "uid": "6a0d1074",
-        "parent_uid": "39b5c2de",
+    "game_object_21": {
+        "uid": "30f516b1",
+        "parent_uid": "6c2dc087",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1463,9 +1838,9 @@
             }
         ]
     },
-    "game_object_17": {
-        "uid": "1ee5411c",
-        "parent_uid": "39b5c2de",
+    "game_object_22": {
+        "uid": "835143c",
+        "parent_uid": "6c2dc087",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1541,9 +1916,9 @@
             }
         ]
     },
-    "game_object_18": {
-        "uid": "171d771c",
-        "parent_uid": "18511bf8",
+    "game_object_23": {
+        "uid": "64af6e19",
+        "parent_uid": "25c95175",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1619,9 +1994,9 @@
             }
         ]
     },
-    "game_object_19": {
-        "uid": "157471bd",
-        "parent_uid": "18511bf8",
+    "game_object_24": {
+        "uid": "41d61cb",
+        "parent_uid": "25c95175",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1697,9 +2072,9 @@
             }
         ]
     },
-    "game_object_20": {
-        "uid": "43ab85d",
-        "parent_uid": "18511bf8",
+    "game_object_25": {
+        "uid": "4d058209",
+        "parent_uid": "25c95175",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1775,9 +2150,9 @@
             }
         ]
     },
-    "game_object_21": {
-        "uid": "3d8cb2be",
-        "parent_uid": "18511bf8",
+    "game_object_26": {
+        "uid": "7c40a035",
+        "parent_uid": "25c95175",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1853,9 +2228,9 @@
             }
         ]
     },
-    "game_object_22": {
-        "uid": "36a81dec",
-        "parent_uid": "f9d857c",
+    "game_object_27": {
+        "uid": "2a310c71",
+        "parent_uid": "5b02d7ec",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1922,9 +2297,9 @@
             }
         ]
     },
-    "game_object_23": {
-        "uid": "529a7c64",
-        "parent_uid": "f9d857c",
+    "game_object_28": {
+        "uid": "47fe5252",
+        "parent_uid": "5b02d7ec",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -1991,9 +2366,9 @@
             }
         ]
     },
-    "game_object_24": {
-        "uid": "28e6fddd",
-        "parent_uid": "f9d857c",
+    "game_object_29": {
+        "uid": "3dcee044",
+        "parent_uid": "5b02d7ec",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2066,9 +2441,9 @@
             }
         ]
     },
-    "game_object_25": {
-        "uid": "6dd76906",
-        "parent_uid": "f9d857c",
+    "game_object_30": {
+        "uid": "490cb190",
+        "parent_uid": "5b02d7ec",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -2113,9 +2488,9 @@
             }
         ]
     },
-    "game_object_26": {
-        "uid": "30c4f959",
-        "parent_uid": "f9d857c",
+    "game_object_31": {
+        "uid": "4137dfc0",
+        "parent_uid": "5b02d7ec",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -2160,384 +2535,9 @@
             }
         ]
     },
-    "game_object_27": {
-        "uid": "51471f21",
-        "parent_uid": "3ce380a2",
-        "ints_count": 1,
-        "int_name_0": "components_count",
-        "int_value_0": 2,
-        "bools_count": 1,
-        "bool_name_0": "active",
-        "bool_value_0": true,
-        "strings_count": 1,
-        "string_name_0": "name",
-        "string_value_0": "CentralLine",
-        "components": [
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 0,
-                "bools_count": 1,
-                "bool_name_0": "keep_ratio",
-                "bool_value_0": false,
-                "floats_count": 1,
-                "float_name_0": "rotation",
-                "float_value_0": -0,
-                "floats2_count": 4,
-                "float2_name_0": "anchor_offset",
-                "float2_value_0": [
-                    0,
-                    0
-                ],
-                "float2_name_1": "anchor_pos",
-                "float2_value_1": [
-                    0,
-                    0
-                ],
-                "float2_name_2": "position",
-                "float2_value_2": [
-                    0,
-                    0
-                ],
-                "float2_name_3": "scale",
-                "float2_value_3": [
-                    0.05000000074505806,
-                    999
-                ]
-            },
-            {
-                "ints_count": 2,
-                "int_name_0": "layer",
-                "int_value_0": 1,
-                "int_name_1": "type",
-                "int_value_1": 1,
-                "bools_count": 3,
-                "bool_name_0": "flip_x",
-                "bool_value_0": false,
-                "bool_name_1": "flip_y",
-                "bool_value_1": false,
-                "bool_name_2": "use_sprite",
-                "bool_value_2": false,
-                "floats2_count": 1,
-                "float2_name_0": "size",
-                "float2_value_0": [
-                    20,
-                    20
-                ],
-                "floats4_count": 1,
-                "float4_name_0": "colour",
-                "float4_value_0": [
-                    0.90196079015731812,
-                    0.90196079015731812,
-                    0.90196079015731812,
-                    0.93333333730697632
-                ]
-            }
-        ]
-    },
-    "game_object_28": {
-        "uid": "5532dc97",
-        "parent_uid": "3ce380a2",
-        "ints_count": 1,
-        "int_name_0": "components_count",
-        "int_value_0": 2,
-        "bools_count": 1,
-        "bool_name_0": "active",
-        "bool_value_0": true,
-        "strings_count": 1,
-        "string_name_0": "name",
-        "string_value_0": "GoalLineP1",
-        "components": [
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 0,
-                "bools_count": 1,
-                "bool_name_0": "keep_ratio",
-                "bool_value_0": false,
-                "floats_count": 1,
-                "float_name_0": "rotation",
-                "float_value_0": -0,
-                "floats2_count": 4,
-                "float2_name_0": "anchor_offset",
-                "float2_value_0": [
-                    0,
-                    0
-                ],
-                "float2_name_1": "anchor_pos",
-                "float2_value_1": [
-                    0,
-                    0
-                ],
-                "float2_name_2": "position",
-                "float2_value_2": [
-                    -127.70534515380859,
-                    0
-                ],
-                "float2_name_3": "scale",
-                "float2_value_3": [
-                    0.15000000596046448,
-                    999
-                ]
-            },
-            {
-                "ints_count": 2,
-                "int_name_0": "layer",
-                "int_value_0": 1,
-                "int_name_1": "type",
-                "int_value_1": 1,
-                "bools_count": 3,
-                "bool_name_0": "flip_x",
-                "bool_value_0": false,
-                "bool_name_1": "flip_y",
-                "bool_value_1": false,
-                "bool_name_2": "use_sprite",
-                "bool_value_2": false,
-                "floats2_count": 1,
-                "float2_name_0": "size",
-                "float2_value_0": [
-                    20,
-                    20
-                ],
-                "floats4_count": 1,
-                "float4_name_0": "colour",
-                "float4_value_0": [
-                    0.18823529779911041,
-                    0.70588237047195435,
-                    0.92156863212585449,
-                    1
-                ]
-            }
-        ]
-    },
-    "game_object_29": {
-        "uid": "194c6c2b",
-        "parent_uid": "3ce380a2",
-        "ints_count": 1,
-        "int_name_0": "components_count",
-        "int_value_0": 2,
-        "bools_count": 1,
-        "bool_name_0": "active",
-        "bool_value_0": true,
-        "strings_count": 1,
-        "string_name_0": "name",
-        "string_value_0": "GoalLineP2",
-        "components": [
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 0,
-                "bools_count": 1,
-                "bool_name_0": "keep_ratio",
-                "bool_value_0": false,
-                "floats_count": 1,
-                "float_name_0": "rotation",
-                "float_value_0": -0,
-                "floats2_count": 4,
-                "float2_name_0": "anchor_offset",
-                "float2_value_0": [
-                    0,
-                    0
-                ],
-                "float2_name_1": "anchor_pos",
-                "float2_value_1": [
-                    0,
-                    0
-                ],
-                "float2_name_2": "position",
-                "float2_value_2": [
-                    127.70500183105469,
-                    0
-                ],
-                "float2_name_3": "scale",
-                "float2_value_3": [
-                    0.15000000596046448,
-                    999
-                ]
-            },
-            {
-                "ints_count": 2,
-                "int_name_0": "layer",
-                "int_value_0": 1,
-                "int_name_1": "type",
-                "int_value_1": 1,
-                "bools_count": 3,
-                "bool_name_0": "flip_x",
-                "bool_value_0": false,
-                "bool_name_1": "flip_y",
-                "bool_value_1": false,
-                "bool_name_2": "use_sprite",
-                "bool_value_2": false,
-                "floats2_count": 1,
-                "float2_name_0": "size",
-                "float2_value_0": [
-                    20,
-                    20
-                ],
-                "floats4_count": 1,
-                "float4_name_0": "colour",
-                "float4_value_0": [
-                    0.93333333730697632,
-                    0.90980392694473267,
-                    0.29019609093666077,
-                    1
-                ]
-            }
-        ]
-    },
-    "game_object_30": {
-        "uid": "7acd1fc8",
-        "parent_uid": "3ce380a2",
-        "ints_count": 1,
-        "int_name_0": "components_count",
-        "int_value_0": 2,
-        "bools_count": 1,
-        "bool_name_0": "active",
-        "bool_value_0": true,
-        "strings_count": 1,
-        "string_name_0": "name",
-        "string_value_0": "LateralLineDown",
-        "components": [
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 0,
-                "bools_count": 1,
-                "bool_name_0": "keep_ratio",
-                "bool_value_0": false,
-                "floats_count": 1,
-                "float_name_0": "rotation",
-                "float_value_0": -0,
-                "floats2_count": 4,
-                "float2_name_0": "anchor_offset",
-                "float2_value_0": [
-                    0,
-                    0
-                ],
-                "float2_name_1": "anchor_pos",
-                "float2_value_1": [
-                    0,
-                    0
-                ],
-                "float2_name_2": "position",
-                "float2_value_2": [
-                    0,
-                    -71.973915100097656
-                ],
-                "float2_name_3": "scale",
-                "float2_value_3": [
-                    99,
-                    0.20000000298023224
-                ]
-            },
-            {
-                "ints_count": 2,
-                "int_name_0": "layer",
-                "int_value_0": 2,
-                "int_name_1": "type",
-                "int_value_1": 1,
-                "bools_count": 3,
-                "bool_name_0": "flip_x",
-                "bool_value_0": false,
-                "bool_name_1": "flip_y",
-                "bool_value_1": false,
-                "bool_name_2": "use_sprite",
-                "bool_value_2": false,
-                "floats2_count": 1,
-                "float2_name_0": "size",
-                "float2_value_0": [
-                    20,
-                    20
-                ],
-                "floats4_count": 1,
-                "float4_name_0": "colour",
-                "float4_value_0": [
-                    0.90196079015731812,
-                    0.90196079015731812,
-                    0.90196079015731812,
-                    0.93333333730697632
-                ]
-            }
-        ]
-    },
-    "game_object_31": {
-        "uid": "3782e491",
-        "parent_uid": "3ce380a2",
-        "ints_count": 1,
-        "int_name_0": "components_count",
-        "int_value_0": 2,
-        "bools_count": 1,
-        "bool_name_0": "active",
-        "bool_value_0": true,
-        "strings_count": 1,
-        "string_name_0": "name",
-        "string_value_0": "LateralLineUp",
-        "components": [
-            {
-                "ints_count": 1,
-                "int_name_0": "type",
-                "int_value_0": 0,
-                "bools_count": 1,
-                "bool_name_0": "keep_ratio",
-                "bool_value_0": false,
-                "floats_count": 1,
-                "float_name_0": "rotation",
-                "float_value_0": -0,
-                "floats2_count": 4,
-                "float2_name_0": "anchor_offset",
-                "float2_value_0": [
-                    0,
-                    0
-                ],
-                "float2_name_1": "anchor_pos",
-                "float2_value_1": [
-                    0,
-                    0
-                ],
-                "float2_name_2": "position",
-                "float2_value_2": [
-                    0,
-                    71.9739990234375
-                ],
-                "float2_name_3": "scale",
-                "float2_value_3": [
-                    99,
-                    0.20000000298023224
-                ]
-            },
-            {
-                "ints_count": 2,
-                "int_name_0": "layer",
-                "int_value_0": 2,
-                "int_name_1": "type",
-                "int_value_1": 1,
-                "bools_count": 3,
-                "bool_name_0": "flip_x",
-                "bool_value_0": false,
-                "bool_name_1": "flip_y",
-                "bool_value_1": false,
-                "bool_name_2": "use_sprite",
-                "bool_value_2": false,
-                "floats2_count": 1,
-                "float2_name_0": "size",
-                "float2_value_0": [
-                    20,
-                    20
-                ],
-                "floats4_count": 1,
-                "float4_name_0": "colour",
-                "float4_value_0": [
-                    0.90196079015731812,
-                    0.90196079015731812,
-                    0.90196079015731812,
-                    0.93333333730697632
-                ]
-            }
-        ]
-    },
     "game_object_32": {
-        "uid": "6adbc586",
-        "parent_uid": "2ceba2f8",
+        "uid": "2515a120",
+        "parent_uid": "411bafe9",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2624,8 +2624,8 @@
         ]
     },
     "game_object_33": {
-        "uid": "49f7d989",
-        "parent_uid": "2ceba2f8",
+        "uid": "632faae2",
+        "parent_uid": "411bafe9",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2712,8 +2712,8 @@
         ]
     },
     "game_object_34": {
-        "uid": "75cc00b9",
-        "parent_uid": "2ceba2f8",
+        "uid": "395c8318",
+        "parent_uid": "411bafe9",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2800,8 +2800,8 @@
         ]
     },
     "game_object_35": {
-        "uid": "53f639d6",
-        "parent_uid": "2ceba2f8",
+        "uid": "3a22e926",
+        "parent_uid": "411bafe9",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -2888,8 +2888,8 @@
         ]
     },
     "game_object_36": {
-        "uid": "79010fc5",
-        "parent_uid": "22b52abf",
+        "uid": "5b7f68ae",
+        "parent_uid": "67220685",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -2935,8 +2935,8 @@
         ]
     },
     "game_object_37": {
-        "uid": "69ec75b1",
-        "parent_uid": "22b52abf",
+        "uid": "59818cd2",
+        "parent_uid": "67220685",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -2982,8 +2982,8 @@
         ]
     },
     "game_object_38": {
-        "uid": "53bdcffe",
-        "parent_uid": "ded1b93",
+        "uid": "18745191",
+        "parent_uid": "32b67a4a",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -3029,8 +3029,8 @@
         ]
     },
     "game_object_39": {
-        "uid": "22f00e77",
-        "parent_uid": "ded1b93",
+        "uid": "244ad8fa",
+        "parent_uid": "32b67a4a",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -3076,8 +3076,8 @@
         ]
     },
     "game_object_40": {
-        "uid": "33cf49b7",
-        "parent_uid": "36a81dec",
+        "uid": "9bedfbb",
+        "parent_uid": "2a310c71",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3145,8 +3145,8 @@
         ]
     },
     "game_object_41": {
-        "uid": "4c0044ba",
-        "parent_uid": "529a7c64",
+        "uid": "3af3958e",
+        "parent_uid": "47fe5252",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3214,8 +3214,8 @@
         ]
     },
     "game_object_42": {
-        "uid": "1c5cf10a",
-        "parent_uid": "28e6fddd",
+        "uid": "70d03398",
+        "parent_uid": "3dcee044",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3283,8 +3283,8 @@
         ]
     },
     "game_object_43": {
-        "uid": "432ffbfe",
-        "parent_uid": "6dd76906",
+        "uid": "500534c9",
+        "parent_uid": "490cb190",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3352,8 +3352,8 @@
         ]
     },
     "game_object_44": {
-        "uid": "458a4977",
-        "parent_uid": "6dd76906",
+        "uid": "5f02364d",
+        "parent_uid": "490cb190",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3421,8 +3421,8 @@
         ]
     },
     "game_object_45": {
-        "uid": "216b751a",
-        "parent_uid": "30c4f959",
+        "uid": "395cad62",
+        "parent_uid": "4137dfc0",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3496,8 +3496,8 @@
         ]
     },
     "game_object_46": {
-        "uid": "41353901",
-        "parent_uid": "30c4f959",
+        "uid": "302e09d3",
+        "parent_uid": "4137dfc0",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 1,
@@ -3543,8 +3543,8 @@
         ]
     },
     "game_object_47": {
-        "uid": "373dda8d",
-        "parent_uid": "432ffbfe",
+        "uid": "25dfa3ea",
+        "parent_uid": "500534c9",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3621,8 +3621,8 @@
         ]
     },
     "game_object_48": {
-        "uid": "439cead5",
-        "parent_uid": "432ffbfe",
+        "uid": "2aa92b8d",
+        "parent_uid": "500534c9",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3699,8 +3699,8 @@
         ]
     },
     "game_object_49": {
-        "uid": "7e6d04b5",
-        "parent_uid": "458a4977",
+        "uid": "bd61b8e",
+        "parent_uid": "5f02364d",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3777,8 +3777,8 @@
         ]
     },
     "game_object_50": {
-        "uid": "4353b66e",
-        "parent_uid": "458a4977",
+        "uid": "57e6926a",
+        "parent_uid": "5f02364d",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3855,8 +3855,8 @@
         ]
     },
     "game_object_51": {
-        "uid": "d715e42",
-        "parent_uid": "41353901",
+        "uid": "2870c6f0",
+        "parent_uid": "302e09d3",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -3924,8 +3924,8 @@
         ]
     },
     "game_object_52": {
-        "uid": "31f25999",
-        "parent_uid": "41353901",
+        "uid": "7658f1c9",
+        "parent_uid": "302e09d3",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -4002,8 +4002,8 @@
         ]
     },
     "game_object_53": {
-        "uid": "517acf5c",
-        "parent_uid": "41353901",
+        "uid": "245a9abb",
+        "parent_uid": "302e09d3",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -4080,8 +4080,8 @@
         ]
     },
     "game_object_54": {
-        "uid": "2817b4a5",
-        "parent_uid": "41353901",
+        "uid": "6797c4b0",
+        "parent_uid": "302e09d3",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -4158,8 +4158,8 @@
         ]
     },
     "game_object_55": {
-        "uid": "476aa71e",
-        "parent_uid": "373dda8d",
+        "uid": "477fa35c",
+        "parent_uid": "25dfa3ea",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -4227,8 +4227,8 @@
         ]
     },
     "game_object_56": {
-        "uid": "6ec64f65",
-        "parent_uid": "439cead5",
+        "uid": "1b09d562",
+        "parent_uid": "2aa92b8d",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -4296,8 +4296,8 @@
         ]
     },
     "game_object_57": {
-        "uid": "5714650",
-        "parent_uid": "7e6d04b5",
+        "uid": "308675e9",
+        "parent_uid": "bd61b8e",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,
@@ -4365,8 +4365,8 @@
         ]
     },
     "game_object_58": {
-        "uid": "2e31e4b3",
-        "parent_uid": "4353b66e",
+        "uid": "5119c34a",
+        "parent_uid": "57e6926a",
         "ints_count": 1,
         "int_name_0": "components_count",
         "int_value_0": 2,

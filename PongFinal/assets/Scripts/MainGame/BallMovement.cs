@@ -78,22 +78,24 @@ public class BallMovement : ComponentScript
                 float player_height = MainGameManager.Instance.GetPlayerHeight();
                 float player_half_height = player_height * 0.5f;
 
-                float angle_to_set = 90.0f;
+                float angle_to_set = -90.0f;
 
                 if (center_diff > 0)
                 {
                     float to_add = (50 * abs_center_diff) / player_half_height;
 
-                    angle_to_set -= to_add;
+                    angle_to_set += to_add;
                 }
                 else
                 {
                     float to_add = (50 * abs_center_diff) / player_half_height;
 
-                    angle_to_set += to_add;
+                    angle_to_set -= to_add;
                 }
 
-                curr_angle = Random.Range(-40.0f, -140.0f);
+                curr_angle = angle_to_set;
+
+                //curr_angle = Random.Range(-40.0f, -140.0f);
                 direction = BallDirection.DIRECTION_RIGHT;
             }
         }
