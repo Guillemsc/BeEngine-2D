@@ -10,7 +10,7 @@ namespace BeEngine
     {
         public static int Range(int min, int max)
         {
-            return new System.Random().Next() * (max - min) + min;
+            return new System.Random().Next(0, max + 1);
         }
 
         public static float Range(float min, float max)

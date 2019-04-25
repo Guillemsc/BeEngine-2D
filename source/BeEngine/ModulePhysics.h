@@ -18,6 +18,19 @@ class PhysicsBody;
 class PhysicsShape;
 enum PhysicsShapeType;
 
+class PhysicsCollision
+{
+	friend class ModulePhysics;
+
+public:
+	PhysicsBody* GetBody1() const;
+	PhysicsBody* GetBody2() const;
+
+private:
+	PhysicsBody* pb1 = nullptr;
+	PhysicsBody* pb2 = nullptr;
+};
+
 class ModulePhysics : public Module, public b2ContactListener
 {
 public:
@@ -57,8 +70,8 @@ private:
 	std::vector<PhysicsBody*> bodies;
 	std::vector<PhysicsShape*> shapes;
 
-	std::vector<b2Contact*> begin_contacts;
-	std::vector<b2Contact*> end_contacts;
+	std::vector<PhysicsCollision> begin_contacts;
+	std::vector<PhysicsCollision> end_contacts;
 
 private:
 	b2World* b2world = nullptr;

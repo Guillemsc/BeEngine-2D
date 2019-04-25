@@ -101,7 +101,7 @@ public class MainMenuManager : ComponentScript
             queue_event.PushEvent(new QueueEventActive(go, true));
 
             queue_event.PushEvent(new QueueEventPosition(go, enter_pos.Transform.Position,
-                camera_go.Transform.Position, 1.3f, EasingFunctionsType.QUAD_OUT));
+                camera_go.Transform.Position, 0.8f, EasingFunctionsType.QUAD_OUT));
         }
     }
 

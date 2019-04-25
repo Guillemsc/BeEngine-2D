@@ -94,7 +94,28 @@ void ModulePhysics::BeginContact(b2Contact * contact)
 {
 	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 	{
-		begin_contacts.push_back(contact);
+		PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+		PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+		bool already_exists = false;
+		for (std::vector<PhysicsCollision>::iterator it = begin_contacts.begin(); it != begin_contacts.end(); ++it)
+		{
+			if (((*it).GetBody1() == pb1 && (*it).GetBody2() == pb2) || 
+				((*it).GetBody1() == pb2 && (*it).GetBody2() == pb1))
+			{
+				already_exists = true;
+				break;
+			}
+		}
+
+		if (!already_exists)
+		{
+			PhysicsCollision coll;
+			coll.pb1 = pb1;
+			coll.pb2 = pb2;
+
+			begin_contacts.push_back(coll);
+		}
 	}
 }
 
@@ -102,7 +123,28 @@ void ModulePhysics::EndContact(b2Contact * contact)
 {
 	if (App->state->GetEditorUpdateState() == EditorUpdateState::EDITOR_UPDATE_STATE_PLAY)
 	{
-		end_contacts.push_back(contact);
+		PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+		PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+		bool already_exists = false;
+		for (std::vector<PhysicsCollision>::iterator it = end_contacts.begin(); it != end_contacts.end(); ++it)
+		{
+			if (((*it).GetBody1() == pb1 && (*it).GetBody2() == pb2) ||
+				((*it).GetBody1() == pb2 && (*it).GetBody2() == pb1))
+			{
+				already_exists = true;
+				break;
+			}
+		}
+
+		if (!already_exists)
+		{
+			PhysicsCollision coll;
+			coll.pb1 = pb1;
+			coll.pb2 = pb2;
+
+			end_contacts.push_back(coll);
+		}
 	}
 }
 
@@ -112,12 +154,10 @@ void ModulePhysics::UpdateContacts()
 	{
 		b2world->Step(App->GetDT(), 128, 128);
 
-		for (std::vector<b2Contact*>::iterator it = begin_contacts.begin(); it != begin_contacts.end(); ++it)
+		for (std::vector<PhysicsCollision>::iterator it = begin_contacts.begin(); it != begin_contacts.end(); ++it)
 		{
-			b2Contact* contact = (*it);
-
-			PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
-			PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+			PhysicsBody* pb1 = (*it).GetBody1();
+			PhysicsBody* pb2 = (*it).GetBody2();
 
 			ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
 			ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
@@ -127,25 +167,6 @@ void ModulePhysics::UpdateContacts()
 
 			bridge_go1->CallOnCollisionEnter(pb2);
 			bridge_go2->CallOnCollisionEnter(pb1);
-		}
-
-		begin_contacts.clear();
-
-		for (std::vector<b2Contact*>::iterator it = begin_contacts.begin(); it != begin_contacts.end(); ++it)
-		{
-			b2Contact* contact = (*it);
-
-			PhysicsBody* pb1 = (PhysicsBody*)contact->GetFixtureA()->GetBody()->GetUserData();
-			PhysicsBody* pb2 = (PhysicsBody*)contact->GetFixtureB()->GetBody()->GetUserData();
-
-			ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
-			ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
-
-			ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
-			ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
-
-			bridge_go1->CallOnCollisionExit(pb2);
-			bridge_go2->CallOnCollisionExit(pb1);
 		}
 
 		begin_contacts.clear();
@@ -167,6 +188,23 @@ void ModulePhysics::UpdateContacts()
 				bridge_go2->CallOnCollisionStay(pb1);
 			}
 		}
+
+		for (std::vector<PhysicsCollision>::iterator it = end_contacts.begin(); it != end_contacts.end(); ++it)
+		{
+			PhysicsBody* pb1 = (*it).GetBody1();
+			PhysicsBody* pb2 = (*it).GetBody2();
+
+			ComponentTransform* trans_pb1 = pb1->GetComponentTransform();
+			ComponentTransform* trans_pb2 = pb2->GetComponentTransform();
+
+			ScriptingBridgeGameObject* bridge_go1 = (ScriptingBridgeGameObject*)trans_pb1->GetOwner()->GetScriptingBridge();
+			ScriptingBridgeGameObject* bridge_go2 = (ScriptingBridgeGameObject*)trans_pb2->GetOwner()->GetScriptingBridge();
+
+			bridge_go1->CallOnCollisionExit(pb2);
+			bridge_go2->CallOnCollisionExit(pb1);
+		}
+
+		end_contacts.clear();
 	}
 }
 
@@ -416,4 +454,14 @@ void ModulePhysics::DestroyAllPhysicsShapes()
 	}
 
 	shapes.clear();
+}
+
+PhysicsBody* PhysicsCollision::GetBody1() const
+{
+	return pb1;
+}
+
+PhysicsBody* PhysicsCollision::GetBody2() const
+{
+	return pb2;
 }
