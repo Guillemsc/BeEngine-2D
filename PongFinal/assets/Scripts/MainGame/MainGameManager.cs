@@ -60,6 +60,9 @@ public class MainGameManager : Singleton<MainGameManager>
 
         controls_go.Active = true;
 
+        Colour curr_colour = foreground.Colour;
+        foreground.Colour = new Colour(curr_colour.r, curr_colour.g, curr_colour.b, 255);
+
         PlayFadeInAnimation();
     }
 	

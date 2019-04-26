@@ -89,13 +89,10 @@ bool ModuleEditor::PreUpdate()
 	bool ret = true;
 
 	ImGuiStartFrame();
-
-	if (draw_imgui_debug)
-	{
-		DrawEditorElements();
-		DrawEditorWindows();
-	}
-
+	
+	DrawEditorElements();
+	DrawEditorWindows();
+	
 	ImGuiEndFrame();
 
 	return ret;

@@ -59,7 +59,14 @@ bool ModuleGameObject::PreUpdate()
 {
 	bool ret = true;
 
+	CheckResourceSceneToLoad();
+
+	ActuallyDestroyGameObjects();
+	ActuallyDestroyScenes();
+
 	UpdateGameObjects();
+
+	UpdateGameObjectsLogic();
 
 	return ret;
 }
@@ -68,19 +75,12 @@ bool ModuleGameObject::Update()
 {
 	bool ret = true;
 
-	UpdateGameObjectsLogic();
-
 	return ret;
 }
 
 bool ModuleGameObject::PostUpdate()
 {
 	bool ret = true;
-
-	CheckResourceSceneToLoad();
-
-	ActuallyDestroyGameObjects();
-	ActuallyDestroyScenes();
 
 	return ret;
 }
@@ -704,22 +704,8 @@ void ModuleGameObject::AddComponentScript(ComponentScript * sc)
 		}
 
 		if (!exists)
-		{
-			bool exists_to_add = false;
-
-			for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
-			{
-				if ((*it) == sc)
-				{
-					exists_to_add = true;
-					break;
-				}
-			}
-
-			if (!exists_to_add)
-			{
-				component_scripts_to_add.push_back(sc);
-			}
+		{			
+			component_scripts.push_back(sc);
 		}
 	}
 }
@@ -737,19 +723,6 @@ void ModuleGameObject::RemoveComponentScript(ComponentScript * sc)
 				component_scripts.erase(it);
 				exists = true;
 				break;
-			}
-		}
-
-		if (!exists)
-		{
-			for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
-			{
-				if ((*it) == sc)
-				{
-					component_scripts_to_add.erase(it);
-					exists = true;
-					break;
-				}
 			}
 		}
 
@@ -905,9 +878,11 @@ void ModuleGameObject::UpdateGameObjectsLogic()
 
 void ModuleGameObject::InitComponentsScripts()
 {
+	std::vector<ComponentScript*> scripts_to_check = component_scripts;
+
 	std::vector<ComponentScript*> need_init;
 
-	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
+	for (std::vector<ComponentScript*>::iterator it = scripts_to_check.begin(); it != scripts_to_check.end(); ++it)
 	{
 		if ((*it)->needs_init)
 		{
@@ -934,15 +909,12 @@ void ModuleGameObject::GameObjectsLogicUpdate()
 {
 	InitComponentsScripts();
 
-	for (std::vector<ComponentScript*>::iterator it = component_scripts.begin(); it != component_scripts.end(); ++it)
+	std::vector<ComponentScript*> scripts_to_update = component_scripts;
+
+	for (std::vector<ComponentScript*>::iterator it = scripts_to_update.begin(); it != scripts_to_update.end(); ++it)
 	{
 		(*it)->CallUpdate();
 	}
-
-	for (std::vector<ComponentScript*>::iterator it = component_scripts_to_add.begin(); it != component_scripts_to_add.end(); ++it)
-		component_scripts.push_back((*it));
-
-	component_scripts_to_add.clear();
 }
 
 void ModuleGameObject::GameObjectsLogicStop()

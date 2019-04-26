@@ -35,6 +35,7 @@ public:
 	~ModuleSceneRenderer();
 
 	bool Awake();
+	bool PreUpdate();
 	bool PostUpdate();
 	bool CleanUp();
 

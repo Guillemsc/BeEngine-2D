@@ -129,7 +129,6 @@ private:
 	bool needs_to_stop_logic = false;
 
 	std::vector<ComponentScript*> component_scripts;
-	std::vector<ComponentScript*> component_scripts_to_add;
 
 	GameObjectAbstraction editor_play_scene_abs;
 	ResourceScene* editor_play_scene_resource = nullptr;

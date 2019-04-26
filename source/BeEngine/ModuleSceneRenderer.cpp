@@ -47,6 +47,13 @@ bool ModuleSceneRenderer::Awake()
 	return ret;
 }
 
+bool ModuleSceneRenderer::PreUpdate()
+{
+	bool ret = true;
+
+	return ret;
+}
+
 bool ModuleSceneRenderer::PostUpdate()
 {
 	bool ret = true;
@@ -62,7 +69,7 @@ bool ModuleSceneRenderer::PostUpdate()
 	App->editor->RenderEditor();
 
 	// ---------------------------------------------------------------------
-	
+
 	// ---------------------------------------------------------------------
 
 	App->renderer->SwapWindowBuffers();
