@@ -24,6 +24,7 @@ public:
 
 	StaticRendererItem* CreateRendererItem(ComponentSpriteRenderer* comp);
 	StaticRendererItem* CreateRendererItem(ComponentText* comp);
+	void UpdateRendererItem(StaticRendererItem* item);
 	void DestroyRendererItem(StaticRendererItem* item);
 
 public:

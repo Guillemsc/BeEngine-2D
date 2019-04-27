@@ -39,9 +39,7 @@ void StaticRenderer::Render(const float4x4 & view, const float4x4 & projection)
 	int curr_layer = 0;
 	for (std::map<int, std::vector<StaticRendererItem*>>::iterator it = renderer_items.begin(); it != renderer_items.end(); ++it)
 	{
-		std::vector<StaticRendererItem*> items = (*it).second;
-
-		for (std::vector<StaticRendererItem*>::iterator s = items.begin(); s != items.end(); ++s, ++curr_layer)
+		for (std::vector<StaticRendererItem*>::iterator s = (*it).second.begin(); s != (*it).second.end(); ++s, ++curr_layer)
 		{
 			// Z pos
 			float z_pos = App->scene_renderer->layer_space_component_scene.GetLayerValue(curr_layer);
@@ -84,6 +82,17 @@ StaticRendererItem * StaticRenderer::CreateRendererItem(ComponentText * comp)
 	}
 
 	return ret;
+}
+
+void StaticRenderer::UpdateRendererItem(StaticRendererItem * item)
+{
+	if (item != nullptr)
+	{
+		if (RemoveRendererItem(item))
+		{
+			AddRendererItem(item);
+		}
+	}
 }
 
 void StaticRenderer::DestroyRendererItem(StaticRendererItem * item)
@@ -179,8 +188,6 @@ void StaticRenderer::UpdateRendererItemsToCheck()
 
 		renderer_items_to_check.erase(renderer_items_to_check.begin());
 
-		RemoveRendererItem(curr);
-
-		AddRendererItem(curr);
+		UpdateRendererItem(curr);
 	}
 }

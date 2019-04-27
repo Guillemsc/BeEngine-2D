@@ -64,16 +64,16 @@ bool ModuleGameObject::PreUpdate()
 	ActuallyDestroyGameObjects();
 	ActuallyDestroyScenes();
 
-	UpdateGameObjects();
-
-	UpdateGameObjectsLogic();
-
 	return ret;
 }
 
 bool ModuleGameObject::Update()
 {
 	bool ret = true;
+
+	UpdateGameObjects();
+
+	UpdateGameObjectsLogic();
 
 	return ret;
 }

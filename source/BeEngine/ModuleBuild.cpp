@@ -322,6 +322,9 @@ void ModuleBuild::TryLoadBuildProject()
 	{
 		App->state->SetEngineState(EngineState::ENGINE_STATE_BUILD);
 
+		App->window->GetWindowNamer()->AddNamePart("app_name", "");
+		App->window->GetWindowNamer()->AddNamePart("fps", "");
+
 		App->SetAppName(build_name.c_str());
 
 		std::string data_path = App->file_system->GetWorkingDirectory() + "data\\";

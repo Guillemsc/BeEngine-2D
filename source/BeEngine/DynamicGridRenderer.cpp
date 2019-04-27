@@ -84,8 +84,13 @@ void DynamicGridRenderer::Start()
 			float alpha = 1 - min(line, 1); \
 			\
 			\
+			float alpha_mult = 1.0f; \
+			if(oCameraSize > 0.0f) \
+			{\
+				alpha_mult = (1 - (oCameraSize) + 0.0f); \
+			}\
 			vec3 col = vec3(0.8, 0.8, 0.8);\
-			finalColor = vec4(col.x, col.y, col.z, alpha); \
+			finalColor = vec4(col.x, col.y, col.z, alpha * alpha_mult); \
 		}";
 
 	Shader* vsh = App->shader->CreateShader(ShaderType::VERTEX);
@@ -169,7 +174,7 @@ void DynamicGridRenderer::Render(const float4x4 & view, const float4x4 & project
 
 		App->renderer->SetUniformFloat(program->GetID(), "camera_size", camera_size);
 
-		App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 1.0f));
+		App->renderer->SetUniformVec4(program->GetID(), "col", float4(1.0f, 0.0f, 1.0f, 0.5f));
 
 		App->renderer->SetUniformMatrix(program->GetID(), "Model", world_transform.Transposed().ptr());
 

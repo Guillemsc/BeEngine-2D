@@ -132,6 +132,9 @@ void ComponentSpriteRenderer::OnLoadAbstraction(DataAbstraction & abs)
 
 	flip_x = abs.GetBool("flip_x");
 	flip_y = abs.GetBool("flip_y");
+
+	if(GetOwner()->GetActive())
+		App->scene_renderer->static_renderer->UpdateRendererItem(rendering_item);
 }
 
 void ComponentSpriteRenderer::OnEvent(Event * ev)
