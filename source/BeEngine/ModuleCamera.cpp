@@ -36,6 +36,7 @@ bool ModuleCamera::Awake()
 bool ModuleCamera::Start()
 {
 	bool ret = true;
+
 	return ret;
 }
 

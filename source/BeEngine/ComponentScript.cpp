@@ -573,6 +573,8 @@ void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptFi
 {
 	std::vector<ComponentScriptField*> fields_values_to_check = fields_values;
 
+	std::vector<ComponentScriptField*> new_fields;
+
 	for (std::vector<ResourceScriptField>::const_iterator fi = fields.begin(); fi != fields.end(); ++fi)
 	{
 		ComponentScriptField* field = nullptr;
@@ -586,6 +588,8 @@ void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptFi
 				if ((*it)->GetName().compare((*fi).GetName()) == 0)
 				{
 					alredy_exists = true;
+
+					new_fields.push_back((*it));
 
 					field = (*it);
 					fields_values_to_check.erase(it);
@@ -645,9 +649,13 @@ void ComponentScript::RecalculateFieldsValues(const std::vector<ResourceScriptFi
 
 		if (field != nullptr && !alredy_exists)
 		{
-			fields_values.push_back(field);
+			new_fields.push_back(field);
 		}
 	}
+
+	fields_values.clear();
+
+	fields_values = new_fields;
 
 	RemoveFieldValues(fields_values_to_check);
 }
