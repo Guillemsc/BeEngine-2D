@@ -24,12 +24,12 @@
     "camera": {
         "wheel_speed": 0.05000000074505806,
         "position": [
-            7.4448542594909668,
-            1.3444437980651855
+            -5.7671537399291992,
+            17.893505096435547
         ],
-        "size": 0.32357370853424072
+        "size": 0.12548944354057312
     },
     "guizmos": {
-        "render_all_physics_guizmos": false
+        "render_all_physics_guizmos": true
     }
 }

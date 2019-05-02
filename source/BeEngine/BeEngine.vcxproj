@@ -166,6 +166,7 @@
     <ClInclude Include="ProjectManager.h" />
     <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="ResourceAudio.h" />
     <ClInclude Include="ResourceFont.h" />
     <ClInclude Include="ResourcePrefab.h" />
@@ -495,6 +496,9 @@
     <None Include="Geometry\QuadTree.inl" />
     <None Include="Math\float2.inl" />
     <None Include="Math\Matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

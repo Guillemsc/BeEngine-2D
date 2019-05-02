@@ -31,7 +31,7 @@ void ProgressWindow::DrawEditor()
 			| ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoTitleBar;
 
 		float2 window_size = App->window->GetWindowSize();
-		ImGui::SetNextWindowPos(ImVec2(window_size.x - last_window_size.x - 5, window_size.y - last_window_size.y - 10));
+		ImGui::SetNextWindowPos(ImVec2(window_size.x - last_window_size.x - 25, window_size.y - last_window_size.y - 10));
 
 		if (ImGui::Begin("ProgressWindow", nullptr, flags))
 		{

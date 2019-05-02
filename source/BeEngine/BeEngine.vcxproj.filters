@@ -786,6 +786,7 @@
     <ClInclude Include="ScriptingBridgeResourceAudio.h">
       <Filter>Sources\8. Scripting ==============\Bridges\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1335,5 +1336,8 @@
     <None Include="Math\Matrix.inl">
       <Filter>Sources\12. ThirdParties ============\MathGeoLib\Math</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
 </Project>

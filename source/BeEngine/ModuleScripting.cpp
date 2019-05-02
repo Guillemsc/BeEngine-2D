@@ -1009,7 +1009,8 @@ void ScriptingAssembly::LoadAssembly()
 		if (App->file_system->FileRead(path, assembly_data, assembly_data_size))
 		{
 			MonoImageOpenStatus status;
-			image = mono_image_open_from_data_with_name(assembly_data, assembly_data_size, true, &status, false, path.c_str());
+			image = mono_image_open_from_data_with_name
+			(assembly_data, assembly_data_size, true, &status, false, path.c_str());
 
 			if (status == MONO_IMAGE_OK || image != nullptr)
 			{
