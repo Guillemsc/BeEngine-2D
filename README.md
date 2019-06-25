@@ -5,7 +5,7 @@ BeEngine comes with all the tools necessary to create 2D games from a intuitive 
 ## License
 MIT License
 
-Copyright (c) 2017 Guillem Sunyer Caldú
+Copyright (c) 2019 Guillem Sunyer Caldú
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
