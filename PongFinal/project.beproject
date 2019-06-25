@@ -2,6 +2,6 @@
     "name": "PongFinal",
     "build": {
         "scene": "3f03c8c8",
-        "name": "FinalPong"
+        "name": "PongFinalBuild"
     }
 }

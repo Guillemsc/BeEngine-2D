@@ -1,7 +1,0 @@
-{
-    "name": "PongTestGame",
-    "build": {
-        "scene": "16725faa",
-        "name": "PongTestGame"
-    }
-}
